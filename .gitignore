@@ -2,18 +2,10 @@ DEBUG
 RELEASE
 .vs
 
-Assets
-Textures
-Sounds
-Music
-Animations
-Fonts
-Logs
 Build
 ThirdParty
-Bin/Save
+Bin
 
-CHANGES.txt
 TODO
 
 *.swp
@@ -38,3 +30,5 @@ TODO
 *.dll
 *.zip
 *.rar
+*.\#*
+\#*\#
