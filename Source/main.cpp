@@ -4,8 +4,7 @@
 
 int main(int argc, char** argv)
 {
-    STATIC_ASSERT(1 == 2);
-
-    printf("Hello, world!\n");
+    int i = 1;
+    VL_ASSERT(1 == 2);
     return 0;
 }

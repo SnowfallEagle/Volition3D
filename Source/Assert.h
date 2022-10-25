@@ -1,40 +1,38 @@
 #ifndef ASSERT_H_
 
-// === Run-time assert ===
-// TODO(sean): Try some assembly stuff instead of stdlib's exit()
-#if defined(_DEBUG) || defined(DEBUG)
-# include <stdlib.h>
-# define DEBUG_BREAK() { exit(1); }
+// === Debug break ===
+// TODO(sean): Make platform header
+#include <intrin.h>
+#define VL_DEBUG_BREAK() __debugbreak()
 
-# define ASSERT(EXPR) \
+// === Run-time assert ===
+#if defined(_DEBUG) || defined(DEBUG)
+# define VL_ASSERT(EXPR) \
     if (EXPR) \
     {} \
     else \
     { \
         fprintf(stderr, "Assertion failed at %s:%d: %s\n", __FILE__, __LINE__, #EXPR); \
-        DEBUG_BREAK(); \
+        VL_DEBUG_BREAK(); \
     }
 #else
-# define ASSERT(EXPR)
+# define VL_DEBUG_BREAK()
+# define VL_ASSERT(EXPR)
 #endif
 
 // === Static assert ===
-#define _GLUE_STATIC_ASSERT(A, B) A ## B
-#define GLUE_STATIC_ASSERT(A, B) _GLUE_STATIC_ASSERT(A, B)
+#define _VL_GLUE_STATIC_ASSERT(A, B) A ## B
+#define VL_GLUE_STATIC_ASSERT(A, B) _VL_GLUE_STATIC_ASSERT(A, B)
 
 #if __cplusplus >= 201103L || defined(_MSC_VER)
-# define STATIC_ASSERT(EXPR) \
-    static_assert(EXPR, \
-                  "Static assertion failed at " \
-                  __FILE__ ":" \
-                  STATIC_ASSERT_TO_STRING(__LINE__) ": " \
-                  #EXPR)
+# define VL_STATIC_ASSERT(EXPR) \
+    static_assert(EXPR, "Static assertion failed: " #EXPR)
 #else
     template<bool> class TStaticAssert;
     template<> class TStaticAssert<true> {};
 
-# define STATIC_ASSERT(EXPR) \
-    enum { GLUE_STATIC_ASSERT(ASSERT_FAIL_, __LINE__) = sizeof(TStaticAssert<!!(EXPR)>) }
+# define VL_STATIC_ASSERT(EXPR) \
+    enum { VL_GLUE_STATIC_ASSERT(ASSERT_FAIL_, __LINE__) = sizeof(TStaticAssert<!!(EXPR)>) }
 #endif
 
 #define ASSERT_H_
