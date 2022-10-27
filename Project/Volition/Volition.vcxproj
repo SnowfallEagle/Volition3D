@@ -152,6 +152,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\Assert.h" />
+    <ClInclude Include="..\..\Source\SpinLock.h" />
+    <ClInclude Include="..\..\Source\Types.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\main.cpp" />
