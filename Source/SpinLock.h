@@ -125,11 +125,72 @@ public:
         ASSERT(ThreadID == ActualID);
 
         --RefCount;
-        if (RefCount <= 0)
+        if (RefCount == 0)
         {
             // It's safe to unlock relaxed because we own it
             Owner.store(0, std::memory_order_relaxed);
         }
+    }
+};
+
+class VPushLock
+{
+    std::atomic<u32> RefCount;
+
+public:
+    VPushLock() : RefCount(0) {}
+
+    void AcquireRead()
+    {
+        u32 CurrentRefCount = RefCount.load(std::memory_order_relaxed);
+        while (!RefCount.compare_exchange_weak(
+            CurrentRefCount,
+            CurrentRefCount + 1,
+            std::memory_order_acquire,
+            std::memory_order_relaxed
+        ))
+        {
+            PAUSE();
+            std::size_t CurrentRefCount = RefCount.load(std::memory_order_relaxed);
+        }
+    }
+
+    void ReleaseRead()
+    {
+        u32 CurrentRefCount = RefCount.load(std::memory_order_relaxed);
+        while (!RefCount.compare_exchange_weak(
+            CurrentRefCount,
+            CurrentRefCount - 1,
+            std::memory_order_acquire,
+            std::memory_order_relaxed
+        ))
+        {
+            PAUSE();
+            std::size_t CurrentRefCount = RefCount.load(std::memory_order_relaxed);
+        }
+
+        ASSERT(CurrentRefCount > 0);
+    }
+
+    void AcquireWrite()
+    {
+        u32 CurrentRefCount = RefCount.load(std::memory_order_relaxed);
+        while (!RefCount.compare_exchange_weak(
+            CurrentRefCount,
+            0xFFFFFFFF,
+            std::memory_order_acquire,
+            std::memory_order_relaxed
+        ))
+        {
+            PAUSE();
+            std::size_t CurrentRefCount = RefCount.load(std::memory_order_relaxed);
+        }
+    }
+
+    void ReleaseWrite()
+    {
+        ASSERT(0xFFFFFFFF == RefCount.load(std::memory_order_relaxed))
+        RefCount.store(0, std::memory_order_release);
     }
 };
 

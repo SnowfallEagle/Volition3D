@@ -5,14 +5,13 @@
 
 int main(int argc, char** argv)
 {
-    VSpinLock SpinLock;
-    TScopedLock<decltype(SpinLock)> ScopedLock(SpinLock);
+    VPushLock PushLock;
 
-    VReentrantLock32 Reentrant;
-    Reentrant.Acquire();
-    Reentrant.Acquire();
-    Reentrant.Release();
-    Reentrant.Release();
+    PushLock.AcquireRead();
+    PushLock.ReleaseRead();
+    PushLock.AcquireWrite();
+    PushLock.ReleaseWrite();
+
     printf("here\n");
     return 0;
 }
