@@ -58,10 +58,13 @@ class VReentrantLock32
     i32 RefCount;
 
 public:
+    VReentrantLock32() : Owner(0), RefCount(0) {}
+
     b32 TryAcquire()
     {
         std::hash<std::thread::id> Hasher;
         std::size_t ThreadID = Hasher(std::this_thread::get_id());
+
         b32 bAcquired;
 
         if (ThreadID == Owner.load(std::memory_order_relaxed))
@@ -79,8 +82,10 @@ public:
         }
 
         if (bAcquired)
+        {
             ++RefCount;
-        std::atomic_thread_fence(std::memory_order_acquire);
+            std::atomic_thread_fence(std::memory_order_acquire);
+        }
 
         return bAcquired;
     }
