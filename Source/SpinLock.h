@@ -3,6 +3,7 @@
 #include <atomic>
 #include <thread> // TODO(sean): Make volition threads
 #include "Types.h"
+#include "Assert.h"
 
 class VSpinLock
 {
@@ -74,10 +75,11 @@ public:
         else
         {
             std::size_t UnlockValue = 0;
-            bAcquired = Owner.compare_exchange_strong(UnlockValue,
-                                                      ThreadID,
-                                                      std::memory_order_relaxed, // Fence below
-                                                      std::memory_order_relaxed
+            bAcquired = Owner.compare_exchange_strong(
+                UnlockValue,
+                ThreadID,
+                std::memory_order_relaxed, // Fence below
+                std::memory_order_relaxed
             );
         }
 
@@ -127,7 +129,7 @@ public:
         --RefCount;
         if (RefCount == 0)
         {
-            // It's safe to unlock relaxed because we own it
+            // TODO(sean): Ensure about it
             Owner.store(0, std::memory_order_relaxed);
         }
     }

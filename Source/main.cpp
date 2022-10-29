@@ -1,9 +1,9 @@
 #include <stdio.h>
 
-#include "Assert.h"
 #include "SpinLock.h"
+#include "Types.h"
 
-int main(int argc, char** argv)
+int main(int Argc, char** Argv)
 {
     VPushLock PushLock;
 
