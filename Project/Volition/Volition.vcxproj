@@ -166,12 +166,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\Assert.h" />
+    <ClInclude Include="..\..\Source\Game.h" />
     <ClInclude Include="..\..\Source\SpinLock.h" />
     <ClInclude Include="..\..\Source\Types.h" />
     <ClInclude Include="..\..\Source\Volition.h" />
     <ClInclude Include="..\..\Source\Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Source\Game.cpp" />
     <ClCompile Include="..\..\Source\main.cpp" />
     <ClCompile Include="..\..\Source\Volition.cpp" />
     <ClCompile Include="..\..\Source\Window.cpp" />

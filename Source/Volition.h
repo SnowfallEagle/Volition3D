@@ -2,11 +2,14 @@
 
 #include "Types.h"
 #include "Window.h"
+#include "Game.h"
 
 static constexpr char WindowTitle[] = "Volition";
 static constexpr i32 WindowWidth = 1280;
 static constexpr i32 WindowHeight = 720;
 static constexpr u32 DefaultFPS = 60;
+
+#define GetTicks() SDL_GetTicks()
 
 class VVolition
 {
@@ -22,13 +25,15 @@ public:
         Delta = 0.0f;
 
         Window.Create(WindowTitle, WindowWidth, WindowHeight);
+        Game.StartUp();
 
-        LastTick = SDL_GetTicks();
+        LastTick = GetTicks();
         bRunning = true;
     }
     void ShutDown()
     {
         bRunning = false;
+        Game.ShutDown();
         Window.Destroy();
     }
 
@@ -38,42 +43,36 @@ public:
         {
             TickFrame();
 
-            HandleEvents();
+            Window.HandleEvents();
+            Game.Update(Delta);
+            Game.Render();
 
             SyncFrame();
         }
     }
 
+    void Stop()
+    {
+        bRunning = false;
+    }
+
+    f32 GetDelta()
+    {
+        return Delta;
+    }
+
 private:
     void TickFrame()
     {
-        u32 CurrentTick = SDL_GetTicks();
+        u32 CurrentTick = GetTicks();
         Delta = (f32)(CurrentTick - LastTick);
         LastTick = CurrentTick;
     }
 
     void SyncFrame()
     {
-        while (SDL_GetTicks() - LastTick < MsFrameLimit)
+        while (GetTicks() - LastTick < MsFrameLimit)
             {}
-    }
-
-    void HandleEvents()
-    {
-        SDL_Event Event;
-
-        while (SDL_PollEvent(&Event))
-        {
-            switch (Event.type)
-            {
-            case SDL_QUIT:
-            {
-                bRunning = false;
-            } break;
-
-            default: {} break;
-            }
-        }
     }
 };
 
