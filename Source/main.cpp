@@ -1,17 +1,10 @@
-#include <stdio.h>
-
-#include "SpinLock.h"
-#include "Types.h"
+#include "Volition.h"
 
 int main(int Argc, char** Argv)
 {
-    VPushLock PushLock;
+    Volition.StartUp();
+    Volition.Run();
+    Volition.ShutDown();
 
-    PushLock.AcquireRead();
-    PushLock.ReleaseRead();
-    PushLock.AcquireWrite();
-    PushLock.ReleaseWrite();
-
-    printf("here\n");
     return 0;
 }

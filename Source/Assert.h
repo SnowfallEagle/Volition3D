@@ -14,9 +14,11 @@
 // === Debug assertions ===
 #ifdef _DEBUG
 
+# include <stdio.h> // TODO(sean): Make my log system
+
 // Assert
 # define ASSERT(EXPR) \
-    if (EXPR) \
+    if ((EXPR)) \
     {} \
     else \
     { \

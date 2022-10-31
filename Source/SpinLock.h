@@ -1,7 +1,7 @@
 #ifndef SPINLOCK_H_
 
 #include <atomic>
-#include <thread> // TODO(sean): Make volition threads
+#include <thread>
 #include "Types.h"
 #include "Assert.h"
 
