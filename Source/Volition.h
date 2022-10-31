@@ -2,6 +2,7 @@
 
 #include "Types.h"
 #include "Window.h"
+#include "Input.h"
 #include "Game.h"
 
 static constexpr char WindowTitle[] = "Volition";
@@ -25,6 +26,7 @@ public:
         Delta = 0.0f;
 
         Window.Create(WindowTitle, WindowWidth, WindowHeight);
+        Input.StartUp();
         Game.StartUp();
 
         LastTick = GetTicks();
@@ -34,6 +36,7 @@ public:
     {
         bRunning = false;
         Game.ShutDown();
+        Input.ShutDown();
         Window.Destroy();
     }
 
@@ -43,7 +46,7 @@ public:
         {
             TickFrame();
 
-            Window.HandleEvents();
+            HandleEvents();
             Game.Update(Delta);
             Game.Render();
 
@@ -62,6 +65,12 @@ public:
     }
 
 private:
+    void HandleEvents()
+    {
+        Window.HandleEvents();
+        Input.HandleEvents();
+    }
+
     void TickFrame()
     {
         u32 CurrentTick = GetTicks();

@@ -4,15 +4,16 @@
 #include "Types.h"
 #include "Assert.h"
 
-class VWindow
+namespace EWindowFlag
 {
-public:
     enum
     {
-        FlagFullscreen = 1 << 0,
+        Fullscreen = 1 << 0,
     };
+}
 
-private:
+class VWindow
+{
     SDL_Window* SDLWindow;
 
 public:

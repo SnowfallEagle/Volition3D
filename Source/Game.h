@@ -8,15 +8,8 @@ public:
     void StartUp() {}
     void ShutDown() {}
 
-    void Update(f32 Delta)
-    {
-
-    }
-
-    void Render()
-    {
-
-    }
+    void Update(f32 Delta);
+    void Render();
 };
 
 extern VGame Game;

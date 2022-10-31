@@ -10,7 +10,7 @@ void VWindow::Create(const char* Title, i32 Width, i32 Height, u32 Flags)
 
     // Set up window flags
     Uint32 SDLFlags = 0;
-    if (Flags & FlagFullscreen)
+    if (Flags & EWindowFlag::Fullscreen)
         SDLFlags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 
     // Create window
