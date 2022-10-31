@@ -38,11 +38,6 @@ public:
         SDL_DestroyWindow(SDLWindow);
         SDL_Quit();
     }
-
-    b32 ShouldClose()
-    {
-        return true;
-    }
 };
 
 extern VWindow Window;
