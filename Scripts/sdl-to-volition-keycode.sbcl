@@ -1,0 +1,25 @@
+(defun prompt-end-character ()
+  (format t "Enter end character: ")
+  (finish-output nil)
+  (let ((c (read-char)))
+    (read-char) ; #\Newline
+    c))
+
+(defun get-input (end-char)
+  (let ((str (make-array '(0)
+                         :element-type 'base-char
+                         :fill-pointer 0
+                         :adjustable t)))
+    (with-output-to-string (str-stream str)
+      (loop
+       (let ((c (read-char)))
+         (if (char= c end-char)
+             (return)
+             (write-char c str-stream)))))
+    str))
+
+(defun convert-sdl-to-volition-keycode (str)
+  str) ;; TODO(sean)
+
+(format t "~A~%" (convert-sdl-to-volition-keycode
+                  (get-input (prompt-end-character))))
