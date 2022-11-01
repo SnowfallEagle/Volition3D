@@ -1,6 +1,11 @@
 #ifndef GRAPHICS_H_
 
-#include <stdio.h>
+/* TODO(sean):
+    - Backbuffer
+    - Force inline define
+ */
+
+#include <stdio.h> // TODO(sean): Log
 #include <stdlib.h> // TODO(sean): My random
 #include "SDL.h"
 #include "Window.h"
@@ -47,13 +52,14 @@ public:
     {
         u32* VideoBuffer;
         i32 Pitch;
+        u32 Color = MapRGB(rand() % 256, rand() % 256, rand() % 256);
         VideoSurface.Lock(VideoBuffer, Pitch);
         {
             for (i32f Y = 0; Y < VideoSurface.GetHeight(); ++Y)
             {
                 for (i32f X = 0; X < VideoSurface.GetWidth(); ++X)
                 {
-                    VideoBuffer[X] = MapRGB(rand() % 256, rand() % 256, rand() % 256);
+                    VideoBuffer[X] = Color;
                 }
                 VideoBuffer += Pitch;
             }

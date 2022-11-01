@@ -2,7 +2,6 @@
 
 #include "SDL.h"
 #include "Types.h"
-#include "Assert.h"
 
 namespace EWindowFlag
 {

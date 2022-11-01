@@ -12,7 +12,9 @@
 #endif
 
 // === Debug assertions ===
-#ifdef _DEBUG
+#define ASSERTIONS_ENABLED 0
+
+#if ASSERTIONS_ENABLED
 
 # include <stdio.h> // TODO(sean): Make my log system
 
