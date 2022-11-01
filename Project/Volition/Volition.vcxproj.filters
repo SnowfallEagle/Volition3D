@@ -27,6 +27,15 @@
     <ClInclude Include="..\..\Source\Input.h">
       <Filter>Source</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\KeyCode.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\MouseButton.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Graphics.h">
+      <Filter>Source</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\main.cpp">
@@ -42,6 +51,9 @@
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Input.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Graphics.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>

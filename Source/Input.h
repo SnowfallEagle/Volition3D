@@ -2,24 +2,8 @@
 
 #include "SDL.h"
 #include "Types.h"
-
-namespace EKeyCode
-{
-    enum
-    {
-
-    };
-}
-
-namespace EMouseButton
-{
-    enum
-    {
-        Left = SDL_BUTTON_LMASK,
-        Middle = SDL_BUTTON_MMASK,
-        Right = SDL_BUTTON_RMASK
-    };
-}
+#include "KeyCode.h"
+#include "MouseButton.h"
 
 class VInput
 {

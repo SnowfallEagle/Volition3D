@@ -4,9 +4,19 @@
 
 VGame Game;
 
+void VGame::StartUp()
+{
+
+}
+
+void VGame::ShutDown()
+{
+
+}
+
 void VGame::Update(f32 Delta)
 {
-    if (Input.IsKeyDown(SDLK_ESCAPE))
+    if (Input.IsKeyDown(EKeyCode::Escape))
         Volition.Stop();
 }
 

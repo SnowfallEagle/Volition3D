@@ -20,6 +20,8 @@ public:
     void Create(const char* Title, i32 Width, i32 Height, u32 Flags = 0u);
     void Destroy();
     void HandleEvents();
+
+    SDL_Window* GetWindow() { return SDLWindow; }
 };
 
 extern VWindow Window;

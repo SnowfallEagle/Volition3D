@@ -5,8 +5,8 @@
 class VGame
 {
 public:
-    void StartUp() {}
-    void ShutDown() {}
+    void StartUp();
+    void ShutDown();
 
     void Update(f32 Delta);
     void Render();

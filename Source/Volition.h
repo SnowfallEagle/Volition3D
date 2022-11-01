@@ -2,6 +2,7 @@
 
 #include "Types.h"
 #include "Window.h"
+#include "Graphics.h"
 #include "Input.h"
 #include "Game.h"
 
@@ -26,6 +27,7 @@ public:
         Delta = 0.0f;
 
         Window.Create(WindowTitle, WindowWidth, WindowHeight);
+        Graphics.StartUp();
         Input.StartUp();
         Game.StartUp();
 
@@ -35,8 +37,10 @@ public:
     void ShutDown()
     {
         bRunning = false;
+
         Game.ShutDown();
         Input.ShutDown();
+        Graphics.ShutDown();
         Window.Destroy();
     }
 
@@ -48,7 +52,10 @@ public:
 
             HandleEvents();
             Game.Update(Delta);
+
+            Graphics.PrepareToRender();
             Game.Render();
+            Graphics.Render();
 
             SyncFrame();
         }
