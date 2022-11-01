@@ -1,45 +1,10 @@
 #ifndef GRAPHICS_H_
 
+#include <stdio.h>
+#include <stdlib.h> // TODO(sean): My random
 #include "SDL.h"
 #include "Window.h"
-
-class VSurface
-{
-    SDL_Surface* SDLSurface;
-    b32 bOwn;
-
-public:
-    VSurface(SDL_Surface* InSDLSurface = nullptr, b32 bInOwn = true)
-        : SDLSurface(InSDLSurface), bOwn(bInOwn)
-    {
-    }
-    ~VSurface()
-    {
-        if (bOwn && SDLSurface)
-            SDL_FreeSurface(SDLSurface);
-    }
-
-    void Lock(u32*& OutVideoBuffer, i32& OutPitch)
-    {
-        if (SDL_MUSTLOCK(SDLSurface))
-            SDL_LockSurface(SDLSurface);
-
-        OutVideoBuffer = (u32*)SDLSurface->pixels;
-        OutPitch = SDLSurface->pitch;
-    }
-    void Unlock()
-    {
-        if (SDL_MUSTLOCK(SDLSurface))
-            SDL_UnlockSurface(SDLSurface);
-    }
-
-    void SetPlatformSurface(SDL_Surface* InSDLSurface) { SDLSurface = InSDLSurface; }
-    SDL_Surface* GetPlatformSurface() { return SDLSurface; }
-    void ToggleOwn(b32 bInOwn) { bOwn = bInOwn; }
-
-    i32 GetWidth() const { return SDLSurface->w; }
-    i32 GetHeight() const { return SDLSurface->h; }
-};
+#include "Surface.h"
 
 class VPixelFormat
 {
@@ -58,7 +23,8 @@ class VGraphics
 public:
     void StartUp()
     {
-        VideoSurface.SetPlatformSurface(SDL_GetWindowSurface(Window.GetWindow()));
+        SDL_Surface* SDLSurface = SDL_GetWindowSurface(Window.GetWindow());
+        VideoSurface.SetPlatformSurface(SDLSurface);
         VideoSurface.ToggleOwn(false);
 
         SDL_PixelFormat* SDLFormat = VideoSurface.GetPlatformSurface()->format;
@@ -80,23 +46,26 @@ public:
     void Render()
     {
         u32* VideoBuffer;
-        i32 PixelsPitch;
-        u32 Pixel = MapRGB(255, 0, 0);
-        VideoSurface.Lock(VideoBuffer, PixelsPitch);
-        PixelsPitch /= PixelFormat.BytesPerPixel;
+        i32 Pitch;
+        VideoSurface.Lock(VideoBuffer, Pitch);
         {
             for (i32f Y = 0; Y < VideoSurface.GetHeight(); ++Y)
             {
                 for (i32f X = 0; X < VideoSurface.GetWidth(); ++X)
                 {
-                    VideoBuffer[X] = Pixel;
+                    VideoBuffer[X] = MapRGB(rand() % 256, rand() % 256, rand() % 256);
                 }
-                VideoBuffer += PixelsPitch;
+                VideoBuffer += Pitch;
             }
         }
         VideoSurface.Unlock();
 
         SDL_UpdateWindowSurface(Window.GetWindow());
+    }
+
+    const VPixelFormat& GetPixelFormat() const
+    {
+        return PixelFormat;
     }
 
     u32 MapRGB(u8 R, u8 G, u8 B)
