@@ -3,6 +3,8 @@
 /* TODO(sean):
     - Backbuffer
     - Force inline define
+    - MapRGB as macro
+    - Maybe some inline assembly like for memsetq
  */
 
 #include <stdio.h> // TODO(sean): Log
@@ -10,15 +12,7 @@
 #include "SDL.h"
 #include "Window.h"
 #include "Surface.h"
-
-class VPixelFormat
-{
-public:
-    u32 AlphaLoss, RedLoss, GreenLoss, BlueLoss;
-    u32 AlphaShift, RedShift, GreenShift, BlueShift;
-    u32 AlphaMask, RedMask, GreenMask, BlueMask;
-    i32 BytesPerPixel, BitsPerPixel;
-};
+#include "PixelFormat.h"
 
 class VGraphics
 {
@@ -52,14 +46,13 @@ public:
     {
         u32* VideoBuffer;
         i32 Pitch;
-        u32 Color = MapRGB(rand() % 256, rand() % 256, rand() % 256);
         VideoSurface.Lock(VideoBuffer, Pitch);
         {
             for (i32f Y = 0; Y < VideoSurface.GetHeight(); ++Y)
             {
                 for (i32f X = 0; X < VideoSurface.GetWidth(); ++X)
                 {
-                    VideoBuffer[X] = Color;
+                    VideoBuffer[X] = MapRGB(rand() % 256, rand() % 256, rand() % 256);
                 }
                 VideoBuffer += Pitch;
             }
