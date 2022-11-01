@@ -18,6 +18,8 @@ void VGame::Update(f32 Delta)
 {
     if (Input.IsKeyDown(EKeyCode::Escape))
         Volition.Stop();
+
+    printf("%.3f\n", Delta);
 }
 
 void VGame::Render()

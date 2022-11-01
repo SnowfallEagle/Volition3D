@@ -57,7 +57,7 @@ public:
             Game.Render();
             Graphics.Render();
 
-            SyncFrame();
+            //SyncFrame();
         }
     }
 
