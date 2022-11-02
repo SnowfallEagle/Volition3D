@@ -8,14 +8,10 @@ VGame Game;
 
 void VGame::StartUp()
 {
-    VL_NOTE(hLogGame, "\n");
-    VL_WARNING(hLogGame, "\n");
-    VL_ERROR(hLogGame, "\n");
 }
 
 void VGame::ShutDown()
 {
-
 }
 
 void VGame::Update(f32 Delta)

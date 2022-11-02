@@ -23,7 +23,7 @@ public:
     void Lock(u32*& OutVideoBuffer, i32& OutPitchInPixels);
     FINLINE void Unlock()
     {
-        if (SDL_MUSTLOCK(SDLSurface))
+        if (SDLSurface->locked)
             SDL_UnlockSurface(SDLSurface);
     }
 
