@@ -1,18 +1,8 @@
 #ifndef ASSERT_H_
 
-// === Platform stuff ===
-// TODO(sean): Make platform header
-#ifdef _MSC_VER
-# include <intrin.h>
-# define DEBUG_BREAK() __debugbreak()
-# define PAUSE() _mm_pause()
-#else
-# define DEBUG_BREAK()
-# define PAUSE()
-#endif
+#include "Platform.h"
 
-// === Debug assertions ===
-#define ASSERTIONS_ENABLED 0
+#define ASSERTIONS_ENABLED 1
 
 #if ASSERTIONS_ENABLED
 

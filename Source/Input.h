@@ -2,6 +2,7 @@
 
 #include "SDL.h"
 #include "Types.h"
+#include "Platform.h"
 #include "KeyCode.h"
 #include "MouseButton.h"
 
@@ -27,22 +28,22 @@ public:
         MouseState = SDL_GetMouseState(&MousePosX, &MousePosY);
     }
 
-    b32 IsKeyDown(u32 Key) const
+    FINLINE b32 IsKeyDown(u32 Key) const
     {
         return KeyState[SDL_GetScancodeFromKey(Key)];
     }
 
-    b32 IsMouseDown(u32 Button) const
+    FINLINE b32 IsMouseDown(u32 Button) const
     {
         return MouseState & Button;
     }
 
-    i32 GetMouseX() const
+    FINLINE i32 GetMouseX() const
     {
         return MousePosX;
     }
 
-    i32 GetMouseY() const
+    FINLINE i32 GetMouseY() const
     {
         return MousePosY;
     }

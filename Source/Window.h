@@ -2,6 +2,7 @@
 
 #include "SDL.h"
 #include "Types.h"
+#include "Platform.h"
 
 namespace EWindowFlag
 {
@@ -20,7 +21,10 @@ public:
     void Destroy();
     void HandleEvents();
 
-    SDL_Window* GetWindow() { return SDLWindow; }
+    FINLINE SDL_Window* GetWindow()
+    {
+        return SDLWindow;
+    }
 };
 
 extern VWindow Window;

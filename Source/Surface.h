@@ -2,6 +2,7 @@
 
 #include "SDL.h"
 #include "Types.h"
+#include "Platform.h"
 
 class VSurface
 {
@@ -20,18 +21,33 @@ public:
     }
 
     void Lock(u32*& OutVideoBuffer, i32& OutPitchInPixels);
-    void Unlock()
+    FINLINE void Unlock()
     {
         if (SDL_MUSTLOCK(SDLSurface))
             SDL_UnlockSurface(SDLSurface);
     }
 
-    void SetPlatformSurface(SDL_Surface* InSDLSurface) { SDLSurface = InSDLSurface; }
-    SDL_Surface* GetPlatformSurface() { return SDLSurface; }
-    void ToggleOwn(b32 bInOwn) { bOwn = bInOwn; }
+    FINLINE void SetPlatformSurface(SDL_Surface* InSDLSurface)
+    {
+        SDLSurface = InSDLSurface;
+    }
+    FINLINE SDL_Surface* GetPlatformSurface()
+    {
+        return SDLSurface;
+    }
+    FINLINE void ToggleOwn(b32 bInOwn)
+    {
+        bOwn = bInOwn;
+    }
 
-    i32 GetWidth() const { return SDLSurface->w; }
-    i32 GetHeight() const { return SDLSurface->h; }
+    FINLINE i32 GetWidth() const 
+    {
+        return SDLSurface->w;
+    }
+    FINLINE i32 GetHeight() const
+    {
+        return SDLSurface->h;
+    }
 };
 
 

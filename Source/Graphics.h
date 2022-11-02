@@ -1,7 +1,6 @@
 #ifndef GRAPHICS_H_
 
 /* TODO(sean):
-    - Force inline define
     - Maybe some inline assembly like for memsetq
  */
 
@@ -12,6 +11,7 @@
 #include "Window.h"
 #include "Surface.h"
 #include "PixelFormat.h"
+#include "Platform.h"
 #include "Assert.h"
 
 #define _RGBA32(A, R, G, B) ( ((A) << 24) | ((R) << 16) | ((G) << 8) | (B) )
@@ -87,22 +87,22 @@ public:
         Flip();
     }
 
-    const VPixelFormat& GetPixelFormat() const
+    FINLINE const VPixelFormat& GetPixelFormat() const
     {
         return PixelFormat;
     }
 
-    u32* GetVideoBuffer()
+    FINLINE u32* GetVideoBuffer()
     {
         return BackBuffer;
     }
 
-    i32 GetPitch()
+    FINLINE i32 GetPitch()
     {
         return BackPitchInPixels;
     }
 
-    u32 MapRGB(u8 R, u8 G, u8 B)
+    FINLINE u32 MapRGB(u8 R, u8 G, u8 B)
     {
         return
             (R >> PixelFormat.RedLoss)   << PixelFormat.RedShift   |

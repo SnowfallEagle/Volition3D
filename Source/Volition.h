@@ -5,6 +5,7 @@
 #include "Graphics.h"
 #include "Input.h"
 #include "Game.h"
+#include "Platform.h"
 
 static constexpr char WindowTitle[] = "Volition";
 static constexpr i32 WindowWidth = 1280;
@@ -61,12 +62,12 @@ public:
         }
     }
 
-    void Stop()
+    FINLINE void Stop()
     {
         bRunning = false;
     }
 
-    f32 GetDelta()
+    FINLINE f32 GetDelta()
     {
         return Delta;
     }
