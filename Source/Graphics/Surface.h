@@ -7,33 +7,15 @@
 class VSurface
 {
     SDL_Surface* SDLSurface;
-    b32 bOwn;
 
 public:
-    VSurface(SDL_Surface* InSDLSurface = nullptr, b32 bInOwn = true)
-        : SDLSurface(InSDLSurface), bOwn(bInOwn)
+    VSurface(SDL_Surface* InSDLSurface = nullptr) : SDLSurface(InSDLSurface)
     {
     }
     ~VSurface()
     {
-        if (bOwn && SDLSurface)
+        if (SDLSurface)
             SDL_FreeSurface(SDLSurface);
-    }
-
-    void Lock(u32*& OutVideoBuffer, i32& OutPitchInPixels);
-    FINLINE void Unlock()
-    {
-        if (SDLSurface->locked)
-            SDL_UnlockSurface(SDLSurface);
-    }
-
-    FINLINE void EnableColorKey()
-    {
-        SDL_SetColorKey(SDLSurface, SDL_TRUE, 0);
-    }
-    FINLINE void EnableRLE()
-    {
-        SDL_SetSurfaceRLE(SDLSurface, true);
     }
 
     FINLINE void SetPlatformSurface(SDL_Surface* InSDLSurface)
@@ -45,9 +27,18 @@ public:
         return SDLSurface;
     }
 
-    FINLINE void ToggleOwn(b32 bInOwn)
+    FINLINE void EnableColorKey()
     {
-        bOwn = bInOwn;
+        SDL_SetColorKey(SDLSurface, SDL_TRUE, 0);
+    }
+
+    FINLINE u32* GetBuffer()
+    {
+        return (u32*)SDLSurface->pixels;
+    }
+    FINLINE i32 GetPitch()
+    {
+        return SDLSurface->pitch >> 2; // TODO(sean)
     }
 
     FINLINE i32 GetWidth() const 

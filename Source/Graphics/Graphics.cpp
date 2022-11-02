@@ -4,37 +4,42 @@ VGraphics Graphics;
 
 void VGraphics::StartUp()
 {
-    // Set up video surface
-    SDL_Surface* SDLSurface = SDL_GetWindowSurface(Window.GetWindow());
-    ASSERT(SDLSurface);
-    VideoSurface.SetPlatformSurface(SDLSurface);
-    VideoSurface.ToggleOwn(false);
+    // Video surface
+    {
+        SDL_Surface* SDLSurface = SDL_GetWindowSurface(Window.GetWindow());
+        ASSERT(SDLSurface);
+        VideoSurface.SetPlatformSurface(SDLSurface);
+        VideoBuffer = VideoSurface.GetBuffer();
+        VideoPitch = VideoSurface.GetPitch();
+    }
 
     // Pixel format
-    SDL_PixelFormat* SDLFormat = VideoSurface.GetPlatformSurface()->format;
-    PixelFormat = {
-        SDLFormat->Aloss, SDLFormat->Rloss, SDLFormat->Gloss, SDLFormat->Bloss,
-        SDLFormat->Ashift, SDLFormat->Rshift, SDLFormat->Gshift, SDLFormat->Bshift,
-        SDLFormat->Amask, SDLFormat->Rmask, SDLFormat->Gmask, SDLFormat->Bmask,
-        SDLFormat->BytesPerPixel, SDLFormat->BitsPerPixel
-    };
+    {
+        SDL_PixelFormat* SDLFormat = VideoSurface.GetPlatformSurface()->format;
+        PixelFormat = {
+            SDLFormat->Aloss, SDLFormat->Rloss, SDLFormat->Gloss, SDLFormat->Bloss,
+            SDLFormat->Ashift, SDLFormat->Rshift, SDLFormat->Gshift, SDLFormat->Bshift,
+            SDLFormat->Amask, SDLFormat->Rmask, SDLFormat->Gmask, SDLFormat->Bmask,
+            SDLFormat->BytesPerPixel, SDLFormat->BitsPerPixel
+        };
+    }
 
     // Back surface
-    SDL_Surface* Temp = SDL_CreateRGBSurfaceWithFormat(
-        0, VideoSurface.GetWidth(), VideoSurface.GetHeight(),
-        PixelFormat.BitsPerPixel, VideoSurface.GetPlatformSurface()->format->format
-    );
-    ASSERT(Temp);
+    {
+        SDL_Surface* Temp = SDL_CreateRGBSurfaceWithFormat(
+            0, VideoSurface.GetWidth(), VideoSurface.GetHeight(),
+            PixelFormat.BitsPerPixel, VideoSurface.GetPlatformSurface()->format->format
+        );
+        ASSERT(Temp);
 
-    SDL_Surface* Converted = SDL_ConvertSurface(Temp, VideoSurface.GetPlatformSurface()->format, 0);
-    ASSERT(Converted);
-    SDL_FreeSurface(Temp);
+        SDL_Surface* Converted = SDL_ConvertSurface(Temp, VideoSurface.GetPlatformSurface()->format, 0);
+        ASSERT(Converted);
+        SDL_FreeSurface(Temp);
 
-    BackSurface.SetPlatformSurface(Converted);
-
-    // Other
-    BackBuffer = nullptr;
-    BackPitchInPixels = 0;
+        BackSurface.SetPlatformSurface(Converted);
+        BackBuffer = BackSurface.GetBuffer();
+        BackPitch = BackSurface.GetPitch();
+    }
 }
 void VGraphics::ShutDown()
 {
@@ -43,7 +48,6 @@ void VGraphics::ShutDown()
 void VGraphics::PrepareToRender()
 {
     SDL_FillRect(BackSurface.GetPlatformSurface(), nullptr, _RGB32(0xFF, 0x00, 0x00));
-    BackSurface.Lock(BackBuffer, BackPitchInPixels); // TODO(sean): Maybe it'll be better to lock only when we need to?
 }
 
 void VGraphics::Render()
@@ -61,9 +65,9 @@ void VGraphics::Render()
         Buffer += BackPitchInPixels;
     }
     */
+
     VSurface* Surface = LoadBMP("Test.bmp");
     Surface->EnableColorKey();
-    Surface->EnableRLE();
     Blit(Surface, nullptr, &BackSurface, nullptr);
     delete Surface;
 
@@ -72,22 +76,17 @@ void VGraphics::Render()
 
 void VGraphics::Flip()
 {
-    u32* VideoBuffer;
-    i32 Pitch;
-    VideoSurface.Lock(VideoBuffer, Pitch);
-    {
-        i32f Height = VideoSurface.GetHeight();
-        i32f BytesWidth = VideoSurface.GetWidth() * PixelFormat.BytesPerPixel;
+    i32f Height = VideoSurface.GetHeight();
+    i32f BytesWidth = VideoSurface.GetWidth() * PixelFormat.BytesPerPixel;
+    u32* TempVideo = VideoBuffer;
+    u32* TempBack = BackBuffer;
 
-        for (i32f Y = 0; Y < Height; ++Y)
-        {
-            memcpy(VideoBuffer, BackBuffer, BytesWidth);
-            VideoBuffer += Pitch;
-            BackBuffer += BackPitchInPixels;
-        }
+    for (i32f Y = 0; Y < Height; ++Y)
+    {
+        memcpy(TempVideo, TempBack, BytesWidth);
+        TempVideo += VideoPitch;
+        TempBack += BackPitch;
     }
-    VideoSurface.Unlock();
-    BackSurface.Unlock();
 
     SDL_UpdateWindowSurface(Window.GetWindow());
 }

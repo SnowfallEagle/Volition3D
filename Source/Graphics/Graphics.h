@@ -10,19 +10,21 @@
 #include "Graphics/Surface.h"
 #include "Graphics/PixelFormat.h"
 
-// Macroses for ABGR8888(High bit -> Low bit) format
-#define _ALPHA_MASK (0xFF << 24)
-#define _RGBA32(A, R, G, B) ( ((A) << 24) | ((R) << 16) | ((G) << 8) | (B) )
-#define _RGB32(R, G, B) ( _ALPHA_MASK | ((R) << 16) | ((G) << 8) | (B) )
+// Macroses for fast mapping ABGR32 format (High bit -> Low bit)
+#define _ARGB32(A, R, G, B) ( ((A) << 24) | ((R) << 16) | ((G) << 8) | (B) )
+#define _RGB32(R, G, B) ( ((R) << 16) | ((G) << 8) | (B) ) // Alpha = 0
 
 class VGraphics
 {
     VSurface VideoSurface;
-    VSurface BackSurface;
-    VPixelFormat PixelFormat;
+    u32* VideoBuffer;
+    i32 VideoPitch;
 
+    VSurface BackSurface;
     u32* BackBuffer;
-    i32 BackPitchInPixels;
+    i32 BackPitch;
+
+    VPixelFormat PixelFormat;
 
 public:
     void StartUp();
@@ -46,18 +48,19 @@ public:
             (B >> PixelFormat.BlueLoss)  << PixelFormat.BlueShift  |
             PixelFormat.AlphaMask;
     }
+    FINLINE u32 MapARGB(u8 A, u8 R, u8 G, u8 B)
+    {
+        return
+            (A >> PixelFormat.AlphaLoss) << PixelFormat.AlphaShift |
+            (R >> PixelFormat.RedLoss)   << PixelFormat.RedShift   |
+            (G >> PixelFormat.GreenLoss) << PixelFormat.GreenShift |
+            (B >> PixelFormat.BlueLoss)  << PixelFormat.BlueShift  |
+            PixelFormat.AlphaMask;
+    }
 
     FINLINE const VPixelFormat& GetPixelFormat() const
     {
         return PixelFormat;
-    }
-    FINLINE u32* GetVideoBuffer()
-    {
-        return BackBuffer;
-    }
-    FINLINE i32 GetPitch()
-    {
-        return BackPitchInPixels;
     }
 
 private:
