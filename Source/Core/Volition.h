@@ -1,18 +1,17 @@
 #ifndef CORE_VOLITION_H_
 
 #include "Core/Types.h"
+#include "Core/Platform.h"
+#include "Core/DebugLog.h"
 #include "Core/Window.h"
 #include "Graphics/Graphics.h"
 #include "Input/Input.h"
 #include "Game/Game.h"
-#include "Core/Platform.h"
 
 static constexpr char WindowTitle[] = "Volition";
 static constexpr i32 WindowWidth = 1280;
 static constexpr i32 WindowHeight = 720;
 static constexpr u32 DefaultFPS = 60;
-
-#define GetTicks() SDL_GetTicks()
 
 class VVolition
 {
@@ -27,6 +26,7 @@ public:
         MsFrameLimit = 1000u / DefaultFPS;
         Delta = 0.0f;
 
+        DebugLog.StartUp();
         Window.Create(WindowTitle, WindowWidth, WindowHeight);
         Graphics.StartUp();
         Input.StartUp();
@@ -43,6 +43,7 @@ public:
         Input.ShutDown();
         Graphics.ShutDown();
         Window.Destroy();
+        DebugLog.ShutDown();
     }
 
     void Run()
@@ -61,12 +62,15 @@ public:
             //SyncFrame();
         }
     }
-
     FINLINE void Stop()
     {
         bRunning = false;
     }
 
+    FINLINE u32 GetTicks()
+    {
+        return SDL_GetTicks();
+    }
     FINLINE f32 GetDelta()
     {
         return Delta;
@@ -85,7 +89,6 @@ private:
         Delta = (f32)(CurrentTick - LastTick);
         LastTick = CurrentTick;
     }
-
     void SyncFrame()
     {
         while (GetTicks() - LastTick < MsFrameLimit)
