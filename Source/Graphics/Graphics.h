@@ -1,8 +1,7 @@
 #ifndef GRAPHICS_GRAPHICS_H_
 
-#include <stdio.h> // TODO(sean): Log
 #include <stdlib.h> // TODO(sean): My random
-#include <string.h>
+#include <string.h> // TODO(sean): mem::MemSet, mem::MemCopy()
 #include "SDL.h"
 #include "Core/Window.h"
 #include "Core/Platform.h"

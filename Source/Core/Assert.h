@@ -1,12 +1,12 @@
 #ifndef CORE_ASSERT_H_
 
 #include "Core/Platform.h"
+#include "Core/DebugLog.h"
+
+DEFINE_LOG_CHANNEL(hLogAssert, "Assert");
 
 #define ASSERTIONS_ENABLED 1
-
 #if ASSERTIONS_ENABLED
-
-# include <stdio.h> // TODO(sean): Make my log system
 
 // Assert
 # define ASSERT(EXPR) \
@@ -14,7 +14,7 @@
     {} \
     else \
     { \
-        fprintf(stderr, "Assertion failed at %s:%d: %s\n", __FILE__, __LINE__, #EXPR); \
+        VL_ERROR(hLogAssert, "Assertion failed at %s:%d: %s\n", __FILE__, __LINE__, #EXPR); \
         DEBUG_BREAK(); \
     }
 
