@@ -1,4 +1,4 @@
-#ifndef KEYCODE_H_
+#ifndef INPUT_KEYCODE_H_
 
 namespace EKeyCode
 {
@@ -109,5 +109,5 @@ namespace EKeyCode
     };
 }
 
-#define KEYCODE_H_
+#define INPUT_KEYCODE_H_
 #endif

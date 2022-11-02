@@ -1,4 +1,4 @@
-#ifndef SPINLOCK_H_
+#ifndef THREAD_SPINLOCK_H_
 
 #include <atomic>
 #include <thread>
@@ -197,5 +197,5 @@ public:
     }
 };
 
-#define SPINLOCK_H_
+#define THREAD_SPINLOCK_H_
 #endif

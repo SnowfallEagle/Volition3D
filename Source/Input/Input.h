@@ -1,4 +1,4 @@
-#ifndef INPUT_H_
+#ifndef INPUT_INPUT_H_
 
 #include "SDL.h"
 #include "Core/Types.h"
@@ -51,5 +51,5 @@ public:
 
 extern VInput Input;
 
-#define INPUT_H_
+#define INPUT_INPUT_H_
 #endif

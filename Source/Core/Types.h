@@ -1,4 +1,4 @@
-#ifndef TYPES_H_
+#ifndef CORE_TYPES_H_
 
 #include <cstdint>
 
@@ -19,5 +19,5 @@ typedef std::uint_fast64_t u64f;
 typedef float f32;
 typedef double f64;
 
-#define TYPES_H_
+#define CORE_TYPES_H_
 #endif

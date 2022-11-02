@@ -1,4 +1,4 @@
-#ifndef GRAPHICS_H_
+#ifndef GRAPHICS_GRAPHICS_H_
 
 #include <stdio.h> // TODO(sean): Log
 #include <stdlib.h> // TODO(sean): My random
@@ -131,5 +131,5 @@ private:
 
 extern VGraphics Graphics;
 
-#define GRAPHICS_H_
+#define GRAPHICS_GRAPHICS_H_
 #endif

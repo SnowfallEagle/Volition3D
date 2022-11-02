@@ -1,4 +1,4 @@
-#ifndef SURFACE_H_
+#ifndef GRAPHICS_SURFACE_H_
 
 #include "SDL.h"
 #include "Core/Types.h"
@@ -51,5 +51,5 @@ public:
 };
 
 
-#define SURFACE_H_
+#define GRAPHICS_SURFACE_H_
 #endif

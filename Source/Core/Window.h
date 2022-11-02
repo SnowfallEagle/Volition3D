@@ -1,4 +1,4 @@
-#ifndef WINDOW_H_
+#ifndef CORE_WINDOW_H_
 
 #include "SDL.h"
 #include "Core/Types.h"
@@ -29,5 +29,5 @@ public:
 
 extern VWindow Window;
 
-#define WINDOW_H_
+#define CORE_WINDOW_H_
 #endif

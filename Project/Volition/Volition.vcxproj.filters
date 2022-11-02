@@ -13,14 +13,14 @@
     <Filter Include="Source\Graphics">
       <UniqueIdentifier>{1a11e41f-8ccd-4a37-a77d-94d3af30e7b7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Threads">
-      <UniqueIdentifier>{0ef1c9d1-4a86-4f04-baad-dbad24424b79}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Core">
       <UniqueIdentifier>{dd89f4ab-016b-490d-88e0-5ecd48ee2865}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Game">
       <UniqueIdentifier>{f8ea90f7-f36b-4e3c-a634-5a71e0f0441c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Thread">
+      <UniqueIdentifier>{0ef1c9d1-4a86-4f04-baad-dbad24424b79}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -64,7 +64,7 @@
       <Filter>Source\Game</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Thread\SpinLock.h">
-      <Filter>Source\Threads</Filter>
+      <Filter>Source\Thread</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

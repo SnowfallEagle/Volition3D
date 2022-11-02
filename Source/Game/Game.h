@@ -1,4 +1,4 @@
-#ifndef GAME_H_
+#ifndef GAME_GAME_H_
 
 #include "Core/Types.h"
 
@@ -14,5 +14,5 @@ public:
 
 extern VGame Game;
 
-#define GAME_H_
+#define GAME_GAME_H_
 #endif

@@ -1,4 +1,4 @@
-#ifndef VOLITION_H_
+#ifndef CORE_VOLITION_H_
 
 #include "Core/Types.h"
 #include "Core/Window.h"
@@ -95,5 +95,5 @@ private:
 
 extern VVolition Volition;
 
-#define VOLITION_H_
+#define CORE_VOLITION_H_
 #endif

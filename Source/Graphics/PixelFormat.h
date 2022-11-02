@@ -1,4 +1,4 @@
-#ifndef PIXELFORMAT_H_
+#ifndef GRAPHICS_PIXELFORMAT_H_
 
 #include "Core/Types.h"
 
@@ -11,5 +11,5 @@ public:
     i32 BytesPerPixel, BitsPerPixel;
 };
 
-#define PIXELFORMAT_H_
+#define GRAPHICS_PIXELFORMAT_H_
 #endif

@@ -1,4 +1,4 @@
-#ifndef MOUSEBUTTON_H_
+#ifndef INPUT_MOUSEBUTTON_H_
 
 namespace EMouseButton
 {
@@ -10,5 +10,5 @@ namespace EMouseButton
     };
 }
 
-#define MOUSEBUTTON_H_
+#define INPUT_MOUSEBUTTON_H_
 #endif
