@@ -27,6 +27,15 @@ public:
             SDL_UnlockSurface(SDLSurface);
     }
 
+    FINLINE void EnableColorKey()
+    {
+        SDL_SetColorKey(SDLSurface, SDL_TRUE, 0);
+    }
+    FINLINE void EnableRLE()
+    {
+        SDL_SetSurfaceRLE(SDLSurface, true);
+    }
+
     FINLINE void SetPlatformSurface(SDL_Surface* InSDLSurface)
     {
         SDLSurface = InSDLSurface;
@@ -35,6 +44,7 @@ public:
     {
         return SDLSurface;
     }
+
     FINLINE void ToggleOwn(b32 bInOwn)
     {
         bOwn = bInOwn;

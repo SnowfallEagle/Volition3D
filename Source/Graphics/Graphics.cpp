@@ -42,8 +42,8 @@ void VGraphics::ShutDown()
 
 void VGraphics::PrepareToRender()
 {
-    SDL_FillRect(BackSurface.GetPlatformSurface(), nullptr, _RGB32(0x00, 0x00, 0x00));
-    BackSurface.Lock(BackBuffer, BackPitchInPixels);
+    SDL_FillRect(BackSurface.GetPlatformSurface(), nullptr, _RGB32(0xFF, 0x00, 0x00));
+    BackSurface.Lock(BackBuffer, BackPitchInPixels); // TODO(sean): Maybe it'll be better to lock only when we need to?
 }
 
 void VGraphics::Render()
@@ -62,6 +62,8 @@ void VGraphics::Render()
     }
     */
     VSurface* Surface = LoadBMP("Test.bmp");
+    Surface->EnableColorKey();
+    Surface->EnableRLE();
     Blit(Surface, nullptr, &BackSurface, nullptr);
     delete Surface;
 
