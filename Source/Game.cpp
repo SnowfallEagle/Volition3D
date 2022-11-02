@@ -24,5 +24,5 @@ void VGame::Update(f32 Delta)
 
 void VGame::Render()
 {
-    
+
 }

@@ -2,7 +2,6 @@
 
 /* TODO(sean):
     - Force inline define
-    - MapRGB as macro
     - Maybe some inline assembly like for memsetq
  */
 
@@ -14,6 +13,9 @@
 #include "Surface.h"
 #include "PixelFormat.h"
 #include "Assert.h"
+
+#define _RGBA32(A, R, G, B) ( ((A) << 24) | ((R) << 16) | ((G) << 8) | (B) )
+#define _RGB32(R, G, B) ( 0xFF000000 | ((R) << 16) | ((G) << 8) | (B) )
 
 class VGraphics
 {
@@ -70,7 +72,6 @@ public:
     }
     void Render()
     {
-        /*
         i32f Height = BackSurface.GetHeight();
         i32f Width = BackSurface.GetWidth();
         u32* Buffer = BackBuffer;
@@ -82,8 +83,6 @@ public:
             }
             Buffer += BackPitchInPixels;
         }
-        */
-        memset(BackBuffer, 255, BackSurface.GetHeight() * BackPitchInPixels * PixelFormat.BytesPerPixel);
 
         Flip();
     }
