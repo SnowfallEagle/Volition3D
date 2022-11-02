@@ -22,6 +22,9 @@
     <Filter Include="Source\Thread">
       <UniqueIdentifier>{0ef1c9d1-4a86-4f04-baad-dbad24424b79}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Math">
+      <UniqueIdentifier>{443909e1-086d-4c26-b9e3-8e63d2a53793}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\Platform\Win.h">
@@ -68,6 +71,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\Core\DebugLog.h">
       <Filter>Source\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Math\Rect.h">
+      <Filter>Source\Math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -6,6 +6,7 @@
 #include "Core/Window.h"
 #include "Core/Platform.h"
 #include "Core/Assert.h"
+#include "Math/Rect.h"
 #include "Graphics/Surface.h"
 #include "Graphics/PixelFormat.h"
 
@@ -29,6 +30,11 @@ public:
 
     void PrepareToRender();
     void Render();
+
+    FINLINE void Blit(VSurface* Source, VRelativeRectI* SourceRect, VSurface* Dest, VRelativeRectI* DestRect)
+    {
+        SDL_BlitScaled(Source->GetPlatformSurface(), (SDL_Rect*)SourceRect, Dest->GetPlatformSurface(), (SDL_Rect*)DestRect);
+    }
 
     VSurface* LoadBMP(const char* Path);
 

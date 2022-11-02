@@ -62,7 +62,7 @@ void VGraphics::Render()
     }
     */
     VSurface* Surface = LoadBMP("Test.bmp");
-    SDL_BlitScaled(Surface->GetPlatformSurface(), nullptr, BackSurface.GetPlatformSurface(), nullptr);
+    Blit(Surface, nullptr, &BackSurface, nullptr);
     delete Surface;
 
     Flip();

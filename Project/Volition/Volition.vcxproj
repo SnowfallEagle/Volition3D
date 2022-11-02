@@ -184,6 +184,7 @@
     <ClInclude Include="..\..\Source\Input\Input.h" />
     <ClInclude Include="..\..\Source\Input\KeyCode.h" />
     <ClInclude Include="..\..\Source\Input\MouseButton.h" />
+    <ClInclude Include="..\..\Source\Math\Rect.h" />
     <ClInclude Include="..\..\Source\Platform\Win.h" />
     <ClInclude Include="..\..\Source\Thread\SpinLock.h" />
   </ItemGroup>
