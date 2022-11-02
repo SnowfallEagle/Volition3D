@@ -49,7 +49,7 @@ void VGraphics::ShutDown()
 
 void VGraphics::PrepareToRender()
 {
-    SDL_FillRect(BackSurface.GetPlatformSurface(), nullptr, _RGB32(0xFF, 0x00, 0x00));
+    FillRect(&BackSurface, nullptr, _RGB32(0XFF, 0x00, 0x00));
 }
 
 void VGraphics::Render()

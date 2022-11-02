@@ -35,6 +35,10 @@ public:
     {
         SDL_BlitScaled(Source->GetPlatformSurface(), (SDL_Rect*)SourceRect, Dest->GetPlatformSurface(), (SDL_Rect*)DestRect);
     }
+    FINLINE void FillRect(VSurface* Dest, VRelativeRectI* Rect, u32 Color)
+    {
+        SDL_FillRect(Dest->GetPlatformSurface(), (SDL_Rect*)Rect, Color);
+    }
 
     VSurface* LoadBMP(const char* Path);
 
