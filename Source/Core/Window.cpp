@@ -1,6 +1,6 @@
-#include "Volition.h"
+#include "Core/Volition.h"
 #include "Core/Assert.h"
-#include "Window.h"
+#include "Core/Window.h"
 
 VWindow Window;
 

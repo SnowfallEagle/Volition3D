@@ -1,6 +1,6 @@
 #ifndef GAME_H_
 
-#include "Types.h"
+#include "Core/Types.h"
 
 class VGame
 {

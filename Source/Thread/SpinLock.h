@@ -2,8 +2,8 @@
 
 #include <atomic>
 #include <thread>
-#include "Types.h"
-#include "Platform.h"
+#include "Core/Types.h"
+#include "Core/Platform.h"
 #include "Core/Assert.h"
 
 class VSpinLock

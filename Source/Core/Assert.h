@@ -1,6 +1,6 @@
 #ifndef CORE_ASSERT_H_
 
-#include "Platform.h"
+#include "Core/Platform.h"
 
 #define ASSERTIONS_ENABLED 1
 

@@ -1,8 +1,8 @@
 #ifndef WINDOW_H_
 
 #include "SDL.h"
-#include "Types.h"
-#include "Platform.h"
+#include "Core/Types.h"
+#include "Core/Platform.h"
 
 namespace EWindowFlag
 {

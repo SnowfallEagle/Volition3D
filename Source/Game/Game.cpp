@@ -1,6 +1,6 @@
-#include "Volition.h"
+#include "Core/Volition.h"
 #include "Input/Input.h"
-#include "Game.h"
+#include "Game/Game.h"
 
 VGame Game;
 

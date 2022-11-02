@@ -4,8 +4,8 @@
 #include <stdlib.h> // TODO(sean): My random
 #include <string.h>
 #include "SDL.h"
-#include "Window.h"
-#include "Platform.h"
+#include "Core/Window.h"
+#include "Core/Platform.h"
 #include "Core/Assert.h"
 #include "Graphics/Surface.h"
 #include "Graphics/PixelFormat.h"

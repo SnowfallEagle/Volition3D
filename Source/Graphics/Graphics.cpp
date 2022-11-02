@@ -1,3 +1,3 @@
-#include "Graphics.h"
+#include "Graphics/Graphics.h"
 
 VGraphics Graphics;

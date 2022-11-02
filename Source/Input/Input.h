@@ -1,8 +1,8 @@
 #ifndef INPUT_H_
 
 #include "SDL.h"
-#include "Types.h"
-#include "Platform.h"
+#include "Core/Types.h"
+#include "Core/Platform.h"
 #include "Input/KeyCode.h"
 #include "Input/MouseButton.h"
 

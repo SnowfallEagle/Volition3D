@@ -1,6 +1,6 @@
 #ifndef PIXELFORMAT_H_
 
-#include "Types.h"
+#include "Core/Types.h"
 
 class VPixelFormat
 {

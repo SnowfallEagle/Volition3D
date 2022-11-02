@@ -19,26 +19,11 @@
     <Filter Include="Source\Core">
       <UniqueIdentifier>{dd89f4ab-016b-490d-88e0-5ecd48ee2865}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Game">
+      <UniqueIdentifier>{f8ea90f7-f36b-4e3c-a634-5a71e0f0441c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Source\SpinLock.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Types.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Volition.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Window.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Game.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Platform.h">
-      <Filter>Source</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Platform\Win.h">
       <Filter>Source\Platform</Filter>
     </ClInclude>
@@ -63,18 +48,27 @@
     <ClInclude Include="..\..\Source\Core\Assert.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Core\Platform.h">
+      <Filter>Source\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Core\Types.h">
+      <Filter>Source\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Core\Volition.h">
+      <Filter>Source\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Core\Window.h">
+      <Filter>Source\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Game\Game.h">
+      <Filter>Source\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Thread\SpinLock.h">
+      <Filter>Source\Threads</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\main.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Volition.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Window.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Game.cpp">
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Input\Input.cpp">
@@ -85,6 +79,15 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Graphics\Surface.cpp">
       <Filter>Source\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Core\Volition.cpp">
+      <Filter>Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Core\Window.cpp">
+      <Filter>Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Game\Game.cpp">
+      <Filter>Source\Game</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

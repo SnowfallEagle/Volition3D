@@ -172,28 +172,28 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\Core\Assert.h" />
-    <ClInclude Include="..\..\Source\Game.h" />
+    <ClInclude Include="..\..\Source\Core\Platform.h" />
+    <ClInclude Include="..\..\Source\Core\Types.h" />
+    <ClInclude Include="..\..\Source\Core\Volition.h" />
+    <ClInclude Include="..\..\Source\Core\Window.h" />
+    <ClInclude Include="..\..\Source\Game\Game.h" />
     <ClInclude Include="..\..\Source\Graphics\Graphics.h" />
     <ClInclude Include="..\..\Source\Graphics\PixelFormat.h" />
     <ClInclude Include="..\..\Source\Graphics\Surface.h" />
     <ClInclude Include="..\..\Source\Input\Input.h" />
     <ClInclude Include="..\..\Source\Input\KeyCode.h" />
     <ClInclude Include="..\..\Source\Input\MouseButton.h" />
-    <ClInclude Include="..\..\Source\Platform.h" />
     <ClInclude Include="..\..\Source\Platform\Win.h" />
-    <ClInclude Include="..\..\Source\SpinLock.h" />
-    <ClInclude Include="..\..\Source\Types.h" />
-    <ClInclude Include="..\..\Source\Volition.h" />
-    <ClInclude Include="..\..\Source\Window.h" />
+    <ClInclude Include="..\..\Source\Thread\SpinLock.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Source\Game.cpp" />
+    <ClCompile Include="..\..\Source\Core\Volition.cpp" />
+    <ClCompile Include="..\..\Source\Core\Window.cpp" />
+    <ClCompile Include="..\..\Source\Game\Game.cpp" />
     <ClCompile Include="..\..\Source\Graphics\Graphics.cpp" />
     <ClCompile Include="..\..\Source\Graphics\Surface.cpp" />
     <ClCompile Include="..\..\Source\Input\Input.cpp" />
     <ClCompile Include="..\..\Source\main.cpp" />
-    <ClCompile Include="..\..\Source\Volition.cpp" />
-    <ClCompile Include="..\..\Source\Window.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

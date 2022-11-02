@@ -1,5 +1,5 @@
 #include "Core/Assert.h"
-#include "Graphics.h"
+#include "Graphics/Graphics.h"
 #include "Surface.h"
 
 void VSurface::Lock(u32*& OutVideoBuffer, i32& OutPitchInPixels)

@@ -1,11 +1,11 @@
 #ifndef VOLITION_H_
 
-#include "Types.h"
-#include "Window.h"
+#include "Core/Types.h"
+#include "Core/Window.h"
 #include "Graphics/Graphics.h"
 #include "Input/Input.h"
-#include "Game.h"
-#include "Platform.h"
+#include "Game/Game.h"
+#include "Core/Platform.h"
 
 static constexpr char WindowTitle[] = "Volition";
 static constexpr i32 WindowWidth = 1280;
