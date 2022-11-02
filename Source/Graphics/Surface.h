@@ -3,6 +3,7 @@
 #include "SDL.h"
 #include "Core/Types.h"
 #include "Core/Platform.h"
+#include "Graphics/PixelFormat.h"
 
 class VSurface
 {
@@ -38,7 +39,7 @@ public:
     }
     FINLINE i32 GetPitch()
     {
-        return SDLSurface->pitch >> 2; // TODO(sean)
+        return SDLSurface->pitch / PixelFormat.BytesPerPixel;
     }
 
     FINLINE i32 GetWidth() const 

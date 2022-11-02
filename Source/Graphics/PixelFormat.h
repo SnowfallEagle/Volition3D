@@ -11,5 +11,7 @@ public:
     i32 BytesPerPixel, BitsPerPixel;
 };
 
+extern VPixelFormat PixelFormat;
+
 #define GRAPHICS_PIXELFORMAT_H_
 #endif

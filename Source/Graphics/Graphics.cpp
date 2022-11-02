@@ -1,27 +1,29 @@
 #include "Graphics/Graphics.h"
 
+VPixelFormat PixelFormat;
 VGraphics Graphics;
 
 void VGraphics::StartUp()
 {
-    // Video surface
-    {
-        SDL_Surface* SDLSurface = SDL_GetWindowSurface(Window.GetWindow());
-        ASSERT(SDLSurface);
-        VideoSurface.SetPlatformSurface(SDLSurface);
-        VideoBuffer = VideoSurface.GetBuffer();
-        VideoPitch = VideoSurface.GetPitch();
-    }
+    SDL_Surface* SDLSurface = SDL_GetWindowSurface(Window.GetWindow());
+    ASSERT(SDLSurface);
 
     // Pixel format
     {
-        SDL_PixelFormat* SDLFormat = VideoSurface.GetPlatformSurface()->format;
+        SDL_PixelFormat* SDLFormat = SDLSurface->format;
         PixelFormat = {
             SDLFormat->Aloss, SDLFormat->Rloss, SDLFormat->Gloss, SDLFormat->Bloss,
             SDLFormat->Ashift, SDLFormat->Rshift, SDLFormat->Gshift, SDLFormat->Bshift,
             SDLFormat->Amask, SDLFormat->Rmask, SDLFormat->Gmask, SDLFormat->Bmask,
             SDLFormat->BytesPerPixel, SDLFormat->BitsPerPixel
         };
+    }
+
+    // Video surface
+    {
+        VideoSurface.SetPlatformSurface(SDLSurface);
+        VideoBuffer = VideoSurface.GetBuffer();
+        VideoPitch = VideoSurface.GetPitch();
     }
 
     // Back surface

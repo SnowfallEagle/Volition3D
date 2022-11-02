@@ -24,8 +24,6 @@ class VGraphics
     u32* BackBuffer;
     i32 BackPitch;
 
-    VPixelFormat PixelFormat;
-
 public:
     void StartUp();
     void ShutDown();
@@ -56,11 +54,6 @@ public:
             (G >> PixelFormat.GreenLoss) << PixelFormat.GreenShift |
             (B >> PixelFormat.BlueLoss)  << PixelFormat.BlueShift  |
             PixelFormat.AlphaMask;
-    }
-
-    FINLINE const VPixelFormat& GetPixelFormat() const
-    {
-        return PixelFormat;
     }
 
 private:
