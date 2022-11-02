@@ -45,8 +45,10 @@ void VGraphics::PrepareToRender()
     SDL_FillRect(BackSurface.GetPlatformSurface(), nullptr, _RGB32(0x00, 0x00, 0x00));
     BackSurface.Lock(BackBuffer, BackPitchInPixels);
 }
+
 void VGraphics::Render()
 {
+    /*
     i32f Height = BackSurface.GetHeight();
     i32f Width = BackSurface.GetWidth();
     u32* Buffer = BackBuffer;
@@ -58,6 +60,10 @@ void VGraphics::Render()
         }
         Buffer += BackPitchInPixels;
     }
+    */
+    VSurface* Surface = LoadBMP("Test.bmp");
+    SDL_BlitScaled(Surface->GetPlatformSurface(), nullptr, BackSurface.GetPlatformSurface(), nullptr);
+    delete Surface;
 
     Flip();
 }
@@ -82,4 +88,18 @@ void VGraphics::Flip()
     BackSurface.Unlock();
 
     SDL_UpdateWindowSurface(Window.GetWindow());
+}
+
+VSurface* VGraphics::LoadBMP(const char* Path)
+{
+    SDL_Surface* Temp = SDL_LoadBMP(Path);
+    ASSERT(Temp);
+
+    SDL_Surface* Converted = SDL_ConvertSurface(
+        Temp, VideoSurface.GetPlatformSurface()->format, 0
+    );
+    SDL_FreeSurface(Temp);
+    ASSERT(Converted);
+
+    return new VSurface(Converted);
 }

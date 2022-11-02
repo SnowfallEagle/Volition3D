@@ -30,6 +30,8 @@ public:
     void PrepareToRender();
     void Render();
 
+    VSurface* LoadBMP(const char* Path);
+
     FINLINE u32 MapRGB(u8 R, u8 G, u8 B)
     {
         return
