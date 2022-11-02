@@ -1,5 +1,5 @@
 #include "Volition.h"
-#include "Input.h"
+#include "Input/Input.h"
 #include "Game.h"
 
 VGame Game;

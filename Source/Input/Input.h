@@ -3,8 +3,8 @@
 #include "SDL.h"
 #include "Types.h"
 #include "Platform.h"
-#include "KeyCode.h"
-#include "MouseButton.h"
+#include "Input/KeyCode.h"
+#include "Input/MouseButton.h"
 
 class VInput
 {

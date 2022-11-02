@@ -1,5 +1,5 @@
 #include "Volition.h"
-#include "Assert.h"
+#include "Core/Assert.h"
 #include "Window.h"
 
 VWindow Window;

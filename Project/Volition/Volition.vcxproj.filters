@@ -4,11 +4,23 @@
     <Filter Include="Source">
       <UniqueIdentifier>{de934220-aa3a-4c61-bf3c-b5af471e8db4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Platform">
+      <UniqueIdentifier>{7543ad6e-6019-4d4a-840a-efab630b5756}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Input">
+      <UniqueIdentifier>{376f82d7-5364-4f63-837f-7f506d72fefc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Graphics">
+      <UniqueIdentifier>{1a11e41f-8ccd-4a37-a77d-94d3af30e7b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Threads">
+      <UniqueIdentifier>{0ef1c9d1-4a86-4f04-baad-dbad24424b79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Core">
+      <UniqueIdentifier>{dd89f4ab-016b-490d-88e0-5ecd48ee2865}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Source\Assert.h">
-      <Filter>Source</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\SpinLock.h">
       <Filter>Source</Filter>
     </ClInclude>
@@ -24,23 +36,32 @@
     <ClInclude Include="..\..\Source\Game.h">
       <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Input.h">
+    <ClInclude Include="..\..\Source\Platform.h">
       <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\KeyCode.h">
-      <Filter>Source</Filter>
+    <ClInclude Include="..\..\Source\Platform\Win.h">
+      <Filter>Source\Platform</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\MouseButton.h">
-      <Filter>Source</Filter>
+    <ClInclude Include="..\..\Source\Input\Input.h">
+      <Filter>Source\Input</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Graphics.h">
-      <Filter>Source</Filter>
+    <ClInclude Include="..\..\Source\Input\KeyCode.h">
+      <Filter>Source\Input</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Surface.h">
-      <Filter>Source</Filter>
+    <ClInclude Include="..\..\Source\Input\MouseButton.h">
+      <Filter>Source\Input</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\PixelFormat.h">
-      <Filter>Source</Filter>
+    <ClInclude Include="..\..\Source\Graphics\Graphics.h">
+      <Filter>Source\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Graphics\PixelFormat.h">
+      <Filter>Source\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Graphics\Surface.h">
+      <Filter>Source\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Core\Assert.h">
+      <Filter>Source\Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -56,14 +77,14 @@
     <ClCompile Include="..\..\Source\Game.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Input.cpp">
-      <Filter>Source</Filter>
+    <ClCompile Include="..\..\Source\Input\Input.cpp">
+      <Filter>Source\Input</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Graphics.cpp">
-      <Filter>Source</Filter>
+    <ClCompile Include="..\..\Source\Graphics\Graphics.cpp">
+      <Filter>Source\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Surface.cpp">
-      <Filter>Source</Filter>
+    <ClCompile Include="..\..\Source\Graphics\Surface.cpp">
+      <Filter>Source\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

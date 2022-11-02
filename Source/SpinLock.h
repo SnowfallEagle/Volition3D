@@ -3,7 +3,8 @@
 #include <atomic>
 #include <thread>
 #include "Types.h"
-#include "Assert.h"
+#include "Platform.h"
+#include "Core/Assert.h"
 
 class VSpinLock
 {

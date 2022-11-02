@@ -1,4 +1,4 @@
-#ifndef ASSERT_H_
+#ifndef CORE_ASSERT_H_
 
 #include "Platform.h"
 
@@ -80,5 +80,5 @@
 
 #endif // _DEBUG
 
-#define ASSERT_H_
+#define CORE_ASSERT_H_
 #endif

@@ -1,18 +1,14 @@
 #ifndef GRAPHICS_H_
 
-/* TODO(sean):
-    - Maybe some inline assembly like for memsetq
- */
-
 #include <stdio.h> // TODO(sean): Log
 #include <stdlib.h> // TODO(sean): My random
 #include <string.h>
 #include "SDL.h"
 #include "Window.h"
-#include "Surface.h"
-#include "PixelFormat.h"
 #include "Platform.h"
-#include "Assert.h"
+#include "Core/Assert.h"
+#include "Graphics/Surface.h"
+#include "Graphics/PixelFormat.h"
 
 #define _RGBA32(A, R, G, B) ( ((A) << 24) | ((R) << 16) | ((G) << 8) | (B) )
 #define _RGB32(R, G, B) ( 0xFF000000 | ((R) << 16) | ((G) << 8) | (B) )
@@ -67,7 +63,7 @@ public:
 
     void PrepareToRender()
     {
-        SDL_FillRect(BackSurface.GetPlatformSurface(), nullptr, MapRGB(0x00, 0x00, 0x00));
+        SDL_FillRect(BackSurface.GetPlatformSurface(), nullptr, _RGB32(0x00, 0x00, 0x00));
         BackSurface.Lock(BackBuffer, BackPitchInPixels);
     }
     void Render()
@@ -87,21 +83,6 @@ public:
         Flip();
     }
 
-    FINLINE const VPixelFormat& GetPixelFormat() const
-    {
-        return PixelFormat;
-    }
-
-    FINLINE u32* GetVideoBuffer()
-    {
-        return BackBuffer;
-    }
-
-    FINLINE i32 GetPitch()
-    {
-        return BackPitchInPixels;
-    }
-
     FINLINE u32 MapRGB(u8 R, u8 G, u8 B)
     {
         return
@@ -109,6 +90,19 @@ public:
             (G >> PixelFormat.GreenLoss) << PixelFormat.GreenShift |
             (B >> PixelFormat.BlueLoss)  << PixelFormat.BlueShift  |
             PixelFormat.AlphaMask;
+    }
+
+    FINLINE const VPixelFormat& GetPixelFormat() const
+    {
+        return PixelFormat;
+    }
+    FINLINE u32* GetVideoBuffer()
+    {
+        return BackBuffer;
+    }
+    FINLINE i32 GetPitch()
+    {
+        return BackPitchInPixels;
     }
 
 private:

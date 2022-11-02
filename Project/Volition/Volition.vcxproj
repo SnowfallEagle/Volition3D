@@ -74,29 +74,33 @@
     <OutDir>$(SolutionDir)..\..\Bin\</OutDir>
     <IntDir>$(SolutionDir)..\..\Build\$(Platform)\$(Configuration)\</IntDir>
     <ExecutablePath>$(SolutionDir)..\..\Bin;$(ExecutablePath)</ExecutablePath>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\..\Source\;$(SolutionDir)..\..\ThirdParty\SDL\Include</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\..\Source;$(SolutionDir)..\..\ThirdParty\SDL\Include</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(SolutionDir)..\..\ThirdParty\SDL\Libs</LibraryPath>
+    <SourcePath>$(VC_SourcePath);$(SolutionDir)..\..\Source</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)..\..\Bin\</OutDir>
     <IntDir>$(SolutionDir)..\..\Build\$(Platform)\$(Configuration)\</IntDir>
     <ExecutablePath>$(SolutionDir)..\..\Bin;$(ExecutablePath)</ExecutablePath>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\..\Source\;$(SolutionDir)..\..\ThirdParty\SDL\Include</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\..\Source;$(SolutionDir)..\..\ThirdParty\SDL\Include</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(SolutionDir)..\..\ThirdParty\SDL\Libs</LibraryPath>
+    <SourcePath>$(VC_SourcePath);$(SolutionDir)..\..\Source</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)..\..\Bin\</OutDir>
     <IntDir>$(SolutionDir)..\..\Build\$(Platform)\$(Configuration)\</IntDir>
     <ExecutablePath>$(SolutionDir)..\..\Bin;$(ExecutablePath)</ExecutablePath>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\..\Source\;$(SolutionDir)..\..\ThirdParty\SDL\Include</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\..\Source;$(SolutionDir)..\..\ThirdParty\SDL\Include</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(SolutionDir)..\..\ThirdParty\SDL\Libs</LibraryPath>
+    <SourcePath>$(VC_SourcePath);$(SolutionDir)..\..\Source</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)..\..\Bin\</OutDir>
     <IntDir>$(SolutionDir)..\..\Build\$(Platform)\$(Configuration)\</IntDir>
     <ExecutablePath>$(SolutionDir)..\..\Bin;$(ExecutablePath)</ExecutablePath>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\..\Source\;$(SolutionDir)..\..\ThirdParty\SDL\Include</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\..\Source;$(SolutionDir)..\..\ThirdParty\SDL\Include</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(SolutionDir)..\..\ThirdParty\SDL\Libs</LibraryPath>
+    <SourcePath>$(VC_SourcePath);$(SolutionDir)..\..\Source</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -167,25 +171,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Source\Assert.h" />
+    <ClInclude Include="..\..\Source\Core\Assert.h" />
     <ClInclude Include="..\..\Source\Game.h" />
-    <ClInclude Include="..\..\Source\Graphics.h" />
-    <ClInclude Include="..\..\Source\Input.h" />
-    <ClInclude Include="..\..\Source\KeyCode.h" />
-    <ClInclude Include="..\..\Source\MouseButton.h" />
-    <ClInclude Include="..\..\Source\PixelFormat.h" />
+    <ClInclude Include="..\..\Source\Graphics\Graphics.h" />
+    <ClInclude Include="..\..\Source\Graphics\PixelFormat.h" />
+    <ClInclude Include="..\..\Source\Graphics\Surface.h" />
+    <ClInclude Include="..\..\Source\Input\Input.h" />
+    <ClInclude Include="..\..\Source\Input\KeyCode.h" />
+    <ClInclude Include="..\..\Source\Input\MouseButton.h" />
+    <ClInclude Include="..\..\Source\Platform.h" />
+    <ClInclude Include="..\..\Source\Platform\Win.h" />
     <ClInclude Include="..\..\Source\SpinLock.h" />
-    <ClInclude Include="..\..\Source\Surface.h" />
     <ClInclude Include="..\..\Source\Types.h" />
     <ClInclude Include="..\..\Source\Volition.h" />
     <ClInclude Include="..\..\Source\Window.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Game.cpp" />
-    <ClCompile Include="..\..\Source\Graphics.cpp" />
-    <ClCompile Include="..\..\Source\Input.cpp" />
+    <ClCompile Include="..\..\Source\Graphics\Graphics.cpp" />
+    <ClCompile Include="..\..\Source\Graphics\Surface.cpp" />
+    <ClCompile Include="..\..\Source\Input\Input.cpp" />
     <ClCompile Include="..\..\Source\main.cpp" />
-    <ClCompile Include="..\..\Source\Surface.cpp" />
     <ClCompile Include="..\..\Source\Volition.cpp" />
     <ClCompile Include="..\..\Source\Window.cpp" />
   </ItemGroup>

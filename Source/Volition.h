@@ -2,8 +2,8 @@
 
 #include "Types.h"
 #include "Window.h"
-#include "Graphics.h"
-#include "Input.h"
+#include "Graphics/Graphics.h"
+#include "Input/Input.h"
 #include "Game.h"
 #include "Platform.h"
 
