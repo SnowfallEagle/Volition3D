@@ -66,6 +66,9 @@
     <ClInclude Include="..\..\Source\Thread\SpinLock.h">
       <Filter>Source\Thread</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Core\DebugLog.h">
+      <Filter>Source\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\main.cpp">
@@ -88,6 +91,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Game\Game.cpp">
       <Filter>Source\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Core\DebugLog.cpp">
+      <Filter>Source\Core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
