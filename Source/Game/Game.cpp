@@ -21,7 +21,7 @@ void VGame::Update(f32 Delta)
     if (Input.IsKeyDown(EKeyCode::Escape))
         Volition.Stop();
 
-    VL_NOTE(hLogGame, "%.3f\n", Delta);
+    VL_LOG("%.3f\n", Delta);
 }
 
 void VGame::Render()
