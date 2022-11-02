@@ -21,26 +21,28 @@ void VGraphics::StartUp()
 
     // Video surface
     {
-        VideoSurface.SetPlatformSurface(SDLSurface);
-        VideoBuffer = VideoSurface.GetBuffer();
-        VideoPitch = VideoSurface.GetPitch();
+        VideoSurface = VSurface::Create(SDLSurface);
+        VideoBuffer = VideoSurface->GetBuffer();
+        VideoPitch = VideoSurface->GetPitch();
     }
 
     // Back surface
     {
         SDL_Surface* Temp = SDL_CreateRGBSurfaceWithFormat(
-            0, VideoSurface.GetWidth(), VideoSurface.GetHeight(),
-            PixelFormat.BitsPerPixel, VideoSurface.GetPlatformSurface()->format->format
+            0, VideoSurface->GetWidth(), VideoSurface->GetHeight(),
+            PixelFormat.BitsPerPixel, VideoSurface->GetPlatformSurface()->format->format
         );
         ASSERT(Temp);
 
-        SDL_Surface* Converted = SDL_ConvertSurface(Temp, VideoSurface.GetPlatformSurface()->format, 0);
+        SDL_Surface* Converted = SDL_ConvertSurface(
+            Temp, VideoSurface->GetPlatformSurface()->format, 0
+        );
         ASSERT(Converted);
         SDL_FreeSurface(Temp);
 
-        BackSurface.SetPlatformSurface(Converted);
-        BackBuffer = BackSurface.GetBuffer();
-        BackPitch = BackSurface.GetPitch();
+        BackSurface = VSurface::Create(Converted);
+        BackBuffer = BackSurface->GetBuffer();
+        BackPitch = BackSurface->GetPitch();
     }
 }
 void VGraphics::ShutDown()
@@ -49,7 +51,7 @@ void VGraphics::ShutDown()
 
 void VGraphics::PrepareToRender()
 {
-    FillRect(&BackSurface, nullptr, _RGB32(0XFF, 0x00, 0x00));
+    FillRect(BackSurface, nullptr, _RGB32(0XFF, 0x00, 0x00));
 }
 
 void VGraphics::Render()
@@ -68,9 +70,12 @@ void VGraphics::Render()
     }
     */
 
-    VSurface* Surface = LoadBMP("Test.bmp");
+    VSurface* Surface = VSurface::Load("Test.bmp");
     Surface->EnableColorKey();
-    Blit(Surface, nullptr, &BackSurface, nullptr);
+
+    Blit(Surface, nullptr, BackSurface, nullptr);
+
+    Surface->Destroy();
     delete Surface;
 
     Flip();
@@ -78,6 +83,7 @@ void VGraphics::Render()
 
 void VGraphics::Flip()
 {
+    /* It's emulated blitting
     i32f Height = VideoSurface.GetHeight();
     i32f BytesWidth = VideoSurface.GetWidth() * PixelFormat.BytesPerPixel;
     u32* TempVideo = VideoBuffer;
@@ -89,20 +95,8 @@ void VGraphics::Flip()
         TempVideo += VideoPitch;
         TempBack += BackPitch;
     }
+    */
 
+    Blit(BackSurface, nullptr, VideoSurface, nullptr);
     SDL_UpdateWindowSurface(Window.GetWindow());
-}
-
-VSurface* VGraphics::LoadBMP(const char* Path)
-{
-    SDL_Surface* Temp = SDL_LoadBMP(Path);
-    ASSERT(Temp);
-
-    SDL_Surface* Converted = SDL_ConvertSurface(
-        Temp, VideoSurface.GetPlatformSurface()->format, 0
-    );
-    SDL_FreeSurface(Temp);
-    ASSERT(Converted);
-
-    return new VSurface(Converted);
 }

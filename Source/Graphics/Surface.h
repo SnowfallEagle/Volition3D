@@ -10,14 +10,9 @@ class VSurface
     SDL_Surface* SDLSurface;
 
 public:
-    VSurface(SDL_Surface* InSDLSurface = nullptr) : SDLSurface(InSDLSurface)
-    {
-    }
-    ~VSurface()
-    {
-        if (SDLSurface)
-            SDL_FreeSurface(SDLSurface);
-    }
+    static VSurface* Create(SDL_Surface* InSDLSurface = nullptr);
+    static VSurface* Load(const char* Path);
+    void Destroy();
 
     FINLINE void SetPlatformSurface(SDL_Surface* InSDLSurface)
     {
@@ -50,6 +45,9 @@ public:
     {
         return SDLSurface->h;
     }
+
+private:
+    VSurface() {}
 };
 
 

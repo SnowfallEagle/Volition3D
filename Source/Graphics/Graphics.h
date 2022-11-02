@@ -16,11 +16,11 @@
 
 class VGraphics
 {
-    VSurface VideoSurface;
+    VSurface* VideoSurface;
     u32* VideoBuffer;
     i32 VideoPitch;
 
-    VSurface BackSurface;
+    VSurface* BackSurface;
     u32* BackBuffer;
     i32 BackPitch;
 
@@ -58,6 +58,11 @@ public:
             (G >> PixelFormat.GreenLoss) << PixelFormat.GreenShift |
             (B >> PixelFormat.BlueLoss)  << PixelFormat.BlueShift  |
             PixelFormat.AlphaMask;
+    }
+
+    FINLINE VSurface* GetVideoSurface()
+    {
+        return VideoSurface;
     }
 
 private:
