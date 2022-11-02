@@ -1,5 +1,16 @@
 #include "Core/DebugLog.h"
 
+namespace EAnsiAttr
+{
+    enum
+    {
+        None = 0,
+        FgGrey = 90,
+        BgRed = 41,
+        BgBlue = 44,
+    };
+}
+
 static constexpr const char LogPath[] = "Log.txt";
 DEFINE_LOG_CHANNEL(hLogLog, "DebugLog");
 
@@ -38,6 +49,7 @@ void VDebugLog::VarOutput(const char* Channel, const char* Priority, const char*
     static constexpr i32f MessageBufferSize = 512;
     static constexpr i32f TempBufferSize = 420;
 
+    // Fill message buffer
     char MessageBuffer[MessageBufferSize];
     char TempBuffer[TempBufferSize];
 
@@ -51,7 +63,17 @@ void VDebugLog::VarOutput(const char* Channel, const char* Priority, const char*
         snprintf(MessageBuffer, MessageBufferSize, "<%s> %s: %s", Channel, Priority, TempBuffer);
     }
 
-    printf("%s", MessageBuffer);
+    // Set color
+    i32f Color;
+    switch (Priority[0])
+    {
+    case 'W': { Color = EAnsiAttr::BgBlue; } break;
+    case 'E': { Color = EAnsiAttr::BgRed; } break;
+    default: { Color = EAnsiAttr::None; } break;
+    }
+
+    // Output
+    printf("\x1b[%dm%s\x1b[m", Color, MessageBuffer);
     fprintf(hFile, "%s", MessageBuffer);
     fflush(hFile);
 }

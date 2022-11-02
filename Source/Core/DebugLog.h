@@ -2,7 +2,6 @@
 
 /* TODO(sean):
     - VFileSystem?
-    - Colors for terminal
  */
 
 #include <stdio.h>
