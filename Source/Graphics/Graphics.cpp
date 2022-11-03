@@ -89,16 +89,14 @@ void VGraphics::DrawText(const char* Text, i32 X, i32 Y, u32 Color)
     // Render text
     SDL_Surface* SDLSurface = TTF_RenderText_Solid(Font, Text, SDLColor);
     ASSERT(SDLSurface);
-    //SDL_SetColorKey(SDLSurface, SDL_TRUE, static_cast<u32*>(SDLSurface->pixels)[0]);
+    SDL_SetColorKey(SDLSurface, SDL_TRUE, static_cast<u32*>(SDLSurface->pixels)[0]);
 
     // Convert surface
     SDL_Surface* SDLConverted = SDL_ConvertSurface(SDLSurface, PixelFormat.SDLPixelFormat, 0);
     ASSERT(SDLConverted);
 
     // Blit
-    SDL_Rect Dest = {
-        X, Y, (i32f)strlen(Text) * FontCharWidth, FontCharHeight
-    };
+    SDL_Rect Dest = { X, Y, (i32f)strlen(Text) * FontCharWidth, FontCharHeight };
     SDL_BlitScaled(SDLConverted, nullptr, BackSurface->SDLSurface, &Dest);
 
     // Free memory

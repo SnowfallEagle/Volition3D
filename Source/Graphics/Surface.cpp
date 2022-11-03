@@ -43,6 +43,7 @@ void VSurface::Lock(u32*& OutBuffer, i32& OutPitch)
 {
     ASSERT(bLocked);
 
+#if 0 // NOTE(sean): We don't have to lock surfaces since we don't use RLE, but in future we may will
     if (SDL_MUSTLOCK(SDLSurface))
     {
         SDL_LockSurface(SDLSurface);
@@ -54,14 +55,20 @@ void VSurface::Lock(u32*& OutBuffer, i32& OutPitch)
         OutBuffer = Buffer = (u32*)SDLSurface->pixels;
         OutPitch = Pitch = SDLSurface->pitch >> 2;
     }
+#endif
+
+    OutBuffer = Buffer = (u32*)SDLSurface->pixels;
+    OutPitch = Pitch = SDLSurface->pitch >> 2;
 
     bLocked = true;
 }
 
 void VSurface::Unlock()
 {
+#if 0
     if (SDLSurface->locked) // Check if we don't have to lock/unlock
         SDL_UnlockSurface(SDLSurface);
+#endif
 
     bLocked = false;
 }
