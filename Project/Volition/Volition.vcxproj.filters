@@ -25,6 +25,15 @@
     <Filter Include="Source\Math">
       <UniqueIdentifier>{443909e1-086d-4c26-b9e3-8e63d2a53793}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Core\Impl">
+      <UniqueIdentifier>{8031a4fc-0999-46d7-b2b6-ddf9c5cbd2bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Graphics\Impl">
+      <UniqueIdentifier>{1b492eed-b98f-4fd5-8ed7-2149904de9e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Input\Impl">
+      <UniqueIdentifier>{60e1ac73-56b7-4191-8889-c9a7ef218a24}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\Platform\Win.h">
@@ -75,6 +84,12 @@
     <ClInclude Include="..\..\Source\Math\Rect.h">
       <Filter>Source\Math</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Core\Impl\Window_DDraw.h">
+      <Filter>Source\Core\Impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Core\Impl\Window_SDL.h">
+      <Filter>Source\Core\Impl</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\main.cpp">
@@ -100,6 +115,12 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Core\DebugLog.cpp">
       <Filter>Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Core\Impl\Window_DDraw.cpp">
+      <Filter>Source\Core\Impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Core\Impl\Window_SDL.cpp">
+      <Filter>Source\Core\Impl</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

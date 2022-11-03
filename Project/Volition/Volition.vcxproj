@@ -173,6 +173,8 @@
   <ItemGroup>
     <ClInclude Include="..\..\Source\Core\Assert.h" />
     <ClInclude Include="..\..\Source\Core\DebugLog.h" />
+    <ClInclude Include="..\..\Source\Core\Impl\Window_DDraw.h" />
+    <ClInclude Include="..\..\Source\Core\Impl\Window_SDL.h" />
     <ClInclude Include="..\..\Source\Core\Platform.h" />
     <ClInclude Include="..\..\Source\Core\Types.h" />
     <ClInclude Include="..\..\Source\Core\Volition.h" />
@@ -190,6 +192,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Core\DebugLog.cpp" />
+    <ClCompile Include="..\..\Source\Core\Impl\Window_DDraw.cpp" />
+    <ClCompile Include="..\..\Source\Core\Impl\Window_SDL.cpp" />
     <ClCompile Include="..\..\Source\Core\Volition.cpp" />
     <ClCompile Include="..\..\Source\Core\Window.cpp" />
     <ClCompile Include="..\..\Source\Game\Game.cpp" />
