@@ -11,7 +11,8 @@ VSurface* VSurface::Create(SDL_Surface* InSDLSurface)
 VSurface* VSurface::Create(i32 InWidth, i32 InHeight)
 {
     SDL_Surface* SDLSurface = SDL_CreateRGBSurfaceWithFormat(
-        0, InWidth, InHeight, Graphics.BitsPerPixel, SDL_PIXELFORMAT_ARGB32
+        0, InWidth, InHeight, Graphics.BitsPerPixel,
+        PixelFormat.SDLPixelFormatEnum
     );
     ASSERT(SDLSurface);
 
@@ -24,7 +25,7 @@ VSurface* VSurface::Load(const char* Path)
     ASSERT(Temp);
 
     SDL_Surface* Converted = SDL_ConvertSurface(
-        Temp, Graphics.BackSurface->SDLSurface->format, 0
+        Temp, PixelFormat.SDLPixelFormat, 0
     );
     ASSERT(Converted);
     SDL_FreeSurface(Temp);

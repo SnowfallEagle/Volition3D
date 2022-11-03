@@ -3,6 +3,8 @@
 VPixelFormat PixelFormat;
 VGraphics Graphics;
 
+DEFINE_LOG_CHANNEL(hLogGraphics, "Graphics");
+
 void VGraphics::StartUp()
 {
     SDL_Surface* SDLSurface = SDL_GetWindowSurface(Window.SDLWindow);
@@ -13,8 +15,12 @@ void VGraphics::StartUp()
         SDLFormat->Aloss, SDLFormat->Rloss, SDLFormat->Gloss, SDLFormat->Bloss,
         SDLFormat->Ashift, SDLFormat->Rshift, SDLFormat->Gshift, SDLFormat->Bshift,
         SDLFormat->Amask, SDLFormat->Rmask, SDLFormat->Gmask, SDLFormat->Bmask,
-        SDLFormat->BytesPerPixel, SDLFormat->BitsPerPixel
+        SDLFormat->BytesPerPixel, SDLFormat->BitsPerPixel,
+
+        SDLFormat, SDLFormat->format
     };
+
+    VL_NOTE(hLogGraphics, "Pixel format: %s\n", SDL_GetPixelFormatName(PixelFormat.SDLPixelFormatEnum));
 
     VideoSurface = VSurface::Create(SDLSurface);
     ScreenWidth = VideoSurface->Width;

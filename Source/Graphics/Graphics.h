@@ -14,7 +14,7 @@
 #include "Graphics/Surface.h"
 #include "Graphics/PixelFormat.h"
 
-// Macroses for fast mapping ARGB32 format
+// Macroses for fast mapping ARGB32/XRGB32 format
 #define _RGBA32(A, R, G, B) ( ((A) << 24) | ((R) << 16) | ((G) << 8) | (B) )
 #define _RGB32(R, G, B) ( ((R) << 16) | ((G) << 8) | (B) ) // Alpha = 0
 
@@ -25,8 +25,8 @@ public:
     static constexpr i32f BitsPerPixel = 32;
 
 private:
-    VSurface* VideoSurface; // Not defined format
-    VSurface* BackSurface; // ARGB32 format
+    VSurface* VideoSurface;
+    VSurface* BackSurface;
 
     i32 ScreenWidth, ScreenHeight;
 

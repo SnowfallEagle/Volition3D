@@ -2,6 +2,8 @@
 
 #include "Core/Types.h"
 
+struct SDL_PixelFormat;
+
 class VPixelFormat
 {
 public:
@@ -9,6 +11,9 @@ public:
     u32 AlphaShift, RedShift, GreenShift, BlueShift;
     u32 AlphaMask, RedMask, GreenMask, BlueMask;
     i32 BytesPerPixel, BitsPerPixel;
+
+    SDL_PixelFormat* SDLPixelFormat;
+    u32 SDLPixelFormatEnum;
 };
 
 extern VPixelFormat PixelFormat;
