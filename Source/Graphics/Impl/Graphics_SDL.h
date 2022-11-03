@@ -1,0 +1,6 @@
+#ifndef GRAPHICS_IMPL_GRAPHICS_SDL_H_
+
+
+
+#define GRAPHICS_IMPL_GRAPHICS_SDL_H_
+#endif

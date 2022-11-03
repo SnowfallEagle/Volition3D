@@ -87,6 +87,18 @@
     <ClInclude Include="..\..\Source\Core\Impl\Window_SDL.h">
       <Filter>Source\Core\Impl</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Graphics\Impl\Graphics_DDraw.h">
+      <Filter>Source\Graphics\Impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Graphics\Impl\Graphics_SDL.h">
+      <Filter>Source\Graphics\Impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Graphics\Impl\Surface_DDraw.h">
+      <Filter>Source\Graphics\Impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Graphics\Impl\Surface_SDL.h">
+      <Filter>Source\Graphics\Impl</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\main.cpp">
@@ -118,6 +130,18 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Core\Impl\Window_SDL.cpp">
       <Filter>Source\Core\Impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Graphics\Impl\Graphics_DDraw.cpp">
+      <Filter>Source\Graphics\Impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Graphics\Impl\Graphics_SDL.cpp">
+      <Filter>Source\Graphics\Impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Graphics\Impl\Surface_DDraw.cpp">
+      <Filter>Source\Graphics\Impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Graphics\Impl\Surface_SDL.cpp">
+      <Filter>Source\Graphics\Impl</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -181,6 +181,10 @@
     <ClInclude Include="..\..\Source\Core\Window.h" />
     <ClInclude Include="..\..\Source\Game\Game.h" />
     <ClInclude Include="..\..\Source\Graphics\Graphics.h" />
+    <ClInclude Include="..\..\Source\Graphics\Impl\Graphics_DDraw.h" />
+    <ClInclude Include="..\..\Source\Graphics\Impl\Graphics_SDL.h" />
+    <ClInclude Include="..\..\Source\Graphics\Impl\Surface_DDraw.h" />
+    <ClInclude Include="..\..\Source\Graphics\Impl\Surface_SDL.h" />
     <ClInclude Include="..\..\Source\Graphics\Surface.h" />
     <ClInclude Include="..\..\Source\Input\Input.h" />
     <ClInclude Include="..\..\Source\Input\KeyCode.h" />
@@ -197,6 +201,10 @@
     <ClCompile Include="..\..\Source\Core\Window.cpp" />
     <ClCompile Include="..\..\Source\Game\Game.cpp" />
     <ClCompile Include="..\..\Source\Graphics\Graphics.cpp" />
+    <ClCompile Include="..\..\Source\Graphics\Impl\Graphics_DDraw.cpp" />
+    <ClCompile Include="..\..\Source\Graphics\Impl\Graphics_SDL.cpp" />
+    <ClCompile Include="..\..\Source\Graphics\Impl\Surface_DDraw.cpp" />
+    <ClCompile Include="..\..\Source\Graphics\Impl\Surface_SDL.cpp" />
     <ClCompile Include="..\..\Source\Graphics\Surface.cpp" />
     <ClCompile Include="..\..\Source\Input\Input.cpp" />
     <ClCompile Include="..\..\Source\main.cpp" />
