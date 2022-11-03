@@ -22,27 +22,23 @@ void VGraphics::StartUp()
     // Video surface
     {
         VideoSurface = VSurface::Create(SDLSurface);
-        VideoBuffer = VideoSurface->GetBuffer();
-        VideoPitch = VideoSurface->GetPitch();
     }
 
     // Back surface
     {
         SDL_Surface* Temp = SDL_CreateRGBSurfaceWithFormat(
             0, VideoSurface->GetWidth(), VideoSurface->GetHeight(),
-            PixelFormat.BitsPerPixel, VideoSurface->GetPlatformSurface()->format->format
+            PixelFormat.BitsPerPixel, VideoSurface->SDLSurface->format->format
         );
         ASSERT(Temp);
 
         SDL_Surface* Converted = SDL_ConvertSurface(
-            Temp, VideoSurface->GetPlatformSurface()->format, 0
+            Temp, VideoSurface->SDLSurface->format, 0
         );
         ASSERT(Converted);
         SDL_FreeSurface(Temp);
 
         BackSurface = VSurface::Create(Converted);
-        BackBuffer = BackSurface->GetBuffer();
-        BackPitch = BackSurface->GetPitch();
     }
 }
 void VGraphics::ShutDown()

@@ -14,19 +14,14 @@
 #include "Graphics/Surface.h"
 #include "Graphics/PixelFormat.h"
 
-// Macroses for fast mapping ABGR32 format (High bit -> Low bit)
-#define _ARGB32(A, R, G, B) ( ((A) << 24) | ((R) << 16) | ((G) << 8) | (B) )
+// Macroses for fast mapping ARGB32 format
+#define _RGBA32(A, R, G, B) ( ((A) << 24) | ((R) << 16) | ((G) << 8) | (B) )
 #define _RGB32(R, G, B) ( ((R) << 16) | ((G) << 8) | (B) ) // Alpha = 0
 
 class VGraphics
 {
     VSurface* VideoSurface;
-    u32* VideoBuffer;
-    i32 VideoPitch;
-
     VSurface* BackSurface;
-    u32* BackBuffer;
-    i32 BackPitch;
 
 public:
     void StartUp();
@@ -37,23 +32,21 @@ public:
 
     FINLINE void BlitSurface(VSurface* Source, VRelativeRectI* SourceRect, VSurface* Dest, VRelativeRectI* DestRect)
     {
-        SDL_BlitSurface(Source->GetPlatformSurface(), (SDL_Rect*)SourceRect, Dest->GetPlatformSurface(), (SDL_Rect*)DestRect);
+        SDL_BlitSurface(Source->SDLSurface, (SDL_Rect*)SourceRect, Dest->SDLSurface, (SDL_Rect*)DestRect);
     }
     FINLINE void BlitScaled(VSurface* Source, VRelativeRectI* SourceRect, VSurface* Dest, VRelativeRectI* DestRect)
     {
-        SDL_BlitScaled(Source->GetPlatformSurface(), (SDL_Rect*)SourceRect, Dest->GetPlatformSurface(), (SDL_Rect*)DestRect);
+        SDL_BlitScaled(Source->SDLSurface, (SDL_Rect*)SourceRect, Dest->SDLSurface, (SDL_Rect*)DestRect);
     }
     FINLINE void FillRect(VSurface* Dest, VRelativeRectI* Rect, u32 Color)
     {
-        SDL_FillRect(Dest->GetPlatformSurface(), (SDL_Rect*)Rect, Color);
+        SDL_FillRect(Dest->SDLSurface, (SDL_Rect*)Rect, Color);
     }
 
     FINLINE void DrawSurface(VSurface* Surface, VRelativeRectI* Source, VRelativeRectI* Dest)
     {
         BlitScaled(Surface, Source, BackSurface, Dest);
     }
-
-    VSurface* LoadBMP(const char* Path);
 
     FINLINE u32 MapRGB(u8 R, u8 G, u8 B)
     {

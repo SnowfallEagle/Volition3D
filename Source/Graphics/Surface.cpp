@@ -4,9 +4,8 @@
 
 VSurface* VSurface::Create(SDL_Surface* InSDLSurface)
 {
-    VSurface* Surface = new VSurface();
-    Surface->SDLSurface = InSDLSurface;
-    return Surface;
+    ASSERT(InSDLSurface);
+    return new VSurface(InSDLSurface, InSDLSurface->w, InSDLSurface->h);
 }
 
 VSurface* VSurface::Load(const char* Path)
@@ -15,7 +14,7 @@ VSurface* VSurface::Load(const char* Path)
     ASSERT(Temp);
 
     SDL_Surface* Converted = SDL_ConvertSurface(
-        Temp, Graphics.VideoSurface->GetPlatformSurface()->format, 0
+        Temp, Graphics.VideoSurface->SDLSurface->format, 0
     );
     ASSERT(Converted);
     SDL_FreeSurface(Temp);
@@ -27,4 +26,31 @@ void VSurface::Destroy()
 {
     if (SDLSurface)
         SDL_FreeSurface(SDLSurface);
+}
+
+void VSurface::Lock(u32*& OutBuffer, i32& OutPitch)
+{
+    ASSERT(bLocked);
+
+    if (SDL_MUSTLOCK(SDLSurface))
+    {
+        SDL_LockSurface(SDLSurface);
+        OutBuffer = Buffer = (u32*)SDLSurface->pixels;
+        OutPitch = Pitch = SDLSurface->pitch >> 2; // Divide by 4 (Bytes per pixel)
+    }
+    else
+    {
+        OutBuffer = Buffer = (u32*)SDLSurface->pixels;
+        OutPitch = Pitch = SDLSurface->pitch >> 2;
+    }
+
+    bLocked = true;
+}
+
+void VSurface::Unlock()
+{
+    if (SDLSurface->locked) // Check if we don't have to lock/unlock
+        SDL_UnlockSurface(SDLSurface);
+
+    bLocked = false;
 }

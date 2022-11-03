@@ -7,47 +7,41 @@
 
 class VSurface
 {
-    SDL_Surface* SDLSurface;
+    SDL_Surface* SDLSurface = nullptr;
+    u32* Buffer = nullptr;
+    i32 Pitch = 0; // In pixels
+    i32 Width = 0;
+    i32 Height = 0;
+    b32 bLocked = false;
 
 public:
-    static VSurface* Create(SDL_Surface* InSDLSurface = nullptr);
+    static VSurface* Create(SDL_Surface* InSDLSurface);
     static VSurface* Load(const char* Path);
     void Destroy();
 
-    FINLINE void SetPlatformSurface(SDL_Surface* InSDLSurface)
-    {
-        SDLSurface = InSDLSurface;
-    }
-    FINLINE SDL_Surface* GetPlatformSurface()
-    {
-        return SDLSurface;
-    }
+    void Lock(u32*& OutBuffer, i32& OutPitch);
+    void Unlock();
 
     FINLINE void EnableColorKey()
     {
         SDL_SetColorKey(SDLSurface, SDL_TRUE, 0);
     }
 
-    FINLINE u32* GetBuffer()
-    {
-        return (u32*)SDLSurface->pixels;
-    }
-    FINLINE i32 GetPitch()
-    {
-        return SDLSurface->pitch / PixelFormat.BytesPerPixel;
-    }
-
     FINLINE i32 GetWidth() const 
     {
-        return SDLSurface->w;
+        return Width;
     }
     FINLINE i32 GetHeight() const
     {
-        return SDLSurface->h;
+        return Height;
     }
 
 private:
     VSurface() = default;
+    VSurface(SDL_Surface* InSDLSurface, i32 InWidth, i32 InHeight)
+        : SDLSurface(InSDLSurface), Width(InWidth), Height(InHeight) {}
+
+    friend class VGraphics;
 };
 
 
