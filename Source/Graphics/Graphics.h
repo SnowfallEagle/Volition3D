@@ -16,13 +16,18 @@
 #include "Graphics/PixelFormat.h"
 
 // Macroses for fast mapping ARGB32/XRGB32 format
-#define _RGBA32(A, R, G, B) ( ((A) << 24) | ((R) << 16) | ((G) << 8) | (B) )
-#define _RGB32(R, G, B) ( ((R) << 16) | ((G) << 8) | (B) ) // Alpha = 0
+#define _ALPHA_SHIFT (24)
+#define _RED_SHIFT (16)
+#define _GREEN_SHIFT (8)
+#define _BLUE_SHIFT (0)
 
-#define _ALPHA_MASK (0xFF << 24)
-#define _RED_MASK (0xFF << 16)
-#define _GREEN_MASK (0xFF << 8)
-#define _BLUE_MASK (0xFF)
+#define _RGBA32(A, R, G, B) ( ((A) << _ALPHA_SHIFT) | ((R) << _RED_SHIFT) | ((G) << _GREEN_SHIFT) | ((B)) << _BLUE_SHIFT )
+#define _RGB32(R, G, B) _RGBA32(0, R, G, B)
+
+#define _GET_ALPHA(COLOR) ( ((COLOR) >> _ALPHA_SHIFT) & 0xFF )
+#define _GET_RED(COLOR) ( ((COLOR) >> _RED_SHIFT) & 0xFF )
+#define _GET_GREEN(COLOR) ( ((COLOR) >> _GREEN_SHIFT) & 0xFF )
+#define _GET_BLUE(COLOR) ( ((COLOR) >> _BLUE_SHIFT ) & 0xFF )
 
 class VGraphics
 {

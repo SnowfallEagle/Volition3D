@@ -81,10 +81,10 @@ void VGraphics::DrawText(const char* Text, i32 X, i32 Y, u32 Color)
 {
     // Convert our color
     SDL_Color SDLColor;
-    SDLColor.a = Color & _ALPHA_MASK;
-    SDLColor.r = Color & _RED_MASK;
-    SDLColor.g = Color & _GREEN_MASK;
-    SDLColor.b = Color & _BLUE_MASK;
+    SDLColor.a = _GET_ALPHA(Color);
+    SDLColor.r = _GET_RED(Color);
+    SDLColor.g = _GET_GREEN(Color);
+    SDLColor.b = _GET_BLUE(Color);
 
     // Render text
     SDL_Surface* SDLSurface = TTF_RenderText_Solid(Font, Text, SDLColor);
