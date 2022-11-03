@@ -70,8 +70,17 @@ void VGraphics::Flip()
     SDL_UpdateWindowSurface(Window.SDLWindow);
 }
 
-void VGraphics::DrawText(const char* Text, i32 X, i32 Y, u32 Color)
+void VGraphics::DrawText(i32 X, i32 Y, u32 Color, const char* Format, ...)
 {
+    // Prepare text
+    static constexpr i32f TextBufferSize = 512;
+    char Text[TextBufferSize];
+
+    va_list VarList;
+    va_start(VarList, Format);
+    vsnprintf(Text, TextBufferSize, Format, VarList);
+    va_end(VarList);
+
     // Convert our color
     SDL_Color SDLColor;
     SDLColor.a = _GET_ALPHA(Color);

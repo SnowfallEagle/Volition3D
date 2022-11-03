@@ -2,6 +2,8 @@
 #include "Graphics/Graphics.h"
 #include "Graphics/Surface.h"
 
+#define SHOULD_LOCK_SDL_SURFACE 0
+
 VSurface* VSurface::Create(SDL_Surface* InSDLSurface)
 {
     ASSERT(InSDLSurface);
@@ -46,7 +48,8 @@ void VSurface::Lock(u32*& OutBuffer, i32& OutPitch)
     /**
        NOTE(sean): We don't have to lock surfaces since
        we don't use RLE, but in future we may will
-
+     */
+#if SHOULD_LOCK_SDL_SURFACE
     if (SDL_MUSTLOCK(SDLSurface))
     {
         SDL_LockSurface(SDLSurface);
@@ -58,7 +61,7 @@ void VSurface::Lock(u32*& OutBuffer, i32& OutPitch)
         OutBuffer = Buffer = (u32*)SDLSurface->pixels;
         OutPitch = Pitch = SDLSurface->pitch >> 2;
     }
-    */
+#endif // SHOULD_LOCK_SDL_SURFACE
 
     OutBuffer = Buffer = (u32*)SDLSurface->pixels;
     OutPitch = Pitch = SDLSurface->pitch >> 2;
@@ -68,10 +71,10 @@ void VSurface::Lock(u32*& OutBuffer, i32& OutPitch)
 
 void VSurface::Unlock()
 {
-    /*
+#if SHOULD_LOCK_SDL_SURFACE
     if (SDLSurface->locked) // Check if we don't have to lock/unlock
         SDL_UnlockSurface(SDLSurface);
-    */
+#endif // SHOULD_LOCK_SDL_SURFACE
 
     bLocked = false;
 }

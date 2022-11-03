@@ -59,7 +59,7 @@ public:
     {
         BlitScaled(Surface, BackSurface, Source, Dest);
     }
-    void DrawText(const char* Text, i32 X, i32 Y, u32 Color);
+    void DrawText(i32 X, i32 Y, u32 Color, const char* Format, ...);
 
     static FINLINE void BlitSurface(VSurface* Source, VSurface* Dest, VRelativeRectI* SourceRect, VRelativeRectI* DestRect)
     {
