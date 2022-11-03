@@ -7,6 +7,7 @@
 #include <stdlib.h> // TODO(sean): math::Random
 #include <string.h> // TODO(sean): mem::MemSet, mem::MemCopy()
 #include "SDL.h"
+#include "SDL_ttf.h"
 #include "Core/Window.h"
 #include "Core/Platform.h"
 #include "Core/Assert.h"
@@ -18,6 +19,11 @@
 #define _RGBA32(A, R, G, B) ( ((A) << 24) | ((R) << 16) | ((G) << 8) | (B) )
 #define _RGB32(R, G, B) ( ((R) << 16) | ((G) << 8) | (B) ) // Alpha = 0
 
+#define _ALPHA_MASK (0xFF << 24)
+#define _RED_MASK (0xFF << 16)
+#define _GREEN_MASK (0xFF << 8)
+#define _BLUE_MASK (0xFF)
+
 class VGraphics
 {
 public:
@@ -28,7 +34,10 @@ private:
     VSurface* VideoSurface;
     VSurface* BackSurface;
 
-    i32 ScreenWidth, ScreenHeight;
+    i32 ScreenWidth;
+    i32 ScreenHeight;
+
+    TTF_Font* Font;
 
 public:
     void StartUp();
@@ -41,6 +50,7 @@ public:
     {
         BlitScaled(Surface, BackSurface, Source, Dest);
     }
+    void DrawText(const char* Text, i32 X, i32 Y, u32 Color);
 
     static FINLINE void BlitSurface(VSurface* Source, VSurface* Dest, VRelativeRectI* SourceRect, VRelativeRectI* DestRect)
     {
