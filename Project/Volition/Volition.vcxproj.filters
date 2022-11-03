@@ -51,9 +51,6 @@
     <ClInclude Include="..\..\Source\Graphics\Graphics.h">
       <Filter>Source\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Graphics\PixelFormat.h">
-      <Filter>Source\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Graphics\Surface.h">
       <Filter>Source\Graphics</Filter>
     </ClInclude>

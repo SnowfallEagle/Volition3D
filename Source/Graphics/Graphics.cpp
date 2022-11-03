@@ -1,7 +1,6 @@
 #include <string.h>
 #include "Graphics/Graphics.h"
 
-VPixelFormat PixelFormat;
 VGraphics Graphics;
 
 DEFINE_LOG_CHANNEL(hLogGraphics, "Graphics");
@@ -13,14 +12,8 @@ void VGraphics::StartUp()
     ASSERT(SDLSurface);
 
     // Init pixel format
-    SDL_PixelFormat* SDLFormat = SDLSurface->format;
-    PixelFormat = {
-        SDLFormat->Aloss, SDLFormat->Rloss, SDLFormat->Gloss, SDLFormat->Bloss,
-        SDLFormat->Ashift, SDLFormat->Rshift, SDLFormat->Gshift, SDLFormat->Bshift,
-        SDLFormat->Amask, SDLFormat->Rmask, SDLFormat->Gmask, SDLFormat->Bmask,
-        SDLFormat->BytesPerPixel, SDLFormat->BitsPerPixel,
-        SDLFormat, SDLFormat->format
-    };
+    SDLPixelFormat = SDLSurface->format;
+    SDLPixelFormatEnum = SDLPixelFormat->format;
 
     // Create video and back surfaces
     VideoSurface = VSurface::Create(SDLSurface);
@@ -42,7 +35,7 @@ void VGraphics::StartUp()
     ASSERT(Font);
 
     // Log
-    VL_NOTE(hLogGraphics, "Initialized with %s pixel format\n", SDL_GetPixelFormatName(PixelFormat.SDLPixelFormatEnum));
+    VL_NOTE(hLogGraphics, "Initialized with %s pixel format\n", SDL_GetPixelFormatName(SDLPixelFormatEnum));
 }
 
 void VGraphics::ShutDown()
@@ -92,7 +85,7 @@ void VGraphics::DrawText(const char* Text, i32 X, i32 Y, u32 Color)
     SDL_SetColorKey(SDLSurface, SDL_TRUE, static_cast<u32*>(SDLSurface->pixels)[0]);
 
     // Convert surface
-    SDL_Surface* SDLConverted = SDL_ConvertSurface(SDLSurface, PixelFormat.SDLPixelFormat, 0);
+    SDL_Surface* SDLConverted = SDL_ConvertSurface(SDLSurface, SDLPixelFormat, 0);
     ASSERT(SDLConverted);
 
     // Blit

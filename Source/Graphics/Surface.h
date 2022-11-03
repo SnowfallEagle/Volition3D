@@ -3,7 +3,6 @@
 #include "SDL.h"
 #include "Core/Types.h"
 #include "Core/Platform.h"
-#include "Graphics/PixelFormat.h"
 
 class VSurface
 {

@@ -12,7 +12,7 @@ VSurface* VSurface::Create(i32 InWidth, i32 InHeight)
 {
     SDL_Surface* SDLSurface = SDL_CreateRGBSurfaceWithFormat(
         0, InWidth, InHeight, Graphics.BitsPerPixel,
-        PixelFormat.SDLPixelFormatEnum
+        Graphics.SDLPixelFormatEnum
     );
     ASSERT(SDLSurface);
 
@@ -25,7 +25,7 @@ VSurface* VSurface::Load(const char* Path)
     ASSERT(Temp);
 
     SDL_Surface* Converted = SDL_ConvertSurface(
-        Temp, PixelFormat.SDLPixelFormat, 0
+        Temp, Graphics.SDLPixelFormat, 0
     );
     ASSERT(Converted);
     SDL_FreeSurface(Temp);
@@ -43,7 +43,10 @@ void VSurface::Lock(u32*& OutBuffer, i32& OutPitch)
 {
     ASSERT(bLocked);
 
-#if 0 // NOTE(sean): We don't have to lock surfaces since we don't use RLE, but in future we may will
+    /**
+       NOTE(sean): We don't have to lock surfaces since
+       we don't use RLE, but in future we may will
+
     if (SDL_MUSTLOCK(SDLSurface))
     {
         SDL_LockSurface(SDLSurface);
@@ -55,7 +58,7 @@ void VSurface::Lock(u32*& OutBuffer, i32& OutPitch)
         OutBuffer = Buffer = (u32*)SDLSurface->pixels;
         OutPitch = Pitch = SDLSurface->pitch >> 2;
     }
-#endif
+    */
 
     OutBuffer = Buffer = (u32*)SDLSurface->pixels;
     OutPitch = Pitch = SDLSurface->pitch >> 2;
@@ -65,10 +68,10 @@ void VSurface::Lock(u32*& OutBuffer, i32& OutPitch)
 
 void VSurface::Unlock()
 {
-#if 0
+    /*
     if (SDLSurface->locked) // Check if we don't have to lock/unlock
         SDL_UnlockSurface(SDLSurface);
-#endif
+    */
 
     bLocked = false;
 }

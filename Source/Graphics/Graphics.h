@@ -13,7 +13,6 @@
 #include "Core/Assert.h"
 #include "Math/Rect.h"
 #include "Graphics/Surface.h"
-#include "Graphics/PixelFormat.h"
 
 // Macroses for fast mapping ARGB32/XRGB32 format
 #define _ALPHA_SHIFT (24)
@@ -38,6 +37,9 @@ public:
 private:
     VSurface* VideoSurface;
     VSurface* BackSurface;
+
+    SDL_PixelFormat* SDLPixelFormat;
+    u32 SDLPixelFormatEnum;
 
     i32 ScreenWidth;
     i32 ScreenHeight;
@@ -70,25 +72,6 @@ public:
     static FINLINE void FillRect(VSurface* Dest, VRelativeRectI* Rect, u32 Color)
     {
         SDL_FillRect(Dest->SDLSurface, (SDL_Rect*)Rect, Color);
-    }
-
-    // Slow mapping RGB functions
-    static FINLINE u32 MapRGB(u8 R, u8 G, u8 B)
-    {
-        return
-            (R >> PixelFormat.RedLoss)   << PixelFormat.RedShift   |
-            (G >> PixelFormat.GreenLoss) << PixelFormat.GreenShift |
-            (B >> PixelFormat.BlueLoss)  << PixelFormat.BlueShift  |
-            PixelFormat.AlphaMask;
-    }
-    static FINLINE u32 MapARGB(u8 A, u8 R, u8 G, u8 B)
-    {
-        return
-            (A >> PixelFormat.AlphaLoss) << PixelFormat.AlphaShift |
-            (R >> PixelFormat.RedLoss)   << PixelFormat.RedShift   |
-            (G >> PixelFormat.GreenLoss) << PixelFormat.GreenShift |
-            (B >> PixelFormat.BlueLoss)  << PixelFormat.BlueShift  |
-            PixelFormat.AlphaMask;
     }
 
 private:

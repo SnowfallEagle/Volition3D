@@ -181,7 +181,6 @@
     <ClInclude Include="..\..\Source\Core\Window.h" />
     <ClInclude Include="..\..\Source\Game\Game.h" />
     <ClInclude Include="..\..\Source\Graphics\Graphics.h" />
-    <ClInclude Include="..\..\Source\Graphics\PixelFormat.h" />
     <ClInclude Include="..\..\Source\Graphics\Surface.h" />
     <ClInclude Include="..\..\Source\Input\Input.h" />
     <ClInclude Include="..\..\Source\Input\KeyCode.h" />
