@@ -1,3 +1,4 @@
+#include <string.h>
 #include "Graphics/Graphics.h"
 
 VPixelFormat PixelFormat;
@@ -31,9 +32,13 @@ void VGraphics::StartUp()
     i32 Res = TTF_Init();
     ASSERT(Res == 0);
 
-    static constexpr i32f CharsPerLine = 100;
-    static constexpr f32 PointDivPixel = 3/4;
-    Font = TTF_OpenFont("Font.ttf", (i32f)( (f32)(ScreenWidth/CharsPerLine) * PointDivPixel) );
+    static constexpr i32f CharsPerLine = 80;
+    static constexpr f32 PointDivPixel = 0.75f;
+    static constexpr f32 QualityMultiplier = 2.0f;
+    FontCharWidth = ScreenWidth / CharsPerLine;
+    FontCharHeight = (i32)(FontCharWidth * 1.25f);
+
+    Font = TTF_OpenFont("Default.ttf", (i32f)( (f32)FontCharWidth * PointDivPixel * QualityMultiplier ));
     ASSERT(Font);
 
     // Log
@@ -74,5 +79,29 @@ void VGraphics::Flip()
 
 void VGraphics::DrawText(const char* Text, i32 X, i32 Y, u32 Color)
 {
-    
+    // Convert our color
+    SDL_Color SDLColor;
+    SDLColor.a = Color & _ALPHA_MASK;
+    SDLColor.r = Color & _RED_MASK;
+    SDLColor.g = Color & _GREEN_MASK;
+    SDLColor.b = Color & _BLUE_MASK;
+
+    // Render text
+    SDL_Surface* SDLSurface = TTF_RenderText_Solid(Font, Text, SDLColor);
+    ASSERT(SDLSurface);
+    //SDL_SetColorKey(SDLSurface, SDL_TRUE, static_cast<u32*>(SDLSurface->pixels)[0]);
+
+    // Convert surface
+    SDL_Surface* SDLConverted = SDL_ConvertSurface(SDLSurface, PixelFormat.SDLPixelFormat, 0);
+    ASSERT(SDLConverted);
+
+    // Blit
+    SDL_Rect Dest = {
+        X, Y, (i32f)strlen(Text) * FontCharWidth, FontCharHeight
+    };
+    SDL_BlitScaled(SDLConverted, nullptr, BackSurface->SDLSurface, &Dest);
+
+    // Free memory
+    SDL_FreeSurface(SDLSurface);
+    SDL_FreeSurface(SDLConverted);
 }

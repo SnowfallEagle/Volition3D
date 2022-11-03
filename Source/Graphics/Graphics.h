@@ -38,6 +38,8 @@ private:
     i32 ScreenHeight;
 
     TTF_Font* Font;
+    i32 FontCharWidth; // In pixels
+    i32 FontCharHeight;
 
 public:
     void StartUp();

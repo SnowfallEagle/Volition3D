@@ -35,6 +35,6 @@ void VGame::Update(f32 Delta)
 
 void VGame::Render()
 {
-    Graphics.DrawSurface(GDebug.Surface, nullptr, nullptr);
-    Graphics.DrawText("Hello, world!", 0, 0, _RGB32(0x00, 0xFF, 0x00));
+    //Graphics.DrawSurface(GDebug.Surface, nullptr, nullptr);
+    Graphics.DrawText("Hey", 0, 0, _RGB32(0xFF, 0xFF, 0xFF));
 }
