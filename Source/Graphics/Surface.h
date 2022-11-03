@@ -47,7 +47,7 @@ public:
     }
 
 private:
-    VSurface() {}
+    VSurface() = default;
 };
 
 

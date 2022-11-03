@@ -15,7 +15,7 @@ VSurface* VSurface::Load(const char* Path)
     ASSERT(Temp);
 
     SDL_Surface* Converted = SDL_ConvertSurface(
-        Temp, Graphics.GetVideoSurface()->GetPlatformSurface()->format, 0
+        Temp, Graphics.VideoSurface->GetPlatformSurface()->format, 0
     );
     ASSERT(Converted);
     SDL_FreeSurface(Temp);

@@ -1,3 +1,7 @@
+/* TODO(sean)
+    - Emulated funcs
+ */
+
 #ifndef GRAPHICS_GRAPHICS_H_
 
 #include <stdlib.h> // TODO(sean): math::Random
@@ -31,13 +35,22 @@ public:
     void PrepareToRender();
     void Render();
 
-    FINLINE void Blit(VSurface* Source, VRelativeRectI* SourceRect, VSurface* Dest, VRelativeRectI* DestRect)
+    FINLINE void BlitSurface(VSurface* Source, VRelativeRectI* SourceRect, VSurface* Dest, VRelativeRectI* DestRect)
+    {
+        SDL_BlitSurface(Source->GetPlatformSurface(), (SDL_Rect*)SourceRect, Dest->GetPlatformSurface(), (SDL_Rect*)DestRect);
+    }
+    FINLINE void BlitScaled(VSurface* Source, VRelativeRectI* SourceRect, VSurface* Dest, VRelativeRectI* DestRect)
     {
         SDL_BlitScaled(Source->GetPlatformSurface(), (SDL_Rect*)SourceRect, Dest->GetPlatformSurface(), (SDL_Rect*)DestRect);
     }
     FINLINE void FillRect(VSurface* Dest, VRelativeRectI* Rect, u32 Color)
     {
         SDL_FillRect(Dest->GetPlatformSurface(), (SDL_Rect*)Rect, Color);
+    }
+
+    FINLINE void DrawSurface(VSurface* Surface, VRelativeRectI* Source, VRelativeRectI* Dest)
+    {
+        BlitScaled(Surface, Source, BackSurface, Dest);
     }
 
     VSurface* LoadBMP(const char* Path);
@@ -60,13 +73,10 @@ public:
             PixelFormat.AlphaMask;
     }
 
-    FINLINE VSurface* GetVideoSurface()
-    {
-        return VideoSurface;
-    }
-
 private:
     void Flip();
+
+    friend class VSurface;
 };
 
 extern VGraphics Graphics;

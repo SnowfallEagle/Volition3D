@@ -59,7 +59,7 @@ public:
             Game.Render();
             Graphics.Render();
 
-            //SyncFrame();
+            // DEBUG(sean) SyncFrame();
         }
     }
     FINLINE void Stop()
