@@ -28,6 +28,8 @@ private:
     VSurface* VideoSurface; // Not defined format
     VSurface* BackSurface; // ARGB32 format
 
+    i32 ScreenWidth, ScreenHeight;
+
 public:
     void StartUp();
     void ShutDown();

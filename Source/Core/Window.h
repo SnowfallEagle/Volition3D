@@ -21,10 +21,7 @@ public:
     void Destroy();
     void HandleEvents();
 
-    FINLINE SDL_Window* GetWindow()
-    {
-        return SDLWindow;
-    }
+    friend class VGraphics;
 };
 
 extern VWindow Window;

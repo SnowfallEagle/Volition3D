@@ -5,7 +5,7 @@ VGraphics Graphics;
 
 void VGraphics::StartUp()
 {
-    SDL_Surface* SDLSurface = SDL_GetWindowSurface(Window.GetWindow());
+    SDL_Surface* SDLSurface = SDL_GetWindowSurface(Window.SDLWindow);
     ASSERT(SDLSurface);
 
     SDL_PixelFormat* SDLFormat = SDLSurface->format;
@@ -17,11 +17,16 @@ void VGraphics::StartUp()
     };
 
     VideoSurface = VSurface::Create(SDLSurface);
-    BackSurface = VSurface::Create(VideoSurface->Width, VideoSurface->Height);
+    ScreenWidth = VideoSurface->Width;
+    ScreenHeight = VideoSurface->Height;
+    BackSurface = VSurface::Create(ScreenWidth, ScreenHeight);
 }
 
 void VGraphics::ShutDown()
 {
+    BackSurface->Destroy();
+    delete VideoSurface;
+    delete BackSurface;
 }
 
 void VGraphics::PrepareToRender()
@@ -37,5 +42,5 @@ void VGraphics::Render()
 void VGraphics::Flip()
 {
     BlitSurface(BackSurface, VideoSurface, nullptr, nullptr);
-    SDL_UpdateWindowSurface(Window.GetWindow());
+    SDL_UpdateWindowSurface(Window.SDLWindow);
 }
