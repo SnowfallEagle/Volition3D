@@ -8,39 +8,18 @@ void VGraphics::StartUp()
     SDL_Surface* SDLSurface = SDL_GetWindowSurface(Window.GetWindow());
     ASSERT(SDLSurface);
 
-    // Pixel format
-    {
-        SDL_PixelFormat* SDLFormat = SDLSurface->format;
-        PixelFormat = {
-            SDLFormat->Aloss, SDLFormat->Rloss, SDLFormat->Gloss, SDLFormat->Bloss,
-            SDLFormat->Ashift, SDLFormat->Rshift, SDLFormat->Gshift, SDLFormat->Bshift,
-            SDLFormat->Amask, SDLFormat->Rmask, SDLFormat->Gmask, SDLFormat->Bmask,
-            SDLFormat->BytesPerPixel, SDLFormat->BitsPerPixel
-        };
-    }
+    SDL_PixelFormat* SDLFormat = SDLSurface->format;
+    PixelFormat = {
+        SDLFormat->Aloss, SDLFormat->Rloss, SDLFormat->Gloss, SDLFormat->Bloss,
+        SDLFormat->Ashift, SDLFormat->Rshift, SDLFormat->Gshift, SDLFormat->Bshift,
+        SDLFormat->Amask, SDLFormat->Rmask, SDLFormat->Gmask, SDLFormat->Bmask,
+        SDLFormat->BytesPerPixel, SDLFormat->BitsPerPixel
+    };
 
-    // Video surface
-    {
-        VideoSurface = VSurface::Create(SDLSurface);
-    }
-
-    // Back surface
-    {
-        SDL_Surface* Temp = SDL_CreateRGBSurfaceWithFormat(
-            0, VideoSurface->GetWidth(), VideoSurface->GetHeight(),
-            PixelFormat.BitsPerPixel, VideoSurface->SDLSurface->format->format
-        );
-        ASSERT(Temp);
-
-        SDL_Surface* Converted = SDL_ConvertSurface(
-            Temp, VideoSurface->SDLSurface->format, 0
-        );
-        ASSERT(Converted);
-        SDL_FreeSurface(Temp);
-
-        BackSurface = VSurface::Create(Converted);
-    }
+    VideoSurface = VSurface::Create(SDLSurface);
+    BackSurface = VSurface::Create(VideoSurface->Width, VideoSurface->Height);
 }
+
 void VGraphics::ShutDown()
 {
 }
@@ -57,6 +36,6 @@ void VGraphics::Render()
 
 void VGraphics::Flip()
 {
-    BlitSurface(BackSurface, nullptr, VideoSurface, nullptr);
+    BlitSurface(BackSurface, VideoSurface, nullptr, nullptr);
     SDL_UpdateWindowSurface(Window.GetWindow());
 }

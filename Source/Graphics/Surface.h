@@ -16,6 +16,7 @@ class VSurface
 
 public:
     static VSurface* Create(SDL_Surface* InSDLSurface);
+    static VSurface* Create(i32 InWidth, i32 InHeight);
     static VSurface* Load(const char* Path);
     void Destroy();
 

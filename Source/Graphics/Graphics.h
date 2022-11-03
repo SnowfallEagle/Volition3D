@@ -20,8 +20,13 @@
 
 class VGraphics
 {
-    VSurface* VideoSurface;
-    VSurface* BackSurface;
+public:
+    static constexpr i32f BytesPerPixel = 4;
+    static constexpr i32f BitsPerPixel = 32;
+
+private:
+    VSurface* VideoSurface; // Not defined format
+    VSurface* BackSurface; // ARGB32 format
 
 public:
     void StartUp();
@@ -30,25 +35,26 @@ public:
     void PrepareToRender();
     void Render();
 
-    FINLINE void BlitSurface(VSurface* Source, VRelativeRectI* SourceRect, VSurface* Dest, VRelativeRectI* DestRect)
+    FINLINE void DrawSurface(VSurface* Surface, VRelativeRectI* Source, VRelativeRectI* Dest)
+    {
+        BlitScaled(Surface, BackSurface, Source, Dest);
+    }
+
+    static FINLINE void BlitSurface(VSurface* Source, VSurface* Dest, VRelativeRectI* SourceRect, VRelativeRectI* DestRect)
     {
         SDL_BlitSurface(Source->SDLSurface, (SDL_Rect*)SourceRect, Dest->SDLSurface, (SDL_Rect*)DestRect);
     }
-    FINLINE void BlitScaled(VSurface* Source, VRelativeRectI* SourceRect, VSurface* Dest, VRelativeRectI* DestRect)
+    static FINLINE void BlitScaled(VSurface* Source, VSurface* Dest, VRelativeRectI* SourceRect, VRelativeRectI* DestRect)
     {
         SDL_BlitScaled(Source->SDLSurface, (SDL_Rect*)SourceRect, Dest->SDLSurface, (SDL_Rect*)DestRect);
     }
-    FINLINE void FillRect(VSurface* Dest, VRelativeRectI* Rect, u32 Color)
+    static FINLINE void FillRect(VSurface* Dest, VRelativeRectI* Rect, u32 Color)
     {
         SDL_FillRect(Dest->SDLSurface, (SDL_Rect*)Rect, Color);
     }
 
-    FINLINE void DrawSurface(VSurface* Surface, VRelativeRectI* Source, VRelativeRectI* Dest)
-    {
-        BlitScaled(Surface, Source, BackSurface, Dest);
-    }
-
-    FINLINE u32 MapRGB(u8 R, u8 G, u8 B)
+    // Slow mapping RGB functions
+    static FINLINE u32 MapRGB(u8 R, u8 G, u8 B)
     {
         return
             (R >> PixelFormat.RedLoss)   << PixelFormat.RedShift   |
@@ -56,7 +62,7 @@ public:
             (B >> PixelFormat.BlueLoss)  << PixelFormat.BlueShift  |
             PixelFormat.AlphaMask;
     }
-    FINLINE u32 MapARGB(u8 A, u8 R, u8 G, u8 B)
+    static FINLINE u32 MapARGB(u8 A, u8 R, u8 G, u8 B)
     {
         return
             (A >> PixelFormat.AlphaLoss) << PixelFormat.AlphaShift |
