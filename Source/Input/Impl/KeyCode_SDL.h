@@ -1,4 +1,6 @@
-#ifndef INPUT_KEYCODE_H_
+#ifndef INPUT_IMPL_KEYCODE_SDL_H_
+
+#include "SDL_keycode.h"
 
 namespace EKeyCode
 {
@@ -109,5 +111,6 @@ namespace EKeyCode
     };
 }
 
-#define INPUT_KEYCODE_H_
+
+#define INPUT_IMPL_KEYCODE_SDL_H_
 #endif

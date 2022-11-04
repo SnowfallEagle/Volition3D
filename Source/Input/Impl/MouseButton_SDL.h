@@ -1,4 +1,6 @@
-#ifndef INPUT_MOUSEBUTTON_H_
+#ifndef INPUT_IMPL_MOUSEBUTTON_SDL_H_
+
+#include "SDL_mouse.h"
 
 namespace EMouseButton
 {
@@ -10,5 +12,5 @@ namespace EMouseButton
     };
 }
 
-#define INPUT_MOUSEBUTTON_H_
+#define INPUT_IMPL_MOUSEBUTTON_SDL_H_
 #endif
