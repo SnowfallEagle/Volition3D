@@ -1,0 +1,6 @@
+#ifndef GRAPHICS_IMPL_IGRAPHICS_H_
+
+
+
+#define GRAPHICS_IMPL_IGRAPHICS_H_
+#endif
