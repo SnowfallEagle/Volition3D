@@ -306,6 +306,7 @@
     <ClCompile Include="..\..\Source\Input\Impl\Input_SDL.cpp" />
     <ClCompile Include="..\..\Source\Input\Input.cpp" />
     <ClCompile Include="..\..\Source\main.cpp" />
+    <ClCompile Include="..\..\Source\WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\ThirdParty\SDL\Include\SDL_config.h.cmake" />

@@ -55,20 +55,11 @@ void VSurface::Lock(u32*& OutBuffer, i32& OutPitch)
      */
 #if SHOULD_LOCK_SDL_SURFACE
     if (SDL_MUSTLOCK(SDLSurface))
-    {
         SDL_LockSurface(SDLSurface);
-        OutBuffer = Buffer = (u32*)SDLSurface->pixels;
-        OutPitch = Pitch = SDLSurface->pitch >> 2; // Divide by 4 (Bytes per pixel)
-    }
-    else
-    {
-        OutBuffer = Buffer = (u32*)SDLSurface->pixels;
-        OutPitch = Pitch = SDLSurface->pitch >> 2;
-    }
 #endif // SHOULD_LOCK_SDL_SURFACE
 
     OutBuffer = Buffer = (u32*)SDLSurface->pixels;
-    OutPitch = Pitch = SDLSurface->pitch >> 2;
+    OutPitch = Pitch = SDLSurface->pitch >> 2; // Divide by 4 (Bytes per pixel)
 
     bLocked = true;
 }
@@ -76,7 +67,7 @@ void VSurface::Lock(u32*& OutBuffer, i32& OutPitch)
 void VSurface::Unlock()
 {
 #if SHOULD_LOCK_SDL_SURFACE
-    if (SDLSurface->locked) // Check if we don't have to lock/unlock
+    if (SDLSurface->locked) // Check if we don't have to unlock
         SDL_UnlockSurface(SDLSurface);
 #endif // SHOULD_LOCK_SDL_SURFACE
 
