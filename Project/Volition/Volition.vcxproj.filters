@@ -51,9 +51,6 @@
     <ClInclude Include="..\..\Source\Graphics\Graphics.h">
       <Filter>Source\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Graphics\Surface.h">
-      <Filter>Source\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Core\Assert.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
@@ -393,9 +390,6 @@
       <Filter>Source\Input</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Graphics\Graphics.cpp">
-      <Filter>Source\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Graphics\Surface.cpp">
       <Filter>Source\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Core\Volition.cpp">

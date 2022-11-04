@@ -14,14 +14,14 @@ typedef TRect<f32> VRectF;
 
 // NOTE(sean): In memory it's equivalent of SDL_Rect
 template<class T>
-class TRelativeRect
+class TRelRect // Relative rectangle
 {
 public:
     T X, Y, W, H;
 };
 
-typedef TRelativeRect<i32> VRelativeRectI;
-typedef TRelativeRect<f32> VRelativeRectF;
+typedef TRelRect<i32> VRelRectI;
+typedef TRelRect<f32> VRelRectF;
 
 #define MATH_RECT_H_
 #endif

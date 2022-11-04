@@ -47,21 +47,21 @@ public:
     void PrepareToRender();
     void Render();
 
-    FINLINE void DrawSurface(VSurface* Surface, VRelativeRectI* Source, VRelativeRectI* Dest)
+    FINLINE void DrawSurface(VSurface* Surface, VRelRectI* Source, VRelRectI* Dest)
     {
         BlitScaled(Surface, BackSurface, Source, Dest);
     }
     void DrawText(i32 X, i32 Y, u32 Color, const char* Format, ...);
 
-    static FINLINE void BlitSurface(VSurface* Source, VSurface* Dest, VRelativeRectI* SourceRect, VRelativeRectI* DestRect)
+    static FINLINE void BlitSurface(VSurface* Source, VSurface* Dest, VRelRectI* SourceRect, VRelRectI* DestRect)
     {
         SDL_BlitSurface(Source->SDLSurface, (SDL_Rect*)SourceRect, Dest->SDLSurface, (SDL_Rect*)DestRect);
     }
-    static FINLINE void BlitScaled(VSurface* Source, VSurface* Dest, VRelativeRectI* SourceRect, VRelativeRectI* DestRect)
+    static FINLINE void BlitScaled(VSurface* Source, VSurface* Dest, VRelRectI* SourceRect, VRelRectI* DestRect)
     {
         SDL_BlitScaled(Source->SDLSurface, (SDL_Rect*)SourceRect, Dest->SDLSurface, (SDL_Rect*)DestRect);
     }
-    static FINLINE void FillRect(VSurface* Dest, VRelativeRectI* Rect, u32 Color)
+    static FINLINE void FillRect(VSurface* Dest, VRelRectI* Rect, u32 Color)
     {
         SDL_FillRect(Dest->SDLSurface, (SDL_Rect*)Rect, Color);
     }

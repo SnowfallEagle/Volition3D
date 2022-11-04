@@ -34,5 +34,5 @@ void VGame::Update(f32 Delta)
 void VGame::Render()
 {
     Graphics.DrawSurface(GDebug.Surface, nullptr, nullptr);
-    Graphics.DrawText(0, 0, _RGB32(0xFF, 0xFF, 0xFF), "%.3f", Volition.GetDelta());
+    Graphics.DrawText(0, 0, _RGB32(0xFF, 0xFF, 0xFF), "FPS: %.3f", 1000.0f/Volition.GetDelta());
 }
