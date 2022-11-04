@@ -4,7 +4,7 @@
 #include "SDL_ttf.h"
 #include "Core/Platform.h"
 #include "Math/Rect.h"
-#include "Graphics/Surface.h"
+#include "Graphics/Impl/Surface_SDL.h"
 
 // Macroses for fast mapping ARGB32/XRGB32 format
 #define _ALPHA_SHIFT (24)
