@@ -183,8 +183,11 @@
     <ClInclude Include="..\..\Source\Graphics\Graphics.h" />
     <ClInclude Include="..\..\Source\Graphics\Impl\Graphics_DDraw.h" />
     <ClInclude Include="..\..\Source\Graphics\Impl\Graphics_SDL.h" />
+    <ClInclude Include="..\..\Source\Graphics\Impl\IGraphics.h" />
+    <ClInclude Include="..\..\Source\Graphics\Impl\ISurface.h" />
     <ClInclude Include="..\..\Source\Graphics\Impl\Surface_DDraw.h" />
     <ClInclude Include="..\..\Source\Graphics\Impl\Surface_SDL.h" />
+    <ClInclude Include="..\..\Source\Graphics\Surface.h" />
     <ClInclude Include="..\..\Source\Input\Impl\Input_DDraw.h" />
     <ClInclude Include="..\..\Source\Input\Impl\Input_SDL.h" />
     <ClInclude Include="..\..\Source\Input\Impl\KeyCode_DDraw.h" />
@@ -295,6 +298,8 @@
     <ClCompile Include="..\..\Source\Graphics\Graphics.cpp" />
     <ClCompile Include="..\..\Source\Graphics\Impl\Graphics_DDraw.cpp" />
     <ClCompile Include="..\..\Source\Graphics\Impl\Graphics_SDL.cpp" />
+    <ClCompile Include="..\..\Source\Graphics\Impl\IGraphics.cpp" />
+    <ClCompile Include="..\..\Source\Graphics\Impl\ISurface.cpp" />
     <ClCompile Include="..\..\Source\Graphics\Impl\Surface_DDraw.cpp" />
     <ClCompile Include="..\..\Source\Graphics\Impl\Surface_SDL.cpp" />
     <ClCompile Include="..\..\Source\Input\Impl\Input_DDraw.cpp" />

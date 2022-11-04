@@ -381,6 +381,15 @@
     <ClInclude Include="..\..\ThirdParty\SDL\Include\SDL_vulkan.h">
       <Filter>ThirdParty\SDL</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Graphics\Impl\IGraphics.h">
+      <Filter>Source\Graphics\Impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Graphics\Impl\ISurface.h">
+      <Filter>Source\Graphics\Impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Graphics\Surface.h">
+      <Filter>Source\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\main.cpp">
@@ -427,6 +436,12 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Input\Impl\Input_SDL.cpp">
       <Filter>Source\Input\Impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Graphics\Impl\IGraphics.cpp">
+      <Filter>Source\Graphics\Impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Graphics\Impl\ISurface.cpp">
+      <Filter>Source\Graphics\Impl</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

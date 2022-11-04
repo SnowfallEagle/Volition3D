@@ -1,5 +1,6 @@
 #include "Core/Volition.h"
 #include "Input/Input.h"
+#include "Graphics/Graphics.h"
 #include "Game/Game.h"
 
 DEFINE_LOG_CHANNEL(hLogGame, "Game");

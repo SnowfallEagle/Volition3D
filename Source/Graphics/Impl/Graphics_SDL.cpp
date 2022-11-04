@@ -63,7 +63,7 @@ void VGraphics::PrepareToRender()
     FillRect(BackSurface, nullptr, _RGB32(0XFF, 0x00, 0x00));
 }
 
-void VGraphics::Render()
+void VGraphics::RenderAndFlip()
 {
     Flip();
 }

@@ -2,39 +2,15 @@
 
 #include "SDL.h"
 #include "SDL_ttf.h"
-#include "Core/Platform.h"
 #include "Math/Rect.h"
+#include "Core/Platform.h"
 #include "Graphics/Impl/Surface_SDL.h"
+#include "Graphics/Impl/IGraphics.h"
 
-// Macroses for fast mapping ARGB32/XRGB32 format
-#define _ALPHA_SHIFT (24)
-#define _RED_SHIFT (16)
-#define _GREEN_SHIFT (8)
-#define _BLUE_SHIFT (0)
-
-#define _RGBA32(A, R, G, B) ( ((A) << _ALPHA_SHIFT) | ((R) << _RED_SHIFT) | ((G) << _GREEN_SHIFT) | ((B)) << _BLUE_SHIFT )
-#define _RGB32(R, G, B) _RGBA32(0, R, G, B)
-
-#define _GET_ALPHA(COLOR) ( ((COLOR) >> _ALPHA_SHIFT) & 0xFF )
-#define _GET_RED(COLOR) ( ((COLOR) >> _RED_SHIFT) & 0xFF )
-#define _GET_GREEN(COLOR) ( ((COLOR) >> _GREEN_SHIFT) & 0xFF )
-#define _GET_BLUE(COLOR) ( ((COLOR) >> _BLUE_SHIFT ) & 0xFF )
-
-class VGraphics
+class VGraphics final : public IGraphics
 {
-public:
-    static constexpr i32f BytesPerPixel = 4;
-    static constexpr i32f BitsPerPixel = 32;
-
-private:
-    VSurface* VideoSurface;
-    VSurface* BackSurface;
-
     SDL_PixelFormat* SDLPixelFormat;
     u32 SDLPixelFormatEnum;
-
-    i32 ScreenWidth;
-    i32 ScreenHeight;
 
     TTF_Font* Font;
     i32 FontCharWidth; // In pixels
@@ -45,7 +21,7 @@ public:
     void ShutDown();
 
     void PrepareToRender();
-    void Render();
+    void RenderAndFlip();
 
     FINLINE void DrawSurface(VSurface* Surface, VRelRectI* Source, VRelRectI* Dest)
     {

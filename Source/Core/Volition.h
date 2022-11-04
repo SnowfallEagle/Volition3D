@@ -57,7 +57,7 @@ public:
 
             Graphics.PrepareToRender();
             Game.Render();
-            Graphics.Render();
+            Graphics.RenderAndFlip();
 
             // DEBUG(sean) SyncFrame();
         }
