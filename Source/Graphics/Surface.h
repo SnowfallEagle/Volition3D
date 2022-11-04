@@ -4,7 +4,7 @@
 
 #if VL_IMPL_SDL
 # include "Graphics/Impl/Surface_SDL.h"
-#else if VL_IMPL_DDRAW
+#elif VL_IMPL_DDRAW
 # include "Graphics/Impl/Surface_DDraw.h"
 #endif
 

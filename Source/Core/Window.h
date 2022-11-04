@@ -4,7 +4,7 @@
 
 #if VL_IMPL_SDL
 # include "Core/Impl/Window_SDL.h"
-#else if VL_IMPL_DDRAW
+#elif VL_IMPL_DDRAW
 # include "Core/Impl/Window_DDraw.h"
 #endif
 

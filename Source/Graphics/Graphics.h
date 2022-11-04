@@ -4,7 +4,7 @@
 
 #if VL_IMPL_SDL
 # include "Graphics/Impl/Graphics_SDL.h"
-#else if VL_IMPL_DDRAW
+#elif VL_IMPL_DDRAW
 # include "Graphics/Impl/Graphics_DDraw.h"
 #endif
 
