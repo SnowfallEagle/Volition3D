@@ -402,6 +402,9 @@
     <ClInclude Include="..\..\ThirdParty\ltm\tlm-add.h">
       <Filter>ThirdParty\tlm</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Math\Fixed16.h">
+      <Filter>Source\Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\main.cpp">
