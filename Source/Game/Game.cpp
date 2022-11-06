@@ -41,7 +41,10 @@ void VGame::Update(f32 Delta)
         GDebug.Fx = DivFx16(GDebug.Fx, Lower);
     if (Input.IsKeyDown(EKeyCode::Down))
         GDebug.Fx = DivFx16(GDebug.Fx, Higher);
-    PrintFx16(GDebug.Fx, '\n');
+    if (Input.IsKeyDown(EKeyCode::Left))
+        VL_LOG("%d\n", Random(100));
+    else if (Input.IsKeyDown(EKeyCode::Right))
+        VL_LOG("%d\n", Random(-100, 100));
 }
 
 void VGame::Render()

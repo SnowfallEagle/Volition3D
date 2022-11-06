@@ -1,5 +1,6 @@
 #ifndef MATH_MATH_H_
 
+#include <cmath>
 #include "Core/Types.h"
 #include "Core/Platform.h"
 #include "Core/DebugLog.h"
@@ -20,9 +21,29 @@ namespace math
     static constexpr f32 PiDiv4 = 0.785398163f;
     static constexpr f32 PiInv = 0.318309886f;
 
+    static constexpr f32 DegToRadConversion = math::Pi/180.0f;
+    static constexpr f32 RadToDegConversion = 180.0f/math::Pi;
+
     static constexpr f32 Epsilon4 = (f32)(1E-4);
     static constexpr f32 Epsilon5 = (f32)(1E-5);
     static constexpr f32 Epsilon6 = (f32)(1E-6);
+}
+
+#define Min(A, B) ((A) < (B) ? (A) : (B))
+#define Max(A, B) ((A) > (B) ? (A) : (B))
+#define Swap(A, B, T) { T = A; A = B; B = T; }
+
+#define DegToRad(A) ((A) * DegToRadConversion)
+#define RadToDeg(A) ((A) * RadToDegConversion)
+
+FINLINE i32 Random(i32 Range) // From 0 to Range-1
+{
+    return std::rand() % Range;
+}
+
+FINLINE i32 Random(i32 From, i32 To)
+{
+    return From + (std::rand() % (To - From + 1));
 }
 
 // *** Vector ***
@@ -248,6 +269,40 @@ public:
             f32 W, X, Y, Z;
         };
     };
+};
+
+// Indentity matrices
+
+// NOTE(sean): Should we make it as extern stuff?
+static const VMatrix44 IdentityMatrix44 = {
+    1, 0, 0, 0,
+    0, 1, 0, 0,
+    0, 0, 1, 0,
+    0, 0, 0, 1,
+};
+
+static const VMatrix43 IdentityMatrix43 = {
+    1, 0, 0,
+    0, 1, 0,
+    0, 0, 1,
+    0, 0, 0,
+};
+
+static const VMatrix33 IdentityMatrix33 = {
+    1, 0, 0,
+    0, 1, 0,
+    0, 0, 1,
+};
+
+static const VMatrix32 IdentityMatrix32 = {
+    1, 0,
+    0, 1,
+    0, 0,
+};
+
+static const VMatrix22 IdentityMatrix22 = {
+    1, 0,
+    0, 1,
 };
 
 // *** Coordinates ***
