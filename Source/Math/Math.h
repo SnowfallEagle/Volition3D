@@ -6,8 +6,7 @@
 #include "Math/Rect.h"
 
 /** NOTE(sean):
-    Only constants and functions are in math namespace
-    for faster access to structures like VVector3D
+    Only constants are in math namespace
  */
 namespace math
 {
@@ -268,83 +267,54 @@ public:
 };
 
 // *** Fixed point 16.16 ***
-typedef int _FX16_IN_INTEGER;
+typedef i32 fx16;
 
-class fx16 // It's much better with like i32, f32 rather than VFixed16 name convection
+namespace
 {
-private:
     static constexpr i32f Shift = 16;
     static constexpr f32 Magnitude = 65535.0f;
 
     static constexpr i32f WholePartMask = 0xFFFF0000;
     static constexpr i32f DecimalPartMask = 0x0000FFFF;
     static constexpr i32f RoundUpMask = 0x00008000;
+}
 
-private:
-    i32 Fixed; // TODO(sean): What about sign? Our functions don't care about sign
+FINLINE fx16 ToFixed(i32 I)
+{
+    return I << Shift;
+}
 
-public:
-    FINLINE fx16() = default;
-    FINLINE fx16(i32 I) : Fixed(I << Shift)
-    {
-    }
-    FINLINE fx16(_FX16_IN_INTEGER AlreadyFixed) : Fixed(AlreadyFixed)
-    {
-    }
-    FINLINE fx16(f32 F) : Fixed((i32)(F * Magnitude + 0.5f))
-    {
-    }
-    FINLINE ~fx16() = default;
+FINLINE fx16 ToFixed(f32 F)
+{
+    return (fx16)(F * Magnitude + 0.5f);
+}
 
-    FINLINE operator i32() const
-    {
-        return Fixed >> Shift;
-    }
-    FINLINE operator f32() const
-    {
-        return (f32)Fixed / Magnitude;
-    }
+FINLINE i32 ToInt(fx16 Fx)
+{
+    return Fx >> Shift;
+}
 
-    FINLINE fx16 operator+(const fx16& InFixed) const
-    {
-        return Fixed + InFixed.Fixed;
-    }
-    FINLINE fx16 operator+=(const fx16& InFixed)
-    {
-        return Fixed += InFixed.Fixed;
-    }
-    FINLINE fx16 operator-(const fx16& InFixed) const
-    {
-        return Fixed - InFixed.Fixed;
-    }
-    FINLINE fx16 operator-=(const fx16& InFixed)
-    {
-        return Fixed -= InFixed.Fixed;
-    }
-    // *** TODO(sean) ***:
-    // Implement this stuff >>>
-    FINLINE fx16 operator*=(fx16 InFixed)
-    {
-        return 0;
-    }
-    // Divides
-    // <<<
+FINLINE f32 ToFloat(fx16 Fx)
+{
+    return (f32)Fx / Magnitude;
+}
 
-    FINLINE i32 GetWholePart() const
-    {
-        return Fixed >> Shift;
-    }
-    FINLINE i32 GetDecimalPart() const
-    {
-        return Fixed & DecimalPartMask;
-    }
-    FINLINE void Print(char EndChar = 0) const
-    {
-        VL_LOG("%f%c", (f32)*this, EndChar);
-    }
-};
+FINLINE i32 GetWholePart(fx16 Fx)
+{
+    return Fx >> Shift;
+}
 
-FINLINE _FX16_IN_INTEGER operator*(fx16 Fixed1, fx16 Fixed2)
+FINLINE i32 GetDecimalPart(fx16 Fx)
+{
+    return Fx & DecimalPartMask;
+}
+
+FINLINE void Print(fx16 Fx, char EndChar = 0)
+{
+    VL_LOG("%f%c", ToFloat(Fx), EndChar);
+}
+
+FINLINE fx16 MulFx(fx16 Fx1, fx16 Fx2)
 {
     /* NOTE(sean):
         Let X, Y are integers and P, Q are fixed point numbers.
@@ -360,13 +330,45 @@ FINLINE _FX16_IN_INTEGER operator*(fx16 Fixed1, fx16 Fixed2)
             2. Shift our whole result right by 16
             3. Get result in one EAX register
     */
+
     __asm
     {
-        mov     eax, Fixed1         // Fixed1->eax
-        imul    Fixed2              // eax *= InFixed->Fixed, result in edx:eax
-        shrd    eax, edx, 16        // shift eax by 2^16,
+        mov     eax, Fx1            // Fx1->eax
+        imul    Fx2                 // eax *= Fx2, result in edx:eax
+        shrd    eax, edx, 16        // shift eax right by 2^16,
                                     // move low 16 bytes from edx to
                                     //  eax high 16 bytes
+        // Result in eax
+    }
+}
+
+FINLINE fx16 DivFx(fx16 Fx1, fx16 Fx2)
+{
+    /* NOTE(sean):
+        Let X, Y are integers and P, Q are fixed point numbers.
+        P = (fx16)X, Q = (fx16)Y.
+        Now P is actually (X * 2^16) and Q is (Y * 2^16).
+
+        When we want to divide P by Q we got:
+        Res = (X * 2^16) / (Y * 2^16) = XY
+        But we do want to see this: Res is equal XY * 2^16
+
+        So all we need to do is:
+            1. Extend fx16 to 64 bit to prevent accuracy losing
+            2. Shift this left by 16
+            3. Divide our extended fixed number
+            4. Get result in one EAX register
+    */
+
+    __asm
+    {
+        mov     eax, Fx1            // Fx1->eax
+        cdq                         // Extend eax to edx:eax
+        shld    edx, eax, 16        // Now 16 high bits of Fx1 in dl and
+                                    //  16 low bits of Fx1 in ah
+        sal     eax, 16             // Previous operand didn't shifted our eax, so
+                                    //  eax *= 2^16 and keep sign
+        idiv    Fx2                 // Divide by Fx2
         // Result in eax
     }
 }

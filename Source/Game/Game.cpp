@@ -20,7 +20,7 @@ void VGame::StartUp()
 {
     GDebug.Surface = VSurface::Load("Test.bmp");
     GDebug.Surface->EnableColorKey();
-    GDebug.Fx = 10.5f;
+    GDebug.Fx = ToFixed(10.5f);
 }
 
 void VGame::ShutDown()
@@ -34,14 +34,14 @@ void VGame::Update(f32 Delta)
     if (Input.IsKeyDown(EKeyCode::Escape))
         Volition.Stop();
 
-    fx16 Higher = 1.05f;
-    fx16 Lower = 0.95f;
+    fx16 Higher = ToFixed(1.01f);
+    fx16 Lower = ToFixed(0.99f);
 
     if (Input.IsKeyDown(EKeyCode::Up))
-        GDebug.Fx = GDebug.Fx * Higher;
+        GDebug.Fx = DivFx(GDebug.Fx, Lower);
     if (Input.IsKeyDown(EKeyCode::Down))
-        GDebug.Fx = GDebug.Fx * Lower;
-    GDebug.Fx.Print('\n');
+        GDebug.Fx = DivFx(GDebug.Fx, Higher);
+    Print(GDebug.Fx, '\n');
 }
 
 void VGame::Render()
