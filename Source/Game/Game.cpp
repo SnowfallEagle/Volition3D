@@ -1,6 +1,7 @@
 #include "Core/Volition.h"
 #include "Input/Input.h"
 #include "Graphics/Graphics.h"
+#include "Math/Math.h"
 #include "Game/Game.h"
 
 DEFINE_LOG_CHANNEL(hLogGame, "Game");
@@ -11,6 +12,7 @@ VGame Game;
 struct VGDebug
 {
     VSurface* Surface;
+    fx16 Fx;
 };
 static VGDebug GDebug;
 
@@ -18,6 +20,7 @@ void VGame::StartUp()
 {
     GDebug.Surface = VSurface::Load("Test.bmp");
     GDebug.Surface->EnableColorKey();
+    GDebug.Fx = 10.5f;
 }
 
 void VGame::ShutDown()
@@ -30,6 +33,12 @@ void VGame::Update(f32 Delta)
 {
     if (Input.IsKeyDown(EKeyCode::Escape))
         Volition.Stop();
+
+    if (Input.IsKeyDown(EKeyCode::Up))
+        GDebug.Fx += 0.1f;
+    if (Input.IsKeyDown(EKeyCode::Down))
+        GDebug.Fx -= 0.1f;
+    GDebug.Fx.Print('\n');
 }
 
 void VGame::Render()
