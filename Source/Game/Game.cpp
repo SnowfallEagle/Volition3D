@@ -31,19 +31,19 @@ void VGame::ShutDown()
 
 void VGame::Update(f32 Delta)
 {
-    if (Input.IsKeyDown(EKeyCode::Escape))
+    if (Input.IsKeyDown(EKeycode::Escape))
         Volition.Stop();
 
     fx16 Higher = FloatToFx16(1.01f);
     fx16 Lower = FloatToFx16(0.99f);
 
-    if (Input.IsKeyDown(EKeyCode::Up))
+    if (Input.IsKeyDown(EKeycode::Up))
         GDebug.Fx = DivFx16(GDebug.Fx, Lower);
-    if (Input.IsKeyDown(EKeyCode::Down))
+    if (Input.IsKeyDown(EKeycode::Down))
         GDebug.Fx = DivFx16(GDebug.Fx, Higher);
-    if (Input.IsKeyDown(EKeyCode::Left))
+    if (Input.IsKeyDown(EKeycode::Left))
         VL_LOG("%d\n", Random(100));
-    else if (Input.IsKeyDown(EKeyCode::Right))
+    else if (Input.IsKeyDown(EKeycode::Right))
         VL_LOG("%d\n", Random(-100, 100));
 }
 

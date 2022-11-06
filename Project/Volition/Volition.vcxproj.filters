@@ -105,10 +105,10 @@
     <ClInclude Include="..\..\Source\Input\Impl\Input_SDL.h">
       <Filter>Source\Input\Impl</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Input\Impl\KeyCode_DDraw.h">
+    <ClInclude Include="..\..\Source\Input\Impl\Keycode_DDraw.h">
       <Filter>Source\Input\Impl</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Input\Impl\KeyCode_SDL.h">
+    <ClInclude Include="..\..\Source\Input\Impl\Keycode_SDL.h">
       <Filter>Source\Input\Impl</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Input\Impl\MouseButton_DDraw.h">

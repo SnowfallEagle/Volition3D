@@ -190,8 +190,8 @@
     <ClInclude Include="..\..\Source\Graphics\Surface.h" />
     <ClInclude Include="..\..\Source\Input\Impl\Input_DDraw.h" />
     <ClInclude Include="..\..\Source\Input\Impl\Input_SDL.h" />
-    <ClInclude Include="..\..\Source\Input\Impl\KeyCode_DDraw.h" />
-    <ClInclude Include="..\..\Source\Input\Impl\KeyCode_SDL.h" />
+    <ClInclude Include="..\..\Source\Input\Impl\Keycode_DDraw.h" />
+    <ClInclude Include="..\..\Source\Input\Impl\Keycode_SDL.h" />
     <ClInclude Include="..\..\Source\Input\Impl\MouseButton_DDraw.h" />
     <ClInclude Include="..\..\Source\Input\Impl\MouseButton_SDL.h" />
     <ClInclude Include="..\..\Source\Input\Input.h" />
