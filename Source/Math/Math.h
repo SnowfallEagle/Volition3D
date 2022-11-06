@@ -1,6 +1,11 @@
 #ifndef MATH_MATH_H_
 
+/* TODO(sean):
+    - Look up tables for sin/cos
+ */
+
 #include <cmath>
+#include <string.h>
 #include "Core/Types.h"
 #include "Core/Platform.h"
 #include "Core/DebugLog.h"
@@ -9,7 +14,7 @@
 
 /** NOTE(sean):
     It's small C-styled math library, so 
-     we don't use methods here, only functions.
+     we don't use methods much here, only functions.
 
     Only constants are in math namespace
  */
@@ -36,12 +41,12 @@ namespace math
 #define DegToRad(A) ((A) * DegToRadConversion)
 #define RadToDeg(A) ((A) * RadToDegConversion)
 
-FINLINE i32 Random(i32 Range) // From 0 to Range-1
+FINLINE i32 Random(i32 Range) // From 0 to "Range"-1
 {
     return std::rand() % Range;
 }
 
-FINLINE i32 Random(i32 From, i32 To)
+FINLINE i32 Random(i32 From, i32 To) // From "From" to "To"
 {
     return From + (std::rand() % (To - From + 1));
 }
@@ -61,6 +66,22 @@ public:
             T X, Y;
         };
     };
+
+public:
+    FINLINE void Zero()
+    {
+        X = Y = 0;
+    }
+
+    FINLINE void Print()
+    {
+        if (T == f32)
+            VL_LOG("<%f, %f>", X, Y);
+        else if (T == i32)
+            VL_LOG("<%d, %d>", X, Y);
+        else
+            VL_LOG("<Unknown type>");
+    }
 };
 
 typedef TVector2D<f32> VVector2D, VPoint2D;
@@ -79,6 +100,22 @@ public:
             T X, Y, Z;
         };
     };
+
+public:
+    FINLINE void Zero()
+    {
+        X = Y = Z = 0;
+    }
+
+    FINLINE void Print()
+    {
+        if (T == f32)
+            VL_LOG("<%f, %f, %f>", X, Y, Z);
+        else if (T == i32)
+            VL_LOG("<%d, %d, %d>", X, Y, Z);
+        else
+            VL_LOG("<Unknown type>");
+    }
 };
 
 typedef TVector3D<f32> VVector3D, VPoint3D;
@@ -97,6 +134,22 @@ public:
             T X, Y, Z, W;
         };
     };
+
+public:
+    FINLINE void Zero()
+    {
+        X = Y = Z = W = 0;
+    }
+
+    FINLINE void Print()
+    {
+        if (T == f32)
+            VL_LOG("<%f, %f, %f, %f>", X, Y, Z, W);
+        else if (T == i32)
+            VL_LOG("<%d, %d, %d, %d>", X, Y, Z, W);
+        else
+            VL_LOG("<Unknown type>");
+    }
 };
 
 typedef TVector4D<f32> VVector4D, VPoint4D;
@@ -140,6 +193,17 @@ public:
             f32 C30, C31, C32, C33;
         };
     };
+
+public:
+    FINLINE void operator=(const VMatrix44& Mat)
+    {
+        memcpy(this, &Mat, sizeof(*this));
+    }
+
+    FINLINE void Zero()
+    {
+        memset(this, 0, sizeof(*this));
+    }
 };
 
 // 4x3
@@ -157,6 +221,17 @@ public:
             f32 C30, C31, C32;
         };
     };
+
+public:
+    FINLINE void operator=(const VMatrix43& Mat)
+    {
+        memcpy(this, &Mat, sizeof(*this));
+    }
+
+    FINLINE void Zero()
+    {
+        memset(this, 0, sizeof(*this));
+    }
 };
 
 // 1x4
@@ -171,6 +246,17 @@ public:
             f32 C00, C01, C02, C03;
         };
     };
+
+public:
+    FINLINE void operator=(const VMatrix14& Mat)
+    {
+        memcpy(this, &Mat, sizeof(*this));
+    }
+
+    FINLINE void Zero()
+    {
+        memset(this, 0, sizeof(*this));
+    }
 };
 
 // 3x3
@@ -187,6 +273,17 @@ public:
             f32 C20, C21, C22;
         };
     };
+
+public:
+    FINLINE void operator=(const VMatrix33& Mat)
+    {
+        memcpy(this, &Mat, sizeof(*this));
+    }
+
+    FINLINE void Zero()
+    {
+        memset(this, 0, sizeof(*this));
+    }
 };
 
 // 3x2
@@ -203,6 +300,17 @@ public:
             f32 C20, C21;
         };
     };
+
+public:
+    FINLINE void operator=(const VMatrix32& Mat)
+    {
+        memcpy(this, &Mat, sizeof(*this));
+    }
+
+    FINLINE void Zero()
+    {
+        memset(this, 0, sizeof(*this));
+    }
 };
 
 // 1x3
@@ -217,6 +325,17 @@ public:
             f32 C00, C01, C02;
         };
     };
+
+public:
+    FINLINE void operator=(const VMatrix13& Mat)
+    {
+        memcpy(this, &Mat, sizeof(*this));
+    }
+
+    FINLINE void Zero()
+    {
+        memset(this, 0, sizeof(*this));
+    }
 };
 
 // 2x2
@@ -232,6 +351,17 @@ public:
             f32 C10, C11;
         };
     };
+
+public:
+    FINLINE void operator=(const VMatrix22& Mat)
+    {
+        memcpy(this, &Mat, sizeof(*this));
+    }
+
+    FINLINE void Zero()
+    {
+        memset(this, 0, sizeof(*this));
+    }
 };
 
 // 1x2
@@ -246,29 +376,17 @@ public:
             f32 C00, C01;
         };
     };
-};
 
-// *** Quaternion ***
-class VQuaternion
-{
 public:
-    union
+    FINLINE void operator=(const VMatrix12& Mat)
     {
-        f32 C[4];
-        struct
-        {
-            f32 Q0;
-            VVector3D QV;
-        };
-        struct
-        {
-            /** NOTE(sean):
-                We can't cast quaternion to 4d
-                vector because of W on first place
-              */
-            f32 W, X, Y, Z;
-        };
-    };
+        memcpy(this, &Mat, sizeof(*this));
+    }
+
+    FINLINE void Zero()
+    {
+        memset(this, 0, sizeof(*this));
+    }
 };
 
 // Indentity matrices
@@ -303,6 +421,50 @@ static const VMatrix32 IdentityMatrix32 = {
 static const VMatrix22 IdentityMatrix22 = {
     1, 0,
     0, 1,
+};
+
+// TODO(sean): Transpose, ColumnSwap, Print functions for matrices
+
+// *** Quaternion ***
+class VQuaternion
+{
+public:
+    union
+    {
+        f32 C[4];
+        struct
+        {
+            f32 Q0;
+            VVector3D QV;
+        };
+        struct
+        {
+            /** NOTE(sean):
+                We can't cast quaternion to 4d
+                vector because of W on first place
+              */
+            f32 W, X, Y, Z;
+        };
+    };
+
+public:
+    FINLINE void Zero()
+    {
+        W = X = Y = Z = 0;
+    }
+
+    FINLINE void InitVec3(const VVector3D* V)
+    {
+        W = 0;
+        X = V->X;
+        Y = V->Y;
+        Z = V->Z;
+    }
+
+    FINLINE void Print()
+    {
+        VL_LOG("<%f, %f, %f, %f>", W, X, Y, Z);
+    }
 };
 
 // *** Coordinates ***
