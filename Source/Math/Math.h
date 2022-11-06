@@ -268,6 +268,8 @@ public:
 };
 
 // *** Fixed point 16.16 ***
+typedef int _FX16_IN_INTEGER;
+
 class fx16 // It's much better with like i32, f32 rather than VFixed16 name convection
 {
 private:
@@ -284,6 +286,9 @@ private:
 public:
     FINLINE fx16() = default;
     FINLINE fx16(i32 I) : Fixed(I << Shift)
+    {
+    }
+    FINLINE fx16(_FX16_IN_INTEGER AlreadyFixed) : Fixed(AlreadyFixed)
     {
     }
     FINLINE fx16(f32 F) : Fixed((i32)(F * Magnitude + 0.5f))
@@ -318,14 +323,11 @@ public:
     }
     // *** TODO(sean) ***:
     // Implement this stuff >>>
-    FINLINE fx16 operator*(const fx16& InFixed) const
+    FINLINE fx16 operator*=(fx16 InFixed)
     {
         return 0;
     }
-    FINLINE fx16 operator*=(const fx16& InFixed)
-    {
-        return 0;
-    }
+    // Divides
     // <<<
 
     FINLINE i32 GetWholePart() const
@@ -341,6 +343,33 @@ public:
         VL_LOG("%f%c", (f32)*this, EndChar);
     }
 };
+
+FINLINE _FX16_IN_INTEGER operator*(fx16 Fixed1, fx16 Fixed2)
+{
+    /* NOTE(sean):
+        Let X, Y are integers and P, Q are fixed point numbers.
+        P = (fx16)X, Q = (fx16)Y.
+        Now P is actually (X * 2^16) and Q is (Y * 2^16).
+
+        When we want to multiply P by Q we got:
+        Res = (X * 2^16) * (Y * 2^16) = XY * 2^32
+        But we do want to see this: Res is equal XY * 2^16
+
+        So all we need to do is:
+            1. Use 64 math to get result in EDX:EAX
+            2. Shift our whole result right by 16
+            3. Get result in one EAX register
+    */
+    __asm
+    {
+        mov     eax, Fixed1         // Fixed1->eax
+        imul    Fixed2              // eax *= InFixed->Fixed, result in edx:eax
+        shrd    eax, edx, 16        // shift eax by 2^16,
+                                    // move low 16 bytes from edx to
+                                    //  eax high 16 bytes
+        // Result in eax
+    }
+}
 
 #define MATH_MATH_H_
 #endif

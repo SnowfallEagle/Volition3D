@@ -195,9 +195,12 @@
     <ClInclude Include="..\..\Source\Input\Impl\MouseButton_DDraw.h" />
     <ClInclude Include="..\..\Source\Input\Impl\MouseButton_SDL.h" />
     <ClInclude Include="..\..\Source\Input\Input.h" />
+    <ClInclude Include="..\..\Source\Math\Math.h" />
     <ClInclude Include="..\..\Source\Math\Rect.h" />
     <ClInclude Include="..\..\Source\Platform\Win.h" />
     <ClInclude Include="..\..\Source\Thread\SpinLock.h" />
+    <ClInclude Include="..\..\ThirdParty\ltm\tlm-add.h" />
+    <ClInclude Include="..\..\ThirdParty\ltm\tlm.h" />
     <ClInclude Include="..\..\ThirdParty\SDL\Include\begin_code.h" />
     <ClInclude Include="..\..\ThirdParty\SDL\Include\close_code.h" />
     <ClInclude Include="..\..\ThirdParty\SDL\Include\SDL.h" />
@@ -307,6 +310,12 @@
     <ClCompile Include="..\..\Source\Input\Input.cpp" />
     <ClCompile Include="..\..\Source\main.cpp" />
     <ClCompile Include="..\..\Source\WinMain.cpp" />
+    <ClCompile Include="..\..\ThirdParty\ltm\tlm.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\ThirdParty\SDL\Include\SDL_config.h.cmake" />

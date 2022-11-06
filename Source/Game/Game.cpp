@@ -34,10 +34,13 @@ void VGame::Update(f32 Delta)
     if (Input.IsKeyDown(EKeyCode::Escape))
         Volition.Stop();
 
+    fx16 Higher = 1.05f;
+    fx16 Lower = 0.95f;
+
     if (Input.IsKeyDown(EKeyCode::Up))
-        GDebug.Fx += 0.1f;
+        GDebug.Fx = GDebug.Fx * Higher;
     if (Input.IsKeyDown(EKeyCode::Down))
-        GDebug.Fx -= 0.1f;
+        GDebug.Fx = GDebug.Fx * Lower;
     GDebug.Fx.Print('\n');
 }
 

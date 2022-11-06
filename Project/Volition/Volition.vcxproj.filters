@@ -40,8 +40,8 @@
     <Filter Include="ThirdParty\SDL">
       <UniqueIdentifier>{5f6a85fb-9c10-4131-9615-803969d4127b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Main">
-      <UniqueIdentifier>{2ecdb37b-07f8-4dc9-97e4-fc612ba07f7b}</UniqueIdentifier>
+    <Filter Include="ThirdParty\tlm">
+      <UniqueIdentifier>{dddc2163-9b6c-4de1-a49c-bc395ec69dd8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -393,6 +393,15 @@
     <ClInclude Include="..\..\Source\Graphics\Surface.h">
       <Filter>Source\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Math\Math.h">
+      <Filter>Source\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\ltm\tlm.h">
+      <Filter>ThirdParty\tlm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\ltm\tlm-add.h">
+      <Filter>ThirdParty\tlm</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\main.cpp">
@@ -448,6 +457,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\WinMain.cpp">
       <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\ltm\tlm.cpp">
+      <Filter>ThirdParty\tlm</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
