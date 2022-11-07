@@ -16,11 +16,6 @@ public:
     void Lock(u32*& OutBuffer, i32& OutPitch);
     void Unlock();
 
-    FINLINE void EnableColorKey()
-    {
-        SDL_SetColorKey(SDLSurface, SDL_TRUE, 0);
-    }
-
 private:
     VSurface() = default;
     VSurface(SDL_Surface* InSDLSurface, i32 InWidth, i32 InHeight)

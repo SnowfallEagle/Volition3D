@@ -16,6 +16,7 @@
 
 #include "Core/Types.h"
 #include "Core/Platform.h"
+#include "Math/Math.h"
 #include "Graphics/Surface.h"
 
 /** NOTE(sean):
@@ -35,6 +36,93 @@ protected:
     i32 ScreenHeight;
 
 public:
+    void DrawSurfaceBlended(VSurface* Surface, const VRelRectI* Source, const VRelRectI* Dest)
+    {
+        // Compute position and size
+        VVector2DI SrcPos, DestPos;
+        VVector2DI SrcSize, DestSize;
+
+        // Source
+        if (Source)
+        {
+            SrcPos = { Source->X, Source->Y };
+            SrcSize = { Source->W, Source->H };
+
+            // TODO(sean): Clipping
+        }
+        else
+        {
+            SrcPos = { 0, 0 };
+            SrcSize = { Surface->GetWidth(), Surface->GetHeight() };
+        }
+
+        // Destination
+        if (Dest)
+        {
+            DestPos = { Dest->X, Dest->Y };
+            DestSize = { Dest->W, Dest->H };
+
+            // TODO(sean): Clipping
+        }
+        else
+        {
+            DestPos = { 0, 0 };
+            DestSize = { BackSurface->GetWidth(), BackSurface->GetHeight() };
+        }
+
+        // Lock surfaces
+        u32* SrcBuffer;
+        u32* DestBuffer;
+        i32 SrcPitch, DestPitch;
+        Surface->Lock(SrcBuffer, SrcPitch);
+        BackSurface->Lock(DestBuffer, DestPitch);
+
+        // Prepare to blit
+        SrcBuffer += SrcPos.Y * SrcPitch + SrcPos.X;
+        DestBuffer += DestPos.Y * DestPitch + DestPos.X;
+
+        f32 XScale = (f32)SrcSize.X / (f32)DestSize.X;
+        f32 YScale = (f32)SrcSize.Y / (f32)DestSize.Y;
+
+        i32f PrevYSrc = 0;
+
+        // Blit
+        for (i32f Y = 0; Y < DestSize.Y; ++Y)
+        {
+            for (i32f X = 0; X < DestSize.X; ++X)
+            {
+                u32 SrcPixel = SrcBuffer[(i32f)(X * XScale)];
+                u32 DestPixel = DestBuffer[X];
+                f32 Alpha = (f32)_GET_ALPHA(SrcPixel) / 255.0f;
+                f32 InvAlpha = 1.0f - Alpha;
+
+                u32 Pixel = (u32)(
+                    _RGB32((u32)(_GET_RED(SrcPixel) * Alpha),
+                           (u32)(_GET_GREEN(SrcPixel) * Alpha),
+                           (u32)(_GET_BLUE(SrcPixel) * Alpha)) +
+
+                    _RGB32((u32)(_GET_RED(DestPixel) * InvAlpha),
+                           (u32)(_GET_GREEN(DestPixel) * InvAlpha),
+                           (u32)(_GET_BLUE(DestPixel) * InvAlpha))
+                );
+
+                DestBuffer[X] = Pixel;
+            }
+
+            DestBuffer += DestPitch;
+
+            i32f ScaledYSrc = (i32f)(Y * YScale);
+            if (ScaledYSrc > PrevYSrc)
+            {
+                SrcBuffer += SrcPitch;
+                PrevYSrc = ScaledYSrc;
+            }
+        }
+
+        Surface->Unlock();
+        BackSurface->Unlock();
+    }
+
     FINLINE i32 GetScreenWidth() const
     {
         return ScreenWidth;

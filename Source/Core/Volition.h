@@ -1,5 +1,6 @@
 #ifndef CORE_VOLITION_H_
 
+#include <cstdlib>
 #include "Core/Types.h"
 #include "Core/Platform.h"
 #include "Core/DebugLog.h"
@@ -28,9 +29,12 @@ public:
 
         DebugLog.StartUp();
         Window.Create(WindowTitle, WindowWidth, WindowHeight);
+        std::srand(GetTicks());
+
         Graphics.StartUp();
         Input.StartUp();
         Game.StartUp();
+
 
         LastTick = GetTicks();
         bRunning = true;

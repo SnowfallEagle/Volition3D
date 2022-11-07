@@ -12,21 +12,24 @@ VGame Game;
 struct VGDebug
 {
     VSurface* Surface;
-    fx16 Fx;
-};
-static VGDebug GDebug;
+    VSurface* Surface2;
+    u32 Alpha;
+} static GDebug; // Game Debug
 
 void VGame::StartUp()
 {
+    GDebug.Surface2 = VSurface::Load("Test2.bmp");
     GDebug.Surface = VSurface::Load("Test.bmp");
-    GDebug.Surface->EnableColorKey();
-    GDebug.Fx = FloatToFx16(10.5f);
+    GDebug.Alpha = 255u;
 }
 
 void VGame::ShutDown()
 {
     GDebug.Surface->Destroy();
     delete GDebug.Surface;
+
+    GDebug.Surface2->Destroy();
+    delete GDebug.Surface2;
 }
 
 void VGame::Update(f32 Delta)
@@ -34,21 +37,52 @@ void VGame::Update(f32 Delta)
     if (Input.IsKeyDown(EKeycode::Escape))
         Volition.Stop();
 
-    fx16 Higher = FloatToFx16(1.01f);
-    fx16 Lower = FloatToFx16(0.99f);
+    {
+        if (Input.IsKeyDown(EKeycode::Left))
+            GDebug.Alpha -= 15;
+        if (Input.IsKeyDown(EKeycode::Right))
+            GDebug.Alpha += 15;
+        VL_LOG("%u\n", GDebug.Alpha);
 
-    if (Input.IsKeyDown(EKeycode::Up))
-        GDebug.Fx = DivFx16(GDebug.Fx, Lower);
-    if (Input.IsKeyDown(EKeycode::Down))
-        GDebug.Fx = DivFx16(GDebug.Fx, Higher);
-    if (Input.IsKeyDown(EKeycode::Left))
-        VL_LOG("%d\n", Random(100));
-    else if (Input.IsKeyDown(EKeycode::Right))
-        VL_LOG("%d\n", Random(-100, 100));
+        i32f Width = GDebug.Surface->GetWidth();
+        i32f Height = GDebug.Surface->GetHeight();
+
+        u32* Buffer;
+        i32 Pitch;
+        GDebug.Surface->Lock(Buffer, Pitch);
+        {
+            for (i32f Y = 0; Y < Height; ++Y)
+            {
+                for (i32f X = 0; X < Width; ++X)
+                {
+                    Buffer[X] = (Buffer[X] << 8) >> 8;
+                    Buffer[X] |= GDebug.Alpha << _ALPHA_SHIFT;
+                }
+                Buffer += Pitch;
+            }
+        }
+        GDebug.Surface->Unlock();
+    }
+
+    {
+        float A = 1.0f;
+        float B = 0.5f;
+        __asm
+        {
+            fld     A
+            fld     B
+            fdiv
+            fstp    A
+        }
+
+        if (Input.IsKeyDown(EKeycode::Return))
+            VL_LOG("%f\n", A);
+    }
 }
 
 void VGame::Render()
 {
-    Graphics.DrawSurface(GDebug.Surface, nullptr, nullptr);
+    //Graphics.DrawSurface(GDebug.Surface2, nullptr, nullptr);
+    Graphics.DrawSurfaceBlended(GDebug.Surface, nullptr, nullptr);
     Graphics.DrawText(0, 0, _RGB32(0xFF, 0xFF, 0xFF), "FPS: %.3f", 1000.0f/Volition.GetDelta());
 }

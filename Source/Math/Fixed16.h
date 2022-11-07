@@ -39,6 +39,7 @@ FINLINE f32 Fx16ToFloat(fx16 Fx)
 
 FINLINE fx16 MulFx16(fx16 Fx1, fx16 Fx2)
 {
+#if VL_COMPILER_MSVC
     /* NOTE(sean):
         Let X, Y are integers and P, Q are fixed point numbers.
         P = (fx16)X, Q = (fx16)Y.
@@ -63,10 +64,14 @@ FINLINE fx16 MulFx16(fx16 Fx1, fx16 Fx2)
                                     //  eax high 16 bytes
         // Result in eax
     }
+#else
+# error "There are no implementation"
+#endif // VL_COMPILER_MSVC
 }
 
 FINLINE fx16 DivFx16(fx16 Fx1, fx16 Fx2)
 {
+#if VL_COMPILER_MSVC
     /* NOTE(sean):
         Let X, Y are integers and P, Q are fixed point numbers.
         P = (fx16)X, Q = (fx16)Y.
@@ -94,6 +99,9 @@ FINLINE fx16 DivFx16(fx16 Fx1, fx16 Fx2)
         idiv    Fx2                 // Divide by Fx2
         // Result in eax
     }
+#else
+# error "There are no implementation"
+#endif // VL_COMPILER_MSVC
 }
 
 FINLINE i32 GetFx16WholePart(fx16 Fx)

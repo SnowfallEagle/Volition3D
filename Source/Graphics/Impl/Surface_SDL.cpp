@@ -47,7 +47,7 @@ void VSurface::Destroy()
 
 void VSurface::Lock(u32*& OutBuffer, i32& OutPitch)
 {
-    ASSERT(bLocked);
+    ASSERT(!bLocked);
 
     /**
        NOTE(sean): We don't have to lock surfaces since
@@ -66,6 +66,7 @@ void VSurface::Lock(u32*& OutBuffer, i32& OutPitch)
 
 void VSurface::Unlock()
 {
+    ASSERT(bLocked);
 #if SHOULD_LOCK_SDL_SURFACE
     if (SDLSurface->locked) // Check if we don't have to unlock
         SDL_UnlockSurface(SDLSurface);
