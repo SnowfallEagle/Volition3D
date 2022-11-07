@@ -38,10 +38,11 @@ void VGame::Update(f32 Delta)
         Volition.Stop();
 
     {
+        GDebug.Alpha %= 256u;
         if (Input.IsKeyDown(EKeycode::Left))
-            GDebug.Alpha -= 15;
+            GDebug.Alpha -= 1;
         if (Input.IsKeyDown(EKeycode::Right))
-            GDebug.Alpha += 15;
+            GDebug.Alpha += 1;
         VL_LOG("%u\n", GDebug.Alpha);
 
         i32f Width = GDebug.Surface->GetWidth();
@@ -82,7 +83,10 @@ void VGame::Update(f32 Delta)
 
 void VGame::Render()
 {
-    //Graphics.DrawSurface(GDebug.Surface2, nullptr, nullptr);
-    Graphics.DrawSurfaceBlended(GDebug.Surface, nullptr, nullptr);
+    Graphics.DrawSurface(GDebug.Surface2, nullptr, nullptr);
+    {
+        VRelRectI Dest = { 128, 128, -128, -128 };
+        Graphics.DrawSurfaceBlended(GDebug.Surface, nullptr, &Dest);
+    }
     Graphics.DrawText(0, 0, _RGB32(0xFF, 0xFF, 0xFF), "FPS: %.3f", 1000.0f/Volition.GetDelta());
 }
