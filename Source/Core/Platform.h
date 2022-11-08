@@ -8,7 +8,7 @@
 #ifdef _MSC_VER
 # define VL_PLATFOM_WIN 1
 # define VL_COMPILER_MSVC 1
-# include "Platform/Win.h"
+# include "Core/Impl/Platform_Win.h"
 #endif
 
 // Standard stuff

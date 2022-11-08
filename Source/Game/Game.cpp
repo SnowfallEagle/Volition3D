@@ -3,6 +3,7 @@
 #include "Graphics/Graphics.h"
 #include "Math/Math.h"
 #include "Game/Game.h"
+#include "Graphics/Renderer/Renderer.h" // Of course in real game we don't need renderer's header but who cares
 
 DEFINE_LOG_CHANNEL(hLogGame, "Game");
 
@@ -37,6 +38,9 @@ void VGame::Update(f32 Delta)
     if (Input.IsKeyDown(EKeycode::Escape))
         Volition.Stop();
 
+
+
+    /* DrawSurfaceBlended test
     {
         GDebug.Alpha %= 256u;
         if (Input.IsKeyDown(EKeycode::Left))
@@ -64,7 +68,9 @@ void VGame::Update(f32 Delta)
         }
         GDebug.Surface->Unlock();
     }
+    */
 
+    /* fpu asm test
     {
         float A = 1.0f;
         float B = 0.5f;
@@ -79,6 +85,7 @@ void VGame::Update(f32 Delta)
         if (Input.IsKeyDown(EKeycode::Return))
             VL_LOG("%f\n", A);
     }
+    */
 }
 
 void VGame::Render()

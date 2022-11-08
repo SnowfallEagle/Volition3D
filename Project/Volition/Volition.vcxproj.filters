@@ -4,9 +4,6 @@
     <Filter Include="Source">
       <UniqueIdentifier>{de934220-aa3a-4c61-bf3c-b5af471e8db4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Platform">
-      <UniqueIdentifier>{7543ad6e-6019-4d4a-840a-efab630b5756}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Input">
       <UniqueIdentifier>{376f82d7-5364-4f63-837f-7f506d72fefc}</UniqueIdentifier>
     </Filter>
@@ -18,9 +15,6 @@
     </Filter>
     <Filter Include="Source\Game">
       <UniqueIdentifier>{f8ea90f7-f36b-4e3c-a634-5a71e0f0441c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Thread">
-      <UniqueIdentifier>{0ef1c9d1-4a86-4f04-baad-dbad24424b79}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Math">
       <UniqueIdentifier>{443909e1-086d-4c26-b9e3-8e63d2a53793}</UniqueIdentifier>
@@ -43,11 +37,14 @@
     <Filter Include="ThirdParty\tlm">
       <UniqueIdentifier>{dddc2163-9b6c-4de1-a49c-bc395ec69dd8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Core\Thread">
+      <UniqueIdentifier>{afd59d05-394b-4f51-b0c5-12c94f608c06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Graphics\Renderer">
+      <UniqueIdentifier>{45e23669-3ef4-403a-a189-672b2ed0f9b6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Source\Platform\Win.h">
-      <Filter>Source\Platform</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Input\Input.h">
       <Filter>Source\Input</Filter>
     </ClInclude>
@@ -55,9 +52,6 @@
       <Filter>Source\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Core\Assert.h">
-      <Filter>Source\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Core\Platform.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Core\Types.h">
@@ -71,9 +65,6 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\Game\Game.h">
       <Filter>Source\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Thread\SpinLock.h">
-      <Filter>Source\Thread</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Core\DebugLog.h">
       <Filter>Source\Core</Filter>
@@ -405,6 +396,18 @@
     <ClInclude Include="..\..\Source\Math\Fixed16.h">
       <Filter>Source\Math</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Core\Thread\SpinLock.h">
+      <Filter>Source\Core\Thread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Core\Impl\Platform_Win.h">
+      <Filter>Source\Core\Impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Core\Platform.h">
+      <Filter>Source\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Graphics\Renderer\Renderer.h">
+      <Filter>Source\Graphics\Renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\main.cpp">
@@ -463,6 +466,9 @@
     </ClCompile>
     <ClCompile Include="..\..\ThirdParty\ltm\tlm.cpp">
       <Filter>ThirdParty\tlm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Graphics\Renderer\Renderer.cpp">
+      <Filter>Source\Graphics\Renderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

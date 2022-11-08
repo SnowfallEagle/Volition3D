@@ -173,9 +173,11 @@
   <ItemGroup>
     <ClInclude Include="..\..\Source\Core\Assert.h" />
     <ClInclude Include="..\..\Source\Core\DebugLog.h" />
+    <ClInclude Include="..\..\Source\Core\Impl\Platform_Win.h" />
     <ClInclude Include="..\..\Source\Core\Impl\Window_DDraw.h" />
     <ClInclude Include="..\..\Source\Core\Impl\Window_SDL.h" />
     <ClInclude Include="..\..\Source\Core\Platform.h" />
+    <ClInclude Include="..\..\Source\Core\Thread\SpinLock.h" />
     <ClInclude Include="..\..\Source\Core\Types.h" />
     <ClInclude Include="..\..\Source\Core\Volition.h" />
     <ClInclude Include="..\..\Source\Core\Window.h" />
@@ -187,6 +189,7 @@
     <ClInclude Include="..\..\Source\Graphics\Impl\ISurface.h" />
     <ClInclude Include="..\..\Source\Graphics\Impl\Surface_DDraw.h" />
     <ClInclude Include="..\..\Source\Graphics\Impl\Surface_SDL.h" />
+    <ClInclude Include="..\..\Source\Graphics\Renderer\Renderer.h" />
     <ClInclude Include="..\..\Source\Graphics\Surface.h" />
     <ClInclude Include="..\..\Source\Input\Impl\Input_DDraw.h" />
     <ClInclude Include="..\..\Source\Input\Impl\Input_SDL.h" />
@@ -198,8 +201,6 @@
     <ClInclude Include="..\..\Source\Math\Fixed16.h" />
     <ClInclude Include="..\..\Source\Math\Math.h" />
     <ClInclude Include="..\..\Source\Math\Rect.h" />
-    <ClInclude Include="..\..\Source\Platform\Win.h" />
-    <ClInclude Include="..\..\Source\Thread\SpinLock.h" />
     <ClInclude Include="..\..\ThirdParty\ltm\tlm-add.h" />
     <ClInclude Include="..\..\ThirdParty\ltm\tlm.h" />
     <ClInclude Include="..\..\ThirdParty\SDL\Include\begin_code.h" />
@@ -306,6 +307,7 @@
     <ClCompile Include="..\..\Source\Graphics\Impl\ISurface.cpp" />
     <ClCompile Include="..\..\Source\Graphics\Impl\Surface_DDraw.cpp" />
     <ClCompile Include="..\..\Source\Graphics\Impl\Surface_SDL.cpp" />
+    <ClCompile Include="..\..\Source\Graphics\Renderer\Renderer.cpp" />
     <ClCompile Include="..\..\Source\Input\Impl\Input_DDraw.cpp" />
     <ClCompile Include="..\..\Source\Input\Impl\Input_SDL.cpp" />
     <ClCompile Include="..\..\Source\Input\Input.cpp" />
