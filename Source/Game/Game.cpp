@@ -85,7 +85,7 @@ void VGame::Render()
 {
     Graphics.DrawSurface(GDebug.Surface2, nullptr, nullptr);
     {
-        VRelRectI Dest = { 128, 128, -128, -128 };
+        VRelRectI Dest = { 0, 0, -128, -128 };
         Graphics.DrawSurfaceBlended(GDebug.Surface, nullptr, &Dest);
     }
     Graphics.DrawText(0, 0, _RGB32(0xFF, 0xFF, 0xFF), "FPS: %.3f", 1000.0f/Volition.GetDelta());
