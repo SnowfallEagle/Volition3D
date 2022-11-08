@@ -177,16 +177,16 @@ public:
 
     void AcquireWrite()
     {
-        u32 CurrentRefCount = RefCount.load(std::memory_order_relaxed);
+        u32 UnlockValue = 0;
         while (!RefCount.compare_exchange_weak(
-            CurrentRefCount,
+            UnlockValue,
             0xFFFFFFFF,
             std::memory_order_acquire,
             std::memory_order_relaxed
         ))
         {
             PAUSE();
-            std::size_t CurrentRefCount = RefCount.load(std::memory_order_relaxed);
+            UnlockValue = 0;
         }
     }
 
