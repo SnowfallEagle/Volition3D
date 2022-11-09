@@ -14,5 +14,7 @@
 // Standard stuff
 #define INLINE inline // Compiler decide if it should be inlined
 
+#define BIT(N) ( 1 << ((N)-1) )
+
 #define CORE_PLATFORM_H_
 #endif

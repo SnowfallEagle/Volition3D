@@ -40,9 +40,6 @@
     <Filter Include="Source\Core\Thread">
       <UniqueIdentifier>{afd59d05-394b-4f51-b0c5-12c94f608c06}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Graphics\Renderer">
-      <UniqueIdentifier>{45e23669-3ef4-403a-a189-672b2ed0f9b6}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\Input\Input.h">
@@ -405,8 +402,8 @@
     <ClInclude Include="..\..\Source\Core\Platform.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Graphics\Renderer\Renderer.h">
-      <Filter>Source\Graphics\Renderer</Filter>
+    <ClInclude Include="..\..\Source\Graphics\Renderer.h">
+      <Filter>Source\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -467,8 +464,8 @@
     <ClCompile Include="..\..\ThirdParty\ltm\tlm.cpp">
       <Filter>ThirdParty\tlm</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Graphics\Renderer\Renderer.cpp">
-      <Filter>Source\Graphics\Renderer</Filter>
+    <ClCompile Include="..\..\Source\Graphics\Renderer.cpp">
+      <Filter>Source\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

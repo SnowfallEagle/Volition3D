@@ -3,7 +3,7 @@
 #include "Graphics/Graphics.h"
 #include "Math/Math.h"
 #include "Game/Game.h"
-#include "Graphics/Renderer/Renderer.h" // Of course in real game we don't need renderer's header but who cares
+#include "Graphics/Renderer.h" // Of course in real game we don't need renderer's header but who cares
 
 DEFINE_LOG_CHANNEL(hLogGame, "Game");
 
@@ -15,6 +15,7 @@ struct VGDebug
     VSurface* Surface;
     VSurface* Surface2;
     u32 Alpha;
+    VObject4DV1 Object;
 } static GDebug; // Game Debug
 
 void VGame::StartUp()
@@ -22,6 +23,12 @@ void VGame::StartUp()
     GDebug.Surface2 = VSurface::Load("Test2.bmp");
     GDebug.Surface = VSurface::Load("Test.bmp");
     GDebug.Alpha = 255u;
+    GDebug.Object.LoadPLG(
+        "Test.plg",
+        { 0.0f, 0.0f, 0.0f },
+        { 1.0f, 1.0f, 1.0f },
+        { 0, 0, 0 }
+    );
 }
 
 void VGame::ShutDown()
@@ -67,23 +74,6 @@ void VGame::Update(f32 Delta)
             }
         }
         GDebug.Surface->Unlock();
-    }
-    */
-
-    /* fpu asm test
-    {
-        float A = 1.0f;
-        float B = 0.5f;
-        __asm
-        {
-            fld     A
-            fld     B
-            fdiv
-            fstp    A
-        }
-
-        if (Input.IsKeyDown(EKeycode::Return))
-            VL_LOG("%f\n", A);
     }
     */
 }
