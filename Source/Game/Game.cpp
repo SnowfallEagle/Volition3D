@@ -29,7 +29,7 @@ void VGame::StartUp()
     );
 
     VVector4D A = { 1.0f, 1.0f, 1.0f, 1.0f };
-    VMatrix44 M = IdentityMatrix44;
+    VMatrix44 M = VMatrix44::Identity;
     VVector4D R;
     VVector4D::MulMat44(A, M, R);
 

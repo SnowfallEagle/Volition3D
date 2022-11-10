@@ -4,33 +4,33 @@
 
 #include "Math/Matrix.h"
 
-const VMatrix44 IdentityMatrix44 = {
+const VMatrix44 VMatrix44::Identity = {
     1, 0, 0, 0,
     0, 1, 0, 0,
     0, 0, 1, 0,
     0, 0, 0, 1,
 };
 
-const VMatrix43 IdentityMatrix43 = {
+const VMatrix43 VMatrix43::Identity = {
     1, 0, 0,
     0, 1, 0,
     0, 0, 1,
     0, 0, 0,
 };
 
-const VMatrix33 IdentityMatrix33 = {
+const VMatrix33 VMatrix33::Identity = {
     1, 0, 0,
     0, 1, 0,
     0, 0, 1,
 };
 
-const VMatrix32 IdentityMatrix32 = {
+const VMatrix32 VMatrix32::Identity = {
     1, 0,
     0, 1,
     0, 0,
 };
 
-const VMatrix22 IdentityMatrix22 = {
+const VMatrix22 VMatrix22::Identity = {
     1, 0,
     0, 1,
 };

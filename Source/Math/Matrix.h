@@ -7,6 +7,9 @@
 class VMatrix44
 {
 public:
+    static const VMatrix44 Identity;
+
+public:
     union
     {
         f32 C[4][4];
@@ -33,6 +36,9 @@ public:
 
 class VMatrix43
 {
+public:
+    static const VMatrix43 Identity;
+
 public:
     union
     {
@@ -61,6 +67,9 @@ public:
 class VMatrix14
 {
 public:
+    static const VMatrix14 Identity;
+
+public:
     union
     {
         f32 C[4];
@@ -85,6 +94,9 @@ public:
 // 3x3
 class VMatrix33
 {
+public:
+    static const VMatrix33 Identity;
+
 public:
     union
     {
@@ -112,6 +124,9 @@ public:
 class VMatrix32
 {
 public:
+    static const VMatrix32 Identity;
+
+public:
     union
     {
         f32 C[3][2];
@@ -138,6 +153,9 @@ public:
 class VMatrix13
 {
 public:
+    static const VMatrix13 Identity;
+
+public:
     union
     {
         f32 C[3];
@@ -161,6 +179,9 @@ public:
 
 class VMatrix22
 {
+public:
+    static const VMatrix22 Identity;
+
 public:
     union
     {
@@ -187,6 +208,9 @@ public:
 class VMatrix12
 {
 public:
+    static const VMatrix12 Identity;
+
+public:
     union
     {
         f32 C[2];
@@ -207,13 +231,4 @@ public:
         memset(this, 0, sizeof(*this));
     }
 };
-
-// Indentity matrices
-extern const VMatrix44 IdentityMatrix44;
-extern const VMatrix43 IdentityMatrix43;
-extern const VMatrix33 IdentityMatrix33;
-extern const VMatrix32 IdentityMatrix32;
-extern const VMatrix22 IdentityMatrix22;
-
-// TODO(sean): Transpose, ColumnSwap, Print functions for matrices
 
