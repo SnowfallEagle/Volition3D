@@ -28,10 +28,20 @@ void VGame::StartUp()
         { 0.0f, 0.0f, 0.0f, 0.0f }
     );
 
-    VVector4D A = { 1.0f, 1.0f, 1.0f, 1.0f };
-    VMatrix44 M = VMatrix44::Identity;
-    VVector4D R;
-    VVector4D::MulMat44(A, M, R);
+    VMatrix44 A = {
+        1.0f, 0.0f, 0.0f, 0.0f,
+        0.0f, 1.0f, 0.0f, 0.0f,
+        0.0f, 0.0f, 1.0f, 0.0f,
+        5.0f, 5.0f, 5.0f, 1.0f,
+    };
+    VMatrix44 B = {
+        1.0f, 0.0f, 0.0f, 0.0f,
+        0.0f, 1.0f, 0.0f, 0.0f,
+        0.0f, 0.0f, 1.0f, 0.0f,
+        -5.0f, -5.0f, -5.0f, 1.0f,
+    };
+    VMatrix44 R;
+    VMatrix44::Mul(A, B, R);
 
     R.Print();
 }

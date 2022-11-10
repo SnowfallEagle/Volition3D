@@ -3,6 +3,7 @@
 #include <string.h>
 #include "Core/Types.h"
 #include "Core/Platform.h"
+#include "Core/DebugLog.h"
 
 class VMatrix44
 {
@@ -32,6 +33,23 @@ public:
     {
         memset(this, 0, sizeof(*this));
     }
+
+    void Print()
+    {
+        VL_LOG("<\n");
+        for (i32f Y = 0; Y < 4; ++Y)
+        {
+            VL_LOG("\t");
+            for (i32f X = 0; X < 4; ++X)
+            {
+                VL_LOG("%f, ", C[Y][X]);
+            }
+            VL_LOG("\n");
+        }
+        VL_LOG(">\n");
+    }
+
+    static void Mul(const VMatrix44& A, const VMatrix44& B, VMatrix44& R);
 };
 
 class VMatrix43
