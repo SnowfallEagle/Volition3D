@@ -51,14 +51,29 @@ public:
     {
     }
 
+    FINLINE static f32 Abs(f32 X)
+    {
+        return fabsf(X);
+    }
+    FINLINE static i32 Abs(i32 X)
+    {
+        return abs(X);
+    }
+
     // TODO(sean)
     static f32 FastDist2D(f32 X, f32 Y)
     {
-        return 0.0f;
+        // Absolute integer values
+        i32 IX = (i32)Abs(X);
+        i32 IY = (i32)Abs(Y);
+
+        i32 Min = MIN(IX, IY);
+
+        return (f32)(IX + IY - (Min >> 1) - (Min >> 2) + (Min >> 4));
     }
     static f32 FastDist3D(f32 X, f32 Y, f32 Z)
     {
-        return 0.0f;
+        return (f32)(0.0f); // TODO(sean)
     }
 
     FINLINE static f32 Sqrt(f32 X)
