@@ -60,8 +60,7 @@ public:
         return abs(X);
     }
 
-    // TODO(sean)
-    static f32 FastDist2D(f32 X, f32 Y)
+    static f32 FastDist2D(f32 X, f32 Y) // 3.5% Error
     {
         // Absolute integer values
         i32 IX = (i32)Abs(X);
@@ -71,9 +70,22 @@ public:
 
         return (f32)(IX + IY - (Min >> 1) - (Min >> 2) + (Min >> 4));
     }
-    static f32 FastDist3D(f32 X, f32 Y, f32 Z)
+    static f32 FastDist3D(f32 X, f32 Y, f32 Z) // 8% Error
     {
-        return (f32)(0.0f); // TODO(sean)
+        // Absolute integer values
+        i32 IX = (i32)(Abs(X)) << 10;
+        i32 IY = (i32)(Abs(Y)) << 10;
+        i32 IZ = (i32)(Abs(Z)) << 10;
+        i32 T; // Temp
+
+        // Sort
+        if (IX > IY) SWAP(IX, IY, T);
+        if (IY > IZ) SWAP(IY, IZ, T);
+        if (IX > IY) SWAP(IX, IY, T);
+
+        return (f32)(
+            (IZ + 11*(IY >> 5) + (IX >> 2)) >> 10
+        );
     }
 
     FINLINE static f32 Sqrt(f32 X)

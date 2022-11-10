@@ -28,7 +28,9 @@ void VGame::StartUp()
         { 0.0f, 0.0f, 0.0f, 0.0f }
     );
 
-    VL_LOG("%f\n", Math.FastDist2D(2.0f, 4.0f));
+    VVector4D Vec = { 12781.87f, 5345.24f, 59353.39695f, 1.0f };
+    VL_LOG("Slow: %f\n", Vec.GetLength());
+    VL_LOG("Fast: %f\n", Vec.GetLengthFast());
 }
 
 void VGame::ShutDown()
