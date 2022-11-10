@@ -120,6 +120,16 @@ public:
         f32 Inv = 1.0f / Len;
         return { X * Inv, Y * Inv, Z * Inv, 1.0f };
     }
+
+    static VVector4D GetCross(const VVector4D& A, const VVector4D& B)
+    {
+        return {
+            A.Y * B.Z - A.Z * B.Y,
+            -(A.X * B.Z - A.Z * B.X),
+            A.X * B.Y - A.Y * B.X,
+            1.0f
+        };
+    }
 };
 
 typedef VVector4D VPoint4D;
