@@ -24,8 +24,13 @@ public:
     static constexpr i32f SinCosLookSize = 361;
 
 public:
-    f32 SinLook[SinCosLookSize]; // 0-360
-    f32 CosLook[SinCosLookSize]; // 0-360
+    /** NOTE(sean):
+        Tables are static because we want to
+        have static FastSin/Cos funcs and don't
+        pass extra argument (this) when we call them
+     */
+    static f32 SinLook[SinCosLookSize]; // 0-360
+    static f32 CosLook[SinCosLookSize]; // 0-360
 
 public:
     void StartUp()
@@ -46,7 +51,22 @@ public:
     {
     }
 
-    f32 FastSin(f32 Angle)
+    // TODO(sean)
+    static f32 FastDist2D(f32 X, f32 Y)
+    {
+        return 0.0f;
+    }
+    static f32 FastDist3D(f32 X, f32 Y, f32 Z)
+    {
+        return 0.0f;
+    }
+
+    FINLINE static f32 Sqrt(f32 X)
+    {
+        return sqrtf(X);
+    }
+
+    static f32 FastSin(f32 Angle)
     {
         Angle = fmodf(Angle, 360);
         if (Angle < 0)
@@ -56,7 +76,7 @@ public:
         f32 Remainder = Angle - (f32)I;
         return SinLook[I] + Remainder * (SinLook[I+1] - SinLook[I]);
     }
-    f32 FastCos(f32 Angle)
+    static f32 FastCos(f32 Angle)
     {
         Angle = fmodf(Angle, 360);
         if (Angle < 0)

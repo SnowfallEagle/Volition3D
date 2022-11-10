@@ -3,6 +3,7 @@
 #include "Core/Types.h"
 #include "Core/Platform.h"
 #include "Core/DebugLog.h"
+#include "Math/Math.h"
 
 template<class T>
 class TVector2D
@@ -84,6 +85,40 @@ public:
     FINLINE void Print()
     {
         VL_LOG("<%f, %f, %f, %f>", X, Y, Z, W);
+    }
+
+    f32 GetLength()
+    {
+        return Math.Sqrt(X*X + Y*Y + Z*Z);
+    }
+    f32 GetLengthFast()
+    {
+        return Math.FastDist3D(X, Y, Z);
+    }
+
+    void Normalize()
+    {
+        f32 Len = GetLength();
+
+        // Don't do anything on zero vector
+        if (Len < Math.Epsilon5)
+            return;
+
+        f32 Inv = 1.0f / Len;
+        X *= Inv;
+        Y *= Inv;
+        Z *= Inv;
+        W = 1.0f;
+    }
+    VVector4D GetNormalized()
+    {
+        f32 Len = GetLength();
+
+        if (Len < Math.Epsilon5)
+            return { 0.0f, 0.0f, 0.0f, 1.0f };
+
+        f32 Inv = 1.0f / Len;
+        return { X * Inv, Y * Inv, Z * Inv, 1.0f };
     }
 };
 

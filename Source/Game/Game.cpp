@@ -27,6 +27,10 @@ void VGame::StartUp()
         { 1.0f, 1.0f, 1.0f, 1.0f },
         { 0.0f, 0.0f, 0.0f, 0.0f }
     );
+
+    VVector4D Vec = { 100.0f, 100.0f, 100.0f, 1.0f };
+    Vec.GetNormalized().Print();
+    Vec.Print();
 }
 
 void VGame::ShutDown()
