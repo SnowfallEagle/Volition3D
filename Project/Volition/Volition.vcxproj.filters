@@ -467,6 +467,9 @@
     <ClCompile Include="..\..\Source\Graphics\Renderer.cpp">
       <Filter>Source\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\Math\Math.cpp">
+      <Filter>Source\Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\ThirdParty\SDL\Include\SDL_config.h.cmake">

@@ -17,6 +17,9 @@ b32 VObject4DV1::LoadPLG(
     memset(this, 0, sizeof(*this));
     State = EObjectStateV1::Active | EObjectStateV1::Visible;
     WorldPos = Pos;
+    UX = { 1.0f, 0.0f, 0.0f, 1.0f };
+    UY = { 0.0f, 1.0f, 0.0f, 1.0f };
+    UZ = { 0.0f, 0.0f, 1.0f, 1.0f };
 
     // Load from file
     FILE* File;
@@ -64,6 +67,7 @@ b32 VObject4DV1::LoadPLG(
             fclose(File);
             return false;
         }
+        LocalVtxList[I].Z = 1.0f;
 
         // Scale
         LocalVtxList[I].X *= Scale.X;

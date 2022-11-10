@@ -53,8 +53,8 @@ public:
     VPoint4D Vtx[3];
     VPoint4D TransVtx[3];
 
-    VPolyFace4DV1* Prev;
-    VPolyFace4DV1* Next;
+    VPolyFace4DV1* Prev; // ?
+    VPolyFace4DV1* Next; // ?
 };
 
 class VRenderList4DV1
@@ -72,6 +72,58 @@ public:
     {
         NumPoly = 0;
     }
+};
+
+// Camera /////////////////////////////////////////////////
+namespace ECamV1State
+{
+    enum
+    {
+
+    };
+}
+
+namespace ECamV1Attr
+{
+    enum
+    {
+        Euler = BIT(1),
+        UVN = BIT(2)
+    };
+}
+
+class VCam4DV1
+{
+public:
+    u32 State;
+    u32 Attr;
+
+    VPoint4D Pos;
+    VVector4D Dir; // Euler angles or look at direction
+
+    VVector4D U, V, N;
+    VPoint4D Target;
+
+    VVector2D ViewDist; // X-Horizontal, Y-Vertical
+    f32 FOV;
+
+    f32 ZNearClip;
+    f32 ZFarClip;
+
+    VPlane3D LeftClipPlane;
+    VPlane3D RightClipPlane;
+    VPlane3D TopClipPlane;
+    VPlane3D BottomClipPlane;
+
+    VVector2D ViewPlaneSize;
+    VVector2D ViewPortSize;
+    VVector2D ViewPortCenter;
+
+    f32 AspectRatio;
+
+    VMatrix44 MatCamera;      // World->Camera
+    VMatrix44 MatPerspective; // Camera->Perspective
+    VMatrix44 MatScreen;      // Perspective->Screen
 };
 
 // Object ////////////////////////////////////////////

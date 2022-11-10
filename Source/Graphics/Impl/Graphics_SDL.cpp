@@ -2,8 +2,8 @@
 
 #if VL_IMPL_SDL
 
-#include <stdlib.h> // TODO(sean): math::Random
 #include <string.h> // TODO(sean): mem::MemSet, mem::MemCopy()
+#include "Math/Math.h"
 #include "Core/Window.h"
 #include "Graphics/Impl/Graphics_SDL.h"
 

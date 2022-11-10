@@ -312,6 +312,7 @@
     <ClCompile Include="..\..\Source\Input\Impl\Input_SDL.cpp" />
     <ClCompile Include="..\..\Source\Input\Input.cpp" />
     <ClCompile Include="..\..\Source\main.cpp" />
+    <ClCompile Include="..\..\Source\Math\Math.cpp" />
     <ClCompile Include="..\..\Source\WinMain.cpp" />
     <ClCompile Include="..\..\ThirdParty\ltm\tlm.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>

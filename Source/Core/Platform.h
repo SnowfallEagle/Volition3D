@@ -1,4 +1,4 @@
-#ifndef CORE_PLATFORM_H_
+#pragma once
 
 // Comment/Uncomment to toggle implementation
 #define VL_IMPL_SDL 1
@@ -11,10 +11,11 @@
 # include "Core/Impl/Platform_Win.h"
 #endif
 
-// Standard stuff
+// Some macroses
 #define INLINE inline // Compiler decide if it should be inlined
 
-#define BIT(N) ( 1 << ((N)-1) )
+#define MIN(A, B) ((A) < (B) ? (A) : (B))
+#define MAX(A, B) ((A) > (B) ? (A) : (B))
+#define SWAP(A, B, T) { T = A; A = B; B = T; }
 
-#define CORE_PLATFORM_H_
-#endif
+#define BIT(N) ( 1 << ((N)-1) )

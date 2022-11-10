@@ -1,26 +1,30 @@
-#ifndef CORE_VOLITION_H_
+#pragma once
 
 #include <cstdlib>
 #include "Core/Types.h"
 #include "Core/Platform.h"
 #include "Core/DebugLog.h"
 #include "Core/Window.h"
+#include "Math/Math.h"
 #include "Graphics/Graphics.h"
 #include "Input/Input.h"
 #include "Game/Game.h"
 
-static constexpr char WindowTitle[] = "Volition";
-static constexpr i32 WindowWidth = 1280;
-static constexpr i32 WindowHeight = 720;
-static constexpr u32 DefaultFPS = 60;
-
 class VVolition
 {
+public:
+    static constexpr char WindowTitle[] = "Volition";
+    static constexpr i32 WindowWidth = 1280;
+    static constexpr i32 WindowHeight = 720;
+    static constexpr u32 DefaultFPS = 60;
+
+private:
     u32 MsFrameLimit;
     u32 LastTick;
     f32 Delta;
 
     b32 bRunning;
+
 public:
     void StartUp()
     {
@@ -29,12 +33,10 @@ public:
 
         DebugLog.StartUp();
         Window.Create(WindowTitle, WindowWidth, WindowHeight);
-        std::srand(GetTicks());
-
+        Math.StartUp();
         Graphics.StartUp();
         Input.StartUp();
         Game.StartUp();
-
 
         LastTick = GetTicks();
         bRunning = true;
@@ -46,6 +48,7 @@ public:
         Game.ShutDown();
         Input.ShutDown();
         Graphics.ShutDown();
+        Math.ShutDown();
         Window.Destroy();
         DebugLog.ShutDown();
     }
@@ -101,6 +104,3 @@ private:
 };
 
 extern VVolition Volition;
-
-#define CORE_VOLITION_H_
-#endif
