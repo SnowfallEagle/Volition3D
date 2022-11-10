@@ -1,3 +1,4 @@
+#include "Math/Vector.h"
 #include "IGraphics.h"
 
 void IGraphics::DrawSurfaceBlended(VSurface* Surface, const VRelRectI* Source, const VRelRectI* Dest)

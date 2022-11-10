@@ -1,4 +1,4 @@
-#ifndef GRAPHICS_IMPL_IGRAPHICS_H_
+#pragma once
 
 // Macroses for fast mapping ARGB32/XRGB32 format
 #define _ALPHA_SHIFT (24)
@@ -16,7 +16,7 @@
 
 #include "Core/Types.h"
 #include "Core/Platform.h"
-#include "Math/Math.h"
+#include "Math/Rect.h"
 #include "Graphics/Surface.h"
 
 /** NOTE(sean):
@@ -48,6 +48,3 @@ public:
         return ScreenHeight;
     }
 };
-
-#define GRAPHICS_IMPL_IGRAPHICS_H_
-#endif

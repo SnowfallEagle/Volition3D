@@ -5,7 +5,7 @@
 #include "Core/Types.h"
 #include "Core/Platform.h"
 #include "Core/Assert.h"
-#include "Math/Math.h"
+#include "Math/Minimal.h"
 
 namespace EPolyStateV1
 {

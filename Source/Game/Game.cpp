@@ -1,9 +1,9 @@
 #include "Core/Volition.h"
 #include "Input/Input.h"
 #include "Graphics/Graphics.h"
-#include "Math/Math.h"
-#include "Game/Game.h"
+#include "Math/Minimal.h"
 #include "Graphics/Renderer.h" // Of course in real game we don't need renderer's header but who cares
+#include "Game/Game.h"
 
 DEFINE_LOG_CHANNEL(hLogGame, "Game");
 
