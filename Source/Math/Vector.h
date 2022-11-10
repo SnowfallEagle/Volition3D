@@ -5,6 +5,8 @@
 #include "Core/DebugLog.h"
 #include "Math/Math.h"
 
+class VMatrix44;
+
 template<class T>
 class TVector2D
 {
@@ -130,6 +132,17 @@ public:
             1.0f
         };
     }
+    static void Cross(const VVector4D& A, const VVector4D& B, VVector4D& R)
+    {
+        R = {
+            A.Y * B.Z - A.Z * B.Y,
+            -(A.X * B.Z - A.Z * B.X),
+            A.X * B.Y - A.Y * B.X,
+            1.0f
+        };
+    }
+
+    static void MulMat44(const VVector4D& A, const VMatrix44& M, VVector4D& R);
 };
 
 typedef VVector4D VPoint4D;

@@ -28,9 +28,12 @@ void VGame::StartUp()
         { 0.0f, 0.0f, 0.0f, 0.0f }
     );
 
-    VVector4D A = { 1.0f, 0.0f, 1.0f, 1.0f };
-    VVector4D B = { 0.0f, 1.0f, 1.0f, 1.0f };
-    VVector4D::GetCross(A, B).Print();
+    VVector4D A = { 1.0f, 1.0f, 1.0f, 1.0f };
+    VMatrix44 M = IdentityMatrix44;
+    VVector4D R;
+    VVector4D::MulMat44(A, M, R);
+
+    R.Print();
 }
 
 void VGame::ShutDown()

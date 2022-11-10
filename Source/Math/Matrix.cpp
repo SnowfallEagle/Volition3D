@@ -1,3 +1,7 @@
+/* TODO(sean)
+    - Put indentity matrices in static variables for each class
+ */
+
 #include "Math/Matrix.h"
 
 const VMatrix44 IdentityMatrix44 = {

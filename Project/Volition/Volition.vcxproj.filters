@@ -482,6 +482,9 @@
     <ClCompile Include="..\..\Source\Math\Matrix.cpp">
       <Filter>Source\Math</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\Math\Vector.cpp">
+      <Filter>Source\Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\ThirdParty\SDL\Include\SDL_config.h.cmake">

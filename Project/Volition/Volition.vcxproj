@@ -317,6 +317,7 @@
     <ClCompile Include="..\..\Source\main.cpp" />
     <ClCompile Include="..\..\Source\Math\Math.cpp" />
     <ClCompile Include="..\..\Source\Math\Matrix.cpp" />
+    <ClCompile Include="..\..\Source\Math\Vector.cpp" />
     <ClCompile Include="..\..\Source\WinMain.cpp" />
     <ClCompile Include="..\..\ThirdParty\ltm\tlm.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
