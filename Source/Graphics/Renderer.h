@@ -158,6 +158,8 @@ public:
     // LocalToTrans or TransOnly
     void TransModelToWorld(const VPoint4D& WorldPos, ETransformType Type = ETransformType::LocalToTrans)
     {
+        // TODO(sean): Test this function
+
         if (Type == ETransformType::LocalToTrans)
         {
             for (i32f I = 0; I < NumPoly; ++I)
@@ -229,26 +231,109 @@ public:
     VVector4D U, V, N;
     VPoint4D Target;
 
-    VVector2D ViewDist; // X-Horizontal, Y-Vertical
     f32 FOV;
+    f32 AspectRatio;
+    f32 ViewDist;
 
     f32 ZNearClip;
     f32 ZFarClip;
+
+    VVector2D ViewPlaneSize;
+    VVector2DI ViewPortSize;
+    VVector2DI ViewPortCenter;
 
     VPlane3D LeftClipPlane;
     VPlane3D RightClipPlane;
     VPlane3D TopClipPlane;
     VPlane3D BottomClipPlane;
 
-    VVector2D ViewPlaneSize;
-    VVector2D ViewPortSize;
-    VVector2D ViewPortCenter;
-
-    f32 AspectRatio;
-
     VMatrix44 MatCamera;      // World->Camera
     VMatrix44 MatPerspective; // Camera->Perspective
     VMatrix44 MatScreen;      // Perspective->Screen
+
+public:
+    void Init(
+        u32 InAttr,
+        const VPoint4D& InPos,
+        const VVector4D& InDir,
+        const VPoint4D& InTarget,
+        f32 InFOV,
+        f32 InZNearClip,
+        f32 InZFarClip,
+        const VVector2DI& InViewPortSize
+    )
+    {
+        State = 0;
+        Attr = InAttr;
+
+        Pos = InPos;
+        Dir = InDir;
+
+        U = { 1.0f, 0.0f, 0.0f, 1.0f };
+        V = { 0.0f, 1.0f, 0.0f, 1.0f };
+        N = { 0.0f, 0.0f, 1.0f, 1.0f };
+        Target = InTarget;
+
+        FOV = InFOV;
+        AspectRatio = (f32)InViewPortSize.X / (f32)InViewPortSize.Y;
+        ViewDist = ((f32)InViewPortSize.X * 0.5f) / Math.Tan(FOV * 0.5f);
+
+        ZNearClip = InZNearClip;
+        ZFarClip = InZFarClip;
+
+        ViewPlaneSize = { 2.0f, 2.0f/AspectRatio };
+        ViewPortSize = InViewPortSize;
+        ViewPortCenter = { (ViewPortSize.X-1)/2, (ViewPortSize.Y-1)/2 };
+
+        MatCamera = VMatrix44::Identity;
+        MatPerspective = VMatrix44::Identity;
+        MatScreen = VMatrix44::Identity;
+
+        if (FOV == 90.0f)
+        {
+            VPoint3D Origin;
+            Origin.Zero();
+
+            VVector3D N = { -1.0f, 0.0f, -1.0f };
+            N.Normalize();
+            LeftClipPlane = { Origin, N };
+
+            N = { 1.0f, 0.0f, -1.0f };
+            N.Normalize();
+            RightClipPlane = { Origin, N };
+
+            N = { 0.0f, 1.0f, -1.0f };
+            N.Normalize();
+            TopClipPlane = { Origin, N };
+
+            N = { 0.0f, -1.0f, -1.0f };
+            N.Normalize();
+            BottomClipPlane = { Origin, N };
+        }
+        else
+        {
+            VPoint3D Origin;
+            Origin.Zero();
+
+            f32 MinusViewPlaneWidthDiv2 = -ViewPlaneSize.X * 0.5f;
+
+            VVector3D N = { -ViewDist, 0.0f, MinusViewPlaneWidthDiv2 };
+            N.Normalize();
+            LeftClipPlane = { Origin, N };
+
+            N = { ViewDist, 0.0f, MinusViewPlaneWidthDiv2 };
+            N.Normalize();
+            RightClipPlane = { Origin, N };
+
+            N = { 0.0f, ViewDist, MinusViewPlaneWidthDiv2 };
+            N.Normalize();
+            TopClipPlane = { Origin, N };
+
+            N = { 0.0f, -ViewDist, MinusViewPlaneWidthDiv2 };
+            N.Normalize();
+            BottomClipPlane = { Origin, N };
+        }
+    }
 };
 
 // Object ////////////////////////////////////////////

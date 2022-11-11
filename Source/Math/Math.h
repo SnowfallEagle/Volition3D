@@ -88,30 +88,34 @@ public:
         );
     }
 
+    static f32 FastSin(f32 Deg)
+    {
+        Deg = fmodf(Deg, 360);
+        if (Deg < 0)
+            Deg += 360;
+
+        i32f I = (i32f)Deg;
+        f32 Remainder = Deg - (f32)I;
+        return SinLook[I] + Remainder * (SinLook[I+1] - SinLook[I]);
+    }
+    static f32 FastCos(f32 Deg)
+    {
+        Deg = fmodf(Deg, 360);
+        if (Deg < 0)
+            Deg += 360;
+
+        i32f I = (i32f)Deg;
+        f32 Remainder = Deg - (f32)I;
+        return CosLook[I] + Remainder * (CosLook[I+1] - CosLook[I]);
+    }
+
     FINLINE static f32 Sqrt(f32 X)
     {
         return sqrtf(X);
     }
-
-    static f32 FastSin(f32 Angle)
+    FINLINE static f32 Tan(f32 Deg)
     {
-        Angle = fmodf(Angle, 360);
-        if (Angle < 0)
-            Angle += 360;
-
-        i32f I = (i32f)Angle;
-        f32 Remainder = Angle - (f32)I;
-        return SinLook[I] + Remainder * (SinLook[I+1] - SinLook[I]);
-    }
-    static f32 FastCos(f32 Angle)
-    {
-        Angle = fmodf(Angle, 360);
-        if (Angle < 0)
-            Angle += 360;
-
-        i32f I = (i32f)Angle;
-        f32 Remainder = Angle - (f32)I;
-        return CosLook[I] + Remainder * (CosLook[I+1] - CosLook[I]);
+        return tanf(Deg * DegToRadConversion);
     }
 
     FINLINE static f32 DegToRad(f32 Deg)

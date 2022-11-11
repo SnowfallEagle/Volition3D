@@ -88,7 +88,7 @@ public:
 class VSpherical3D
 {
 public:
-    f32 P; // Rho, the distance to the point from the origin
-    f32 Theta; // Angle that projection O->P on x-y plane. Just like Theta in VPolar2D
-    f32 Phi; // Angle from the z-axis and the line segment O->P 
+    f32 P; // Distance to the point from the origin
+    f32 Theta; // X-Y
+    f32 Phi; // Z-Y
 };

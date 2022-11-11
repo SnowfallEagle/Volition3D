@@ -58,6 +58,56 @@ public:
         X = Y = Z = 0;
     }
 
+    FINLINE f32 GetLength()
+    {
+        return Math.Sqrt(X*X + Y*Y + Z*Z);
+    }
+    FINLINE f32 GetLengthFast()
+    {
+        return Math.FastDist3D(X, Y, Z);
+    }
+
+    void Normalize()
+    {
+        f32 Len = GetLength();
+
+        // Don't do anything on zero vector
+        if (Len < Math.Epsilon5)
+            return;
+
+        f32 Inv = 1.0f / Len;
+        X *= Inv;
+        Y *= Inv;
+        Z *= Inv;
+    }
+    VVector3D GetNormalized()
+    {
+        f32 Len = GetLength();
+
+        if (Len < Math.Epsilon5)
+            return { 0.0f, 0.0f, 0.0f };
+
+        f32 Inv = 1.0f / Len;
+        return { X * Inv, Y * Inv, Z * Inv };
+    }
+
+    static VVector3D GetCross(const VVector3D& A, const VVector3D& B)
+    {
+        return {
+            A.Y * B.Z - A.Z * B.Y,
+            -(A.X * B.Z - A.Z * B.X),
+            A.X * B.Y - A.Y * B.X
+        };
+    }
+    static void Cross(const VVector3D& A, const VVector3D& B, VVector3D& R)
+    {
+        R = {
+            A.Y * B.Z - A.Z * B.Y,
+            -(A.X * B.Z - A.Z * B.X),
+            A.X * B.Y - A.Y * B.X
+        };
+    }
+
     FINLINE void Print()
     {
         VL_LOG("<%f, %f, %f>", X, Y, Z);
@@ -119,11 +169,11 @@ public:
         VL_LOG("<%f, %f, %f, %f>", X, Y, Z, W);
     }
 
-    f32 GetLength()
+    FINLINE f32 GetLength()
     {
         return Math.Sqrt(X*X + Y*Y + Z*Z);
     }
-    f32 GetLengthFast()
+    FINLINE f32 GetLengthFast()
     {
         return Math.FastDist3D(X, Y, Z);
     }
