@@ -339,7 +339,14 @@ public:
 
         if (bTransBasis)
         {
-            // TODO(sean)
+            VVector4D::MulMat44(UX, M, Res);
+            UX = Res;
+
+            VVector4D::MulMat44(UY, M, Res);
+            UY = Res;
+
+            VVector4D::MulMat44(UZ, M, Res);
+            UZ = Res;
         }
     }
 };

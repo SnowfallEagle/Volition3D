@@ -48,7 +48,6 @@ void VGame::StartUp()
     VL_LOG("\n");
 
     Object.Transform(M, ETransformType::LocalToTrans, false);
-    // TODO(sean): Test with true
 
     VL_LOG("\n");
     Object.LocalVtxList[0].Print();
