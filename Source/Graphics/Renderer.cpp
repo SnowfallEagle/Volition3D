@@ -11,7 +11,6 @@ b32 VObject4DV1::LoadPLG(
 )
 {
     static constexpr i32f BufferSize = 256;
-    static constexpr i32f PolyDescSize = 128;
 
     // Clean object
     memset(this, 0, sizeof(*this));
@@ -84,7 +83,7 @@ b32 VObject4DV1::LoadPLG(
 
     // Read polygons
     i32f PolyDesc;
-    char StrPolyDesc[PolyDescSize];
+    char StrPolyDesc[BufferSize];
 
     VL_LOG("Polygons:\n");
 
@@ -98,7 +97,7 @@ b32 VObject4DV1::LoadPLG(
         }
 
         // Parse
-        if (sscanf(Buffer, "%127s %d %d %d %d",
+        if (sscanf(Buffer, "%255s %d %d %d %d",
                    StrPolyDesc, &NumVtx,
                    &PolyList[I].Vtx[0], &PolyList[I].Vtx[1], &PolyList[I].Vtx[2]) <= 0)
         {
