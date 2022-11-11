@@ -28,14 +28,13 @@ void VGame::StartUp()
         { 0.0f, 0.0f, 0.0f, 0.0f }
     );
 
-    VRenderList4DV1 List;
-    List.NumPoly = 1;
-    List.PolyList[0] = {
-        EPolyStateV1::Active, 0, 0,
-        { { 0, 0, 0, 1 }, { 1, 1, 1, 1 }, { 2, 2, 2, 1 } },
-        { { 0, 0, 0, 1 }, { 0, 0, 0, 1 }, { 0, 0, 0, 1 } },
+    Object.NumVtx = 1;
+    Object.LocalVtxList[0] = {
+        0, 0, 0, 1
     };
-    List.PolyPtrList[0] = &List.PolyList[0];
+    Object.TransVtxList[0] = {
+        100, 100, 100, 1
+    };
 
     VMatrix44 M = {
         1, 0, 0, 0,
@@ -45,27 +44,19 @@ void VGame::StartUp()
     };
 
     VL_LOG("\n");
-    for (i32f I = 0; I < 3; ++I)
-    {
-        List.PolyList[0].LocalVtx[I].Print();
-        VL_LOG("\n");
-    }
+    Object.LocalVtxList[0].Print();
+    VL_LOG("\n");
 
-    List.Transform(M, ETransformType::TransOnly);
+    Object.Transform(M, ETransformType::LocalToTrans, false);
+    // TODO(sean): Test with true
 
     VL_LOG("\n");
-    for (i32f I = 0; I < 3; ++I)
-    {
-        List.PolyList[0].LocalVtx[I].Print();
-        VL_LOG("\n");
-    }
+    Object.LocalVtxList[0].Print();
+    VL_LOG("\n");
 
     VL_LOG("\n");
-    for (i32f I = 0; I < 3; ++I)
-    {
-        List.PolyList[0].TransVtx[I].Print();
-        VL_LOG("\n");
-    }
+    Object.TransVtxList[0].Print();
+    VL_LOG("\n");
 }
 
 void VGame::ShutDown()

@@ -86,6 +86,8 @@ public:
 
     void Transform(const VMatrix44& M, ETransformType Type)
     {
+        VVector4D Res;
+
         switch (Type)
         {
         case ETransformType::LocalOnly:
@@ -103,7 +105,6 @@ public:
 
                 for (i32f V = 0; V < 3; ++V)
                 {
-                    VVector4D Res;
                     VVector4D::MulMat44(Poly->LocalVtx[V], M, Res);
                     Poly->LocalVtx[V] = Res;
                 }
@@ -125,7 +126,6 @@ public:
 
                 for (i32f V = 0; V < 3; ++V)
                 {
-                    VVector4D Res;
                     VVector4D::MulMat44(Poly->TransVtx[V], M, Res);
                     Poly->TransVtx[V] = Res;
                 }
@@ -147,7 +147,6 @@ public:
 
                 for (i32f V = 0; V < 3; ++V)
                 {
-                    VVector4D Res;
                     VVector4D::MulMat44(Poly->LocalVtx[V], M, Res);
                     Poly->TransVtx[V] = Res;
                 }
@@ -301,5 +300,46 @@ public:
     void ComputeRadius()
     {
         // TODO(sean)
+    }
+
+
+    void Transform(const VMatrix44& M, ETransformType Type, b32 bTransBasis)
+    {
+        VVector4D Res;
+
+        switch (Type)
+        {
+        case ETransformType::LocalOnly:
+        {
+            for (i32f I = 0; I < NumVtx; ++I)
+            {
+                VVector4D::MulMat44(LocalVtxList[I], M, Res);
+                LocalVtxList[I] = Res;
+            }
+        } break;
+
+        case ETransformType::TransOnly:
+        {
+            for (i32f I = 0; I < NumVtx; ++I)
+            {
+                VVector4D::MulMat44(TransVtxList[I], M, Res);
+                TransVtxList[I] = Res;
+            }
+        } break;
+
+        case ETransformType::LocalToTrans:
+        {
+            for (i32f I = 0; I < NumVtx; ++I)
+            {
+                VVector4D::MulMat44(LocalVtxList[I], M, Res);
+                TransVtxList[I] = Res;
+            }
+        } break;
+        }
+
+        if (bTransBasis)
+        {
+            // TODO(sean)
+        }
     }
 };
