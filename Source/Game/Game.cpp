@@ -5,8 +5,6 @@
 #include "Graphics/Renderer.h" // Of course in real game we don't need renderer's header but who cares
 #include "Game/Game.h"
 
-DEFINE_LOG_CHANNEL(hLogGame, "Game");
-
 VGame Game;
 
 // DEBUG(sean)
@@ -14,6 +12,8 @@ VSurface* Surface;
 VSurface* Surface2;
 u32 Alpha;
 VObject4DV1 Object;
+
+DEFINE_LOG_CHANNEL(hLogGame, "Game");
 
 void VGame::StartUp()
 {
@@ -28,17 +28,35 @@ void VGame::StartUp()
         { 0.0f, 0.0f, 0.0f, 0.0f }
     );
 
-    VMatrix44 A = {
-        1.0f, 0.0f, 0.0f, 0.0f,
-        0.0f, 1.0f, 0.0f, 0.0f,
-        0.0f, 0.0f, 1.0f, 0.0f,
-        5.0f, 5.0f, 5.0f, 1.0f,
+    VRenderList4DV1 List;
+    List.NumPoly = 1;
+    List.PolyList[0] = {
+        0, 0, 0, { { 0, 0, 0, 1 }, { 1, 1, 1, 1 }, { 2, 2, 2, 1 } }
     };
-    VMatrix44 R, T;
-    VMatrix44::Inverse(A, R);
-    VMatrix44::Mul(A, R, T);
+    List.PolyPtrList[0] = &List.PolyList[0];
 
-    T.Print();
+    VMatrix44 M = {
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1, 0,
+        50, 25, -10, 1
+    };
+
+    VL_LOG("\n");
+    for (i32f I = 0; I < 3; ++I)
+    {
+        List.PolyList[0].LocalVtx[I].Print();
+        VL_LOG("\n");
+    }
+
+    List.Transform(M, ETransformType::LocalOnly);
+
+    VL_LOG("\n");
+    for (i32f I = 0; I < 3; ++I)
+    {
+        List.PolyList[0].LocalVtx[I].Print();
+        VL_LOG("\n");
+    }
 }
 
 void VGame::ShutDown()
@@ -54,8 +72,6 @@ void VGame::Update(f32 Delta)
 {
     if (Input.IsKeyDown(EKeycode::Escape))
         Volition.Stop();
-
-
 
     /* DrawSurfaceBlended test
     {

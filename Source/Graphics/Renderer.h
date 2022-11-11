@@ -7,6 +7,7 @@
 #include "Core/Assert.h"
 #include "Math/Minimal.h"
 
+// Polygon /////////////////////////////////
 namespace EPolyStateV1
 {
     enum
@@ -50,11 +51,20 @@ public:
     u32 Attr;
     u32 Color;
 
-    VPoint4D Vtx[3];
+    VPoint4D LocalVtx[3];
     VPoint4D TransVtx[3];
 
     VPolyFace4DV1* Prev; // ?
     VPolyFace4DV1* Next; // ?
+};
+
+// Renderer ////////////////////////////////////////////////
+
+enum class ETransformType
+{
+    LocalOnly = 0,
+    TransOnly,
+    LocalToTrans,
 };
 
 class VRenderList4DV1
@@ -62,7 +72,8 @@ class VRenderList4DV1
 public:
     static constexpr i32f MaxPoly = 1024;
 
-private:
+//private:
+public:
     i32 NumPoly;
     VPolyFace4DV1* PolyPtrList[MaxPoly];
     VPolyFace4DV1 PolyList[MaxPoly];
@@ -71,6 +82,26 @@ public:
     void Reset()
     {
         NumPoly = 0;
+    }
+
+    void Transform(const VMatrix44& M, ETransformType Type)
+    {
+        switch (Type)
+        {
+        case ETransformType::LocalOnly:
+        {
+            for (i32f I = 0; I < NumPoly; ++I)
+            {
+                VPolyFace4DV1* Poly = PolyPtrList[I];
+                for (i32f V = 0; V < 3; ++V)
+                {
+                    VVector4D Res;
+                    VVector4D::MulMat44(Poly->LocalVtx[V], M, Res);
+                    Poly->LocalVtx[V] = Res;
+                }
+            }
+        } break;
+        }
     }
 };
 
