@@ -349,4 +349,23 @@ public:
             UZ = Res;
         }
     }
+
+    // LocalToTrans or TransOnly
+    void TransModelToWorld(ETransformType Type = ETransformType::LocalToTrans)
+    {
+        if (Type == ETransformType::LocalToTrans)
+        {
+            for (i32f I = 0; I < NumVtx; ++I)
+            {
+                TransVtxList[I] = LocalVtxList[I] + WorldPos;
+            }
+        }
+        else // TransOnly
+        {
+            for (i32f I = 0; I < NumVtx; ++I)
+            {
+                TransVtxList[I] += WorldPos;
+            }
+        }
+    }
 };

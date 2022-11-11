@@ -23,8 +23,8 @@ void VGame::StartUp()
 
     Object.LoadPLG(
         "Test.plg",
-        { 0.0f, 0.0f, 0.0f, 0.0f },
-        { 1.0f, 1.0f, 1.0f, 1.0f },
+        { 100.0f, 100.0f, 100.0f, 1.0f },
+        { 1.0f, 1.0f, 1.0f, 0.0f },
         { 0.0f, 0.0f, 0.0f, 0.0f }
     );
 
@@ -36,18 +36,11 @@ void VGame::StartUp()
         100, 100, 100, 1
     };
 
-    VMatrix44 M = {
-        1, 0, 0, 0,
-        0, 1, 0, 0,
-        0, 0, 1, 0,
-        50, 25, -10, 1
-    };
-
     VL_LOG("\n");
     Object.LocalVtxList[0].Print();
     VL_LOG("\n");
 
-    Object.Transform(M, ETransformType::LocalToTrans, false);
+    Object.TransModelToWorld(ETransformType::LocalToTrans);
 
     VL_LOG("\n");
     Object.LocalVtxList[0].Print();

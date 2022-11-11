@@ -79,6 +79,36 @@ public:
     };
 
 public:
+    // TODO(sean): Should they be force inlined?
+    VVector4D operator+(const VVector4D& V)
+    {
+        return {
+            X + V.X, Y + V.Y, Z + V.Z, 1.0f
+        };
+    }
+    VVector4D& operator+=(const VVector4D& V)
+    {
+        X += V.X;
+        Y += V.Y;
+        Z += V.Z;
+        W = 1.0f;
+        return *this;
+    }
+    VVector4D operator-(const VVector4D& V)
+    {
+        return {
+            X - V.X, Y - V.Y, Z - V.Z, 1.0f
+        };
+    }
+    VVector4D& operator-=(const VVector4D& V)
+    {
+        X -= V.X;
+        Y -= V.Y;
+        Z -= V.Z;
+        W = 1.0f;
+        return *this;
+    }
+
     FINLINE void Zero()
     {
         X = Y = Z = W = 0;
