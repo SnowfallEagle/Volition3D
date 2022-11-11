@@ -40,7 +40,9 @@ void VGame::StartUp()
     Object.LocalVtxList[0].Print();
     VL_LOG("\n");
 
-    Object.TransModelToWorld(ETransformType::LocalToTrans);
+    VMatrix44 M;
+    M.BuildTranslate(Object.WorldPos);
+    Object.Transform(M, ETransformType::TransOnly, false);
 
     VL_LOG("\n");
     Object.LocalVtxList[0].Print();

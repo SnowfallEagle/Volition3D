@@ -1,4 +1,5 @@
 #include "Math/Math.h"
+#include "Math/Vector.h"
 #include "Math/Matrix.h"
 
 const VMatrix44 VMatrix44::Identity = {
@@ -31,6 +32,16 @@ const VMatrix22 VMatrix22::Identity = {
     1, 0,
     0, 1,
 };
+
+void VMatrix44::BuildTranslate(const VVector4D& V)
+{
+    *this = {
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1, 0,
+        V.X, V.Y, V.Z, 1
+    };
+}
 
 void VMatrix44::Mul(const VMatrix44& A, const VMatrix44& B, VMatrix44& R)
 {

@@ -302,7 +302,6 @@ public:
         // TODO(sean)
     }
 
-
     void Transform(const VMatrix44& M, ETransformType Type, b32 bTransBasis)
     {
         VVector4D Res;
