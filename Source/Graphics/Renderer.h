@@ -93,6 +93,14 @@ public:
             for (i32f I = 0; I < NumPoly; ++I)
             {
                 VPolyFace4DV1* Poly = PolyPtrList[I];
+                if (!Poly ||
+                    ~Poly->State & EPolyStateV1::Active ||
+                    Poly->State & EPolyStateV1::Clipped ||
+                    Poly->State & EPolyStateV1::BackFace)
+                {
+                    continue;
+                }
+
                 for (i32f V = 0; V < 3; ++V)
                 {
                     VVector4D Res;
@@ -107,6 +115,14 @@ public:
             for (i32f I = 0; I < NumPoly; ++I)
             {
                 VPolyFace4DV1* Poly = PolyPtrList[I];
+                if (!Poly ||
+                    ~Poly->State & EPolyStateV1::Active ||
+                    Poly->State & EPolyStateV1::Clipped ||
+                    Poly->State & EPolyStateV1::BackFace)
+                {
+                    continue;
+                }
+
                 for (i32f V = 0; V < 3; ++V)
                 {
                     VVector4D Res;
@@ -121,6 +137,14 @@ public:
             for (i32f I = 0; I < NumPoly; ++I)
             {
                 VPolyFace4DV1* Poly = PolyPtrList[I];
+                if (!Poly ||
+                    ~Poly->State & EPolyStateV1::Active ||
+                    Poly->State & EPolyStateV1::Clipped ||
+                    Poly->State & EPolyStateV1::BackFace)
+                {
+                    continue;
+                }
+
                 for (i32f V = 0; V < 3; ++V)
                 {
                     VVector4D Res;

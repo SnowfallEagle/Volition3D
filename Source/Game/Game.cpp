@@ -31,7 +31,7 @@ void VGame::StartUp()
     VRenderList4DV1 List;
     List.NumPoly = 1;
     List.PolyList[0] = {
-        0, 0, 0,
+        EPolyStateV1::Active, 0, 0,
         { { 0, 0, 0, 1 }, { 1, 1, 1, 1 }, { 2, 2, 2, 1 } },
         { { 0, 0, 0, 1 }, { 0, 0, 0, 1 }, { 0, 0, 0, 1 } },
     };
