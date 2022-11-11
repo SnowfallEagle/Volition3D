@@ -31,7 +31,9 @@ void VGame::StartUp()
     VRenderList4DV1 List;
     List.NumPoly = 1;
     List.PolyList[0] = {
-        0, 0, 0, { { 0, 0, 0, 1 }, { 1, 1, 1, 1 }, { 2, 2, 2, 1 } }
+        0, 0, 0,
+        { { 0, 0, 0, 1 }, { 1, 1, 1, 1 }, { 2, 2, 2, 1 } },
+        { { 0, 0, 0, 1 }, { 0, 0, 0, 1 }, { 0, 0, 0, 1 } },
     };
     List.PolyPtrList[0] = &List.PolyList[0];
 
@@ -49,12 +51,19 @@ void VGame::StartUp()
         VL_LOG("\n");
     }
 
-    List.Transform(M, ETransformType::LocalOnly);
+    List.Transform(M, ETransformType::TransOnly);
 
     VL_LOG("\n");
     for (i32f I = 0; I < 3; ++I)
     {
         List.PolyList[0].LocalVtx[I].Print();
+        VL_LOG("\n");
+    }
+
+    VL_LOG("\n");
+    for (i32f I = 0; I < 3; ++I)
+    {
+        List.PolyList[0].TransVtx[I].Print();
         VL_LOG("\n");
     }
 }

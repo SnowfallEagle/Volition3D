@@ -101,6 +101,34 @@ public:
                 }
             }
         } break;
+
+        case ETransformType::TransOnly:
+        {
+            for (i32f I = 0; I < NumPoly; ++I)
+            {
+                VPolyFace4DV1* Poly = PolyPtrList[I];
+                for (i32f V = 0; V < 3; ++V)
+                {
+                    VVector4D Res;
+                    VVector4D::MulMat44(Poly->TransVtx[V], M, Res);
+                    Poly->TransVtx[V] = Res;
+                }
+            }
+        } break;
+
+        case ETransformType::LocalToTrans:
+        {
+            for (i32f I = 0; I < NumPoly; ++I)
+            {
+                VPolyFace4DV1* Poly = PolyPtrList[I];
+                for (i32f V = 0; V < 3; ++V)
+                {
+                    VVector4D Res;
+                    VVector4D::MulMat44(Poly->LocalVtx[V], M, Res);
+                    Poly->TransVtx[V] = Res;
+                }
+            }
+        } break;
         }
     }
 };
