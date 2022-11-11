@@ -1,3 +1,4 @@
+#include "Math/Math.h"
 #include "Math/Matrix.h"
 
 const VMatrix44 VMatrix44::Identity = {
@@ -33,30 +34,61 @@ const VMatrix22 VMatrix22::Identity = {
 
 void VMatrix44::Mul(const VMatrix44& A, const VMatrix44& B, VMatrix44& R)
 {
-    /*
-        Result matrix
-
-             -> X
-          -         -
-        | | . . . . |
-        v | . . . . |
-          | . . . . |
-        Y | . . . . |
-          -         -
-    
-        T is temp for go through
-        A's columns and B's rows
-     */
-    for (i32f Y = 0; Y < 4; ++Y)
+    for (i32f Row = 0; Row < 4; ++Row)
     {
-        for (i32f X = 0; X < 4; ++X)
+        for (i32f Col = 0; Col < 4; ++Col)
         {
             f32 C = 0.0f;
-            for (i32f T = 0; T < 4; ++T)
+            for (i32f I = 0; I < 4; ++I)
             {
-                C += A.C[Y][T] * B.C[T][X];
+                C += A.C[Row][I] * B.C[I][Col];
             }
-            R.C[Y][X] = C;
+            R.C[Row][Col] = C;
         }
     }
+}
+
+b32 VMatrix44::Inverse(const VMatrix44& A, VMatrix44& R)
+{
+    /* Assumes that the last column is
+        [ 0 ]
+        [ 0 ]
+        [ 0 ]
+        [ 1 ]
+     */
+
+    // Find 3x3 det
+    f32 Det =
+        A.C00 * (A.C11 * A.C22 - A.C12 * A.C21) -
+        A.C01 * (A.C10 * A.C22 - A.C12 * A.C20) +
+        A.C02 * (A.C10 * A.C21 - A.C11 * A.C20);
+
+    // Test if we can't inverse
+    if (Math.Abs(Det) < Math.Epsilon5)
+        return false;
+
+    f32 InvDet = 1.0f / Det;
+
+    R.C00 =  InvDet * (A.C11 * A.C22 - A.C12 * A.C21);
+    R.C01 = -InvDet * (A.C01 * A.C22 - A.C02 * A.C21);
+    R.C02 =  InvDet * (A.C01 * A.C12 - A.C02 * A.C11);
+    R.C03 = 0.0f;
+
+    R.C10 = -InvDet * (A.C10 * A.C22 - A.C12 * A.C20);
+    R.C11 =  InvDet * (A.C00 * A.C22 - A.C02 * A.C20);
+    R.C12 = -InvDet * (A.C00 * A.C12 - A.C02 * A.C10);
+    R.C13 = 0.0f;
+
+    R.C20 =  InvDet * (A.C10 * A.C21 - A.C11 * A.C20);
+    R.C21 = -InvDet * (A.C00 * A.C21 - A.C01 * A.C20);
+    R.C22 =  InvDet * (A.C00 * A.C11 - A.C01 * A.C10);
+    R.C23 = 0.0f;
+
+    R.C30 = -(A.C30 * R.C00 + A.C31 * R.C10 + A.C32 * R.C20);
+    R.C31 = -(A.C30 * R.C01 + A.C31 * R.C11 + A.C32 * R.C21);
+    R.C32 = -(A.C30 * R.C02 + A.C31 * R.C12 + A.C32 * R.C22);
+    R.C33 = 1.0f;
+
+    // Success
+    return true;
 }

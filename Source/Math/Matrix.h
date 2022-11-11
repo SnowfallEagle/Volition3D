@@ -50,6 +50,7 @@ public:
     }
 
     static void Mul(const VMatrix44& A, const VMatrix44& B, VMatrix44& R);
+    static b32 Inverse(const VMatrix44& A, VMatrix44& R);
 };
 
 class VMatrix43

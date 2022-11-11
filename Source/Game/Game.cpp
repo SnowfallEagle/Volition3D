@@ -34,16 +34,11 @@ void VGame::StartUp()
         0.0f, 0.0f, 1.0f, 0.0f,
         5.0f, 5.0f, 5.0f, 1.0f,
     };
-    VMatrix44 B = {
-        1.0f, 0.0f, 0.0f, 0.0f,
-        0.0f, 1.0f, 0.0f, 0.0f,
-        0.0f, 0.0f, 1.0f, 0.0f,
-        -5.0f, -5.0f, -5.0f, 1.0f,
-    };
-    VMatrix44 R;
-    VMatrix44::Mul(A, B, R);
+    VMatrix44 R, T;
+    VMatrix44::Inverse(A, R);
+    VMatrix44::Mul(A, R, T);
 
-    R.Print();
+    T.Print();
 }
 
 void VGame::ShutDown()
