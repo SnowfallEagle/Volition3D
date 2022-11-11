@@ -154,6 +154,49 @@ public:
         } break;
         }
     }
+
+    // LocalToTrans or TransOnly
+    void TransModelToWorld(const VPoint4D& WorldPos, ETransformType Type = ETransformType::LocalToTrans)
+    {
+        if (Type == ETransformType::LocalToTrans)
+        {
+            for (i32f I = 0; I < NumPoly; ++I)
+            {
+                VPolyFace4DV1* Poly = PolyPtrList[I];
+                if (!Poly ||
+                    ~Poly->State & EPolyStateV1::Active ||
+                    Poly->State & EPolyStateV1::Clipped ||
+                    Poly->State & EPolyStateV1::BackFace)
+                {
+                    continue;
+                }
+
+                for (i32f V = 0; V < 3; ++V)
+                {
+                    Poly->TransVtx[V] = Poly->LocalVtx[V] + WorldPos;
+                }
+            }
+        }
+        else // TransOnly
+        {
+            for (i32f I = 0; I < NumPoly; ++I)
+            {
+                VPolyFace4DV1* Poly = PolyPtrList[I];
+                if (!Poly ||
+                    ~Poly->State & EPolyStateV1::Active ||
+                    Poly->State & EPolyStateV1::Clipped ||
+                    Poly->State & EPolyStateV1::BackFace)
+                {
+                    continue;
+                }
+
+                for (i32f V = 0; V < 3; ++V)
+                {
+                    Poly->TransVtx[V] += WorldPos;
+                }
+            }
+        }
+    }
 };
 
 // Camera /////////////////////////////////////////////////
