@@ -518,6 +518,7 @@ namespace EObjectStateV1
     {
         Active = BIT(1),
         Visible = BIT(2),
+        Culled = BIT(3)
     };
 }
 
@@ -547,6 +548,17 @@ namespace EPLX
     };
 }
 
+namespace ECullType
+{
+    enum
+    {
+        X = BIT(1),
+        Y = BIT(2),
+        Z = BIT(3),
+        XYZ = X | Y | Z,
+    };
+}
+
 DEFINE_LOG_CHANNEL(hObjectV1Log, "ObjectV1");
 
 class VObject4DV1
@@ -563,8 +575,8 @@ public:
     u32 State;
     u32 Attr;
 
-    i32 AvgRadius;
-    i32 MaxRadius;
+    f32 AvgRadius;
+    f32 MaxRadius;
 
     VPoint4D WorldPos;
     VVector4D Dir;
@@ -603,7 +615,18 @@ public:
 
     void ComputeRadius()
     {
-        // TODO(sean)
+        AvgRadius = 0.0f;
+        MaxRadius = 0.0f;
+
+        for (i32f I = 0; I < NumVtx; ++I)
+        {
+            f32 Dist = LocalVtxList[I].GetLength();
+            AvgRadius += Dist;
+            if (MaxRadius < Dist)
+                MaxRadius = Dist;
+        }
+
+        AvgRadius /= NumVtx;
     }
 
     void Transform(const VMatrix44& M, ETransformType Type, b32 bTransBasis)
@@ -679,6 +702,66 @@ public:
             VVector4D Res;
             VVector4D::MulMat44(TransVtxList[I], MatCamera, Res);
             TransVtxList[I] = Res;
+        }
+    }
+
+    b32 Cull(const VCam4DV1& Cam, u32 CullType = ECullType::XYZ)
+    {
+        VVector4D SpherePos;
+        VVector4D::MulMat44(WorldPos, Cam.MatCamera, SpherePos);
+
+        if (CullType & ECullType::X)
+        {
+            f32 ZTest = (0.5f * Cam.ViewPlaneSize.X) * (SpherePos.Z / Cam.ViewDist);
+
+            if (SpherePos.X - MaxRadius > ZTest ||  // Check Sphere's Left with Right side
+                SpherePos.X + MaxRadius < -ZTest)   // Check Sphere's Right with Left side
+            {
+                State |= EObjectStateV1::Culled;
+                return true;
+            }
+        }
+
+        if (CullType & ECullType::Y)
+        {
+            f32 ZTest = (0.5f * Cam.ViewPlaneSize.Y) * (SpherePos.Z / Cam.ViewDist);
+
+            // TODO(sean): SpherePos.Y + MaxRadius for first check???
+            if (SpherePos.Y - MaxRadius > ZTest ||  // Check Sphere's Bottom with Top side
+                SpherePos.Y + MaxRadius < -ZTest)   // Check Sphere's Top with Bottom side
+            {
+                State |= EObjectStateV1::Culled;
+                return true;
+            }
+        }
+
+        if (CullType & ECullType::Z)
+        {
+            if (SpherePos.Z - MaxRadius > Cam.ZFarClip ||
+                SpherePos.Z + MaxRadius < Cam.ZNearClip)
+            {
+                State |= EObjectStateV1::Culled;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    void Reset()
+    {
+        // Reset object's state
+        State = State & ~EObjectStateV1::Culled;
+
+        // Restore polygons
+        for (i32f I = 0; I < NumPoly; ++I)
+        {
+            VPoly4DV1& Poly = PolyList[I];
+            if (~Poly.State & EPolyStateV1::Active)
+                continue;
+
+            Poly.State = Poly.State & ~EPolyStateV1::Clipped;
+            Poly.State = Poly.State & ~EPolyStateV1::BackFace;
         }
     }
 };
