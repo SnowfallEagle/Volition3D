@@ -113,6 +113,14 @@ public:
     {
         return sqrtf(X);
     }
+    FINLINE static f32 Sin(f32 Deg)
+    {
+        return sinf(Deg * DegToRadConversion);
+    }
+    FINLINE static f32 Cos(f32 Deg)
+    {
+        return cosf(Deg * DegToRadConversion);
+    }
     FINLINE static f32 Tan(f32 Deg)
     {
         return tanf(Deg * DegToRadConversion);

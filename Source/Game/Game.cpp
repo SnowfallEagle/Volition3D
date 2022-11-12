@@ -29,7 +29,8 @@ void VGame::StartUp()
     );
 
     VCam4DV1 Cam;
-    Cam.Init(0, { 0, 0, 0, 1.0f }, { 0, 0, 0, 1 }, { 0, 0, 0, 1 }, 160, 10, 100, { 1280, 720 });
+    Cam.Init(0, { 0, 0, 0, 1.0f }, { 45.0f, 45.0f, 0.0f, 1 }, { 0, 0, 0, 1 }, 160, 10, 100, { 1280, 720 });
+    Cam.BuildMatCameraUVN(EUVNMode::Spherical);
 
     /*
     Object.NumVtx = 1;
