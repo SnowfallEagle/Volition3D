@@ -203,6 +203,11 @@ public:
         return { X * Inv, Y * Inv, Z * Inv, 1.0f };
     }
 
+    static f32 Dot(const VVector4D& A, const VVector4D& B)
+    {
+        return A.X*B.X + A.Y*B.Y + A.Z+B.Z;
+    }
+
     static VVector4D GetCross(const VVector4D& A, const VVector4D& B)
     {
         return {

@@ -200,6 +200,32 @@ public:
         }
     }
 
+    void RemoveBackFaces(VVector4D CamPos)
+    {
+        for (i32f I = 0; I < NumPoly; ++I)
+        {
+            VPolyFace4DV1* Poly = PolyPtrList[I];
+
+            if (~Poly->State & EPolyStateV1::Active ||
+                Poly->State & EPolyStateV1::Clipped ||
+                Poly->Attr & EPolyAttrV1::TwoSided ||
+                Poly->State & EPolyStateV1::BackFace)
+            {
+                continue;
+            }
+
+            VVector4D U, V, N;
+            U = Poly->TransVtx[1] - Poly->TransVtx[0];
+            V = Poly->TransVtx[2] - Poly->TransVtx[0];
+            VVector4D::Cross(U, V, N);
+
+            VVector4D View = CamPos - Poly->TransVtx[0];
+            // If > 0 then N watch in the same direction as View vector and visible
+            if (VVector4D::Dot(View, N) <= 0.0f)
+                Poly->State |= EPolyStateV1::BackFace;
+        }
+    }
+
     void TransWorldToCamera(const VMatrix44& MatCamera)
     {
         for (i32f I = 0; I < NumPoly; ++I)
@@ -695,16 +721,6 @@ public:
         }
     }
 
-    void TransWorldToCamera(const VMatrix44& MatCamera)
-    {
-        for (i32f I = 0; I < NumVtx; ++I)
-        {
-            VVector4D Res;
-            VVector4D::MulMat44(TransVtxList[I], MatCamera, Res);
-            TransVtxList[I] = Res;
-        }
-    }
-
     b32 Cull(const VCam4DV1& Cam, u32 CullType = ECullType::XYZ)
     {
         VVector4D SpherePos;
@@ -746,6 +762,45 @@ public:
         }
 
         return false;
+    }
+
+    void RemoveBackFaces(VVector4D CamPos)
+    {
+        if (State & EObjectStateV1::Culled)
+            return;
+
+        for (i32f I = 0; I < NumPoly; ++I)
+        {
+            VPoly4DV1& Poly = PolyList[I];
+
+            if (~Poly.State & EPolyStateV1::Active ||
+                Poly.State & EPolyStateV1::Clipped ||
+                Poly.Attr & EPolyAttrV1::TwoSided ||
+                Poly.State & EPolyStateV1::BackFace)
+            {
+                continue;
+            }
+
+            VVector4D U, V, N;
+            U = TransVtxList[Poly.Vtx[1]] - TransVtxList[Poly.Vtx[0]];
+            V = TransVtxList[Poly.Vtx[2]] - TransVtxList[Poly.Vtx[0]];
+            VVector4D::Cross(U, V, N);
+
+            VVector4D View = CamPos - TransVtxList[Poly.Vtx[0]];
+            // If > 0 then N watch in the same direction as View vector and visible
+            if (VVector4D::Dot(View, N) <= 0.0f)
+                Poly.State |= EPolyStateV1::BackFace;
+        }
+    }
+
+    void TransWorldToCamera(const VMatrix44& MatCamera)
+    {
+        for (i32f I = 0; I < NumVtx; ++I)
+        {
+            VVector4D Res;
+            VVector4D::MulMat44(TransVtxList[I], MatCamera, Res);
+            TransVtxList[I] = Res;
+        }
     }
 
     void Reset()
