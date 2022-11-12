@@ -199,6 +199,28 @@ public:
             }
         }
     }
+
+    void TransWorldToCamera(const VMatrix44& MatCamera)
+    {
+        for (i32f I = 0; I < NumPoly; ++I)
+        {
+            VPolyFace4DV1* Poly = PolyPtrList[I];
+            if (!Poly ||
+                ~Poly->State & EPolyStateV1::Active ||
+                Poly->State & EPolyStateV1::Clipped ||
+                Poly->State & EPolyStateV1::BackFace)
+            {
+                continue;
+            }
+
+            for (i32f V = 0; V < 3; ++V)
+            {
+                VVector4D Res;
+                VVector4D::MulMat44(Poly->TransVtx[V], MatCamera, Res);
+                Poly->TransVtx[V] = Res;
+            }
+        }
+    }
 };
 
 // Camera /////////////////////////////////////////////////
@@ -647,6 +669,16 @@ public:
             {
                 TransVtxList[I] += WorldPos;
             }
+        }
+    }
+
+    void TransWorldToCamera(const VMatrix44& MatCamera)
+    {
+        for (i32f I = 0; I < NumVtx; ++I)
+        {
+            VVector4D Res;
+            VVector4D::MulMat44(TransVtxList[I], MatCamera, Res);
+            TransVtxList[I] = Res;
         }
     }
 };

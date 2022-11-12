@@ -28,11 +28,6 @@ void VGame::StartUp()
         { 0.0f, 0.0f, 0.0f, 0.0f }
     );
 
-    VCam4DV1 Cam;
-    Cam.Init(0, { 0, 0, 0, 1.0f }, { 45.0f, 45.0f, 0.0f, 1 }, { 0, 0, 0, 1 }, 160, 10, 100, { 1280, 720 });
-    Cam.BuildMatCameraUVN(EUVNMode::Spherical);
-
-    /*
     Object.NumVtx = 1;
     Object.LocalVtxList[0] = {
         0, 0, 0, 1
@@ -45,9 +40,10 @@ void VGame::StartUp()
     Object.LocalVtxList[0].Print();
     VL_LOG("\n");
 
-    VMatrix44 M;
-    M.BuildTranslate(Object.WorldPos);
-    Object.Transform(M, ETransformType::TransOnly, false);
+    VCam4DV1 Cam;
+    Cam.Init(0, { 0, 0, 0, 1.0f }, { 45.0f, 45.0f, 0.0f, 1 }, { 0, 0, 0, 1 }, 160, 10, 100, { 1280, 720 });
+    Cam.BuildMatCameraUVN(EUVNMode::Spherical);
+    Object.TransWorldToCamera(Cam.MatCamera);
 
     VL_LOG("\n");
     Object.LocalVtxList[0].Print();
@@ -56,7 +52,6 @@ void VGame::StartUp()
     VL_LOG("\n");
     Object.TransVtxList[0].Print();
     VL_LOG("\n");
-    */
 }
 
 void VGame::ShutDown()
