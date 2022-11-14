@@ -169,6 +169,13 @@ public:
         VL_LOG("<%f, %f, %f, %f>", X, Y, Z, W);
     }
 
+    FINLINE void DivByW()
+    {
+        X /= W;
+        Y /= W;
+        Z /= W;
+    }
+
     FINLINE f32 GetLength()
     {
         return Math.Sqrt(X*X + Y*Y + Z*Z);

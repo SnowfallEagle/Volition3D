@@ -23,40 +23,21 @@ void VGame::StartUp()
 
     Object.LoadPLG(
         "Test.plg",
-        { 100.0f, 100.0f, 100.0f, 1.0f },
+        { 0.0f, 0.0f, -400.0f, 1.0f },
         { 1.0f, 1.0f, 1.0f, 0.0f },
         { 0.0f, 0.0f, 0.0f, 0.0f }
     );
 
-    Object.NumVtx = 1;
-    Object.LocalVtxList[0] = {
-        0, 0, 0, 1
-    };
-    Object.TransVtxList[0] = {
-        100, 100, 100, 1
-    };
-
-    VL_LOG("\n");
-    Object.LocalVtxList[0].Print();
-    VL_LOG("\n");
-
     VCam4DV1 Cam;
-    Cam.Init(0, { 0, 0, 0, 1.0f }, { 45.0f, 45.0f, 0.0f, 1 }, { 0, 0, 0, 1 }, 160, 10, 100, { 1280, 720 });
-    Cam.BuildMatCameraUVN(EUVNMode::Spherical);
+    Cam.Init(0, { 0, 0, 0, 1.0f }, { 0.0f, 0.0f, 0.0f, 1.0f }, { 0, 0, 0, 1 }, 90, 50, 500, { 1280, 720 });
+    Cam.BuildMatCameraEuler();
 
     Object.TransModelToWorld();
     Object.Cull(Cam);
     Object.RemoveBackFaces(Cam.Pos);
     Object.TransWorldToCamera(Cam.MatCamera);
+    Object.TransCameraToPerspective(Cam);
     Object.Reset();
-
-    VL_LOG("\n");
-    Object.LocalVtxList[0].Print();
-    VL_LOG("\n");
-
-    VL_LOG("\n");
-    Object.TransVtxList[0].Print();
-    VL_LOG("\n");
 }
 
 void VGame::ShutDown()

@@ -337,7 +337,7 @@ public:
 
         FOV = InFOV;
         AspectRatio = (f32)InViewPortSize.X / (f32)InViewPortSize.Y;
-        ViewDist = ((f32)InViewPortSize.X * 0.5f) / Math.Tan(FOV * 0.5f);
+        ViewDist = ((f32)InViewPortSize.X * 0.5f) / Math.Tan(FOV * 0.5f); // TODO(sean): Or maybe multiply by tan?
 
         ZNearClip = InZNearClip;
         ZFarClip = InZFarClip;
@@ -534,6 +534,16 @@ public:
 
         // Compute camera matrix
         VMatrix44::Mul(InvTranslate, UVN, MatCamera);
+    }
+
+    void BuildCameraToPerspectiveMat44(VMatrix44& M)
+    {
+        M = {
+            ViewDist, 0.0f, 0.0f, 0.0f,
+            0.0f, ViewDist*AspectRatio, 0.0f, 0.0f,
+            0.0f, 0.0f, 1.0f, 1.0f,
+            0.0f, 0.0f, 0.0f, 0.0f
+        };
     }
 };
 
@@ -803,6 +813,27 @@ public:
         }
     }
 
+    void TransCameraToPerspective(const VCam4DV1& Cam)
+    {
+        for (i32f I = 0; I < NumVtx; ++I)
+        {
+            f32 Z = TransVtxList[I].Z;
+
+            // TODO(sean): Understand role of multiplication by AspectRatio...
+            TransVtxList[I].X *= Cam.ViewDist / Z;
+            TransVtxList[I].Y *= Cam.AspectRatio * (Cam.ViewDist / Z);
+            // Z = Z
+        }
+    }
+
+    void ConvertFromHomogeneous()
+    {
+        for (i32f I = 0; I < NumVtx; ++I)
+        {
+            TransVtxList[I].DivByW();
+        }
+    }
+
     void Reset()
     {
         // Reset object's state
@@ -815,8 +846,8 @@ public:
             if (~Poly.State & EPolyStateV1::Active)
                 continue;
 
-            Poly.State = Poly.State & ~EPolyStateV1::Clipped;
-            Poly.State = Poly.State & ~EPolyStateV1::BackFace;
+            Poly.State &= ~EPolyStateV1::Clipped;
+            Poly.State &= ~EPolyStateV1::BackFace;
         }
     }
 };

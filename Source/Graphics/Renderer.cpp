@@ -97,8 +97,9 @@ b32 VObject4DV1::LoadPLG(
         }
 
         // Parse
+        i32 NumPolyVtx;
         if (sscanf(Buffer, "%255s %d %d %d %d",
-                   StrPolyDesc, &NumVtx,
+                   StrPolyDesc, &NumPolyVtx,
                    &PolyList[I].Vtx[0], &PolyList[I].Vtx[1], &PolyList[I].Vtx[2]) <= 0)
         {
             VL_ERROR(hObjectV1Log, "Can't parse polygon\n");
