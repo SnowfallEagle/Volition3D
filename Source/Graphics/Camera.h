@@ -52,8 +52,8 @@ public:
     f32 ZFarClip;
 
     VVector2D ViewPlaneSize;
-    VVector2DI ViewPortSize;
-    VVector2DI ViewPortCenter;
+    VVector2D ViewPortSize;
+    VVector2D ViewPortCenter;
 
     VPlane3D LeftClipPlane;
     VPlane3D RightClipPlane;
@@ -73,7 +73,7 @@ public:
         f32 InFOV,
         f32 InZNearClip,
         f32 InZFarClip,
-        const VVector2DI& InViewPortSize
+        const VVector2D& InViewPortSize
     )
     {
         State = 0;
@@ -88,15 +88,17 @@ public:
         Target = InTarget;
 
         FOV = InFOV;
-        AspectRatio = (f32)InViewPortSize.X / (f32)InViewPortSize.Y;
-        ViewDist = ((f32)InViewPortSize.X * 0.5f) / Math.Tan(FOV * 0.5f); // TODO(sean): Or maybe multiply by tan?
+        AspectRatio = InViewPortSize.X / InViewPortSize.Y;
+        ViewDist = (InViewPortSize.X * 0.5f) / Math.Tan(FOV * 0.5f); // TODO(sean): Or maybe multiply by tan?
 
         ZNearClip = InZNearClip;
         ZFarClip = InZFarClip;
 
         ViewPlaneSize = { 2.0f, 2.0f/AspectRatio };
         ViewPortSize = InViewPortSize;
-        ViewPortCenter = { (ViewPortSize.X-1)/2, (ViewPortSize.Y-1)/2 };
+        ViewPortCenter = {
+            (ViewPortSize.X - 1.0f) * 0.5f, (ViewPortSize.Y - 1.0f) * 0.5f
+        };
 
         MatCamera = VMatrix44::Identity;
         MatPerspective = VMatrix44::Identity;
@@ -288,13 +290,54 @@ public:
         VMatrix44::Mul(InvTranslate, UVN, MatCamera);
     }
 
-    void BuildCameraToPerspectiveMat44(VMatrix44& M)
+    void BuildCameraToPerspectiveMat44()
     {
-        M = {
+        /* NOTE(sean):
+            This function assumes that later in code
+            we will perform conversion 4D->3D
+         */
+
+        MatPerspective = {
             ViewDist, 0.0f, 0.0f, 0.0f,
             0.0f, ViewDist*AspectRatio, 0.0f, 0.0f,
             0.0f, 0.0f, 1.0f, 1.0f,
             0.0f, 0.0f, 0.0f, 0.0f
+        };
+    }
+
+    void BuildHomogeneousPerspectiveToScreenMat44()
+    {
+        /* NOTE(sean):
+            This function assumes that later in code
+            we will perform conversion 4D->3D
+         */
+
+        f32 Alpha = ViewPortSize.X * 0.5f - 0.5f;
+        f32 Beta = ViewPortSize.Y * 0.5f - 0.5f;
+
+        MatScreen = {
+            Alpha, 0.0f, 0.0f, 0.0f,
+            0.0f, -Beta, 0.0f, 0.0f,
+            Alpha, Beta, 1.0f, 1.0f,
+            0.0f, 0.0f, 0.0f, 0.0f
+        };
+    }
+
+    void BuildNonHomogeneousPerspectiveToScreenMat44()
+    {
+        /* NOTE(sean):
+            This function assumes that we are already
+            performed conversion 4D->3D
+         */
+
+        f32 Alpha = ViewPortSize.X * 0.5f - 0.5f;
+        f32 Beta = ViewPortSize.Y * 0.5f - 0.5f;
+
+        MatScreen = {
+            Alpha, 0.0f, 0.0f, 0.0f,
+            0.0f, -Beta, 0.0f, 0.0f,
+            Alpha, Beta, 1.0f, 0.0f,
+            0.0f, 0.0f, 0.0f, 1.0f
         };
     }
 };

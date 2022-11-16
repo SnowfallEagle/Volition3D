@@ -31,6 +31,7 @@ void VGame::StartUp()
     Object.TransWorldToCamera(Cam.MatCamera);
     Object.TransCameraToPerspective(Cam);
     Object.ConvertFromHomogeneous();
+    Object.TransPerspectiveToScreen(Cam);
     Object.Reset();
 }
 
