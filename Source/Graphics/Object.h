@@ -302,6 +302,33 @@ public:
         }
     }
 
+    void TransCameraToScreen(const VCam4DV1& Cam)
+    {
+        /* NOTE(sean):
+            So, how i understand.. We project coordinates to
+            X = [-ViewPortSize.X/2 ; ViewPortSize.X/2] and
+            Y = [-ViewPortSize.Y/2 ; ViewPortSize.Y/2]
+
+            So we don't have to scale anything? And because of
+            that we don't need to multiply projected Y by AspectRatio
+            to normalize coords
+         */
+
+        f32 Alpha = Cam.ViewPortSize.X * 0.5f - 0.5f;
+        f32 Beta = Cam.ViewPortSize.Y * 0.5f - 0.5f;
+
+        for (i32f I = 0; I < NumVtx; ++I)
+        {
+            f32 Z = TransVtxList[I].Z;
+
+            TransVtxList[I].X = TransVtxList[I].X * (Cam.ViewDist / Z);
+            TransVtxList[I].Y = TransVtxList[I].Y * (Cam.ViewDist / Z);
+
+            TransVtxList[I].X = TransVtxList[I].X + Alpha;
+            TransVtxList[I].Y = -TransVtxList[I].Y + Beta;
+        }
+    }
+
     void Reset()
     {
         // Reset object's state
