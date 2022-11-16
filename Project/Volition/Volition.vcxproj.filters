@@ -414,6 +414,12 @@
     <ClInclude Include="..\..\Source\Math\Minimal.h">
       <Filter>Source\Math</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Graphics\Camera.h">
+      <Filter>Source\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Graphics\Object.h">
+      <Filter>Source\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\main.cpp">
@@ -484,6 +490,12 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Math\Vector.cpp">
       <Filter>Source\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Graphics\Camera.cpp">
+      <Filter>Source\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Graphics\Object.cpp">
+      <Filter>Source\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -182,6 +182,7 @@
     <ClInclude Include="..\..\Source\Core\Volition.h" />
     <ClInclude Include="..\..\Source\Core\Window.h" />
     <ClInclude Include="..\..\Source\Game\Game.h" />
+    <ClInclude Include="..\..\Source\Graphics\Camera.h" />
     <ClInclude Include="..\..\Source\Graphics\Graphics.h" />
     <ClInclude Include="..\..\Source\Graphics\Impl\Graphics_DDraw.h" />
     <ClInclude Include="..\..\Source\Graphics\Impl\Graphics_SDL.h" />
@@ -189,6 +190,7 @@
     <ClInclude Include="..\..\Source\Graphics\Impl\ISurface.h" />
     <ClInclude Include="..\..\Source\Graphics\Impl\Surface_DDraw.h" />
     <ClInclude Include="..\..\Source\Graphics\Impl\Surface_SDL.h" />
+    <ClInclude Include="..\..\Source\Graphics\Object.h" />
     <ClInclude Include="..\..\Source\Graphics\Renderer.h" />
     <ClInclude Include="..\..\Source\Graphics\Surface.h" />
     <ClInclude Include="..\..\Source\Input\Impl\Input_DDraw.h" />
@@ -303,6 +305,7 @@
     <ClCompile Include="..\..\Source\Core\Volition.cpp" />
     <ClCompile Include="..\..\Source\Core\Window.cpp" />
     <ClCompile Include="..\..\Source\Game\Game.cpp" />
+    <ClCompile Include="..\..\Source\Graphics\Camera.cpp" />
     <ClCompile Include="..\..\Source\Graphics\Graphics.cpp" />
     <ClCompile Include="..\..\Source\Graphics\Impl\Graphics_DDraw.cpp" />
     <ClCompile Include="..\..\Source\Graphics\Impl\Graphics_SDL.cpp" />
@@ -310,6 +313,7 @@
     <ClCompile Include="..\..\Source\Graphics\Impl\ISurface.cpp" />
     <ClCompile Include="..\..\Source\Graphics\Impl\Surface_DDraw.cpp" />
     <ClCompile Include="..\..\Source\Graphics\Impl\Surface_SDL.cpp" />
+    <ClCompile Include="..\..\Source\Graphics\Object.cpp" />
     <ClCompile Include="..\..\Source\Graphics\Renderer.cpp" />
     <ClCompile Include="..\..\Source\Input\Impl\Input_DDraw.cpp" />
     <ClCompile Include="..\..\Source\Input\Impl\Input_SDL.cpp" />
