@@ -154,8 +154,6 @@ public:
     // LocalToTrans or TransOnly
     void TransModelToWorld(const VPoint4D& WorldPos, ETransformType Type = ETransformType::LocalToTrans)
     {
-        // TODO(sean): Test this function
-
         if (Type == ETransformType::LocalToTrans)
         {
             for (i32f I = 0; I < NumPoly; ++I)
@@ -284,6 +282,30 @@ public:
             for (i32f V = 0; V < 3; ++V)
             {
                 Poly->TransVtx[V].DivByW();
+            }
+        }
+    }
+
+    void TransPerspectiveToScreen(const VCam4DV1& Cam)
+    {
+        f32 Alpha = Cam.ViewPortSize.X * 0.5f - 0.5f;
+        f32 Beta = Cam.ViewPortSize.Y * 0.5f - 0.5f;
+
+        for (i32f I = 0; I < NumPoly; ++I)
+        {
+            VPolyFace4DV1* Poly = PolyPtrList[I];
+            if (!Poly ||
+                ~Poly->State & EPolyStateV1::Active ||
+                Poly->State & EPolyStateV1::Clipped ||
+                Poly->State & EPolyStateV1::BackFace)
+            {
+                continue;
+            }
+
+            for (i32f V = 0; V < 3; ++V)
+            {
+                Poly->TransVtx[V].X = Alpha + Poly->TransVtx[V].X * Alpha;
+                Poly->TransVtx[V].Y = Beta - Poly->TransVtx[V].Y * Beta;
             }
         }
     }
