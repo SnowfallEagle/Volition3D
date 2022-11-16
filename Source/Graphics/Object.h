@@ -319,10 +319,10 @@ public:
 
         for (i32f I = 0; I < NumVtx; ++I)
         {
-            f32 Z = TransVtxList[I].Z;
+            f32 ViewDistDivZ = Cam.ViewDist / TransVtxList[I].Z;
 
-            TransVtxList[I].X = TransVtxList[I].X * (Cam.ViewDist / Z);
-            TransVtxList[I].Y = TransVtxList[I].Y * (Cam.ViewDist / Z);
+            TransVtxList[I].X = TransVtxList[I].X * ViewDistDivZ;
+            TransVtxList[I].Y = TransVtxList[I].Y * ViewDistDivZ;
 
             TransVtxList[I].X = TransVtxList[I].X + Alpha;
             TransVtxList[I].Y = -TransVtxList[I].Y + Beta;

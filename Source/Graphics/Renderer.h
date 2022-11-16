@@ -309,4 +309,33 @@ public:
             }
         }
     }
+
+    void TransCameraToScreen(const VCam4DV1& Cam)
+    {
+        f32 Alpha = Cam.ViewPortSize.X * 0.5f - 0.5f;
+        f32 Beta = Cam.ViewPortSize.Y * 0.5f - 0.5f;
+
+        for (i32f I = 0; I < NumPoly; ++I)
+        {
+            VPolyFace4DV1* Poly = PolyPtrList[I];
+            if (!Poly ||
+                ~Poly->State & EPolyStateV1::Active ||
+                Poly->State & EPolyStateV1::Clipped ||
+                Poly->State & EPolyStateV1::BackFace)
+            {
+                continue;
+            }
+
+            for (i32f V = 0; V < 3; ++V)
+            {
+                f32 ViewDistDivZ = Cam.ViewDist / Poly->TransVtx[V].Z;
+
+                Poly->TransVtx[V].X = Poly->TransVtx[V].X * ViewDistDivZ;
+                Poly->TransVtx[V].Y = Poly->TransVtx[V].Y * ViewDistDivZ;
+
+                Poly->TransVtx[V].X = Poly->TransVtx[V].X + Alpha;
+                Poly->TransVtx[V].Y = -Poly->TransVtx[V].Y + Beta;
+            }
+        }
+    }
 };
