@@ -151,7 +151,7 @@ public:
         }
     }
 
-    void BuildMatCameraEuler(ERotateSeq Seq = ERotateSeq::YXZ)
+    void BuildWorldToCameraEulerMat44(ERotateSeq Seq = ERotateSeq::YXZ)
     {
         VMatrix44 InvTranslate, InvX, InvY, InvZ, Rot, Temp;
         f32 SinA, CosA;
@@ -218,7 +218,7 @@ public:
     }
 
     // On Spherical mode Dir.X - elevation, Dir.Y - heading
-    void BuildMatCameraUVN(EUVNMode Mode)
+    void BuildWorldToCameraUVNMat44(EUVNMode Mode)
     {
         // Translate matrix
         VMatrix44 InvTranslate = {

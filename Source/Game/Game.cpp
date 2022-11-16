@@ -23,7 +23,7 @@ void VGame::StartUp()
 
     VCam4DV1 Cam;
     Cam.Init(0, { 0, 0, 0, 1.0f }, { 0.0f, 0.0f, 0.0f, 1.0f }, { 0, 0, 0, 1 }, 90, 100, 1000, { 1280, 720 });
-    Cam.BuildMatCameraEuler();
+    Cam.BuildWorldToCameraEulerMat44();
 
     Object.TransModelToWorld();
     Object.Cull(Cam);
