@@ -22,7 +22,7 @@ public:
 
     FINLINE void DrawSurface(VSurface* Surface, VRelRectI* Source, VRelRectI* Dest)
     {
-        BlitScaled(Surface, BackSurface, Source, Dest);
+        BlitScaled(Surface, &BackSurface, Source, Dest);
     }
     virtual void DrawText(i32 X, i32 Y, u32 Color, const char* Format, ...) override;
 

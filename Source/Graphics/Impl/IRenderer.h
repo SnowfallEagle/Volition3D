@@ -31,8 +31,8 @@ public:
     static constexpr i32f BitsPerPixel = 32;
 
 protected:
-    VSurface* VideoSurface;
-    VSurface* BackSurface;
+    VSurface VideoSurface;
+    VSurface BackSurface;
 
     i32 ScreenWidth;
     i32 ScreenHeight;
@@ -40,7 +40,7 @@ protected:
 public:
     virtual void PrepareToRender()
     {
-        FillRect(BackSurface, nullptr, _RGB32(0XFF, 0x00, 0x00));
+        FillRect(&BackSurface, nullptr, _RGB32(0XFF, 0x00, 0x00));
     }
     virtual void RenderAndFlip()
     {

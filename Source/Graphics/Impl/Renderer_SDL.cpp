@@ -20,10 +20,10 @@ void VRenderer::StartUp()
     SDLPixelFormatEnum = SDLPixelFormat->format;
 
     // Create video and back surfaces
-    VideoSurface = VSurface::Create(SDLSurface);
-    ScreenWidth = VideoSurface->Width;
-    ScreenHeight = VideoSurface->Height;
-    BackSurface = VSurface::Create(ScreenWidth, ScreenHeight);
+    VideoSurface.Create(SDLSurface);
+    ScreenWidth = VideoSurface.Width;
+    ScreenHeight = VideoSurface.Height;
+    BackSurface.Create(ScreenWidth, ScreenHeight);
 
     // Initialize TTF
     i32 Res = TTF_Init();
@@ -52,15 +52,13 @@ void VRenderer::ShutDown()
 
     // Destroy surfaces
     {
-        BackSurface->Destroy();
-        delete VideoSurface;
-        delete BackSurface;
+        BackSurface.Destroy();
     }
 }
 
 void VRenderer::Flip()
 {
-    BlitSurface(BackSurface, VideoSurface, nullptr, nullptr);
+    BlitSurface(&BackSurface, &VideoSurface, nullptr, nullptr);
     SDL_UpdateWindowSurface(Window.SDLWindow);
 }
 
@@ -93,7 +91,7 @@ void VRenderer::DrawText(i32 X, i32 Y, u32 Color, const char* Format, ...)
 
     // Blit
     SDL_Rect Dest = { X, Y, (i32f)strlen(Text) * FontCharWidth, FontCharHeight };
-    SDL_BlitScaled(SDLConverted, nullptr, BackSurface->SDLSurface, &Dest);
+    SDL_BlitScaled(SDLConverted, nullptr, BackSurface.SDLSurface, &Dest);
 
     // Free memory
     SDL_FreeSurface(SDLSurface);

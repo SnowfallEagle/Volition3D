@@ -16,7 +16,7 @@ void IRenderer::DrawSurfaceBlended(VSurface* Surface, const VRelRectI* Source, c
     VVector2DI SrcSize, DestSize;
     VVector2DI SrcSurfaceSize, DestSurfaceSize;
     SrcSurfaceSize = { Surface->GetWidth(), Surface->GetHeight() };
-    DestSurfaceSize = { BackSurface->GetWidth(), BackSurface->GetHeight() };
+    DestSurfaceSize = { BackSurface.GetWidth(), BackSurface.GetHeight() };
 
     // Source
     if (Source)
@@ -131,7 +131,7 @@ void IRenderer::DrawSurfaceBlended(VSurface* Surface, const VRelRectI* Source, c
     u32* DestBuffer;
     i32 SrcPitch, DestPitch;
     Surface->Lock(SrcBuffer, SrcPitch);
-    BackSurface->Lock(DestBuffer, DestPitch);
+    BackSurface.Lock(DestBuffer, DestPitch);
 
     // Prepare to blit
     SrcBuffer += SrcPos.Y * SrcPitch + SrcPos.X;
@@ -182,6 +182,6 @@ void IRenderer::DrawSurfaceBlended(VSurface* Surface, const VRelRectI* Source, c
     }
 
     Surface->Unlock();
-    BackSurface->Unlock();
+    BackSurface.Unlock();
 }
 

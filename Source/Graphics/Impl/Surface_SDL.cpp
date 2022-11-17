@@ -8,25 +8,35 @@
 
 #define SHOULD_LOCK_SDL_SURFACE 0
 
-VSurface* VSurface::Create(SDL_Surface* InSDLSurface)
+void VSurface::Create(SDL_Surface* InSDLSurface)
 {
     ASSERT(InSDLSurface);
-    return new VSurface(InSDLSurface, InSDLSurface->w, InSDLSurface->h);
+    Destroy();
+
+    SDLSurface = InSDLSurface;
+    Width = InSDLSurface->w;
+    Height = InSDLSurface->h;
 }
 
-VSurface* VSurface::Create(i32 InWidth, i32 InHeight)
+void VSurface::Create(i32 InWidth, i32 InHeight)
 {
-    SDL_Surface* SDLSurface = SDL_CreateRGBSurfaceWithFormat(
+    Destroy();
+
+    SDL_Surface* PlatformSurface = SDL_CreateRGBSurfaceWithFormat(
         0, InWidth, InHeight, Renderer.BitsPerPixel,
         Renderer.SDLPixelFormatEnum
     );
-    ASSERT(SDLSurface);
+    ASSERT(PlatformSurface);
 
-    return new VSurface(SDLSurface, InWidth, InHeight);
+    SDLSurface = PlatformSurface;
+    Width = SDLSurface->w;
+    Height = SDLSurface->h;
 }
 
-VSurface* VSurface::Load(const char* Path)
+void VSurface::Load(const char* Path)
 {
+    Destroy();
+
     SDL_Surface* Temp = SDL_LoadBMP(Path);
     ASSERT(Temp);
 
@@ -36,13 +46,22 @@ VSurface* VSurface::Load(const char* Path)
     ASSERT(Converted);
     SDL_FreeSurface(Temp);
 
-    return Create(Converted);
+    Create(Converted);
 }
 
 void VSurface::Destroy()
 {
     if (SDLSurface)
+    {
         SDL_FreeSurface(SDLSurface);
+        SDLSurface = nullptr;
+    }
+
+    Buffer = nullptr;
+    Pitch = 0;
+    bLocked = false;
+    Width = 0;
+    Height = 0;
 }
 
 void VSurface::Lock(u32*& OutBuffer, i32& OutPitch)
