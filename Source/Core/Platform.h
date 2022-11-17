@@ -1,8 +1,6 @@
 #pragma once
 
-// Comment/Uncomment to toggle implementation
 #define VL_IMPL_SDL 1
-//#define VL_IMPL_DDRAW 1
 
 // MSVC
 #ifdef _MSC_VER

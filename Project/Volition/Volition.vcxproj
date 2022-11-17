@@ -174,7 +174,6 @@
     <ClInclude Include="..\..\Source\Core\Assert.h" />
     <ClInclude Include="..\..\Source\Core\DebugLog.h" />
     <ClInclude Include="..\..\Source\Core\Impl\Platform_Win.h" />
-    <ClInclude Include="..\..\Source\Core\Impl\Window_DDraw.h" />
     <ClInclude Include="..\..\Source\Core\Impl\Window_SDL.h" />
     <ClInclude Include="..\..\Source\Core\Platform.h" />
     <ClInclude Include="..\..\Source\Core\Thread\SpinLock.h" />
@@ -184,20 +183,15 @@
     <ClInclude Include="..\..\Source\Game\Game.h" />
     <ClInclude Include="..\..\Source\Graphics\Camera.h" />
     <ClInclude Include="..\..\Source\Graphics\Graphics.h" />
-    <ClInclude Include="..\..\Source\Graphics\Impl\Graphics_DDraw.h" />
     <ClInclude Include="..\..\Source\Graphics\Impl\Graphics_SDL.h" />
     <ClInclude Include="..\..\Source\Graphics\Impl\IGraphics.h" />
     <ClInclude Include="..\..\Source\Graphics\Impl\ISurface.h" />
-    <ClInclude Include="..\..\Source\Graphics\Impl\Surface_DDraw.h" />
     <ClInclude Include="..\..\Source\Graphics\Impl\Surface_SDL.h" />
     <ClInclude Include="..\..\Source\Graphics\Object.h" />
     <ClInclude Include="..\..\Source\Graphics\Renderer.h" />
     <ClInclude Include="..\..\Source\Graphics\Surface.h" />
-    <ClInclude Include="..\..\Source\Input\Impl\Input_DDraw.h" />
     <ClInclude Include="..\..\Source\Input\Impl\Input_SDL.h" />
-    <ClInclude Include="..\..\Source\Input\Impl\Keycode_DDraw.h" />
     <ClInclude Include="..\..\Source\Input\Impl\Keycode_SDL.h" />
-    <ClInclude Include="..\..\Source\Input\Impl\MouseButton_DDraw.h" />
     <ClInclude Include="..\..\Source\Input\Impl\MouseButton_SDL.h" />
     <ClInclude Include="..\..\Source\Input\Input.h" />
     <ClInclude Include="..\..\Source\Math\Fixed16.h" />
@@ -300,22 +294,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Core\DebugLog.cpp" />
-    <ClCompile Include="..\..\Source\Core\Impl\Window_DDraw.cpp" />
     <ClCompile Include="..\..\Source\Core\Impl\Window_SDL.cpp" />
     <ClCompile Include="..\..\Source\Core\Volition.cpp" />
     <ClCompile Include="..\..\Source\Core\Window.cpp" />
     <ClCompile Include="..\..\Source\Game\Game.cpp" />
     <ClCompile Include="..\..\Source\Graphics\Camera.cpp" />
     <ClCompile Include="..\..\Source\Graphics\Graphics.cpp" />
-    <ClCompile Include="..\..\Source\Graphics\Impl\Graphics_DDraw.cpp" />
     <ClCompile Include="..\..\Source\Graphics\Impl\Graphics_SDL.cpp" />
     <ClCompile Include="..\..\Source\Graphics\Impl\IGraphics.cpp" />
     <ClCompile Include="..\..\Source\Graphics\Impl\ISurface.cpp" />
-    <ClCompile Include="..\..\Source\Graphics\Impl\Surface_DDraw.cpp" />
     <ClCompile Include="..\..\Source\Graphics\Impl\Surface_SDL.cpp" />
     <ClCompile Include="..\..\Source\Graphics\Object.cpp" />
     <ClCompile Include="..\..\Source\Graphics\Renderer.cpp" />
-    <ClCompile Include="..\..\Source\Input\Impl\Input_DDraw.cpp" />
     <ClCompile Include="..\..\Source\Input\Impl\Input_SDL.cpp" />
     <ClCompile Include="..\..\Source\Input\Input.cpp" />
     <ClCompile Include="..\..\Source\main.cpp" />

@@ -1,6 +1,0 @@
-#ifndef GRAPHICS_IMPL_SURFACE_DDRAW_H_
-
-
-
-#define GRAPHICS_IMPL_SURFACE_DDRAW_H_
-#endif

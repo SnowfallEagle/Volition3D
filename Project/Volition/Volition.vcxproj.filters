@@ -69,37 +69,19 @@
     <ClInclude Include="..\..\Source\Math\Rect.h">
       <Filter>Source\Math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Core\Impl\Window_DDraw.h">
-      <Filter>Source\Core\Impl</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Core\Impl\Window_SDL.h">
       <Filter>Source\Core\Impl</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Graphics\Impl\Graphics_DDraw.h">
-      <Filter>Source\Graphics\Impl</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Graphics\Impl\Graphics_SDL.h">
-      <Filter>Source\Graphics\Impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Graphics\Impl\Surface_DDraw.h">
       <Filter>Source\Graphics\Impl</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Graphics\Impl\Surface_SDL.h">
       <Filter>Source\Graphics\Impl</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Input\Impl\Input_DDraw.h">
-      <Filter>Source\Input\Impl</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Input\Impl\Input_SDL.h">
       <Filter>Source\Input\Impl</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Input\Impl\Keycode_DDraw.h">
-      <Filter>Source\Input\Impl</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Input\Impl\Keycode_SDL.h">
-      <Filter>Source\Input\Impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Input\Impl\MouseButton_DDraw.h">
       <Filter>Source\Input\Impl</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Input\Impl\MouseButton_SDL.h">
@@ -443,26 +425,14 @@
     <ClCompile Include="..\..\Source\Core\DebugLog.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Core\Impl\Window_DDraw.cpp">
-      <Filter>Source\Core\Impl</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\Core\Impl\Window_SDL.cpp">
       <Filter>Source\Core\Impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Graphics\Impl\Graphics_DDraw.cpp">
-      <Filter>Source\Graphics\Impl</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Graphics\Impl\Graphics_SDL.cpp">
       <Filter>Source\Graphics\Impl</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Graphics\Impl\Surface_DDraw.cpp">
-      <Filter>Source\Graphics\Impl</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\Graphics\Impl\Surface_SDL.cpp">
       <Filter>Source\Graphics\Impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Input\Impl\Input_DDraw.cpp">
-      <Filter>Source\Input\Impl</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Input\Impl\Input_SDL.cpp">
       <Filter>Source\Input\Impl</Filter>

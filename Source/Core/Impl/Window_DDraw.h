@@ -1,6 +1,0 @@
-#ifndef CORE_IMPL_WINDOW_DDRAW_H_
-
-
-
-#define CORE_IMPL_WINDOW_DDRAW_H_
-#endif
