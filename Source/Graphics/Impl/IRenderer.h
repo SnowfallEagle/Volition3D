@@ -47,10 +47,7 @@ public:
         Flip();
     }
 
-    virtual void FillRect(VSurface* Dest, VRelRectI* Rect, u32 Color) = 0;
     virtual void DrawText(i32 X, i32 Y, u32 Color, const char* Format, ...) = 0;
-    // TODO(sean): Put this in VSurface and don't use lock-based blitting??
-    void DrawSurfaceBlended(VSurface* Surface, const VRelRectI* Source, const VRelRectI* Dest);
 
     FINLINE i32 GetScreenWidth() const
     {
@@ -63,4 +60,8 @@ public:
 
 protected:
     virtual void Flip() = 0;
+
+    // Put this all in VSurface
+    void DrawSurfaceBlended(VSurface* Surface, const VRelRectI* Source, const VRelRectI* Dest);
+    virtual void FillRect(VSurface* Dest, VRelRectI* Rect, u32 Color) = 0;
 };

@@ -58,7 +58,7 @@ void VRenderer::ShutDown()
 
 void VRenderer::Flip()
 {
-    BlitSurface(&BackSurface, &VideoSurface, nullptr, nullptr);
+    SDL_BlitSurface(BackSurface.SDLSurface, nullptr, VideoSurface.SDLSurface, nullptr);
     SDL_UpdateWindowSurface(Window.SDLWindow);
 }
 

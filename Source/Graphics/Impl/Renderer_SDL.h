@@ -20,17 +20,10 @@ public:
     void StartUp();
     void ShutDown();
 
-    FINLINE void DrawSurface(VSurface* Surface, VRelRectI* Source, VRelRectI* Dest)
-    {
-        BlitScaled(Surface, &BackSurface, Source, Dest);
-    }
     virtual void DrawText(i32 X, i32 Y, u32 Color, const char* Format, ...) override;
 
-    FINLINE static void BlitSurface(VSurface* Source, VSurface* Dest, VRelRectI* SourceRect, VRelRectI* DestRect)
-    {
-        SDL_BlitSurface(Source->SDLSurface, (SDL_Rect*)SourceRect, Dest->SDLSurface, (SDL_Rect*)DestRect);
-    }
-    FINLINE static void BlitScaled(VSurface* Source, VSurface* Dest, VRelRectI* SourceRect, VRelRectI* DestRect)
+    // TODO(sean): Put it in VSurface
+    FINLINE static void Blit(VSurface* Source, VSurface* Dest, VRelRectI* SourceRect, VRelRectI* DestRect)
     {
         SDL_BlitScaled(Source->SDLSurface, (SDL_Rect*)SourceRect, Dest->SDLSurface, (SDL_Rect*)DestRect);
     }
