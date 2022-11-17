@@ -91,7 +91,7 @@ public:
         return { X * Inv, Y * Inv, Z * Inv };
     }
 
-    static VVector3D GetCross(const VVector3D& A, const VVector3D& B)
+    FINLINE static VVector3D GetCross(const VVector3D& A, const VVector3D& B)
     {
         return {
             A.Y * B.Z - A.Z * B.Y,
@@ -99,7 +99,7 @@ public:
             A.X * B.Y - A.Y * B.X
         };
     }
-    static void Cross(const VVector3D& A, const VVector3D& B, VVector3D& R)
+    FINLINE static void Cross(const VVector3D& A, const VVector3D& B, VVector3D& R)
     {
         R = {
             A.Y * B.Z - A.Z * B.Y,
@@ -129,14 +129,19 @@ public:
     };
 
 public:
-    // TODO(sean): Should they be force inlined?
-    VVector4D operator+(const VVector4D& V)
+    VVector4D() = default;
+    VVector4D(f32 InX, f32 InY, f32 InZ, f32 InW = 1.0f)
+        : X(InX), Y(InY), Z(InZ), W(InW)
+    {
+    }
+
+    FINLINE VVector4D operator+(const VVector4D& V)
     {
         return {
             X + V.X, Y + V.Y, Z + V.Z, 1.0f
         };
     }
-    VVector4D& operator+=(const VVector4D& V)
+    FINLINE VVector4D& operator+=(const VVector4D& V)
     {
         X += V.X;
         Y += V.Y;
@@ -144,13 +149,13 @@ public:
         W = 1.0f;
         return *this;
     }
-    VVector4D operator-(const VVector4D& V)
+    FINLINE VVector4D operator-(const VVector4D& V)
     {
         return {
             X - V.X, Y - V.Y, Z - V.Z, 1.0f
         };
     }
-    VVector4D& operator-=(const VVector4D& V)
+    FINLINE VVector4D& operator-=(const VVector4D& V)
     {
         X -= V.X;
         Y -= V.Y;
@@ -210,12 +215,12 @@ public:
         return { X * Inv, Y * Inv, Z * Inv, 1.0f };
     }
 
-    static f32 Dot(const VVector4D& A, const VVector4D& B)
+    FINLINE static f32 Dot(const VVector4D& A, const VVector4D& B)
     {
         return A.X*B.X + A.Y*B.Y + A.Z+B.Z;
     }
 
-    static VVector4D GetCross(const VVector4D& A, const VVector4D& B)
+    FINLINE static VVector4D GetCross(const VVector4D& A, const VVector4D& B)
     {
         return {
             A.Y * B.Z - A.Z * B.Y,
@@ -224,7 +229,7 @@ public:
             1.0f
         };
     }
-    static void Cross(const VVector4D& A, const VVector4D& B, VVector4D& R)
+    FINLINE static void Cross(const VVector4D& A, const VVector4D& B, VVector4D& R)
     {
         R = {
             A.Y * B.Z - A.Z * B.Y,

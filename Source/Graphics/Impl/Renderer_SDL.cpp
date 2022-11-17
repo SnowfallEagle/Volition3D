@@ -58,16 +58,6 @@ void VRenderer::ShutDown()
     }
 }
 
-void VRenderer::PrepareToRender()
-{
-    FillRect(BackSurface, nullptr, _RGB32(0XFF, 0x00, 0x00));
-}
-
-void VRenderer::RenderAndFlip()
-{
-    Flip();
-}
-
 void VRenderer::Flip()
 {
     BlitSurface(BackSurface, VideoSurface, nullptr, nullptr);

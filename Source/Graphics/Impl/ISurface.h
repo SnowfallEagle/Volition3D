@@ -15,6 +15,8 @@ protected:
     i32 Height = 0;
 
 public:
+    // TODO(sean): Am i idiot? I can make them non-static...
+
     // Static stuff that can't be virtual:
     // virtual static ISurface* Create(i32 InWidth, i32 InHeight) = 0;
     // virtual static ISurface* Load(const char* Path) = 0;

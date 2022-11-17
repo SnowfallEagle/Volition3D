@@ -20,14 +20,11 @@ public:
     void StartUp();
     void ShutDown();
 
-    void PrepareToRender();
-    void RenderAndFlip();
-
     FINLINE void DrawSurface(VSurface* Surface, VRelRectI* Source, VRelRectI* Dest)
     {
         BlitScaled(Surface, BackSurface, Source, Dest);
     }
-    void DrawText(i32 X, i32 Y, u32 Color, const char* Format, ...);
+    virtual void DrawText(i32 X, i32 Y, u32 Color, const char* Format, ...) override;
 
     FINLINE static void BlitSurface(VSurface* Source, VSurface* Dest, VRelRectI* SourceRect, VRelRectI* DestRect)
     {
@@ -37,7 +34,7 @@ public:
     {
         SDL_BlitScaled(Source->SDLSurface, (SDL_Rect*)SourceRect, Dest->SDLSurface, (SDL_Rect*)DestRect);
     }
-    FINLINE static void FillRect(VSurface* Dest, VRelRectI* Rect, u32 Color)
+    FINLINE virtual void FillRect(VSurface* Dest, VRelRectI* Rect, u32 Color) override
     {
         SDL_FillRect(Dest->SDLSurface, (SDL_Rect*)Rect, Color);
     }

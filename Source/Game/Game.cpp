@@ -16,13 +16,13 @@ void VGame::StartUp()
 {
     Object.LoadPLG(
         "Test.plg",
-        { 0.0f, 0.0f, 800.0f, 1.0f },
-        { 1.0f, 1.0f, 1.0f, 0.0f },
-        { 0.0f, 0.0f, 0.0f, 0.0f }
+        { 0.0f, 0.0f, 800.0f },
+        { 1.0f, 1.0f, 1.0f },
+        { 0.0f, 0.0f, 0.0f }
     );
 
     VCam4DV1 Cam;
-    Cam.Init(0, { 0, 0, 0, 1.0f }, { 0.0f, 0.0f, 0.0f, 1.0f }, { 0, 0, 0, 1 }, 90, 100, 1000, { 1280, 720 });
+    Cam.Init(0, { 0, 0, 0 }, { 0.0f, 0.0f, 0.0f }, { 0, 0, 0 }, 90, 100, 1000, { 1280, 720 });
     Cam.BuildWorldToCameraEulerMat44();
 
     Object.TransModelToWorld();
