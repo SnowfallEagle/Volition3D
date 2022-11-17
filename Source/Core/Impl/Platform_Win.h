@@ -1,4 +1,4 @@
-#ifndef PLATFORM_WIN_H_
+#pragma once
 
 #include <intrin.h>
 
@@ -6,6 +6,3 @@
 
 #define DEBUG_BREAK() __debugbreak()
 #define PAUSE() _mm_pause()
-
-#define PLATFORM_WIN_H_
-#endif

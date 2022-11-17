@@ -1,4 +1,4 @@
-#ifndef INPUT_IMPL_MOUSEBUTTON_SDL_H_
+#pragma once
 
 #include "SDL_mouse.h"
 
@@ -11,6 +11,3 @@ namespace EMouseButton
         Right = SDL_BUTTON_RMASK
     };
 }
-
-#define INPUT_IMPL_MOUSEBUTTON_SDL_H_
-#endif

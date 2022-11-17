@@ -1,4 +1,4 @@
-#ifndef CORE_WINDOW_H_
+#pragma once
 
 #include "Core/Platform.h"
 
@@ -9,6 +9,3 @@
 #endif
 
 extern VWindow Window;
-
-#define CORE_WINDOW_H_
-#endif

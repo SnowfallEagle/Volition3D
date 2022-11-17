@@ -1,4 +1,4 @@
-#ifndef MATH_RECT_H_
+#pragma once
 
 #include "Core/Types.h"
 
@@ -22,6 +22,3 @@ public:
 
 typedef TRelRect<i32> VRelRectI;
 typedef TRelRect<f32> VRelRectF;
-
-#define MATH_RECT_H_
-#endif

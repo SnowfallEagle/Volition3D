@@ -1,4 +1,4 @@
-#ifndef GRAPHICS_SURFACE_H_
+#pragma once
 
 #include "Core/Platform.h"
 
@@ -6,7 +6,4 @@
 # include "Graphics/Impl/Surface_SDL.h"
 #elif VL_IMPL_DDRAW
 # include "Graphics/Impl/Surface_DDraw.h"
-#endif
-
-#define GRAPHICS_SURFACE_H_
 #endif

@@ -1,4 +1,4 @@
-#ifndef CORE_IMPL_WINDOW_SDL_H_
+#pragma once
 
 #include "SDL.h"
 #include "Core/Types.h"
@@ -14,6 +14,3 @@ public:
 
     friend class VRenderer;
 };
-
-#define CORE_IMPL_WINDOW_SDL_H_
-#endif

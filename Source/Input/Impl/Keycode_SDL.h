@@ -1,4 +1,4 @@
-#ifndef INPUT_IMPL_KEYCODE_SDL_H_
+#pragma once
 
 #include "SDL_keycode.h"
 
@@ -110,7 +110,3 @@ namespace EKeycode
         RAlt = SDLK_RALT,
     };
 }
-
-
-#define INPUT_IMPL_KEYCODE_SDL_H_
-#endif

@@ -1,4 +1,4 @@
-#ifndef GAME_GAME_H_
+#pragma once
 
 #include "Core/Types.h"
 
@@ -13,6 +13,3 @@ public:
 };
 
 extern VGame Game;
-
-#define GAME_GAME_H_
-#endif

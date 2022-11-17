@@ -1,4 +1,4 @@
-#ifndef CORE_ASSERT_H_
+#pragma once
 
 #include "Core/Platform.h"
 #include "Core/DebugLog.h"
@@ -80,5 +80,3 @@ DEFINE_LOG_CHANNEL(hLogAssert, "Assert");
 
 #endif // _DEBUG
 
-#define CORE_ASSERT_H_
-#endif

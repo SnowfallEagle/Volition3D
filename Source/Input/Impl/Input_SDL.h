@@ -1,4 +1,4 @@
-#ifndef INPUT_IMPL_INPUT_SDL_H_
+#pragma once
 
 #include "SDL.h"
 #include "Core/Types.h"
@@ -45,6 +45,3 @@ public:
         return MousePosY;
     }
 };
-
-#define INPUT_IMPL_INPUT_SDL_H_
-#endif

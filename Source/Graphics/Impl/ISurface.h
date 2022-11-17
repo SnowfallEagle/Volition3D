@@ -1,4 +1,4 @@
-#ifndef GRAPHICS_IMPL_ISURFACE_H_
+#pragma once
 
 #include "Core/Types.h"
 #include "Core/Platform.h"
@@ -44,6 +44,3 @@ protected:
     {
     }
 };
-
-#define GRAPHICS_IMPL_ISURFACE_H_
-#endif

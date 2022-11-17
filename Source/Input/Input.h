@@ -1,4 +1,4 @@
-#ifndef INPUT_INPUT_H_
+#pragma once
 
 #include "Core/Platform.h"
 
@@ -9,6 +9,3 @@
 #endif
 
 extern VInput Input;
-
-#define INPUT_INPUT_H_
-#endif

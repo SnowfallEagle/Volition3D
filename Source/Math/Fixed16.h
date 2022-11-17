@@ -1,4 +1,4 @@
-#ifndef MATH_FIXED16_H_
+#pragma once
 
 #include "Core/Types.h"
 #include "Core/Platform.h"
@@ -118,6 +118,3 @@ FINLINE void PrintFx16(fx16 Fx, char EndChar = 0)
 {
     VL_LOG("%f%c", Fx16ToFloat(Fx), EndChar);
 }
-
-#define MATH_FIXED16_H_
-#endif

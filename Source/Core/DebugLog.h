@@ -1,4 +1,4 @@
-#ifndef CORE_DEBUGLOG_H_
+#pragma once
 
 /* TODO(sean):
     - VFileSystem?
@@ -30,6 +30,3 @@ private:
 };
 
 extern VDebugLog DebugLog;
-
-#define CORE_DEBUGLOG_H_
-#endif
