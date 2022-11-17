@@ -1,6 +1,8 @@
 #pragma once
 
-#include "Graphics/Renderer.h"
+#include "Graphics/Polygon.h"
+#include "Graphics/Camera.h"
+#include "Graphics/TransformType.h"
 
 namespace EObjectStateV1
 {

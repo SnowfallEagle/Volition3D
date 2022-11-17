@@ -1,4 +1,4 @@
-#ifndef GRAPHICS_IMPL_SURFACE_SDL_H_
+#pragma once
 
 #include "SDL.h"
 #include "Graphics/Impl/ISurface.h"
@@ -23,8 +23,5 @@ private:
     {
     }
 
-    friend class VGraphics;
+    friend class VRenderer;
 };
-
-#define GRAPHICS_IMPL_SURFACE_SDL_H_
-#endif

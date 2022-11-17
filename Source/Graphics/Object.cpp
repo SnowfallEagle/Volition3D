@@ -3,7 +3,7 @@
 #include <errno.h>
 #include "Core/Types.h"
 #include "Math/Vector.h"
-#include "Graphics/Graphics.h"
+#include "Graphics/Renderer.h"
 #include "Graphics/Object.h"
 
 b32 VObject4DV1::LoadPLG(

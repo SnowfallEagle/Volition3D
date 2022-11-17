@@ -5,11 +5,11 @@
 #include <string.h> // TODO(sean): mem::MemSet, mem::MemCopy()
 #include "Math/Math.h"
 #include "Core/Window.h"
-#include "Graphics/Impl/Graphics_SDL.h"
+#include "Graphics/Impl/Renderer_SDL.h"
 
-DEFINE_LOG_CHANNEL(hLogGraphics, "Graphics");
+DEFINE_LOG_CHANNEL(hLogRenderer, "Renderer");
 
-void VGraphics::StartUp()
+void VRenderer::StartUp()
 {
     // Get window surface
     SDL_Surface* SDLSurface = SDL_GetWindowSurface(Window.SDLWindow);
@@ -39,10 +39,10 @@ void VGraphics::StartUp()
     ASSERT(Font);
 
     // Log
-    VL_NOTE(hLogGraphics, "Initialized with %s pixel format\n", SDL_GetPixelFormatName(SDLPixelFormatEnum));
+    VL_NOTE(hLogRenderer, "Initialized with %s pixel format\n", SDL_GetPixelFormatName(SDLPixelFormatEnum));
 }
 
-void VGraphics::ShutDown()
+void VRenderer::ShutDown()
 {
     // Shut down TTF
     {
@@ -58,23 +58,23 @@ void VGraphics::ShutDown()
     }
 }
 
-void VGraphics::PrepareToRender()
+void VRenderer::PrepareToRender()
 {
     FillRect(BackSurface, nullptr, _RGB32(0XFF, 0x00, 0x00));
 }
 
-void VGraphics::RenderAndFlip()
+void VRenderer::RenderAndFlip()
 {
     Flip();
 }
 
-void VGraphics::Flip()
+void VRenderer::Flip()
 {
     BlitSurface(BackSurface, VideoSurface, nullptr, nullptr);
     SDL_UpdateWindowSurface(Window.SDLWindow);
 }
 
-void VGraphics::DrawText(i32 X, i32 Y, u32 Color, const char* Format, ...)
+void VRenderer::DrawText(i32 X, i32 Y, u32 Color, const char* Format, ...)
 {
     // Prepare text
     static constexpr i32f TextBufferSize = 512;

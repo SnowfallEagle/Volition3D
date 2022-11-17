@@ -6,7 +6,7 @@
 #include "Core/DebugLog.h"
 #include "Core/Window.h"
 #include "Math/Math.h"
-#include "Graphics/Graphics.h"
+#include "Graphics/Renderer.h"
 #include "Input/Input.h"
 #include "Game/Game.h"
 
@@ -34,7 +34,7 @@ public:
         DebugLog.StartUp();
         Window.Create(WindowTitle, WindowWidth, WindowHeight);
         Math.StartUp();
-        Graphics.StartUp();
+        Renderer.StartUp();
         Input.StartUp();
         Game.StartUp();
 
@@ -47,7 +47,7 @@ public:
 
         Game.ShutDown();
         Input.ShutDown();
-        Graphics.ShutDown();
+        Renderer.ShutDown();
         Math.ShutDown();
         Window.Destroy();
         DebugLog.ShutDown();
@@ -62,9 +62,9 @@ public:
             HandleEvents();
             Game.Update(Delta);
 
-            Graphics.PrepareToRender();
+            Renderer.PrepareToRender();
             Game.Render();
-            Graphics.RenderAndFlip();
+            Renderer.RenderAndFlip();
 
             // DEBUG(sean) SyncFrame();
         }

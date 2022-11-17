@@ -3,7 +3,7 @@
 #if VL_IMPL_SDL
 
 #include "Core/Assert.h"
-#include "Graphics/Graphics.h"
+#include "Graphics/Renderer.h"
 #include "Graphics/Impl/Surface_SDL.h"
 
 #define SHOULD_LOCK_SDL_SURFACE 0
@@ -17,8 +17,8 @@ VSurface* VSurface::Create(SDL_Surface* InSDLSurface)
 VSurface* VSurface::Create(i32 InWidth, i32 InHeight)
 {
     SDL_Surface* SDLSurface = SDL_CreateRGBSurfaceWithFormat(
-        0, InWidth, InHeight, Graphics.BitsPerPixel,
-        Graphics.SDLPixelFormatEnum
+        0, InWidth, InHeight, Renderer.BitsPerPixel,
+        Renderer.SDLPixelFormatEnum
     );
     ASSERT(SDLSurface);
 
@@ -31,7 +31,7 @@ VSurface* VSurface::Load(const char* Path)
     ASSERT(Temp);
 
     SDL_Surface* Converted = SDL_ConvertSurface(
-        Temp, Graphics.SDLPixelFormat, 0
+        Temp, Renderer.SDLPixelFormat, 0
     );
     ASSERT(Converted);
     SDL_FreeSurface(Temp);

@@ -1,7 +1,7 @@
 #include "Math/Vector.h"
-#include "IGraphics.h"
+#include "IRenderer.h"
 
-void IGraphics::DrawSurfaceBlended(VSurface* Surface, const VRelRectI* Source, const VRelRectI* Dest)
+void IRenderer::DrawSurfaceBlended(VSurface* Surface, const VRelRectI* Source, const VRelRectI* Dest)
 {
     /** TODO(sean)
         When we clip position, we need to clip width and height too and maybe we can return if W and H == 0

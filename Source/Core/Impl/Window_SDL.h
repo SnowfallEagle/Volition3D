@@ -12,7 +12,7 @@ public:
     void Destroy();
     void HandleEvents();
 
-    friend class VGraphics;
+    friend class VRenderer;
 };
 
 #define CORE_IMPL_WINDOW_SDL_H_

@@ -22,7 +22,7 @@
 /** NOTE(sean):
     No virtual functions. Speed.
  */
-class IGraphics
+class IRenderer
 {
 public:
     static constexpr i32f BytesPerPixel = 4;

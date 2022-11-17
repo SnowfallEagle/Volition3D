@@ -1,6 +1,6 @@
 #include "Core/Volition.h"
 #include "Input/Input.h"
-#include "Graphics/Graphics.h"
+#include "Graphics/Renderer.h"
 #include "Math/Minimal.h"
 #include "Graphics/Object.h"
 #include "Game/Game.h"
@@ -50,5 +50,5 @@ void VGame::Update(f32 Delta)
 
 void VGame::Render()
 {
-    Graphics.DrawText(0, 0, _RGB32(0xFF, 0xFF, 0xFF), "FPS: %.3f", 1000.0f/Volition.GetDelta());
+    Renderer.DrawText(0, 0, _RGB32(0xFF, 0xFF, 0xFF), "FPS: %.3f", 1000.0f/Volition.GetDelta());
 }

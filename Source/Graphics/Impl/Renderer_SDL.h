@@ -1,13 +1,13 @@
-#ifndef GRAPHICS_IMPL_GRAPHICS_SDL_H_
+#pragma once
 
 #include "SDL.h"
 #include "SDL_ttf.h"
 #include "Math/Rect.h"
 #include "Core/Platform.h"
 #include "Graphics/Impl/Surface_SDL.h"
-#include "Graphics/Impl/IGraphics.h"
+#include "Graphics/Impl/IRenderer.h"
 
-class VGraphics final : public IGraphics
+class VRenderer final : public IRenderer
 {
     SDL_PixelFormat* SDLPixelFormat;
     u32 SDLPixelFormatEnum;
@@ -47,6 +47,3 @@ private:
 
     friend class VSurface;
 };
-
-#define GRAPHICS_IMPL_GRAPHICS_SDL_H_
-#endif
