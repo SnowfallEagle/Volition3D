@@ -11,10 +11,10 @@ public:
     static VSurface* Create(SDL_Surface* InSDLSurface);
     static VSurface* Create(i32 InWidth, i32 InHeight);
     static VSurface* Load(const char* Path);
-    void Destroy();
+    virtual void Destroy() override;
 
-    void Lock(u32*& OutBuffer, i32& OutPitch);
-    void Unlock();
+    virtual void Lock(u32*& OutBuffer, i32& OutPitch) override;
+    virtual void Unlock() override;
 
 private:
     VSurface() = default;

@@ -29,15 +29,15 @@ public:
     }
     void DrawText(i32 X, i32 Y, u32 Color, const char* Format, ...);
 
-    static FINLINE void BlitSurface(VSurface* Source, VSurface* Dest, VRelRectI* SourceRect, VRelRectI* DestRect)
+    FINLINE static void BlitSurface(VSurface* Source, VSurface* Dest, VRelRectI* SourceRect, VRelRectI* DestRect)
     {
         SDL_BlitSurface(Source->SDLSurface, (SDL_Rect*)SourceRect, Dest->SDLSurface, (SDL_Rect*)DestRect);
     }
-    static FINLINE void BlitScaled(VSurface* Source, VSurface* Dest, VRelRectI* SourceRect, VRelRectI* DestRect)
+    FINLINE static void BlitScaled(VSurface* Source, VSurface* Dest, VRelRectI* SourceRect, VRelRectI* DestRect)
     {
         SDL_BlitScaled(Source->SDLSurface, (SDL_Rect*)SourceRect, Dest->SDLSurface, (SDL_Rect*)DestRect);
     }
-    static FINLINE void FillRect(VSurface* Dest, VRelRectI* Rect, u32 Color)
+    FINLINE static void FillRect(VSurface* Dest, VRelRectI* Rect, u32 Color)
     {
         SDL_FillRect(Dest->SDLSurface, (SDL_Rect*)Rect, Color);
     }
