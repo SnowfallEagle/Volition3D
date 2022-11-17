@@ -166,7 +166,8 @@ public:
 
     FINLINE void Zero()
     {
-        X = Y = Z = W = 0;
+        X = Y = Z = 0.0f;
+        W = 1.0f;
     }
 
     FINLINE void Print()

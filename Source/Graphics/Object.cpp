@@ -19,9 +19,9 @@ b32 VObject4DV1::LoadPLG(
     memset(this, 0, sizeof(*this));
     State = EObjectStateV1::Active | EObjectStateV1::Visible;
     WorldPos = Pos;
-    UX = { 1.0f, 0.0f, 0.0f, 0.0f };
-    UY = { 0.0f, 1.0f, 0.0f, 0.0f };
-    UZ = { 0.0f, 0.0f, 1.0f, 0.0f };
+    UX = { 1.0f, 0.0f, 0.0f };
+    UY = { 0.0f, 1.0f, 0.0f };
+    UZ = { 0.0f, 0.0f, 1.0f };
 
     // Load from file
     FILE* File;
