@@ -382,4 +382,3 @@ void IRenderer::DrawLineSlow(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32
         }
     }
 }
-

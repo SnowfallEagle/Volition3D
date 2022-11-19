@@ -70,10 +70,7 @@ void VGame::Render()
     Renderer.BackSurface.Lock(Buffer, Pitch);
     {
         i32 X1 = -100, Y1 = -100, X2 = Input.GetMouseX(), Y2 = Input.GetMouseY();
-        if (Renderer.ClipLine(X1, Y1, X2, Y2))
-        {
-            Renderer.DrawLine(Buffer, Pitch, X1, Y1, X2, Y2, _RGB32(0xFF, 0xFF, 0xFF));
-        }
+        Renderer.DrawClipLine(Buffer, Pitch, X1, Y1, X2, Y2, _RGB32(0xFF, 0xFF, 0xFF));
         VL_LOG("%d %d %d %d\n", X1, Y1, X2, Y2);
     }
     Renderer.BackSurface.Unlock();

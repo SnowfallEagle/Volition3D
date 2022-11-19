@@ -60,6 +60,11 @@ public:
     b32 ClipLine(i32& X1, i32& Y1, i32& X2, i32& Y2);
     static void DrawLine(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, u32 Color);
     static void DrawLineSlow(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, u32 Color);
+    void DrawClipLine(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, u32 Color)
+    {
+        if (ClipLine(X1, Y1, X2, Y2))
+            DrawLine(Buffer, Pitch, X1, Y1, X2, Y2, Color);
+    }
     // TODO(sean): void DrawClipLine();
     virtual void DrawText(i32 X, i32 Y, u32 Color, const char* Format, ...) = 0;
 
