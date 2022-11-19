@@ -25,11 +25,11 @@ public:
     static constexpr i32f BytesPerPixel = 4;
     static constexpr i32f BitsPerPixel = 32;
 
-public: // TODO(sean): For faster access while dev
-    VSurface VideoSurface;
+public: // TODO(sean): For faster testing
     VSurface BackSurface;
 
 protected:
+    VSurface VideoSurface;
     i32 ScreenWidth;
     i32 ScreenHeight;
 

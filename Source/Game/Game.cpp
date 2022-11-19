@@ -28,7 +28,7 @@ void VGame::StartUp()
 
     Object.TransModelToWorld();
     Object.Cull(Cam);
-    Object.RemoveBackFaces(Cam.Pos);
+    Object.RemoveBackFaces(Cam);
     Object.TransWorldToCamera(Cam.MatCamera);
     Object.TransCameraToScreen(Cam);
     /*
