@@ -69,7 +69,7 @@ void VGame::Render()
     i32 Pitch;
     Renderer.BackSurface.Lock(Buffer, Pitch);
     {
-        Renderer.DrawLine(Buffer, Pitch, 0, 100, 1000, 150, _RGB32(0xFF, 0xFF, 0xFF));
+        Renderer.DrawLine(Buffer, Pitch, 100, 200, Input.GetMouseX(), Input.GetMouseY(), _RGB32(0xFF, 0xFF, 0xFF));
     }
     Renderer.BackSurface.Unlock();
 

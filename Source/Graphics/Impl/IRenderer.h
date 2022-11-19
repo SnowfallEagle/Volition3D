@@ -18,6 +18,7 @@
 #include "Core/Platform.h"
 #include "Math/Rect.h"
 #include "Graphics/Surface.h"
+#include "Math/Math.h"
 
 class IRenderer
 {
@@ -53,15 +54,43 @@ public:
 
         Buffer[Y*Pitch + X] = Color;
     }
-    // DEBUG(sean): static void DrawLine(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, u32 Color)
-    void DrawLine(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, u32 Color)
+    static void DrawLine(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, u32 Color)
     {
-        for (i32 X = X1; X < X2; ++X)
+        if (Math.Abs(X2 - X1) > Math.Abs(Y2 - Y1))
         {
-            f32 M = (f32)(Y2 - Y1) / (f32)(X2 - X1);
-            i32 Y = (i32f)(M * X) + Y1;
-            //Buffer[Y*Pitch + X] = Color;
-            PutPixel(Buffer, Pitch, X, Y, Color);
+            i32 T;
+            if (X1 > X2)
+            {
+                SWAP(X1, X2, T);
+                SWAP(Y1, Y2, T);
+            }
+
+            const f32 M = (f32)(Y2 - Y1) / (f32)(X2 - X1);
+            const f32 B = Y1 - X1 * M;
+
+            for (i32 X = X1; X < X2; ++X)
+            {
+                f32 Y = M * (f32)X + B;
+                Buffer[(i32f)Y * Pitch + X] = Color;
+            }
+        }
+        else
+        {
+            i32 T;
+            if (Y1 > Y2)
+            {
+                SWAP(X1, X2, T);
+                SWAP(Y1, Y2, T);
+            }
+
+            const f32 M = (f32)(X2 - X1) / (f32)(Y2 - Y1);
+            const f32 B = X1 - Y1 * M;
+
+            for (i32 Y = Y1; Y < Y2; ++Y)
+            {
+                f32 X = M * (f32)Y + B;
+                Buffer[Y * Pitch + (i32f)X] = Color;
+            }
         }
     }
     virtual void DrawText(i32 X, i32 Y, u32 Color, const char* Format, ...) = 0;
