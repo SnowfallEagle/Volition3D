@@ -347,4 +347,40 @@ public:
             Poly.State &= ~EPolyStateV1::BackFace;
         }
     }
+
+    void RenderWire(u32* Buffer, i32 Pitch)
+    {
+        for (i32f I = 0; I < NumPoly; ++I)
+        {
+            if (~PolyList[I].State & EPolyStateV1::Active ||
+                PolyList[I].State & EPolyStateV1::Clipped ||
+                PolyList[I].State & EPolyStateV1::BackFace)
+            {
+                continue;
+            }
+
+            i32 V0 = PolyList[I].Vtx[0];
+            i32 V1 = PolyList[I].Vtx[1];
+            i32 V2 = PolyList[I].Vtx[2];
+
+            Renderer.DrawClipLine(
+                Buffer, Pitch,
+                (i32)TransVtxList[V0].X, (i32)TransVtxList[V0].Y,
+                (i32)TransVtxList[V1].X, (i32)TransVtxList[V1].Y,
+                PolyList[I].Color
+            );
+            Renderer.DrawClipLine(
+                Buffer, Pitch,
+                (i32)TransVtxList[V1].X, (i32)TransVtxList[V1].Y,
+                (i32)TransVtxList[V2].X, (i32)TransVtxList[V2].Y,
+                PolyList[I].Color
+            );
+            Renderer.DrawClipLine(
+                Buffer, Pitch,
+                (i32)TransVtxList[V2].X, (i32)TransVtxList[V2].Y,
+                (i32)TransVtxList[V0].X, (i32)TransVtxList[V0].Y,
+                PolyList[I].Color
+            );
+        }
+    }
 };

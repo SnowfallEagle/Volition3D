@@ -9,6 +9,8 @@
 
 class VRenderer final : public IRenderer
 {
+    VSurface VideoSurface;
+
     SDL_PixelFormat* SDLPixelFormat;
     u32 SDLPixelFormatEnum;
 

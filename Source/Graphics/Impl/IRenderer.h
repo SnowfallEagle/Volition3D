@@ -31,7 +31,6 @@ public: // TODO(sean): For faster testing
     VSurface BackSurface;
 
 protected:
-    VSurface VideoSurface;
     i32 ScreenWidth;
     i32 ScreenHeight;
     VVector2DI MinClip;

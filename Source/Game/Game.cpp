@@ -17,13 +17,13 @@ void VGame::StartUp()
 {
     Object.LoadPLG(
         "Test.plg",
-        { 0.0f, 0.0f, 800.0f },
+        { 0.0f, 0.0f, 100.0f },
         { 1.0f, 1.0f, 1.0f },
         { 0.0f, 0.0f, 0.0f }
     );
 
     VCam4DV1 Cam;
-    Cam.Init(0, { 0, 0, 0 }, { 0.0f, 0.0f, 0.0f }, { 0, 0, 0 }, 90, 100, 1000, { 1280, 720 });
+    Cam.Init(0, { 0, 0, 0 }, { 0.0f, 0.0f, 0.0f }, { 0, 0, 0 }, 90, 100, 1000, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
     Cam.BuildWorldToCameraEulerMat44();
 
     Object.TransModelToWorld();
@@ -68,11 +68,7 @@ void VGame::Render()
     u32* Buffer;
     i32 Pitch;
     Renderer.BackSurface.Lock(Buffer, Pitch);
-    {
-        i32 X1 = -100, Y1 = -100, X2 = Input.GetMouseX(), Y2 = Input.GetMouseY();
-        Renderer.DrawClipLine(Buffer, Pitch, X1, Y1, X2, Y2, _RGB32(0xFF, 0xFF, 0xFF));
-        VL_LOG("%d %d %d %d\n", X1, Y1, X2, Y2);
-    }
+    Object.RenderWire(Buffer, Pitch);
     Renderer.BackSurface.Unlock();
 
     Renderer.DrawText(0, 0, _RGB32(0xFF, 0xFF, 0xFF), "FPS: %.3f", 1000.0f/Volition.GetDelta());
