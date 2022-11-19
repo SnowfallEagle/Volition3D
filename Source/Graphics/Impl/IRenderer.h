@@ -1,10 +1,5 @@
 #pragma once
 
-/* TODO(sean):
-    - Think about our functions that want surface to be locked...
-        Maybe we should make functions with buffer and pitch as arguments?
- */
-
 // Macroses for fast mapping ARGB32/XRGB32 format
 #define _ALPHA_SHIFT (24)
 #define _RED_SHIFT (16)
@@ -40,7 +35,7 @@ protected:
 public:
     virtual void PrepareToRender()
     {
-        FillRect(&BackSurface, nullptr, _RGB32(0XFF, 0x00, 0x00));
+        BackSurface.FillRectHW(nullptr, _RGB32(0xFF, 0x00, 0x00));
     }
     virtual void RenderAndFlip()
     {
@@ -60,8 +55,4 @@ public:
 
 protected:
     virtual void Flip() = 0;
-
-    // Put this all in VSurface
-    void DrawSurfaceBlended(VSurface* Surface, const VRelRectI* Source, const VRelRectI* Dest);
-    virtual void FillRect(VSurface* Dest, VRelRectI* Rect, u32 Color) = 0;
 };

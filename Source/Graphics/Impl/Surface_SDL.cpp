@@ -85,4 +85,15 @@ void VSurface::Unlock()
     bLocked = false;
 }
 
+void VSurface::FillRectHW(VRelRectI* Rect, u32 Color)
+{
+    // SDL_Rect has the same footprint as VRelRectI
+    SDL_FillRect(SDLSurface, (SDL_Rect*)Rect, Color);
+}
+
+void VSurface::BlitHW(VRelRectI* SourceRect, VSurface* Dest, VRelRectI* DestRect)
+{
+    SDL_BlitScaled(SDLSurface, (SDL_Rect*)SourceRect, Dest->SDLSurface, (SDL_Rect*)DestRect);
+}
+
 #endif VL_IMPL_SDL

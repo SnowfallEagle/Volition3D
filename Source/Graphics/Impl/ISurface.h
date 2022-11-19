@@ -3,6 +3,7 @@
 #include "Core/Types.h"
 #include "Core/Platform.h"
 #include "Core/Assert.h"
+#include "Math/Rect.h"
 
 class ISurface
 {
@@ -45,4 +46,6 @@ public:
     {
         return Height;
     }
+
+    void DrawSurfaceBlended(const VRelRectI* Source, u32* Buffer, i32 Pitch, const VRelRectI* Dest);
 };

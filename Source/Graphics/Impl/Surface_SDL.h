@@ -17,5 +17,8 @@ public:
     virtual void Lock(u32*& OutBuffer, i32& OutPitch) override;
     virtual void Unlock() override;
 
+    void BlitHW(VRelRectI* SourceRect, VSurface* Dest, VRelRectI* DestRect);
+    void FillRectHW(VRelRectI* Rect, u32 Color);
+
     friend class VRenderer;
 };

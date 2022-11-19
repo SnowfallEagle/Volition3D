@@ -22,16 +22,6 @@ public:
 
     virtual void DrawText(i32 X, i32 Y, u32 Color, const char* Format, ...) override;
 
-    // TODO(sean): Put it in VSurface
-    FINLINE static void Blit(VSurface* Source, VSurface* Dest, VRelRectI* SourceRect, VRelRectI* DestRect)
-    {
-        SDL_BlitScaled(Source->SDLSurface, (SDL_Rect*)SourceRect, Dest->SDLSurface, (SDL_Rect*)DestRect);
-    }
-    FINLINE virtual void FillRect(VSurface* Dest, VRelRectI* Rect, u32 Color) override
-    {
-        SDL_FillRect(Dest->SDLSurface, (SDL_Rect*)Rect, Color);
-    }
-
 private:
     void Flip();
 
