@@ -19,6 +19,7 @@
 #include "Math/Rect.h"
 #include "Graphics/Surface.h"
 #include "Math/Math.h"
+#include "Math/Vector.h"
 
 class IRenderer
 {
@@ -33,6 +34,8 @@ protected:
     VSurface VideoSurface;
     i32 ScreenWidth;
     i32 ScreenHeight;
+    VVector2DI MinClip;
+    VVector2DI MaxClip;
 
 public:
     virtual void PrepareToRender()
@@ -54,8 +57,10 @@ public:
 
         Buffer[Y*Pitch + X] = Color;
     }
+    b32 ClipLine(i32& X1, i32& Y1, i32& X2, i32& Y2);
     static void DrawLine(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, u32 Color);
     static void DrawLineSlow(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, u32 Color);
+    // TODO(sean): void DrawClipLine();
     virtual void DrawText(i32 X, i32 Y, u32 Color, const char* Format, ...) = 0;
 
     FINLINE i32 GetScreenWidth() const

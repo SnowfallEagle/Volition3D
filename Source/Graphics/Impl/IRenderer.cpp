@@ -1,5 +1,275 @@
 #include "IRenderer.h"
 
+b32 IRenderer::ClipLine(i32& X1, i32& Y1, i32& X2, i32& Y2)
+{
+    /* NOTE(sean):
+        We can optimize this function if we throw away floating
+        point computations, but we could loss in accuracy...
+     */
+
+    enum EClipCode
+    {
+        CC_N = BIT(1),
+        CC_W = BIT(2),
+        CC_S = BIT(3),
+        CC_E = BIT(4),
+
+        CC_NW = CC_N | CC_W,
+        CC_NE = CC_N | CC_E,
+        CC_SW = CC_S | CC_W,
+        CC_SE = CC_S | CC_E,
+    };
+
+    i32 CX1 = X1, CY1 = Y1, CX2 = X2, CY2 = Y2;
+    i32 Code1 = 0, Code2 = 0;
+
+    // Define codes
+    if (CX1 < MinClip.X)
+        Code1 |= CC_W;
+    else if (CX1 > MaxClip.X)
+        Code1 |= CC_E;
+    if (CY1 < MinClip.Y)
+        Code1 |= CC_N;
+    else if (CY1 > MaxClip.Y)
+        Code1 |= CC_S;
+
+    if (CX2 < MinClip.X)
+        Code2 |= CC_W;
+    else if (CX2 > MaxClip.X)
+        Code2 |= CC_E;
+    if (CY2 < MinClip.Y)
+        Code2 |= CC_N;
+    else if (CY2 > MaxClip.Y)
+        Code2 |= CC_S;
+
+    // Center is 0, so check if we can't see whole line
+    if (Code1 & Code2)
+        return false;
+
+    // We see whole line, don't need to clip
+    if (Code1 == 0 && Code2 == 0)
+        return true;
+
+    // Clip line
+    switch (Code1)
+    {
+    case CC_N:
+    {
+        CY1 = MinClip.Y;
+        CX1 = (i32)(
+            0.5f + (X1 + (CY1 - Y1) * (X2-X1) / (f32)(Y2-Y1))
+        );
+    } break;
+
+    case CC_S:
+    {
+        CY1 = MaxClip.Y;
+        CX1 = (i32)(
+            0.5f + (X1 + (CY1 - Y1) * (X2-X1) / (f32)(Y2-Y1))
+        );
+    } break;
+
+    case CC_W:
+    {
+        CX1 = MinClip.X;
+        CY1 = (i32)(
+            0.5f + (Y1 + (CX1 - X1) * (Y2-Y1) / (f32)(X2-X1))
+        );
+    } break;
+
+    case CC_E:
+    {
+        CX1 = MaxClip.X;
+        CY1 = (i32)(
+            0.5f + (Y1 + (CX1 - X1) * (Y2-Y1) / (f32)(X2-X1))
+        );
+    } break;
+
+    case CC_NW:
+    {
+        CY1 = MinClip.Y;
+        CX1 = (i32)(
+            0.5f + (X1 + (CY1 - Y1) * (X2-X1) / (f32)(Y2-Y1))
+        );
+
+        if (CX1 < MinClip.X || CX1 > MaxClip.X)
+        {
+            CX1 = MinClip.X;
+            CY1 = (i32)(
+                0.5f + (Y1 + (CX1 - X1) * (Y2-Y1) / (f32)(X2-X1))
+            );
+        }
+    } break;
+
+    case CC_NE:
+    {
+        CY1 = MinClip.Y;
+        CX1 = (i32)(
+            0.5f + (X1 + (CY1 - Y1) * (X2-X1) / (f32)(Y2-Y1))
+        );
+
+        if (CX1 < MinClip.X || CX1 > MaxClip.X)
+        {
+            CX1 = MaxClip.X;
+            CY1 = (i32)(
+                0.5f + (Y1 + (CX1 - X1) * (Y2-Y1) / (f32)(X2-X1))
+            );
+        }
+    } break;
+
+    case CC_SW:
+    {
+        CY1 = MaxClip.Y;
+        CX1 = (i32)(
+            0.5f + (X1 + (CY1 - Y1) * (X2-X1) / (f32)(Y2-Y1))
+        );
+
+        if (CX1 < MinClip.X || CX1 > MaxClip.X)
+        {
+            CX1 = MinClip.X;
+            CY1 = (i32)(
+                0.5f + (Y1 + (CX1 - X1) * (Y2-Y1) / (f32)(X2-X1))
+            );
+        }
+    } break;
+
+    case CC_SE:
+    {
+        CY1 = MaxClip.Y;
+        CX1 = (i32)(
+            0.5f + (X1 + (CY1 - Y1) * (X2-X1) / (f32)(Y2-Y1))
+        );
+
+        if (CX1 < MinClip.X || CX1 > MaxClip.X)
+        {
+            CX1 = MaxClip.X;
+            CY1 = (i32)(
+                0.5f + (Y1 + (CX1 - X1) * (Y2-Y1) / (f32)(X2-X1))
+            );
+        }
+    } break;
+
+    default: {} break;
+    }
+
+    switch (Code2)
+    {
+    case CC_N:
+    {
+        CY2 = MinClip.Y;
+        CX2 = (i32)(
+            0.5f + (X2 + (CY2 - Y2) * (X1-X2) / (f32)(Y1-Y2))
+        );
+    } break;
+
+    case CC_S:
+    {
+        CY2 = MaxClip.Y;
+        CX2 = (i32)(
+            0.5f + (X2 + (CY2 - Y2) * (X1-X2) / (f32)(Y1-Y2))
+        );
+    } break;
+
+    case CC_W:
+    {
+        CX2 = MinClip.X;
+        CY2 = (i32)(
+            0.5f + (Y2 + (CX2 - X2) * (Y1-Y2) / (f32)(X1-X2))
+        );
+    } break;
+
+    case CC_E:
+    {
+        CX2 = MaxClip.X;
+        CY2 = (i32)(
+            0.5f + (Y2 + (CX2 - X2) * (Y1-Y2) / (f32)(X1-X2))
+        );
+    } break;
+
+    case CC_NW:
+    {
+        CY2 = MinClip.Y;
+        CX2 = (i32)(
+            0.5f + (X2 + (CY2 - Y2) * (X1-X2) / (f32)(Y1-Y2))
+        );
+
+        if (CX2 < MinClip.X || CX2 > MaxClip.X)
+        {
+            CX2 = MinClip.X;
+            CY2 = (i32)(
+                0.5f + (Y2 + (CX2 - X2) * (Y1-Y2) / (f32)(X1-X2))
+            );
+        }
+    } break;
+
+    case CC_NE:
+    {
+        CY2 = MinClip.Y;
+        CX2 = (i32)(
+            0.5f + (X2 + (CY2 - Y2) * (X1-X2) / (f32)(Y1-Y2))
+        );
+
+        if (CX2 < MinClip.X || CX2 > MaxClip.X)
+        {
+            CX2 = MaxClip.X;
+            CY2 = (i32)(
+                0.5f + (Y2 + (CX2 - X2) * (Y1-Y2) / (f32)(X1-X2))
+            );
+        }
+    } break;
+
+    case CC_SW:
+    {
+        CY2 = MaxClip.Y;
+        CX2 = (i32)(
+            0.5f + (X2 + (CY2 - Y2) * (X1-X2) / (f32)(Y1-Y2))
+        );
+
+        if (CX2 < MinClip.X || CX2 > MaxClip.X)
+        {
+            CX2 = MinClip.X;
+            CY2 = (i32)(
+                0.5f + (Y2 + (CX2 - X2) * (Y1-Y2) / (f32)(X1-X2))
+            );
+        }
+    } break;
+
+    case CC_SE:
+    {
+        CY2 = MaxClip.Y;
+        CX2 = (i32)(
+            0.5f + (X2 + (CY2 - Y2) * (X1-X2) / (f32)(Y1-Y2))
+        );
+
+        if (CX2 < MinClip.X || CX2 > MaxClip.X)
+        {
+            CX2 = MaxClip.X;
+            CY2 = (i32)(
+                0.5f + (Y2 + (CX2 - X2) * (Y1-Y2) / (f32)(X1-X2))
+            );
+        }
+    } break;
+
+    default: {} break;
+    }
+
+    // Check if we still can't see the line
+    if (CX1 < MinClip.X || CX1 > MaxClip.X ||
+        CX2 < MinClip.X || CX2 > MaxClip.X ||
+        CY1 < MinClip.Y || CY1 > MaxClip.Y ||
+        CY2 < MinClip.Y || CY2 > MaxClip.Y)
+    {
+        return false;
+    }
+
+    X1 = CX1;
+    X2 = CX2;
+    Y1 = CY1;
+    Y2 = CY2;
+
+    return true;
+}
+
 void IRenderer::DrawLine(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, u32 Color)
 {
     i32f DX, DY, DX2, DY2, XInc, YInc, Error;
