@@ -1,7 +1,8 @@
 #pragma once
 
-#include "SDL.h"
 #include "Graphics/Impl/ISurface.h"
+
+struct SDL_Surface;
 
 class VSurface final : public ISurface
 {
