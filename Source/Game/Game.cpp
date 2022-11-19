@@ -65,6 +65,13 @@ void VGame::Update(f32 Delta)
 
 void VGame::Render()
 {
-    Surface.DrawBlended(nullptr, &Renderer.BackSurface, nullptr);
+    u32* Buffer;
+    i32 Pitch;
+    Renderer.BackSurface.Lock(Buffer, Pitch);
+    {
+        Renderer.DrawLine(Buffer, Pitch, 0, 100, 1000, 150, _RGB32(0xFF, 0xFF, 0xFF));
+    }
+    Renderer.BackSurface.Unlock();
+
     Renderer.DrawText(0, 0, _RGB32(0xFF, 0xFF, 0xFF), "FPS: %.3f", 1000.0f/Volition.GetDelta());
 }

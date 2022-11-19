@@ -36,13 +36,34 @@ protected:
 public:
     virtual void PrepareToRender()
     {
-        BackSurface.FillRectHW(nullptr, _RGB32(0xFF, 0x00, 0x00));
+        BackSurface.FillRectHW(nullptr, _RGB32(0x00, 0x00, 0x00));
     }
     virtual void RenderAndFlip()
     {
         Flip();
     }
 
+    // Very slow put pixel function to debug draw functions
+    void PutPixel(u32* Buffer, i32 Pitch, i32 X, i32 Y, u32 Color)
+    {
+        ASSERT(X >= 0);
+        ASSERT(X < ScreenWidth);
+        ASSERT(Y >= 0);
+        ASSERT(Y < ScreenHeight);
+
+        Buffer[Y*Pitch + X] = Color;
+    }
+    // DEBUG(sean): static void DrawLine(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, u32 Color)
+    void DrawLine(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, u32 Color)
+    {
+        for (i32 X = X1; X < X2; ++X)
+        {
+            f32 M = (f32)(Y2 - Y1) / (f32)(X2 - X1);
+            i32 Y = (i32f)(M * X) + Y1;
+            //Buffer[Y*Pitch + X] = Color;
+            PutPixel(Buffer, Pitch, X, Y, Color);
+        }
+    }
     virtual void DrawText(i32 X, i32 Y, u32 Color, const char* Format, ...) = 0;
 
     FINLINE i32 GetScreenWidth() const
