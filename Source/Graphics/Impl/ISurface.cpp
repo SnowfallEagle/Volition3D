@@ -1,8 +1,8 @@
 #include "Math/Vector.h"
 #include "Graphics/Impl/ISurface.h"
+#include "Graphics/Renderer.h" // RGB macroses. TODO(sean): Maybe separate them in header?
 
-#if 0 // TODO(sean)
-void ISurface::DrawSurfaceBlended(const VRelRectI* Source, u32* Buffer, i32 Pitch, const VRelRectI* Dest)
+void ISurface::DrawBlended(const VRelRectI* SrcRect, ISurface* Dest, const VRelRectI* DestRect)
 {
     /** TODO(sean)
         When we clip position, we need to clip width and height too and maybe we can return if W and H == 0
@@ -15,14 +15,14 @@ void ISurface::DrawSurfaceBlended(const VRelRectI* Source, u32* Buffer, i32 Pitc
     VVector2DI SrcPos, DestPos;
     VVector2DI SrcSize, DestSize;
     VVector2DI SrcSurfaceSize, DestSurfaceSize;
-    SrcSurfaceSize = { Surface->GetWidth(), Surface->GetHeight() };
-    DestSurfaceSize = { BackSurface.GetWidth(), BackSurface.GetHeight() };
+    SrcSurfaceSize = { Width, Height };
+    DestSurfaceSize = { Dest->GetWidth(), Dest->GetHeight() };
 
-    // Source
-    if (Source)
+    // Source rectangle
+    if (SrcRect)
     {
-        SrcPos = { Source->X, Source->Y };
-        SrcSize = { Source->W, Source->H };
+        SrcPos = { SrcRect->X, SrcRect->Y };
+        SrcSize = { SrcRect->W, SrcRect->H };
 
         // Check for negative size
 
@@ -74,11 +74,11 @@ void ISurface::DrawSurfaceBlended(const VRelRectI* Source, u32* Buffer, i32 Pitc
         SrcSize = SrcSurfaceSize;
     }
 
-    // Destination
-    if (Dest)
+    // Destination rectangle
+    if (DestRect)
     {
-        DestPos = { Dest->X, Dest->Y };
-        DestSize = { Dest->W, Dest->H };
+        DestPos = { DestRect->X, DestRect->Y };
+        DestSize = { DestRect->W, DestRect->H };
 
         // Check for negative size
 
@@ -130,8 +130,8 @@ void ISurface::DrawSurfaceBlended(const VRelRectI* Source, u32* Buffer, i32 Pitc
     u32* SrcBuffer;
     u32* DestBuffer;
     i32 SrcPitch, DestPitch;
-    Surface->Lock(SrcBuffer, SrcPitch);
-    BackSurface.Lock(DestBuffer, DestPitch);
+    Lock(SrcBuffer, SrcPitch);
+    Dest->Lock(DestBuffer, DestPitch);
 
     // Prepare to blit
     SrcBuffer += SrcPos.Y * SrcPitch + SrcPos.X;
@@ -181,7 +181,6 @@ void ISurface::DrawSurfaceBlended(const VRelRectI* Source, u32* Buffer, i32 Pitc
         }
     }
 
-    Surface->Unlock();
-    BackSurface.Unlock();
+    Unlock();
+    Dest->Unlock();
 }
-#endif

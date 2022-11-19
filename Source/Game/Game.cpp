@@ -7,8 +7,9 @@
 
 VGame Game;
 
-// DEBUG(sean)
+// DEBUG(sean): Variables to test things
 VObject4DV1 Object;
+VSurface Surface;
 
 DEFINE_LOG_CHANNEL(hLogGame, "Game");
 
@@ -36,6 +37,20 @@ void VGame::StartUp()
     Object.TransPerspectiveToScreen(Cam);
     */
     Object.Reset();
+
+    Surface.Load("test.bmp");
+    u32* Buffer;
+    i32 Pitch;
+    Surface.Lock(Buffer, Pitch);
+    for (i32f Y = 0; Y < Surface.GetHeight(); ++Y)
+    {
+        for (i32f X = 0; X < Surface.GetWidth(); ++X)
+        {
+            Buffer[X] |= 0xCC << _ALPHA_SHIFT;
+        }
+        Buffer += Pitch;
+    }
+    Surface.Unlock();
 }
 
 void VGame::ShutDown()
@@ -50,5 +65,6 @@ void VGame::Update(f32 Delta)
 
 void VGame::Render()
 {
+    Surface.DrawBlended(nullptr, &Renderer.BackSurface, nullptr);
     Renderer.DrawText(0, 0, _RGB32(0xFF, 0xFF, 0xFF), "FPS: %.3f", 1000.0f/Volition.GetDelta());
 }

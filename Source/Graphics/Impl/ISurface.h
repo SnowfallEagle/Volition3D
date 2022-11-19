@@ -47,5 +47,5 @@ public:
         return Height;
     }
 
-    void DrawSurfaceBlended(const VRelRectI* Source, u32* Buffer, i32 Pitch, const VRelRectI* Dest);
+    void DrawBlended(const VRelRectI* SrcRect, ISurface* Dest, const VRelRectI* DestRect);
 };
