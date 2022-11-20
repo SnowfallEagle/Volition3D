@@ -144,8 +144,16 @@ b32 VObject4DV1::LoadPLG(
         {
             u32 Color444 = PolyDesc & EPLX::RGB16Mask;
 
+            /* NOTE(sean):
+                4 bit is 0xF but we need 8 since we use rgb32,
+                so 8 bit is 0xFF and we have to shift our colors
+             */
             PolyList[I].Attr |= EPolyAttrV1::RGB32;
-            PolyList[I].Color = _RGB32((Color444 & 0xF00) * 2, (Color444 & 0xF0) * 2, (Color444 & 0xF) * 2);
+            PolyList[I].Color = _RGB32(
+                (Color444 & 0xF00) >> 4,
+                Color444 & 0xF0,
+                (Color444 & 0xF) << 4
+            );
         }
         else
         {

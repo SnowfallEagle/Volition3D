@@ -16,14 +16,14 @@ DEFINE_LOG_CHANNEL(hLogGame, "Game");
 void VGame::StartUp()
 {
     Object.LoadPLG(
-        "Test.plg",
+        "tank3.plg",
         { 0.0f, 0.0f, 100.0f },
         { 1.0f, 1.0f, 1.0f },
         { 0.0f, 0.0f, 0.0f }
     );
 
     VCam4DV1 Cam;
-    Cam.Init(0, { 0, 0, 0 }, { 0.0f, 0.0f, 0.0f }, { 0, 0, 0 }, 90, 100, 1000, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
+    Cam.Init(0, { 0, 0, 0 }, { -20.0f, 0.0f, 0.0f }, { 0, 0, 0 }, 90, 100, 1000, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
     Cam.BuildWorldToCameraEulerMat44();
 
     Object.TransModelToWorld();
