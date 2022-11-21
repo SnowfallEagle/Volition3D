@@ -20,7 +20,7 @@ TODO
 *.ncb
 *.opt
 *.bmp
-*.png
+Bin/*.png
 *.wav
 *.ilk
 *.ttf
