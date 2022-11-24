@@ -16,7 +16,7 @@ DEFINE_LOG_CHANNEL(hLogGame, "Game");
 void VGame::StartUp()
 {
     Object.LoadPLG(
-        "towerg1.plg",
+        "tank3.plg",
         { 0.0f, 0.0f, 100.0f },
         { 1.0f, 1.0f, 1.0f },
         { 0.0f, 0.0f, 0.0f }
@@ -26,17 +26,18 @@ void VGame::StartUp()
     Cam.Init(0, { 0, 0, 0 }, { -20.0f, 0.0f, 0.0f }, { 0, 0, 0 }, 90, 100, 1000, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
     Cam.BuildWorldToCameraEulerMat44();
 
+    Object.Reset();
     Object.TransModelToWorld();
     Object.Cull(Cam);
-    Object.RemoveBackFaces(Cam);
+    /* NOTE(sean):
+        We shouldn't remove backfaces in wireframe engine since there are no backfaces
+        Object.RemoveBackFaces(Cam);
+     */
     Object.TransWorldToCamera(Cam.MatCamera);
-    Object.TransCameraToScreen(Cam);
-    /*
+    // Object.TransCameraToScreen(Cam);
     Object.TransCameraToPerspective(Cam);
     Object.ConvertFromHomogeneous();
     Object.TransPerspectiveToScreen(Cam);
-    */
-    Object.Reset();
 
     Surface.Load("test.bmp");
     u32* Buffer;

@@ -275,7 +275,7 @@ public:
             f32 Z = TransVtxList[I].Z;
 
             TransVtxList[I].X = TransVtxList[I].X * (Cam.ViewDist / Z);
-            TransVtxList[I].Y = TransVtxList[I].Y * (Cam.AspectRatio * Cam.ViewDist / Z);
+            TransVtxList[I].Y = TransVtxList[I].Y * (Cam.ViewDist / Z);
             // Z = Z
         }
     }
@@ -290,17 +290,13 @@ public:
 
     void TransPerspectiveToScreen(const VCam4DV1& Cam)
     {
-        // Xscr = (Xp + 1) * (ScreenWidth/2 - 0.5)
-        //      = Xp * Alpha + Alpha
-        // Yscr = (ScreenHeight - 1) - (Yp + 1) * (ScreenHeight/2 - 0.5)
-        //      = Beta - Yp * Beta
         f32 Alpha = Cam.ViewPortSize.X * 0.5f - 0.5f;
         f32 Beta = Cam.ViewPortSize.Y * 0.5f - 0.5f;
 
         for (i32f I = 0; I < NumVtx; ++I)
         {
-            TransVtxList[I].X = Alpha + TransVtxList[I].X * Alpha;
-            TransVtxList[I].Y = Beta - TransVtxList[I].Y * Beta;
+            TransVtxList[I].X = Alpha + TransVtxList[I].X;
+            TransVtxList[I].Y = Beta - TransVtxList[I].Y;
         }
     }
 
