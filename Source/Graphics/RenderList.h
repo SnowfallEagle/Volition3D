@@ -199,11 +199,10 @@ public:
 
             for (i32f V = 0; V < 3; ++V)
             {
-                f32 Z = Poly->TransVtx[V].Z;
+                f32 ViewDistDivZ = Cam.ViewDist / Poly->TransVtx[V].Z;
 
-                Poly->TransVtx[V].X *= Cam.ViewDist / Z;
-                Poly->TransVtx[V].Y *= Cam.AspectRatio * (Cam.ViewDist / Z);
-                // Z = Z
+                Poly->TransVtx[V].X *= ViewDistDivZ;
+                Poly->TransVtx[V].Y *= ViewDistDivZ;
             }
         }
     }
@@ -246,8 +245,8 @@ public:
 
             for (i32f V = 0; V < 3; ++V)
             {
-                Poly->TransVtx[V].X = Alpha + Poly->TransVtx[V].X * Alpha;
-                Poly->TransVtx[V].Y = Beta - Poly->TransVtx[V].Y * Beta;
+                Poly->TransVtx[V].X = Poly->TransVtx[V].X + Alpha;
+                Poly->TransVtx[V].Y = -Poly->TransVtx[V].Y + Beta;
             }
         }
     }

@@ -43,6 +43,11 @@ void VMatrix44::BuildTranslate(const VVector4D& V)
     };
 }
 
+void VMatrix44::BuildRotationXYZ(f32 X, f32 Y, f32 Z)
+{
+
+}
+
 void VMatrix44::Mul(const VMatrix44& A, const VMatrix44& B, VMatrix44& R)
 {
     for (i32f Row = 0; Row < 4; ++Row)

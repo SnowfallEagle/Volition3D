@@ -36,6 +36,7 @@ public:
     }
 
     void BuildTranslate(const VVector4D& V);
+    void BuildRotationXYZ(f32 X, f32 Y, f32 Z);
     static void Mul(const VMatrix44& A, const VMatrix44& B, VMatrix44& R);
     static b32 Inverse(const VMatrix44& A, VMatrix44& R);
 
