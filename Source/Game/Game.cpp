@@ -1,7 +1,7 @@
 #include "Core/Volition.h"
 #include "Input/Input.h"
-#include "Graphics/Renderer.h"
 #include "Math/Minimal.h"
+#include "Graphics/Renderer.h"
 #include "Graphics/Object.h"
 #include "Game/Game.h"
 
@@ -34,6 +34,7 @@ void VGame::StartUp()
         Object.RemoveBackFaces(Cam);
      */
     Object.TransWorldToCamera(Cam.MatCamera);
+    // Alternative way:
     // Object.TransCameraToScreen(Cam);
     Object.TransCameraToPerspective(Cam);
     Object.ConvertFromHomogeneous();
@@ -78,5 +79,7 @@ void VGame::Render()
     Renderer.DrawText(0, 93, _RGB32(0xFF, 0xFF, 0xFF), "World pos: <%.2f, %.2f, %.2f>", Object.WorldPos.X, Object.WorldPos.Y, Object.WorldPos.Z);
     Renderer.DrawText(0, 123, _RGB32(0xFF, 0xFF, 0xFF), "State: 0x%x", Object.State);
     Renderer.DrawText(0, 153, _RGB32(0xFF, 0xFF, 0xFF), "Attr: 0x%x", Object.Attr);
-    Renderer.DrawText(0, 183, _RGB32(0xFF, 0xFF, 0xFF), "FPS: %.3f", 1000.0f/Volition.GetDelta());
+    Renderer.DrawText(0, 183, _RGB32(0xFF, 0xFF, 0xFF), "Avg radius: %.3f", Object.AvgRadius);
+    Renderer.DrawText(0, 213, _RGB32(0xFF, 0xFF, 0xFF), "Max radius: %.3f", Object.MaxRadius);
+    Renderer.DrawText(0, 243, _RGB32(0xFF, 0xFF, 0xFF), "FPS: %.3f", 1000.0f/Volition.GetDelta());
 }

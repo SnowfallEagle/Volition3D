@@ -4,6 +4,7 @@
 #include "Graphics/Polygon.h"
 #include "Graphics/Camera.h"
 #include "Graphics/TransformType.h"
+#include "Graphics/Renderer.h"
 
 class VRenderList4DV1
 {
@@ -277,6 +278,40 @@ public:
                 Poly->TransVtx[V].X = Poly->TransVtx[V].X + Alpha;
                 Poly->TransVtx[V].Y = -Poly->TransVtx[V].Y + Beta;
             }
+        }
+    }
+
+    void RenderWire(u32* Buffer, i32 Pitch)
+    {
+        for (i32f I = 0; I < NumPoly; ++I)
+        {
+            VPolyFace4DV1* Poly = PolyPtrList[I];
+            if (!Poly ||
+                ~Poly->State & EPolyStateV1::Active ||
+                Poly->State & EPolyStateV1::BackFace ||
+                Poly->State & EPolyStateV1::Clipped)
+            {
+                continue;
+            }
+
+            Renderer.DrawClipLine(
+                Buffer, Pitch,
+                (i32)Poly->TransVtx[0].X, (i32)Poly->TransVtx[0].Y,
+                (i32)Poly->TransVtx[1].X, (i32)Poly->TransVtx[1].Y,
+                Poly->Color
+            );
+            Renderer.DrawClipLine(
+                Buffer, Pitch,
+                (i32)Poly->TransVtx[1].X, (i32)Poly->TransVtx[1].Y,
+                (i32)Poly->TransVtx[2].X, (i32)Poly->TransVtx[2].Y,
+                Poly->Color
+            );
+            Renderer.DrawClipLine(
+                Buffer, Pitch,
+                (i32)Poly->TransVtx[2].X, (i32)Poly->TransVtx[2].Y,
+                (i32)Poly->TransVtx[0].X, (i32)Poly->TransVtx[0].Y,
+                Poly->Color
+            );
         }
     }
 };
