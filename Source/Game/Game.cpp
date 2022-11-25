@@ -1,3 +1,7 @@
+/* TODO(sean):
+    - Object -> RenderList
+ */
+
 #include "Core/Volition.h"
 #include "Input/Input.h"
 #include "Math/Minimal.h"
@@ -23,7 +27,7 @@ void VGame::StartUp()
         { 0.0f, 0.0f, 0.0f }
     );
 
-    Cam.Init(0, { 0, 0, 0 }, { 0.0f, 0.0f, 0.0f }, { 0, 0, 0 }, 90, 100, 1000, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
+    Cam.Init(0, { 0, 0, 0 }, { 0, 0, 0 }, Object.WorldPos, 120, 100, 1000, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
 }
 
 void VGame::ShutDown()
@@ -45,11 +49,11 @@ void VGame::Update(f32 Delta)
     }
     if (Input.IsKeyDown(EKeycode::A))
     {
-        Cam.Pos.X += 0.5f;
+        Cam.Pos.X -= 0.5f;
     }
     if (Input.IsKeyDown(EKeycode::D))
     {
-        Cam.Pos.X -= 0.5f;
+        Cam.Pos.X += 0.5f;
     }
 
     if (Input.IsKeyDown(EKeycode::Left))
@@ -72,14 +76,14 @@ void VGame::Update(f32 Delta)
     if (Input.IsKeyDown(EKeycode::Q))
     {
         VMatrix44 Rot;
-        Rot.BuildRotationXYZ(0.0f, 0.0f, 0.5f);
+        Rot.BuildRotationXYZ(0.0f, 0.5f, 0);
         Object.Transform(Rot, ETransformType::LocalOnly, true);
     }
 
     if (Input.IsKeyDown(EKeycode::E))
     {
         VMatrix44 Rot;
-        Rot.BuildRotationXYZ(0.0f, 0.0f, -0.5f);
+        Rot.BuildRotationXYZ(0.0f, -0.5f, 0.0f);
         Object.Transform(Rot, ETransformType::LocalOnly, true);
     }
 }
@@ -89,24 +93,26 @@ void VGame::Render()
     // Camera
     {
         Cam.BuildWorldToCameraEulerMat44();
+        // Cam.BuildWorldToCameraUVNMat44(EUVNMode::Simple);
     }
 
     // Object
     {
         Object.Reset();
         Object.TransModelToWorld();
-        // TODO(sean): Fix culling
         Object.Cull(Cam);
-        /* NOTE(sean):
-            We shouldn't remove backfaces in wireframe engine since there are no backfaces
-            Object.RemoveBackFaces(Cam);
-         */
+        Object.RemoveBackFaces(Cam);
         Object.TransWorldToCamera(Cam.MatCamera);
-        // Alternative way:
-        // Object.TransCameraToScreen(Cam);
-        Object.TransCameraToPerspective(Cam);
-        Object.ConvertFromHomogeneous();
-        Object.TransPerspectiveToScreen(Cam);
+        /*
+        {
+            Object.TransCameraToScreen(Cam);
+        }
+        */
+        {
+            Object.TransCameraToPerspective(Cam);
+            Object.ConvertFromHomogeneous();
+            Object.TransPerspectiveToScreen(Cam);
+        }
     }
 
     // Render

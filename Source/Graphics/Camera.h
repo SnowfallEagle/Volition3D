@@ -89,12 +89,12 @@ public:
 
         FOV = InFOV;
         AspectRatio = InViewPortSize.X / InViewPortSize.Y;
-        ViewDist = (InViewPortSize.X * 0.5f) / Math.Tan(FOV * 0.5f); // TODO(sean): Or maybe multiply by tan?
+        ViewDist = (InViewPortSize.X * 0.5f) / Math.Tan(FOV * 0.5f);
 
         ZNearClip = InZNearClip;
         ZFarClip = InZFarClip;
 
-        ViewPlaneSize = { 2.0f, 2.0f/AspectRatio };
+        ViewPlaneSize = InViewPortSize; // Or { 2, 2/AspectRatio } when normalized
         ViewPortSize = InViewPortSize;
         ViewPortCenter = {
             (ViewPortSize.X - 1.0f) * 0.5f, (ViewPortSize.Y - 1.0f) * 0.5f
