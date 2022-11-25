@@ -45,7 +45,58 @@ void VMatrix44::BuildTranslate(const VVector4D& V)
 
 void VMatrix44::BuildRotationXYZ(f32 X, f32 Y, f32 Z)
 {
+    // NOTE(sean):
+    // We can optimize this function by checking
+    // special conditions with switch case
 
+    VMatrix44 MatX, MatY, MatZ, MatTemp;
+    f32 SinAngle, CosAngle;
+
+    MatX = Identity;
+    MatY = Identity;
+    MatZ = Identity;
+
+    if (Math.Abs(X) > Math.Epsilon5)
+    {
+        SinAngle = Math.FastSin(X);
+        CosAngle = Math.FastCos(X);
+
+        MatX = {
+            1, 0, 0, 0,
+            0, CosAngle, SinAngle, 0,
+            0, -SinAngle, CosAngle, 0,
+            0, 0, 0, 1
+        };
+    }
+
+    if (Math.Abs(Y) > Math.Epsilon5)
+    {
+        SinAngle = Math.FastSin(Y);
+        CosAngle = Math.FastCos(Y);
+
+        MatY = {
+            CosAngle, 0, -SinAngle, 0,
+            0,        1, 0,         0,
+            SinAngle, 0, CosAngle,  0,
+            0,        0, 0,         1
+        };
+    }
+
+    if (Math.Abs(Z) > Math.Epsilon5)
+    {
+        SinAngle = Math.FastSin(Z);
+        CosAngle = Math.FastCos(Z);
+
+        MatZ = {
+            CosAngle,  SinAngle, 0, 0,
+            -SinAngle, CosAngle, 0, 0,
+            0,         0,        1, 0,
+            0,         0,        0, 1
+        };
+    }
+
+    VMatrix44::Mul(MatX, MatY, MatTemp);
+    VMatrix44::Mul(MatTemp, MatZ, *this);
 }
 
 void VMatrix44::Mul(const VMatrix44& A, const VMatrix44& B, VMatrix44& R)

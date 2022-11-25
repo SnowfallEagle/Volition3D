@@ -69,7 +69,7 @@ b32 VObject4DV1::LoadPLG(
             fclose(File);
             return false;
         }
-        LocalVtxList[I].Z = 1.0f;
+        LocalVtxList[I].W = 1.0f;
 
         // Scale
         LocalVtxList[I].X *= Scale.X;

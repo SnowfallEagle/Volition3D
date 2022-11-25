@@ -23,7 +23,7 @@ void VGame::StartUp()
         { 0.0f, 0.0f, 0.0f }
     );
 
-    Cam.Init(0, { 0, 0, 0 }, { -20.0f, 0.0f, 0.0f }, { 0, 0, 0 }, 90, 100, 1000, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
+    Cam.Init(0, { 0, 0, 0 }, { 0.0f, 0.0f, 0.0f }, { 0, 0, 0 }, 90, 100, 1000, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
 }
 
 void VGame::ShutDown()
@@ -35,13 +35,52 @@ void VGame::Update(f32 Delta)
     if (Input.IsKeyDown(EKeycode::Escape))
         Volition.Stop();
 
+    if (Input.IsKeyDown(EKeycode::W))
+    {
+        Cam.Pos.Z += 0.5f;
+    }
+    if (Input.IsKeyDown(EKeycode::S))
+    {
+        Cam.Pos.Z -= 0.5f;
+    }
+    if (Input.IsKeyDown(EKeycode::A))
+    {
+        Cam.Pos.X += 0.5f;
+    }
+    if (Input.IsKeyDown(EKeycode::D))
+    {
+        Cam.Pos.X -= 0.5f;
+    }
+
     if (Input.IsKeyDown(EKeycode::Left))
     {
-        /*
+        Cam.Dir.Y -= 0.5f;
+    }
+    if (Input.IsKeyDown(EKeycode::Right))
+    {
+        Cam.Dir.Y += 0.5f;
+    }
+    if (Input.IsKeyDown(EKeycode::Up))
+    {
+        Cam.Dir.X -= 0.5f;
+    }
+    if (Input.IsKeyDown(EKeycode::Down))
+    {
+        Cam.Dir.X += 0.5f;
+    }
+
+    if (Input.IsKeyDown(EKeycode::Q))
+    {
         VMatrix44 Rot;
-        Rot.BuildRotationXYZ(0.0f, 5.0f, 0.0f);
-        Object.Transform(Rot, ETransformType::LocalToTrans, true);
-        */
+        Rot.BuildRotationXYZ(0.0f, 0.0f, 0.5f);
+        Object.Transform(Rot, ETransformType::LocalOnly, true);
+    }
+
+    if (Input.IsKeyDown(EKeycode::E))
+    {
+        VMatrix44 Rot;
+        Rot.BuildRotationXYZ(0.0f, 0.0f, -0.5f);
+        Object.Transform(Rot, ETransformType::LocalOnly, true);
     }
 }
 
@@ -56,6 +95,7 @@ void VGame::Render()
     {
         Object.Reset();
         Object.TransModelToWorld();
+        // TODO(sean): Fix culling
         Object.Cull(Cam);
         /* NOTE(sean):
             We shouldn't remove backfaces in wireframe engine since there are no backfaces
@@ -75,7 +115,8 @@ void VGame::Render()
         i32 Pitch;
         Renderer.BackSurface.Lock(Buffer, Pitch);
         {
-            Object.RenderWire(Buffer, Pitch);
+            if (~Object.State & EObjectStateV1::Culled)
+                Object.RenderWire(Buffer, Pitch);
         }
         Renderer.BackSurface.Unlock();
     }
