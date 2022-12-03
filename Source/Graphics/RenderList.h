@@ -20,6 +20,35 @@ public:
 public:
     b32 InsertPoly(const VPoly4DV1& Poly)
     {
+        if (NumPoly >= MaxPoly)
+        {
+            return false;
+        }
+
+        PolyPtrList[NumPoly] = &PolyList[NumPoly];
+        PolyList[NumPoly].State = Poly.State;
+        PolyList[NumPoly].Attr = Poly.Attr;
+        PolyList[NumPoly].Color = Poly.Color;
+
+        for (i32f I = 0; I < 3; ++I)
+        {
+            // Copy in PolyFace's trans and local vertices lists
+            PolyList[NumPoly].TransVtx[I] = PolyList[NumPoly].LocalVtx[I] = Poly.VtxList[Poly.Vtx[I]];
+        }
+
+        PolyList[NumPoly].Next = nullptr;
+        if (NumPoly == 0)
+        {
+            PolyList[NumPoly].Prev = nullptr;
+        }
+        else
+        {
+            PolyList[NumPoly].Prev = &PolyList[NumPoly - 1];
+            PolyList[NumPoly - 1].Next = &PolyList[NumPoly];
+        }
+
+        ++NumPoly;
+
         return true;
     }
 
