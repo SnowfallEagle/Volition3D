@@ -135,7 +135,7 @@ public:
     {
     }
 
-    FINLINE VVector4D operator+(const VVector4D& V)
+    FINLINE VVector4D operator+(const VVector4D& V) const
     {
         return {
             X + V.X, Y + V.Y, Z + V.Z, 1.0f
@@ -149,7 +149,7 @@ public:
         W = 1.0f;
         return *this;
     }
-    FINLINE VVector4D operator-(const VVector4D& V)
+    FINLINE VVector4D operator-(const VVector4D& V) const
     {
         return {
             X - V.X, Y - V.Y, Z - V.Z, 1.0f
@@ -182,11 +182,11 @@ public:
         Z /= W;
     }
 
-    FINLINE f32 GetLength()
+    FINLINE f32 GetLength() const
     {
         return Math.Sqrt(X*X + Y*Y + Z*Z);
     }
-    FINLINE f32 GetLengthFast()
+    FINLINE f32 GetLengthFast() const
     {
         return Math.FastDist3D(X, Y, Z);
     }
@@ -205,7 +205,7 @@ public:
         Z *= Inv;
         W = 1.0f;
     }
-    VVector4D GetNormalized()
+    VVector4D GetNormalized() const
     {
         f32 Len = GetLength();
 

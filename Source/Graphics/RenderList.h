@@ -52,7 +52,7 @@ public:
         return true;
     }
 
-    void InsertObject(VObject4DV1& Object, b32 bInsertLocal = false)
+    void InsertObject(VObject4DV1& Object, b32 bInsertLocal)
     {
         if (~Object.State & EObjectStateV1::Active  ||
             ~Object.State & EObjectStateV1::Visible ||
@@ -203,7 +203,7 @@ public:
         }
     }
 
-    void RemoveBackFaces(VVector4D CamPos)
+    void RemoveBackFaces(const VCam4DV1& Cam)
     {
         for (i32f I = 0; I < NumPoly; ++I)
         {
@@ -222,7 +222,7 @@ public:
             V = Poly->TransVtx[2] - Poly->TransVtx[0];
             VVector4D::Cross(U, V, N);
 
-            VVector4D View = CamPos - Poly->TransVtx[0];
+            VVector4D View = Cam.Pos - Poly->TransVtx[0];
             // If > 0 then N watch in the same direction as View vector and visible
             if (VVector4D::Dot(View, N) <= 0.0f)
                 Poly->State |= EPolyStateV1::BackFace;

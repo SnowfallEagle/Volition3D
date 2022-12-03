@@ -28,8 +28,6 @@ void VGame::StartUp()
         { 1.0f, 1.0f, 1.0f },
         { 0.0f, 0.0f, 0.0f }
     );
-    RenderList.Reset();
-    RenderList.InsertObject(Object);
 
     Cam.Init(0, { 0, 0, 0 }, { 0, 0, 0 }, Object.WorldPos, 100, 50, 500, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
 }
@@ -100,6 +98,7 @@ void VGame::Render()
         // Cam.BuildWorldToCameraUVNMat44(EUVNMode::Simple);
     }
 
+#if 0
     // Object
     {
         Object.Reset();
@@ -136,6 +135,38 @@ void VGame::Render()
                     _RGB32(0xFF, 0xFF, 0xFF)
                 );
             */
+        }
+        Renderer.BackSurface.Unlock();
+    }
+#endif
+
+    // RenderList
+    {
+        RenderList.Reset();
+        RenderList.InsertObject(Object, true);
+        RenderList.TransModelToWorld(Object.WorldPos);
+        RenderList.RemoveBackFaces(Cam);
+        RenderList.TransWorldToCamera(Cam.MatCamera);
+        /*
+        {
+            RenderList.TransCameraToScreen(Cam);
+        }
+        */
+        {
+            RenderList.TransCameraToPerspective(Cam);
+            RenderList.ConvertFromHomogeneous();
+            RenderList.TransPerspectiveToScreen(Cam);
+        }
+    }
+
+    // Render
+    {
+        u32* Buffer;
+        i32 Pitch;
+        Renderer.BackSurface.Lock(Buffer, Pitch);
+        {
+            if (~Object.State & EObjectStateV1::Culled)
+                RenderList.RenderWire(Buffer, Pitch);
         }
         Renderer.BackSurface.Unlock();
     }
