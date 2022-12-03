@@ -7,6 +7,7 @@
 #include "Math/Minimal.h"
 #include "Graphics/Renderer.h"
 #include "Graphics/Object.h"
+#include "Graphics/RenderList.h"
 #include "Game/Game.h"
 
 VGame Game;
@@ -15,6 +16,7 @@ VGame Game;
 VCam4DV1 Cam;
 VObject4DV1 Object;
 VSurface Surface;
+VRenderList4DV1 RenderList;
 
 DEFINE_LOG_CHANNEL(hLogGame, "Game");
 
@@ -26,8 +28,10 @@ void VGame::StartUp()
         { 1.0f, 1.0f, 1.0f },
         { 0.0f, 0.0f, 0.0f }
     );
+    RenderList.Reset();
+    RenderList.InsertObject(Object);
 
-    Cam.Init(0, { 0, 0, 0 }, { 0, 0, 0 }, Object.WorldPos, 120, 50, 500, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
+    Cam.Init(0, { 0, 0, 0 }, { 0, 0, 0 }, Object.WorldPos, 100, 50, 500, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
 }
 
 void VGame::ShutDown()

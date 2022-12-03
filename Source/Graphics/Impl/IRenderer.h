@@ -16,10 +16,10 @@
 
 #include "Core/Types.h"
 #include "Core/Platform.h"
-#include "Math/Rect.h"
-#include "Graphics/Surface.h"
 #include "Math/Math.h"
+#include "Math/Rect.h"
 #include "Math/Vector.h"
+#include "Graphics/Surface.h"
 
 class IRenderer
 {

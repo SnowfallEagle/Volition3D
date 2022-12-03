@@ -48,4 +48,7 @@ public:
 
     VPoint4D LocalVtx[3];
     VPoint4D TransVtx[3];
+
+    VPolyFace4DV1* Prev;
+    VPolyFace4DV1* Next;
 };

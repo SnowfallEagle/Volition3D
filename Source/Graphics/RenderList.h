@@ -5,6 +5,7 @@
 #include "Graphics/Camera.h"
 #include "Graphics/TransformType.h"
 #include "Graphics/Renderer.h"
+#include "Graphics/Object.h"
 
 class VRenderList4DV1
 {
@@ -17,6 +18,43 @@ public:
     VPolyFace4DV1 PolyList[MaxPoly];
 
 public:
+    b32 InsertPoly(const VPoly4DV1& Poly)
+    {
+        return true;
+    }
+
+    void InsertObject(VObject4DV1& Object, b32 bInsertLocal = false)
+    {
+        if (~Object.State & EObjectStateV1::Active  ||
+            ~Object.State & EObjectStateV1::Visible ||
+            Object.State & EObjectStateV1::Culled)
+        {
+            return;
+        }
+
+        for (i32f I = 0; I < Object.NumPoly; ++I)
+        {
+            VPoly4DV1& Poly = Object.PolyList[I];
+
+            if (~Poly.State & EPolyStateV1::Active ||
+                Poly.State & EPolyStateV1::Clipped ||
+                Poly.State & EPolyStateV1::BackFace)
+            {
+                continue;
+            }
+
+            VPoint4D* OldVtxList = Poly.VtxList;
+            Poly.VtxList = bInsertLocal ? Object.LocalVtxList : Object.TransVtxList;
+            b32 bRes = InsertPoly(Poly);
+            Poly.VtxList = OldVtxList;
+
+            if (!bRes)
+            {
+                return;
+            }
+        }
+    }
+
     void Reset()
     {
         NumPoly = 0;
