@@ -52,6 +52,32 @@ public:
         return true;
     }
 
+    b32 InsertPolyFace(const VPolyFace4DV1& PolyFace)
+    {
+        if (NumPoly >= MaxPoly)
+        {
+            return false;
+        }
+
+        PolyPtrList[NumPoly] = &PolyList[NumPoly];
+        memcpy(&PolyList[NumPoly], &PolyFace, sizeof(VPolyFace4DV1));
+
+        PolyList[NumPoly].Next = nullptr;
+        if (NumPoly == 0)
+        {
+            PolyList[NumPoly].Prev = nullptr;
+        }
+        else
+        {
+            PolyList[NumPoly].Prev = &PolyList[NumPoly - 1];
+            PolyList[NumPoly - 1].Next = &PolyList[NumPoly];
+        }
+
+        ++NumPoly;
+
+        return true;
+    }
+
     void InsertObject(VObject4DV1& Object, b32 bInsertLocal)
     {
         if (~Object.State & EObjectStateV1::Active  ||
