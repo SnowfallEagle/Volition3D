@@ -383,10 +383,44 @@ b32 IRenderer::ClipLine(i32& X1, i32& Y1, i32& X2, i32& Y2) const
     return true;
 }
 
+void IRenderer::DrawTopTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, i32 X3, i32 Y3, u32 Color)
+{
+    f32 FX1 = (f32)X1;
+    f32 FX2 = (f32)X2;
+
+    f32 DX1 = (f32)(X3 - X1) / (f32)(Y3 - Y1);
+    f32 DX2 = (f32)(X3 - X2) / (f32)(Y3 - Y1);
+
+    i32 YEnd = Y1 + (Y3 - Y1);
+
+    for (i32 Y = Y1; Y <= YEnd; ++Y)
+    {
+        DrawLine(Buffer, Pitch, (i32)FX1, Y, (i32)FX2, Y, Color);
+        FX1 += DX1;
+        FX2 += DX2;
+    }
+}
+
+void IRenderer::DrawBottomTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, i32 X3, i32 Y3, u32 Color)
+{
+    f32 FX2 = (f32)X1;
+    f32 FX3 = FX2;
+
+    f32 DX2 = (f32)(X1 - X2) / (f32)(Y3 - Y1);
+    f32 DX3 = (f32)(X1 - X3) / (f32)(Y3 - Y1);
+
+    i32 YEnd = Y1 + (Y3 - Y1);
+
+    for (i32 Y = Y1; Y <= YEnd; ++Y)
+    {
+        DrawLine(Buffer, Pitch, (i32)FX2, Y, (i32)FX3, Y, Color);
+        FX2 += DX2;
+        FX3 += DX3;
+    }
+}
+
 void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, i32 X3, i32 Y3, u32 Color)
 {
     if ((X1 == X2 && X2 == X3) || (Y1 == Y2 && Y2 == Y3))
         return;
-
-
 }

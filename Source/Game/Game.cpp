@@ -1,5 +1,5 @@
 /* TODO(sean):
-    - Object -> RenderList
+    - Render triangles
  */
 
 #include "Core/Volition.h"
@@ -13,10 +13,10 @@
 VGame Game;
 
 // DEBUG(sean): Variables to test things
-VCam4DV1 Cam;
-VObject4DV1 Object;
-VSurface Surface;
-VRenderList4DV1 RenderList;
+static VCam4DV1 Cam;
+static VObject4DV1 Object;
+static VSurface Surface;
+static VRenderList4DV1 RenderList;
 
 DEFINE_LOG_CHANNEL(hLogGame, "Game");
 
@@ -92,13 +92,23 @@ void VGame::Update(f32 Delta)
 
 void VGame::Render()
 {
+    u32* Buffer;
+    i32 Pitch;
+    Renderer.BackSurface.Lock(Buffer, Pitch);
+    {
+        // Renderer.DrawTriangle(Buffer, Pitch, 100, 100, 200, 200, 150, 300, _RGB32(0xFF, 0xFF, 0xFF));
+        // Renderer.DrawTopTriangle(Buffer, Pitch, 100, 100, 200, 100, 150, 300, _RGB32(0xFF, 0xFF, 0xFF));
+        Renderer.DrawBottomTriangle(Buffer, Pitch, 150, 500, 100, 600, 200, 600, _RGB32(0xFF, 0xFF, 0xFF));
+    }
+    Renderer.BackSurface.Unlock();
+
+#if 0
     // Camera
     {
         Cam.BuildWorldToCameraEulerMat44();
         // Cam.BuildWorldToCameraUVNMat44(EUVNMode::Simple);
     }
 
-#if 0
     // Object
     {
         Object.Reset();
@@ -140,6 +150,7 @@ void VGame::Render()
     }
 #endif
 
+#if 0
     // RenderList
     {
         RenderList.Reset();
@@ -147,16 +158,16 @@ void VGame::Render()
         RenderList.TransModelToWorld(Object.WorldPos);
         RenderList.RemoveBackFaces(Cam);
         RenderList.TransWorldToCamera(Cam.MatCamera);
-        /*
         {
             RenderList.TransCameraToScreen(Cam);
         }
-        */
+        /*
         {
             RenderList.TransCameraToPerspective(Cam);
             RenderList.ConvertFromHomogeneous();
             RenderList.TransPerspectiveToScreen(Cam);
         }
+        */
     }
 
     // Render
@@ -170,7 +181,9 @@ void VGame::Render()
         }
         Renderer.BackSurface.Unlock();
     }
+#endif
 
+#if 0
     // Object info
     {
         Renderer.DrawText(0, 3, _RGB32(0xFF, 0xFF, 0xFF), "Name: %s", Object.Name);
@@ -183,4 +196,5 @@ void VGame::Render()
         Renderer.DrawText(0, 213, _RGB32(0xFF, 0xFF, 0xFF), "Max radius: %.3f", Object.MaxRadius);
         Renderer.DrawText(0, 243, _RGB32(0xFF, 0xFF, 0xFF), "FPS: %.3f", 1000.0f / Volition.GetDelta());
     }
+#endif
 }
