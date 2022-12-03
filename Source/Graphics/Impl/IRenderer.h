@@ -47,7 +47,7 @@ public:
     }
 
     // Very slow put pixel function to debug draw functions
-    void PutPixel(u32* Buffer, i32 Pitch, i32 X, i32 Y, u32 Color)
+    void PutPixel(u32* Buffer, i32 Pitch, i32 X, i32 Y, u32 Color) const
     {
         ASSERT(X >= 0);
         ASSERT(X < ScreenWidth);
@@ -56,15 +56,19 @@ public:
 
         Buffer[Y*Pitch + X] = Color;
     }
-    b32 ClipLine(i32& X1, i32& Y1, i32& X2, i32& Y2);
+
     static void DrawLine(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, u32 Color);
     static void DrawLineSlow(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, u32 Color);
-    void DrawClipLine(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, u32 Color)
+
+    b32 ClipLine(i32& X1, i32& Y1, i32& X2, i32& Y2) const;
+    void DrawClipLine(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, u32 Color) const
     {
         if (ClipLine(X1, Y1, X2, Y2))
             DrawLine(Buffer, Pitch, X1, Y1, X2, Y2, Color);
     }
-    // TODO(sean): void DrawClipLine();
+
+    static void DrawTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, i32 X3, i32 Y3, u32 Color);
+
     virtual void DrawText(i32 X, i32 Y, u32 Color, const char* Format, ...) = 0;
 
     FINLINE i32 GetScreenWidth() const

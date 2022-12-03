@@ -27,7 +27,7 @@ void VGame::StartUp()
         { 0.0f, 0.0f, 0.0f }
     );
 
-    Cam.Init(0, { 0, 0, 0 }, { 0, 0, 0 }, Object.WorldPos, 120, 100, 1000, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
+    Cam.Init(0, { 0, 0, 0 }, { 0, 0, 0 }, Object.WorldPos, 120, 50, 500, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
 }
 
 void VGame::ShutDown()
@@ -123,6 +123,15 @@ void VGame::Render()
         {
             if (~Object.State & EObjectStateV1::Culled)
                 Object.RenderWire(Buffer, Pitch);
+            /*
+                Renderer.DrawTriangle(
+                    Buffer, Pitch,
+                    100, 100,
+                    200, 200,
+                    0, 200,
+                    _RGB32(0xFF, 0xFF, 0xFF)
+                );
+            */
         }
         Renderer.BackSurface.Unlock();
     }
