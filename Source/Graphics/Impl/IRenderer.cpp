@@ -385,12 +385,19 @@ b32 IRenderer::ClipLine(i32& X1, i32& Y1, i32& X2, i32& Y2) const
 
 void IRenderer::DrawTopTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, i32 X3, i32 Y3, u32 Color)
 {
+    // Sort
+    if (X1 > X2)
+    {
+        i32 Temp;
+        SWAP(X1, X2, Temp);
+    }
+
     f32 FX1 = (f32)X1;
     f32 FX2 = (f32)X2;
 
-    // We can optimize this via multiplication with 1.0f / (f32)(Y3 - Y1)
-    f32 DX1 = (f32)(X3 - X1) / (f32)(Y3 - Y1);
-    f32 DX2 = (f32)(X3 - X2) / (f32)(Y3 - Y1);
+    f32 OneDivHeight = 1.0f / (Y3 - Y1);
+    f32 DX1 = (f32)(X3 - X1) * OneDivHeight;
+    f32 DX2 = (f32)(X3 - X2) * OneDivHeight;
 
     for (i32 Y = Y1; Y <= Y3; ++Y)
     {
@@ -405,8 +412,9 @@ void IRenderer::DrawBottomTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X
     f32 FX2 = (f32)X1;
     f32 FX3 = FX2;
 
-    f32 DX2 = (f32)(X2 - X1) / (f32)(Y3 - Y1);
-    f32 DX3 = (f32)(X3 - X1) / (f32)(Y3 - Y1);
+    f32 OneDivHeight = 1.0f / (Y3 - Y1);
+    f32 DX2 = (f32)(X2 - X1) * OneDivHeight;
+    f32 DX3 = (f32)(X3 - X1) * OneDivHeight;
 
     for (i32 Y = Y1; Y <= Y3; ++Y)
     {
