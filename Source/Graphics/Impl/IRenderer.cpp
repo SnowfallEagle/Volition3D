@@ -409,6 +409,13 @@ void IRenderer::DrawTopTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, 
 
 void IRenderer::DrawBottomTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, i32 X3, i32 Y3, u32 Color)
 {
+    // Sort
+    if (X2 > X3)
+    {
+        i32 Temp;
+        SWAP(X2, X3, Temp);
+    }
+
     f32 FX2 = (f32)X1;
     f32 FX3 = FX2;
 
