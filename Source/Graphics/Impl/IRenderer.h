@@ -35,6 +35,7 @@ protected:
     i32 ScreenHeight;
     VVector2DI MinClip;
     VVector2DI MaxClip;
+    // TODO(sean): Maybe we need float VVector2D for clipping?
 
 public:
     virtual void PrepareToRender()

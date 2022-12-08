@@ -96,7 +96,7 @@ void VGame::Render()
     i32 Pitch;
     Renderer.BackSurface.Lock(Buffer, Pitch);
     {
-        Renderer.DrawTriangle(Buffer, Pitch, 300,300, 500,400, 100,500, _RGB32(0xFF, 0xFF, 0xFF));
+        Renderer.DrawTriangle(Buffer, Pitch, 300,-10, -100,90, 100,-110, _RGB32(0xFF, 0xFF, 0xFF));
     }
     Renderer.BackSurface.Unlock();
 

@@ -392,18 +392,74 @@ void IRenderer::DrawTopTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, 
         SWAP(X1, X2, Temp);
     }
 
-    f32 FX1 = (f32)X1;
-    f32 FX2 = (f32)X2;
+    f32 XStart = (f32)X1;
+    f32 XEnd = (f32)X2 + 0.5f;
 
     f32 OneDivHeight = 1.0f / (Y3 - Y1);
-    f32 DX1 = (f32)(X3 - X1) * OneDivHeight;
-    f32 DX2 = (f32)(X3 - X2) * OneDivHeight;
+    f32 XDiffStart = (f32)(X3 - X1) * OneDivHeight;
+    f32 XDiffEnd = (f32)(X3 - X2) * OneDivHeight;
 
-    for (i32 Y = Y1; Y <= Y3; ++Y)
+    // Y clipping
+    if (Y1 < MinClip.Y)
     {
-        DrawLine(Buffer, Pitch, (i32)FX1, Y, (i32)FX2, Y, Color);
-        FX1 += DX1;
-        FX2 += DX2;
+        XStart += XDiffStart * (MinClip.Y - Y1);
+        XEnd += XDiffEnd * (MinClip.Y - Y1);
+        Y1 = MinClip.Y;
+    }
+    if (Y3 > MaxClip.Y)
+    {
+        Y3 = MaxClip.Y;
+    }
+
+    // Test if we need X clipping
+    if (X3     >= MinClip.X      && X3     <= MaxClip.X &&
+        XStart >= (f32)MinClip.X && XStart <= (f32)MaxClip.X &&
+        XEnd   >= (f32)MinClip.X && XEnd   <= (f32)MaxClip.X)
+    {
+        for (i32 Y = Y1; Y <= Y3; ++Y)
+        {
+            // TODO(sean): memset
+            DrawLine(Buffer, Pitch, (i32)XStart, Y, (i32)XEnd, Y, Color);
+            XStart += XDiffStart;
+            XEnd += XDiffEnd;
+        }
+    }
+    else
+    {
+        for (i32 Y = Y1; Y <= Y3; ++Y)
+        {
+            f32 XClippedStart = XStart;
+            f32 XClippedEnd = XEnd;
+
+            if (XClippedStart < (f32)MinClip.X)
+            {
+                // Whole clipping
+                if (XClippedEnd < (f32)MinClip.X)
+                {
+                    // FIXME(sean): Maybe it's <return;>? Because if XEnd is smaller than MinClip.X we couldn't draw it later
+                    continue;
+                }
+
+                XClippedStart = (f32)MinClip.X;
+            }
+
+            if (XClippedEnd > (f32)MaxClip.X)
+            {
+                if (XClippedStart > (f32)MaxClip.X)
+                {
+                    // FIXME(sean): See above
+                    continue;
+                }
+
+                XClippedEnd = (f32)MaxClip.X;
+            }
+
+            // TODO(sean): memset
+            DrawLine(Buffer, Pitch, (i32)XClippedStart, Y, (i32)XClippedEnd, Y, Color);
+
+            XStart += XDiffStart;
+            XEnd += XDiffEnd;
+        }
     }
 }
 
@@ -417,7 +473,7 @@ void IRenderer::DrawBottomTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X
     }
 
     f32 FX2 = (f32)X1;
-    f32 FX3 = FX2;
+    f32 FX3 = FX2 + 0.5f;
 
     f32 OneDivHeight = 1.0f / (Y3 - Y1);
     f32 DX2 = (f32)(X2 - X1) * OneDivHeight;
@@ -481,7 +537,7 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32
         // DEBUG(sean)
         VL_LOG("%d,%d, %d,%d, %d,%d. New: %d,%d\n", X1,Y1, X2,Y2, X3,Y3, NewX,Y2);
 
-        DrawBottomTriangle(Buffer, Pitch, X1, Y1, NewX, Y2, X2, Y2, Color);
-        DrawTopTriangle(Buffer, Pitch, NewX, Y2, X2, Y2, X3, Y3, Color);
+        // DEBUG(sean): DrawBottomTriangle(Buffer, Pitch, X1, Y1, NewX, Y2, X2, Y2, Color);
+        DrawTopTriangle(Buffer, Pitch, X2, Y2, NewX, Y2, X3, Y3, Color);
     }
 }
