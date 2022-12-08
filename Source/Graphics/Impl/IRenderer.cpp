@@ -418,7 +418,7 @@ void IRenderer::DrawTopTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, 
     {
         for (i32 Y = Y1; Y <= Y3; ++Y)
         {
-            // TODO(sean): memset
+            // TODO(sean): Memory.MemSetQuad()
             DrawLine(Buffer, Pitch, (i32)XStart, Y, (i32)XEnd, Y, Color);
             XStart += XDiffStart;
             XEnd += XDiffEnd;
@@ -436,7 +436,6 @@ void IRenderer::DrawTopTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, 
                 // Whole clipping
                 if (XClippedEnd < (f32)MinClip.X)
                 {
-                    // FIXME(sean): Maybe it's <return;>? Because if XEnd is smaller than MinClip.X we couldn't draw it later
                     continue;
                 }
 
@@ -447,14 +446,13 @@ void IRenderer::DrawTopTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, 
             {
                 if (XClippedStart > (f32)MaxClip.X)
                 {
-                    // FIXME(sean): See above
                     continue;
                 }
 
                 XClippedEnd = (f32)MaxClip.X;
             }
 
-            // TODO(sean): memset
+            // TODO(sean): Memory.MemSetQuad()
             DrawLine(Buffer, Pitch, (i32)XClippedStart, Y, (i32)XClippedEnd, Y, Color);
 
             XStart += XDiffStart;

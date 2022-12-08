@@ -194,5 +194,7 @@ void VGame::Render()
         Renderer.DrawText(0, 213, _RGB32(0xFF, 0xFF, 0xFF), "Max radius: %.3f", Object.MaxRadius);
         Renderer.DrawText(0, 243, _RGB32(0xFF, 0xFF, 0xFF), "FPS: %.3f", 1000.0f / Volition.GetDelta());
     }
+#else
+    Renderer.DrawText(0, 5, _RGB32(0xCC, 0xCC, 0xCC), "FPS: %.3f", 1000.0f / Volition.GetDelta());
 #endif
 }

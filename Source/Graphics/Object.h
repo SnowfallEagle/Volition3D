@@ -362,19 +362,19 @@ public:
             i32 V1 = PolyList[I].Vtx[1];
             i32 V2 = PolyList[I].Vtx[2];
 
-            Renderer.DrawClipLine(
+            Renderer.DrawClippedLine(
                 Buffer, Pitch,
                 (i32)TransVtxList[V0].X, (i32)TransVtxList[V0].Y,
                 (i32)TransVtxList[V1].X, (i32)TransVtxList[V1].Y,
                 PolyList[I].Color
             );
-            Renderer.DrawClipLine(
+            Renderer.DrawClippedLine(
                 Buffer, Pitch,
                 (i32)TransVtxList[V1].X, (i32)TransVtxList[V1].Y,
                 (i32)TransVtxList[V2].X, (i32)TransVtxList[V2].Y,
                 PolyList[I].Color
             );
-            Renderer.DrawClipLine(
+            Renderer.DrawClippedLine(
                 Buffer, Pitch,
                 (i32)TransVtxList[V2].X, (i32)TransVtxList[V2].Y,
                 (i32)TransVtxList[V0].X, (i32)TransVtxList[V0].Y,

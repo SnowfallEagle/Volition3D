@@ -62,7 +62,7 @@ public:
     static void DrawLineSlow(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, u32 Color);
 
     b32 ClipLine(i32& X1, i32& Y1, i32& X2, i32& Y2) const;
-    void DrawClipLine(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, u32 Color) const
+    void DrawClippedLine(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, u32 Color) const
     {
         if (ClipLine(X1, Y1, X2, Y2))
             DrawLine(Buffer, Pitch, X1, Y1, X2, Y2, Color);

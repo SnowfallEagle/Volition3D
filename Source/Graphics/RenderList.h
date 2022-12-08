@@ -386,19 +386,19 @@ public:
                 continue;
             }
 
-            Renderer.DrawClipLine(
+            Renderer.DrawClippedLine(
                 Buffer, Pitch,
                 (i32)Poly->TransVtx[0].X, (i32)Poly->TransVtx[0].Y,
                 (i32)Poly->TransVtx[1].X, (i32)Poly->TransVtx[1].Y,
                 Poly->Color
             );
-            Renderer.DrawClipLine(
+            Renderer.DrawClippedLine(
                 Buffer, Pitch,
                 (i32)Poly->TransVtx[1].X, (i32)Poly->TransVtx[1].Y,
                 (i32)Poly->TransVtx[2].X, (i32)Poly->TransVtx[2].Y,
                 Poly->Color
             );
-            Renderer.DrawClipLine(
+            Renderer.DrawClippedLine(
                 Buffer, Pitch,
                 (i32)Poly->TransVtx[2].X, (i32)Poly->TransVtx[2].Y,
                 (i32)Poly->TransVtx[0].X, (i32)Poly->TransVtx[0].Y,
