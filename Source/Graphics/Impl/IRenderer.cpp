@@ -388,6 +388,7 @@ void IRenderer::DrawTopTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, 
     f32 FX1 = (f32)X1;
     f32 FX2 = (f32)X2;
 
+    // We can optimize this via multiplication with 1.0f / (f32)(Y3 - Y1)
     f32 DX1 = (f32)(X3 - X1) / (f32)(Y3 - Y1);
     f32 DX2 = (f32)(X3 - X2) / (f32)(Y3 - Y1);
 
@@ -401,9 +402,17 @@ void IRenderer::DrawTopTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, 
 
 void IRenderer::DrawBottomTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, i32 X3, i32 Y3, u32 Color)
 {
-    for (i32 Y = Y1; Y < Y3; ++Y)
+    f32 FX2 = (f32)X1;
+    f32 FX3 = FX2;
+
+    f32 DX2 = (f32)(X2 - X1) / (f32)(Y3 - Y1);
+    f32 DX3 = (f32)(X3 - X1) / (f32)(Y3 - Y1);
+
+    for (i32 Y = Y1; Y <= Y3; ++Y)
     {
-        DrawLine(Buffer, Pitch, X2, Y2, X3, Y3, Color);
+        DrawLine(Buffer, Pitch, (i32)FX2, Y, (i32)FX3, Y, Color);
+        FX2 += DX2;
+        FX3 += DX3;
     }
 }
 
@@ -452,7 +461,10 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32
     else
     {
         // Find NewX which will divide triangle on Bottom/Top parts
-        i32 NewX = (i32)(0.5f + (f32)(Y2 - Y1) * ((f32)(X3 - X1) / (f32)(Y3 - Y1)) );
+        i32 NewX = X1 + (i32)(0.5f + (f32)(Y2 - Y1) * ((f32)(X3 - X1) / (f32)(Y3 - Y1)) );
+
+        // DEBUG(sean)
+        VL_LOG("%d,%d, %d,%d, %d,%d. New: %d,%d\n", X1,Y1, X2,Y2, X3,Y3, NewX,Y2);
 
         DrawBottomTriangle(Buffer, Pitch, X1, Y1, NewX, Y2, X2, Y2, Color);
         DrawTopTriangle(Buffer, Pitch, NewX, Y2, X2, Y2, X3, Y3, Color);
