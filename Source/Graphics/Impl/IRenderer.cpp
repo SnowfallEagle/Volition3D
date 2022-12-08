@@ -391,9 +391,7 @@ void IRenderer::DrawTopTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, 
     f32 DX1 = (f32)(X3 - X1) / (f32)(Y3 - Y1);
     f32 DX2 = (f32)(X3 - X2) / (f32)(Y3 - Y1);
 
-    i32 YEnd = Y1 + (Y3 - Y1);
-
-    for (i32 Y = Y1; Y <= YEnd; ++Y)
+    for (i32 Y = Y1; Y <= Y3; ++Y)
     {
         DrawLine(Buffer, Pitch, (i32)FX1, Y, (i32)FX2, Y, Color);
         FX1 += DX1;
@@ -403,24 +401,60 @@ void IRenderer::DrawTopTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, 
 
 void IRenderer::DrawBottomTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, i32 X3, i32 Y3, u32 Color)
 {
-    f32 FX2 = (f32)X1;
-    f32 FX3 = FX2;
-
-    f32 DX2 = (f32)(X1 - X2) / (f32)(Y3 - Y1);
-    f32 DX3 = (f32)(X1 - X3) / (f32)(Y3 - Y1);
-
-    i32 YEnd = Y1 + (Y3 - Y1);
-
-    for (i32 Y = Y1; Y <= YEnd; ++Y)
+    for (i32 Y = Y1; Y < Y3; ++Y)
     {
-        DrawLine(Buffer, Pitch, (i32)FX2, Y, (i32)FX3, Y, Color);
-        FX2 += DX2;
-        FX3 += DX3;
+        DrawLine(Buffer, Pitch, X2, Y2, X3, Y3, Color);
     }
 }
 
 void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, i32 X3, i32 Y3, u32 Color)
 {
+    // Test for vertical and horizontal triangle
     if ((X1 == X2 && X2 == X3) || (Y1 == Y2 && Y2 == Y3))
+    {
         return;
+    }
+
+    // Do sorting by Y
+    i32 Temp;
+    if (Y1 > Y2)
+    {
+        SWAP(Y1, Y2, Temp);
+        SWAP(X1, X2, Temp);
+    }
+    if (Y1 > Y3)
+    {
+        SWAP(Y1, Y3, Temp);
+        SWAP(X1, X3, Temp);
+    }
+    if (Y2 > Y3)
+    {
+        SWAP(Y2, Y3, Temp);
+        SWAP(X2, X3, Temp);
+    }
+
+    // Whole clipping test
+    if (Y3 < MinClip.Y || Y1 > MaxClip.Y ||
+        (X1 < MinClip.X && X2 < MinClip.X && X3 < MinClip.X) ||
+        (X1 > MaxClip.X && X2 > MaxClip.X && X3 > MaxClip.X))
+    {
+        return;
+    }
+
+    if (Y1 == Y2)
+    {
+        DrawTopTriangle(Buffer, Pitch, X1, Y1, X2, Y2, X3, Y3, Color);
+    }
+    else if (Y2 == Y3)
+    {
+        DrawBottomTriangle(Buffer, Pitch, X1, Y1, X2, Y2, X3, Y3, Color);
+    }
+    else
+    {
+        // Find NewX which will divide triangle on Bottom/Top parts
+        i32 NewX = (i32)(0.5f + (f32)(Y2 - Y1) * ((f32)(X3 - X1) / (f32)(Y3 - Y1)) );
+
+        DrawBottomTriangle(Buffer, Pitch, X1, Y1, NewX, Y2, X2, Y2, Color);
+        DrawTopTriangle(Buffer, Pitch, NewX, Y2, X2, Y2, X3, Y3, Color);
+    }
 }
