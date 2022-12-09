@@ -415,9 +415,9 @@ void IRenderer::DrawTopTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, 
     Buffer += Y1 * Pitch;
 
     // Test if we need X clipping
-    if (X3     >= MinClip.X      && X3     <= MaxClip.X &&
-        XStart >= (f32)MinClip.X && XStart <= (f32)MaxClip.X &&
-        XEnd   >= (f32)MinClip.X && XEnd   <= (f32)MaxClip.X)
+    if (X1 >= MinClip.X && X1 <= MaxClip.X &&
+        X2 >= MinClip.X && X2 <= MaxClip.X &&
+        X3 >= MinClip.X && X3 <= MaxClip.X)
     {
         for (i32 Y = Y1; Y <= Y3; ++Y)
         {
@@ -429,10 +429,13 @@ void IRenderer::DrawTopTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, 
     }
     else
     {
-        for (i32 Y = Y1; Y <= Y3; ++Y)
+        for (i32 Y = Y1; Y <= Y3; ++Y, Buffer += Pitch)
         {
             f32 XClippedStart = XStart;
             f32 XClippedEnd = XEnd;
+
+            XStart += XDiffStart;
+            XEnd += XDiffEnd;
 
             if (XClippedStart < (f32)MinClip.X)
             {
@@ -456,10 +459,6 @@ void IRenderer::DrawTopTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, 
             }
 
             Memory.MemSetQuad(Buffer + (u32)XClippedStart, Color, (i32)((XClippedEnd - XClippedStart) + 1.0f));
-
-            XStart += XDiffStart;
-            XEnd += XDiffEnd;
-            Buffer += Pitch;
         }
     }
 }
@@ -495,9 +494,9 @@ void IRenderer::DrawBottomTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X
     Buffer += Y1 * Pitch;
 
     // Test if we need X clipping
-    if (X3     >= MinClip.X      && X3     <= MaxClip.X &&
-        XStart >= (f32)MinClip.X && XStart <= (f32)MaxClip.X &&
-        XEnd   >= (f32)MinClip.X && XEnd   <= (f32)MaxClip.X)
+    if (X1 >= MinClip.X && X1 <= MaxClip.X &&
+        X2 >= MinClip.X && X2 <= MaxClip.X &&
+        X3 >= MinClip.X && X3 <= MaxClip.X)
     {
         for (i32 Y = Y1; Y <= Y3; ++Y)
         {
@@ -509,10 +508,13 @@ void IRenderer::DrawBottomTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X
     }
     else
     {
-        for (i32 Y = Y1; Y <= Y3; ++Y)
+        for (i32 Y = Y1; Y <= Y3; ++Y, Buffer += Pitch)
         {
             f32 XClippedStart = XStart;
             f32 XClippedEnd = XEnd;
+
+            XStart += XDiffStart;
+            XEnd += XDiffEnd;
 
             if (XClippedStart < (f32)MinClip.X)
             {
@@ -536,10 +538,6 @@ void IRenderer::DrawBottomTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X
             }
 
             Memory.MemSetQuad(Buffer + (u32)XClippedStart, Color, (i32)((XClippedEnd - XClippedStart) + 1.0f));
-
-            XStart += XDiffStart;
-            XEnd += XDiffEnd;
-            Buffer += Pitch;
         }
     }
 }
@@ -590,9 +588,6 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32
     {
         // Find NewX which will divide triangle on Bottom/Top parts
         i32 NewX = X1 + (i32)(0.5f + (f32)(Y2 - Y1) * ((f32)(X3 - X1) / (f32)(Y3 - Y1)) );
-
-        // DEBUG(sean)
-        VL_LOG("%d,%d, %d,%d, %d,%d. New: %d,%d\n", X1,Y1, X2,Y2, X3,Y3, NewX,Y2);
 
         DrawBottomTriangle(Buffer, Pitch, X1, Y1, NewX, Y2, X2, Y2, Color);
         DrawTopTriangle(Buffer, Pitch, X2, Y2, NewX, Y2, X3, Y3, Color);
