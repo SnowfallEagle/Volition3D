@@ -340,7 +340,9 @@ public:
         {
             VPoly4DV1& Poly = PolyList[I];
             if (~Poly.State & EPolyStateV1::Active)
+            {
                 continue;
+            }
 
             Poly.State &= ~EPolyStateV1::Clipped;
             Poly.State &= ~EPolyStateV1::BackFace;
@@ -400,9 +402,9 @@ public:
 
             Renderer.DrawTriangle(
                 Buffer, Pitch,
-                TransVtxList[V0].X, TransVtxList[V0].Y,
-                TransVtxList[V1].X, TransVtxList[V1].Y,
-                TransVtxList[V2].X, TransVtxList[V2].Y,
+                (i32)TransVtxList[V0].X, (i32)TransVtxList[V0].Y,
+                (i32)TransVtxList[V1].X, (i32)TransVtxList[V1].Y,
+                (i32)TransVtxList[V2].X, (i32)TransVtxList[V2].Y,
                 PolyList[I].Color
             );
         }
