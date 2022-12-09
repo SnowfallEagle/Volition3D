@@ -1,4 +1,5 @@
-#include "IRenderer.h"
+#include "Core/Memory.h"
+#include "Graphics/Impl/IRenderer.h"
 
 void IRenderer::DrawLine(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, u32 Color)
 {
@@ -411,6 +412,8 @@ void IRenderer::DrawTopTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, 
         Y3 = MaxClip.Y;
     }
 
+    Buffer += Y1 * Pitch;
+
     // Test if we need X clipping
     if (X3     >= MinClip.X      && X3     <= MaxClip.X &&
         XStart >= (f32)MinClip.X && XStart <= (f32)MaxClip.X &&
@@ -418,10 +421,10 @@ void IRenderer::DrawTopTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, 
     {
         for (i32 Y = Y1; Y <= Y3; ++Y)
         {
-            // TODO(sean): Memory.MemSetQuad()
-            DrawLine(Buffer, Pitch, (i32)XStart, Y, (i32)XEnd, Y, Color);
+            Memory.MemSetQuad(Buffer + (u32)XStart, Color, (i32)((XEnd - XStart) + 1.0f));
             XStart += XDiffStart;
             XEnd += XDiffEnd;
+            Buffer += Pitch;
         }
     }
     else
@@ -452,11 +455,11 @@ void IRenderer::DrawTopTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, 
                 XClippedEnd = (f32)MaxClip.X;
             }
 
-            // TODO(sean): Memory.MemSetQuad()
-            DrawLine(Buffer, Pitch, (i32)XClippedStart, Y, (i32)XClippedEnd, Y, Color);
+            Memory.MemSetQuad(Buffer + (u32)XClippedStart, Color, (i32)((XClippedEnd - XClippedStart) + 1.0f));
 
             XStart += XDiffStart;
             XEnd += XDiffEnd;
+            Buffer += Pitch;
         }
     }
 }

@@ -1,7 +1,3 @@
-/* TODO(sean):
-    - Render triangles
- */
-
 #include "Core/Volition.h"
 #include "Input/Input.h"
 #include "Math/Minimal.h"

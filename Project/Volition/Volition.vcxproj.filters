@@ -408,6 +408,9 @@
     <ClInclude Include="..\..\Source\Graphics\TransformType.h">
       <Filter>Source\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Core\Memory.h">
+      <Filter>Source\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\main.cpp">
@@ -475,6 +478,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Graphics\RenderList.cpp">
       <Filter>Source\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Core\Memory.cpp">
+      <Filter>Source\Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

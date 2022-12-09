@@ -4,7 +4,7 @@
 
 // MSVC
 #ifdef _MSC_VER
-# define VL_PLATFOM_WIN 1
+# define VL_PLATFORM_WIN 1
 # define VL_COMPILER_MSVC 1
 # include "Core/Impl/Platform_Win.h"
 #endif

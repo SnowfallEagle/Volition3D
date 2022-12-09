@@ -175,6 +175,7 @@
     <ClInclude Include="..\..\Source\Core\DebugLog.h" />
     <ClInclude Include="..\..\Source\Core\Impl\Platform_Win.h" />
     <ClInclude Include="..\..\Source\Core\Impl\Window_SDL.h" />
+    <ClInclude Include="..\..\Source\Core\Memory.h" />
     <ClInclude Include="..\..\Source\Core\Platform.h" />
     <ClInclude Include="..\..\Source\Core\Thread\SpinLock.h" />
     <ClInclude Include="..\..\Source\Core\Types.h" />
@@ -297,6 +298,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\Source\Core\DebugLog.cpp" />
     <ClCompile Include="..\..\Source\Core\Impl\Window_SDL.cpp" />
+    <ClCompile Include="..\..\Source\Core\Memory.cpp" />
     <ClCompile Include="..\..\Source\Core\Volition.cpp" />
     <ClCompile Include="..\..\Source\Core\Window.cpp" />
     <ClCompile Include="..\..\Source\Game\Game.cpp" />
