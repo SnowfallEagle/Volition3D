@@ -13,6 +13,9 @@ static VCam4DV1 Cam;
 static VObject4DV1 Object;
 static VSurface Surface;
 static VRenderList4DV1 RenderList;
+static VVector2DI V1 = { 300, 90 };
+static VVector2DI V2 = { -100, 180 };
+static VVector2DI V3 = { 100, -20 };
 
 DEFINE_LOG_CHANNEL(hLogGame, "Game");
 
@@ -35,8 +38,36 @@ void VGame::ShutDown()
 void VGame::Update(f32 Delta)
 {
     if (Input.IsKeyDown(EKeycode::Escape))
+    {
         Volition.Stop();
+    }
 
+    if (Input.IsKeyDown(EKeycode::W))
+    {
+        V1.Y -= 1;
+        V2.Y -= 1;
+        V3.Y -= 1;
+    }
+    if (Input.IsKeyDown(EKeycode::A))
+    {
+        V1.X -= 1;
+        V2.X -= 1;
+        V3.X -= 1;
+    }
+    if (Input.IsKeyDown(EKeycode::S))
+    {
+        V1.Y += 1;
+        V2.Y += 1;
+        V3.Y += 1;
+    }
+    if (Input.IsKeyDown(EKeycode::D))
+    {
+        V1.X += 1;
+        V2.X += 1;
+        V3.X += 1;
+    }
+
+#if 0
     if (Input.IsKeyDown(EKeycode::W))
     {
         Cam.Pos.Z += 0.5f;
@@ -84,6 +115,7 @@ void VGame::Update(f32 Delta)
         Rot.BuildRotationXYZ(0.0f, -0.5f, 0.0f);
         Object.Transform(Rot, ETransformType::LocalOnly, true);
     }
+#endif
 }
 
 void VGame::Render()
@@ -92,7 +124,7 @@ void VGame::Render()
     i32 Pitch;
     Renderer.BackSurface.Lock(Buffer, Pitch);
     {
-        Renderer.DrawTriangle(Buffer, Pitch, 300,-10, -100,90, 100,-110, _RGB32(0xFF, 0xFF, 0xFF));
+        Renderer.DrawTriangle(Buffer, Pitch, V1.X,V1.Y, V2.X,V2.Y, V3.X,V3.Y, _RGB32(0xFF, 0xFF, 0xFF));
     }
     Renderer.BackSurface.Unlock();
 
