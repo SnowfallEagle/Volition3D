@@ -136,6 +136,7 @@ void VGame::Render()
         // Cam.BuildWorldToCameraUVNMat44(EUVNMode::Simple);
     }
 
+#if 0
     // Object
     {
         Object.Reset();
@@ -168,8 +169,8 @@ void VGame::Render()
         }
         Renderer.BackSurface.Unlock();
     }
+#endif
 
-#if 0
     // RenderList
     {
         RenderList.Reset();
@@ -196,11 +197,12 @@ void VGame::Render()
         Renderer.BackSurface.Lock(Buffer, Pitch);
         {
             if (~Object.State & EObjectStateV1::Culled)
-                RenderList.RenderWire(Buffer, Pitch);
+            {
+                RenderList.RenderSolid(Buffer, Pitch);
+            }
         }
         Renderer.BackSurface.Unlock();
     }
-#endif
 
 #if 0
     // Object info
