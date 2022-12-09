@@ -42,6 +42,7 @@ void VGame::Update(f32 Delta)
         Volition.Stop();
     }
 
+#if 0
     if (Input.IsKeyDown(EKeycode::W))
     {
         V1.Y -= 1;
@@ -66,8 +67,8 @@ void VGame::Update(f32 Delta)
         V2.X += 1;
         V3.X += 1;
     }
+#endif
 
-#if 0
     if (Input.IsKeyDown(EKeycode::W))
     {
         Cam.Pos.Z += 0.5f;
@@ -115,11 +116,11 @@ void VGame::Update(f32 Delta)
         Rot.BuildRotationXYZ(0.0f, -0.5f, 0.0f);
         Object.Transform(Rot, ETransformType::LocalOnly, true);
     }
-#endif
 }
 
 void VGame::Render()
 {
+#if 0
     u32* Buffer;
     i32 Pitch;
     Renderer.BackSurface.Lock(Buffer, Pitch);
@@ -127,8 +128,8 @@ void VGame::Render()
         Renderer.DrawTriangle(Buffer, Pitch, V1.X,V1.Y, V2.X,V2.Y, V3.X,V3.Y, _RGB32(0xFF, 0xFF, 0xFF));
     }
     Renderer.BackSurface.Unlock();
+#endif
 
-#if 0
     // Camera
     {
         Cam.BuildWorldToCameraEulerMat44();
@@ -161,20 +162,12 @@ void VGame::Render()
         Renderer.BackSurface.Lock(Buffer, Pitch);
         {
             if (~Object.State & EObjectStateV1::Culled)
-                Object.RenderWire(Buffer, Pitch);
-            /*
-                Renderer.DrawTriangle(
-                    Buffer, Pitch,
-                    100, 100,
-                    200, 200,
-                    0, 200,
-                    _RGB32(0xFF, 0xFF, 0xFF)
-                );
-            */
+            {
+                Object.RenderSolid(Buffer, Pitch);
+            }
         }
         Renderer.BackSurface.Unlock();
     }
-#endif
 
 #if 0
     // RenderList

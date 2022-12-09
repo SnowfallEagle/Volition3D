@@ -382,4 +382,29 @@ public:
             );
         }
     }
+
+    void RenderSolid(u32* Buffer, i32 Pitch)
+    {
+        for (i32f I = 0; I < NumPoly; ++I)
+        {
+            if (~PolyList[I].State & EPolyStateV1::Active ||
+                PolyList[I].State & EPolyStateV1::Clipped ||
+                PolyList[I].State & EPolyStateV1::BackFace)
+            {
+                continue;
+            }
+
+            i32f V0 = PolyList[I].Vtx[0];
+            i32f V1 = PolyList[I].Vtx[1];
+            i32f V2 = PolyList[I].Vtx[2];
+
+            Renderer.DrawTriangle(
+                Buffer, Pitch,
+                TransVtxList[V0].X, TransVtxList[V0].Y,
+                TransVtxList[V1].X, TransVtxList[V1].Y,
+                TransVtxList[V2].X, TransVtxList[V2].Y,
+                PolyList[I].Color
+            );
+        }
+    }
 };
