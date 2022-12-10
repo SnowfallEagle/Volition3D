@@ -29,11 +29,17 @@ public:
     FINLINE void Print()
     {
         if (T == f32)
+        {
             VL_LOG("<%f, %f>", X, Y);
+        }
         else if (T == i32)
+        {
             VL_LOG("<%d, %d>", X, Y);
+        }
         else
+        {
             VL_LOG("<Unknown type>");
+        }
     }
 };
 
@@ -94,17 +100,17 @@ public:
     FINLINE static VVector3D GetCross(const VVector3D& A, const VVector3D& B)
     {
         return {
-            A.Y * B.Z - A.Z * B.Y,
-            -(A.X * B.Z - A.Z * B.X),
-            A.X * B.Y - A.Y * B.X
+            (A.Y * B.Z)   - (A.Z * B.Y),
+            -((A.X * B.Z) - (A.Z * B.X)),
+            (A.X * B.Y)   - (A.Y * B.X)
         };
     }
     FINLINE static void Cross(const VVector3D& A, const VVector3D& B, VVector3D& R)
     {
         R = {
-            A.Y * B.Z - A.Z * B.Y,
-            -(A.X * B.Z - A.Z * B.X),
-            A.X * B.Y - A.Y * B.X
+            (A.Y * B.Z)   - (A.Z * B.Y),
+            -((A.X * B.Z) - (A.Z * B.X)),
+            (A.X * B.Y)   - (A.Y * B.X)
         };
     }
 
@@ -197,7 +203,9 @@ public:
 
         // Don't do anything on zero vector
         if (Len < Math.Epsilon5)
+        {
             return;
+        }
 
         f32 Inv = 1.0f / Len;
         X *= Inv;
@@ -210,12 +218,15 @@ public:
         f32 Len = GetLength();
 
         if (Len < Math.Epsilon5)
+        {
             return { 0.0f, 0.0f, 0.0f, 1.0f };
+        }
 
         f32 Inv = 1.0f / Len;
         return { X * Inv, Y * Inv, Z * Inv, 1.0f };
     }
 
+    // TODO(sean): Rename in GetDot, make C-like dot
     FINLINE static f32 Dot(const VVector4D& A, const VVector4D& B)
     {
         return A.X*B.X + A.Y*B.Y + A.Z+B.Z;

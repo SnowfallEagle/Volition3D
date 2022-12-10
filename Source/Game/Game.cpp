@@ -1,5 +1,5 @@
 /* TODO:
-    - Fix bugs with backface clipping, crash on Solid rendering when XClippedStart is greater than XClippedEnd
+    - Fix bugs with backface clipping, sometimes triangles don't rasterized fully, maybe floating point problem
  */
 
 #include "Core/Volition.h"

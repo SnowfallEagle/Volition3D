@@ -394,7 +394,7 @@ void IRenderer::DrawTopTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, 
     }
 
     f32 XStart = (f32)X1;
-    f32 XEnd = (f32)X2 + 0.5f;
+    f32 XEnd = (f32)X2;
 
     f32 OneDivHeight = 1.0f / (Y3 - Y1);
     f32 XDiffStart = (f32)(X3 - X1) * OneDivHeight;
