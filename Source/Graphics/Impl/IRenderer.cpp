@@ -439,7 +439,6 @@ void IRenderer::DrawTopTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, 
 
             if (XClippedStart < (f32)MinClip.X)
             {
-                // Whole clipping
                 if (XClippedEnd < (f32)MinClip.X)
                 {
                     continue;
@@ -458,7 +457,7 @@ void IRenderer::DrawTopTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, 
                 XClippedEnd = (f32)MaxClip.X;
             }
 
-            Memory.MemSetQuad(Buffer + (u32)XClippedStart, Color, (i32)((XClippedEnd - XClippedStart) + 1.0f));
+            Memory.MemSetQuad(Buffer + (u32)XClippedStart, Color, ((i32)XClippedEnd - (i32)XClippedStart) + 1);
         }
     }
 }
@@ -518,7 +517,6 @@ void IRenderer::DrawBottomTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X
 
             if (XClippedStart < (f32)MinClip.X)
             {
-                // Whole clipping
                 if (XClippedEnd < (f32)MinClip.X)
                 {
                     continue;
@@ -537,7 +535,7 @@ void IRenderer::DrawBottomTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X
                 XClippedEnd = (f32)MaxClip.X;
             }
 
-            Memory.MemSetQuad(Buffer + (u32)XClippedStart, Color, (i32)((XClippedEnd - XClippedStart) + 1.0f));
+            Memory.MemSetQuad(Buffer + (u32)XClippedStart, Color, ((i32)XClippedEnd - (i32)XClippedStart) + 1);
         }
     }
 }

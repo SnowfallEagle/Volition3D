@@ -6,7 +6,10 @@
 class VMemory
 {
 public:
-    FINLINE static void MemSetQuad(void* Dest, i32 Value, i32 Count)
+#ifdef VL_COMPILER_MSVC
+    FINLINE
+#endif
+    static void MemSetQuad(void* Dest, i32 Value, i32 Count)
     {
 #ifdef VL_COMPILER_MSVC
         __asm

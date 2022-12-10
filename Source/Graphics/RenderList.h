@@ -251,7 +251,9 @@ public:
             VVector4D View = Cam.Pos - Poly->TransVtx[0];
             // If > 0 then N watch in the same direction as View vector and visible
             if (VVector4D::Dot(View, N) <= 0.0f)
+            {
                 Poly->State |= EPolyStateV1::BackFace;
+            }
         }
     }
 

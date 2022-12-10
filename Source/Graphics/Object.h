@@ -235,7 +235,9 @@ public:
     void RemoveBackFaces(VCam4DV1 Cam)
     {
         if (State & EObjectStateV1::Culled)
+        {
             return;
+        }
 
         for (i32f I = 0; I < NumPoly; ++I)
         {
@@ -257,7 +259,9 @@ public:
             VVector4D View = Cam.Pos - TransVtxList[Poly.Vtx[0]];
             // If > 0 then N watch in the same direction as View vector and visible
             if (VVector4D::Dot(View, N) <= 0.0f)
+            {
                 Poly.State |= EPolyStateV1::BackFace;
+            }
         }
     }
 

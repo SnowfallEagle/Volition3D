@@ -1,3 +1,7 @@
+/* TODO:
+    - Fix bugs with backface clipping, crash on Solid rendering when XClippedStart is greater than XClippedEnd
+ */
+
 #include "Core/Volition.h"
 #include "Input/Input.h"
 #include "Math/Minimal.h"
@@ -136,7 +140,6 @@ void VGame::Render()
         // Cam.BuildWorldToCameraUVNMat44(EUVNMode::Simple);
     }
 
-#if 0
     // Object
     {
         Object.Reset();
@@ -169,8 +172,8 @@ void VGame::Render()
         }
         Renderer.BackSurface.Unlock();
     }
-#endif
 
+#if 0
     // RenderList
     {
         RenderList.Reset();
@@ -203,6 +206,7 @@ void VGame::Render()
         }
         Renderer.BackSurface.Unlock();
     }
+#endif
 
 #if 0
     // Object info
