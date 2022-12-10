@@ -246,9 +246,11 @@ public:
             VVector4D U, V, N;
             U = Poly->TransVtx[1] - Poly->TransVtx[0];
             V = Poly->TransVtx[2] - Poly->TransVtx[0];
-            VVector4D::Cross(U, V, N);
 
+            // FIXME(sean): Maybe we should normalize these values?
+            VVector4D::Cross(U, V, N);
             VVector4D View = Cam.Pos - Poly->TransVtx[0];
+
             // If > 0 then N watch in the same direction as View vector and visible
             if (VVector4D::Dot(View, N) <= 0.0f)
             {

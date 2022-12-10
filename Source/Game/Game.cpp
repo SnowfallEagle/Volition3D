@@ -1,5 +1,5 @@
 /* TODO:
-    - Fix bugs with backfaces
+    - Fix backfaces removal
     - Sometimes triangles don't rasterized fully, maybe floating point problem
  */
 
@@ -21,13 +21,14 @@ static VRenderList4DV1 RenderList;
 static VVector2DI V1 = { 300, 90 };
 static VVector2DI V2 = { -100, 180 };
 static VVector2DI V3 = { 100, -20 };
+static b32 bRenderSolid = true;
 
 DEFINE_LOG_CHANNEL(hLogGame, "Game");
 
 void VGame::StartUp()
 {
     Object.LoadPLG(
-        "tank3.plg",
+        "tower1.plg",
         { 0.0f, 0.0f, 200.0f },
         { 1.0f, 1.0f, 1.0f },
         { 0.0f, 0.0f, 0.0f }
@@ -73,6 +74,11 @@ void VGame::Update(f32 Delta)
         V3.X += 1;
     }
 #endif
+
+    if (Input.IsKeyDown(EKeycode::R))
+    {
+        bRenderSolid = !bRenderSolid;
+    }
 
     if (Input.IsKeyDown(EKeycode::W))
     {
@@ -168,7 +174,14 @@ void VGame::Render()
         {
             if (~Object.State & EObjectStateV1::Culled)
             {
-                Object.RenderSolid(Buffer, Pitch);
+                if (bRenderSolid)
+                {
+                    Object.RenderSolid(Buffer, Pitch);
+                }
+                else
+                {
+                    Object.RenderWire(Buffer, Pitch);
+                }
             }
         }
         Renderer.BackSurface.Unlock();

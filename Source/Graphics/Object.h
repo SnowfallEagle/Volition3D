@@ -94,14 +94,18 @@ public:
         for (;;)
         {
             if (!fgets(Buffer, Size, File))
+            {
                 return nullptr;
+            }
 
             i32f I, Len = strlen(Buffer);
-            for (I = 0; I < Len && Buffer[I] == ' ' && Buffer[I] == '\t'; ++I)
+            for (I = 0; I < Len && (Buffer[I] == ' ' || Buffer[I] == '\t' || Buffer[I] == '\r' || Buffer[I] == '\n'); ++I)
                 {}
 
-            if (I < Len && Buffer[I] != '#' && Buffer[I] != '\r' && Buffer[I] != '\n')
+            if (I < Len && Buffer[I] != '#')
+            {
                 return &Buffer[I];
+            }
         }
     }
 
@@ -254,9 +258,11 @@ public:
             VVector4D U, V, N;
             U = TransVtxList[Poly.Vtx[1]] - TransVtxList[Poly.Vtx[0]];
             V = TransVtxList[Poly.Vtx[2]] - TransVtxList[Poly.Vtx[0]];
-            VVector4D::Cross(U, V, N);
 
+            // FIXME(sean): Maybe we should normalize these values?
+            VVector4D::Cross(U, V, N);
             VVector4D View = Cam.Pos - TransVtxList[Poly.Vtx[0]];
+
             // If > 0 then N watch in the same direction as View vector and visible
             if (VVector4D::Dot(View, N) <= 0.0f)
             {

@@ -7,8 +7,8 @@ namespace EPolyStateV1
 {
     enum
     {
-        Active = BIT(1),
-        Clipped = BIT(2),
+        Active   = BIT(1),
+        Clipped  = BIT(2),
         BackFace = BIT(3),
     };
 }
@@ -17,14 +17,16 @@ namespace EPolyAttrV1
 {
     enum
     {
-        RGB32 = BIT(1),
-        TwoSided = BIT(2),
+        RGB32       = BIT(1),
+        TwoSided    = BIT(2),
         Transparent = BIT(3),
 
-        ShadeModePure = BIT(4),
-        ShadeModeFlat = BIT(5),
-        ShadeModeGouraud = BIT(6),
-        ShadeModePhong = BIT(7),
+        ShadeModePure     = BIT(4),
+        ShadeModeConstant = ShadeModePure,
+        ShadeModeFlat     = BIT(5),
+        ShadeModeGouraud  = BIT(6),
+        ShadeModePhong    = BIT(7),
+        ShadeModeTexture  = BIT(8),
     };
 }
 
