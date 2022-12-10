@@ -448,24 +448,24 @@ void IRenderer::DrawTopTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, 
                 }
             */
 
-            if (XClippedStart < (f32)MinClip.X)
+            if (XClippedStart < MinClipFloat.X)
             {
-                if (XClippedEnd < (f32)MinClip.X)
+                if (XClippedEnd < MinClipFloat.X)
                 {
                     continue;
                 }
 
-                XClippedStart = (f32)MinClip.X;
+                XClippedStart = MinClipFloat.X;
             }
 
-            if (XClippedEnd > (f32)MaxClip.X)
+            if (XClippedEnd > MaxClipFloat.X)
             {
-                if (XClippedStart > (f32)MaxClip.X)
+                if (XClippedStart > MaxClipFloat.X)
                 {
                     continue;
                 }
 
-                XClippedEnd = (f32)MaxClip.X;
+                XClippedEnd = MaxClipFloat.X;
             }
 
             Memory.MemSetQuad(Buffer + (u32)XClippedStart, Color, ((i32)XClippedEnd - (i32)XClippedStart) + 1);
@@ -537,24 +537,24 @@ void IRenderer::DrawBottomTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X
                 }
             */
 
-            if (XClippedStart < (f32)MinClip.X)
+            if (XClippedStart < MinClipFloat.X)
             {
-                if (XClippedEnd < (f32)MinClip.X)
+                if (XClippedEnd < MinClipFloat.X)
                 {
                     continue;
                 }
 
-                XClippedStart = (f32)MinClip.X;
+                XClippedStart = MinClipFloat.X;
             }
 
-            if (XClippedEnd > (f32)MaxClip.X)
+            if (XClippedEnd > MaxClipFloat.X)
             {
-                if (XClippedStart > (f32)MaxClip.X)
+                if (XClippedStart > MaxClipFloat.X)
                 {
                     continue;
                 }
 
-                XClippedEnd = (f32)MaxClip.X;
+                XClippedEnd = MaxClipFloat.X;
             }
 
             Memory.MemSetQuad(Buffer + (u32)XClippedStart, Color, ((i32)XClippedEnd - (i32)XClippedStart) + 1);

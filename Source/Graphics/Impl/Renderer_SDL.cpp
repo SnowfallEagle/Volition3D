@@ -21,10 +21,15 @@ void VRenderer::StartUp()
 
     // Create video and back surfaces
     VideoSurface.Create(SDLSurface);
+
     ScreenWidth = VideoSurface.Width;
     ScreenHeight = VideoSurface.Height;
+
     MinClip = { 0, 0 };
     MaxClip = { ScreenWidth - 1, ScreenHeight - 1 };
+    MinClipFloat = { (f32)MinClip.X, (f32)MinClip.Y };
+    MaxClipFloat = { (f32)MaxClip.X, (f32)MaxClip.Y };
+
     BackSurface.Create(ScreenWidth, ScreenHeight);
 
     // Initialize TTF

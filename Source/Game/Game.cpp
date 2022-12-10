@@ -28,12 +28,12 @@ void VGame::StartUp()
 {
     Object.LoadPLG(
         "tank3.plg",
-        { 0.0f, 0.0f, 100.0f },
+        { 0.0f, 0.0f, 200.0f },
         { 1.0f, 1.0f, 1.0f },
         { 0.0f, 0.0f, 0.0f }
     );
 
-    Cam.Init(0, { 0, 0, 0 }, { 0, 0, 0 }, Object.WorldPos, 100, 50, 500, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
+    Cam.Init(0, { 0, 0, 0 }, { 0, 0, 0 }, Object.WorldPos, 90, 50, 500, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
 }
 
 void VGame::ShutDown()
