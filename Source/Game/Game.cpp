@@ -1,5 +1,6 @@
 /* TODO:
-    - Fix bugs with backface clipping, sometimes triangles don't rasterized fully, maybe floating point problem
+    - Fix bugs with backfaces
+    - Sometimes triangles don't rasterized fully, maybe floating point problem
  */
 
 #include "Core/Volition.h"

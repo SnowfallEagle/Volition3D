@@ -437,6 +437,17 @@ void IRenderer::DrawTopTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, 
             XStart += XDiffStart;
             XEnd += XDiffEnd;
 
+            /* NOTE(sean):
+                If we don't do nice clipping in 3D, we can have problems
+                with XClipped and XClippedEnd. This code can help here:
+
+                if (XStart > XEnd)
+                {
+                    f32 Temp;
+                    SWAP(XClippedStart, XClippedEnd, Temp);
+                }
+            */
+
             if (XClippedStart < (f32)MinClip.X)
             {
                 if (XClippedEnd < (f32)MinClip.X)
@@ -514,6 +525,17 @@ void IRenderer::DrawBottomTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X
 
             XStart += XDiffStart;
             XEnd += XDiffEnd;
+
+            /* NOTE(sean):
+                If we don't do nice clipping in 3D, we can have problems
+                with XClipped and XClippedEnd. This code can help here:
+
+                if (XStart > XEnd)
+                {
+                    f32 Temp;
+                    SWAP(XClippedStart, XClippedEnd, Temp);
+                }
+            */
 
             if (XClippedStart < (f32)MinClip.X)
             {
