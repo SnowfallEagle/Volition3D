@@ -22,6 +22,9 @@ static VVector2DI V1 = { 300, 90 };
 static VVector2DI V2 = { -100, 180 };
 static VVector2DI V3 = { 100, -20 };
 static b32 bRenderSolid = true;
+static b32 bBackFaceRemoval = true;
+static u32 RenderKeyTicks = 0;
+static u32 BackFaceKeyTicks = 0;
 
 DEFINE_LOG_CHANNEL(hLogGame, "Game");
 
@@ -75,9 +78,15 @@ void VGame::Update(f32 Delta)
     }
 #endif
 
-    if (Input.IsKeyDown(EKeycode::R))
+    if (Input.IsKeyDown(EKeycode::R) && Volition.GetTicks() - RenderKeyTicks > 100)
     {
         bRenderSolid = !bRenderSolid;
+        RenderKeyTicks = Volition.GetTicks();
+    }
+    if (Input.IsKeyDown(EKeycode::B) && Volition.GetTicks() - BackFaceKeyTicks > 100)
+    {
+        bBackFaceRemoval = !bBackFaceRemoval;
+        BackFaceKeyTicks = Volition.GetTicks();
     }
 
     if (Input.IsKeyDown(EKeycode::W))
@@ -147,12 +156,16 @@ void VGame::Render()
         // Cam.BuildWorldToCameraUVNMat44(EUVNMode::Simple);
     }
 
+#if 0
     // Object
     {
         Object.Reset();
         Object.TransModelToWorld();
         Object.Cull(Cam);
-        Object.RemoveBackFaces(Cam);
+        if (bBackFaceRemoval)
+        {
+            Object.RemoveBackFaces(Cam);
+        }
         Object.TransWorldToCamera(Cam.MatCamera);
         /*
         {
@@ -186,14 +199,17 @@ void VGame::Render()
         }
         Renderer.BackSurface.Unlock();
     }
+#endif
 
-#if 0
     // RenderList
     {
         RenderList.Reset();
         RenderList.InsertObject(Object, true);
         RenderList.TransModelToWorld(Object.WorldPos);
-        RenderList.RemoveBackFaces(Cam);
+        if (bBackFaceRemoval)
+        {
+            RenderList.RemoveBackFaces(Cam);
+        }
         RenderList.TransWorldToCamera(Cam.MatCamera);
         {
             RenderList.TransCameraToScreen(Cam);
@@ -215,12 +231,18 @@ void VGame::Render()
         {
             if (~Object.State & EObjectStateV1::Culled)
             {
-                RenderList.RenderSolid(Buffer, Pitch);
+                if (bRenderSolid)
+                {
+                    RenderList.RenderSolid(Buffer, Pitch);
+                }
+                else
+                {
+                    RenderList.RenderWire(Buffer, Pitch);
+                }
             }
         }
         Renderer.BackSurface.Unlock();
     }
-#endif
 
 #if 0
     // Object info
@@ -237,5 +259,7 @@ void VGame::Render()
     }
 #else
     Renderer.DrawText(0, 5, _RGB32(0xCC, 0xCC, 0xCC), "FPS: %.3f", 1000.0f / Volition.GetDelta());
+    Renderer.DrawText(0, 35, _RGB32(0xCC, 0xCC, 0xCC), bBackFaceRemoval ? "BackFace: true" : "BackFace: false");
+    Renderer.DrawText(0, 65, _RGB32(0xCC, 0xCC, 0xCC), bRenderSolid ? "Render: Solid" : "Render: Wire");
 #endif
 }
