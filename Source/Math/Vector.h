@@ -229,7 +229,7 @@ public:
     // TODO(sean): Rename in GetDot, make C-like dot
     FINLINE static f32 Dot(const VVector4D& A, const VVector4D& B)
     {
-        return A.X*B.X + A.Y*B.Y + A.Z+B.Z;
+        return A.X*B.X + A.Y*B.Y + A.Z*B.Z;
     }
 
     FINLINE static VVector4D GetCross(const VVector4D& A, const VVector4D& B)

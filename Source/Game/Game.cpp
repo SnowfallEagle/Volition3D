@@ -1,5 +1,4 @@
 /* TODO:
-    - Fix backfaces removal
     - Sometimes triangles don't rasterized fully, maybe floating point problem
  */
 
@@ -18,9 +17,6 @@ static VCam4DV1 Cam;
 static VObject4DV1 Object;
 static VSurface Surface;
 static VRenderList4DV1 RenderList;
-static VVector2DI V1 = { 300, 90 };
-static VVector2DI V2 = { -100, 180 };
-static VVector2DI V3 = { 100, -20 };
 
 static b32 bRenderSolid = true;
 static b32 bBackFaceRemoval = false;
@@ -42,6 +38,65 @@ void VGame::StartUp()
     );
 
     Cam.Init(0, { 0, 0, 0 }, { 0, 0, 0 }, Object.WorldPos, 90, 50, 500, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
+
+    {
+        VLightV1 AmbientLight = {
+            0,
+            ELightStateV1::Active,
+            ELightAttrV1::Ambient,
+
+            MAP_RGBX32(0xFF, 0xFF, 0xFF), 0, 0,
+            { 0, 0, 0, 0 }, { 0, 0, 0, 0 },
+
+            0, 0, 0,
+            0, 0,
+            0
+        };
+
+        VLightV1 InfiniteLight = {
+            1,
+            ELightStateV1::Active,
+            ELightAttrV1::Infinite,
+
+            0, MAP_RGBX32(0xFF, 0xFF, 0x00), 0,
+            { 0, 0, 0, 0 }, { 0, -1.0f, 0, 0 },
+
+            0, 0, 0,
+            0, 0,
+            0
+        };
+
+        VLightV1 PointLight = {
+            2,
+            ELightStateV1::Active,
+            ELightAttrV1::Point,
+
+            0, MAP_RGBX32(0xFF, 0xFF, 0x00), 0,
+            { 0, 10000.0f, 0, 0 }, { 0, 0, 0, 0 },
+
+            0, 1, 0,
+            0, 0,
+            0
+        };
+
+        VLightV1 Spotlight = {
+            3,
+            ELightStateV1::Active,
+            ELightAttrV1::SimpleSpotlight,
+
+            0, 0, MAP_RGBX32(0x80, 0x80, 0x80),
+            { 1000.0f, 1000.0f, -1000.0f, 0 }, { -1.0f, -1.0f, 1.0f, 0 },
+
+            0, 0, 0,
+            30.0f, 60.0f,
+            1.0f
+        };
+
+        Renderer.InitLight(0, AmbientLight);
+        Renderer.InitLight(1, InfiniteLight);
+        Renderer.InitLight(2, PointLight);
+        Renderer.InitLight(3, Spotlight);
+    }
 }
 
 void VGame::ShutDown()
@@ -144,23 +199,12 @@ void VGame::Update(f32 Delta)
 
 void VGame::Render()
 {
-#if 0
-    u32* Buffer;
-    i32 Pitch;
-    Renderer.BackSurface.Lock(Buffer, Pitch);
-    {
-        Renderer.DrawTriangle(Buffer, Pitch, V1.X,V1.Y, V2.X,V2.Y, V3.X,V3.Y, MAP_XRGB32(0xFF, 0xFF, 0xFF));
-    }
-    Renderer.BackSurface.Unlock();
-#endif
-
     // Camera
     {
         Cam.BuildWorldToCameraEulerMat44();
         // Cam.BuildWorldToCameraUVNMat44(EUVNMode::Simple);
     }
 
-#if 0
     // Object
     {
         Object.Reset();
@@ -203,8 +247,8 @@ void VGame::Render()
         }
         Renderer.BackSurface.Unlock();
     }
-#endif
 
+#if 0
     // RenderList
     {
         RenderList.Reset();
@@ -247,6 +291,7 @@ void VGame::Render()
         }
         Renderer.BackSurface.Unlock();
     }
+#endif
 
 #if 0
     // Object info

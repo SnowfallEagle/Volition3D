@@ -28,9 +28,9 @@ namespace ELightAttrV1
 class VLightV1
 {
 public:
+    i32 ID;
     u32 State;
     u32 Attr;
-    i32 ID;
 
     VColorRGBA CAmbient, CDiffuse, CSpecular;
     VPoint4D Pos;

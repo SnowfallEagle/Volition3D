@@ -76,6 +76,14 @@ public:
         NumLights = 0;
     }
 
+    void InitLight(i32 Index, const VLightV1& InLight)
+    {
+        if (Index >= 0 || Index < MaxLights)
+        {
+            Lights[Index] = InLight;
+        }
+    }
+
     virtual void PrepareToRender()
     {
         BackSurface.FillRectHW(nullptr, MAP_XRGB32(0x00, 0x00, 0x00));
