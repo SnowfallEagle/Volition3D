@@ -69,7 +69,7 @@ void VRenderer::Flip()
     SDL_UpdateWindowSurface(Window.SDLWindow);
 }
 
-void VRenderer::DrawText(i32 X, i32 Y, ColorARGB Color, const char* Format, ...)
+void VRenderer::DrawText(i32 X, i32 Y, VColorARGB Color, const char* Format, ...)
 {
     // Prepare text
     static constexpr i32f TextBufferSize = 512;

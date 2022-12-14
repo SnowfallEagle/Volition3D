@@ -9,7 +9,7 @@
 #define MAP_RGBA32(R, G, B, A) ( (u32) ( ((R) << 24) | ((G) << 16) | ((B) << 8) | (A)) )
 #define MAP_RGBX32(R, G, B) MAP_RGBA32(R, G, B, 0)
 
-class ColorARGB
+class VColorARGB
 {
 public:
     union
@@ -27,16 +27,16 @@ public:
     };
 
 public:
-    FINLINE ColorARGB() = default;
-    FINLINE ColorARGB(u8 A, u8 R, u8 G, u8 B) :
+    FINLINE VColorARGB() = default;
+    FINLINE VColorARGB(u8 A, u8 R, u8 G, u8 B) :
         ARGB(MAP_ARGB32(A, R, G, B))
     {}
-    FINLINE ColorARGB(u32 InARGB) :
+    FINLINE VColorARGB(u32 InARGB) :
         ARGB(InARGB)
     {}
 };
 
-class ColorRGBA
+class VColorRGBA
 {
 public:
     union
@@ -54,11 +54,11 @@ public:
     };
 
 public:
-    FINLINE ColorRGBA() = default;
-    FINLINE ColorRGBA(u8 R, u8 G, u8 B, u8 A) :
+    FINLINE VColorRGBA() = default;
+    FINLINE VColorRGBA(u8 R, u8 G, u8 B, u8 A) :
         RGBA(MAP_RGBA32(R, G, B, A))
     {}
-    FINLINE ColorRGBA(u32 InRGBA) :
+    FINLINE VColorRGBA(u32 InRGBA) :
         RGBA(InRGBA)
     {}
 };

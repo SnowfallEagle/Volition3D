@@ -16,6 +16,7 @@ public:
     static constexpr i32f BytesPerPixel = 4;
     static constexpr i32f BitsPerPixel = 32;
     static constexpr i32f MaxMaterials = 256;
+    static constexpr i32f MaxLights = 8;
 
 public:
     VSurface BackSurface;
@@ -96,7 +97,7 @@ public:
     void DrawBottomTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, i32 X3, i32 Y3, u32 Color);
     void DrawTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, i32 X3, i32 Y3, u32 Color);
 
-    virtual void DrawText(i32 X, i32 Y, ColorARGB Color, const char* Format, ...) = 0;
+    virtual void DrawText(i32 X, i32 Y, VColorARGB Color, const char* Format, ...) = 0;
 
     FINLINE i32 GetScreenWidth() const
     {

@@ -42,7 +42,7 @@ public:
     i32 State;
     i32 Attr;
 
-    ColorRGBA Color;
+    VColorRGBA Color;
     f32 KAmbient, KDiffuse, KSpecular, Power;
     f32 RAmbient, RDiffuse, RSpecular; // K * Color
 

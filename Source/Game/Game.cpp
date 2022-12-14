@@ -31,7 +31,7 @@ DEFINE_LOG_CHANNEL(hLogGame, "Game");
 
 void VGame::StartUp()
 {
-    ColorARGB Color = { MAP_ARGB32(0xFF, 0xFF, 0xFF, 0xFF) };
+    VColorARGB Color = { MAP_ARGB32(0xFF, 0xFF, 0xFF, 0xFF) };
     VL_LOG("%d\n", Color.A);
 
     Object.LoadPLG(
