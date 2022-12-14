@@ -183,10 +183,13 @@
     <ClInclude Include="..\..\Source\Core\Window.h" />
     <ClInclude Include="..\..\Source\Game\Game.h" />
     <ClInclude Include="..\..\Source\Graphics\Camera.h" />
+    <ClInclude Include="..\..\Source\Graphics\Color.h" />
     <ClInclude Include="..\..\Source\Graphics\Impl\Renderer_SDL.h" />
     <ClInclude Include="..\..\Source\Graphics\Impl\IRenderer.h" />
     <ClInclude Include="..\..\Source\Graphics\Impl\ISurface.h" />
     <ClInclude Include="..\..\Source\Graphics\Impl\Surface_SDL.h" />
+    <ClInclude Include="..\..\Source\Graphics\Light.h" />
+    <ClInclude Include="..\..\Source\Graphics\Material.h" />
     <ClInclude Include="..\..\Source\Graphics\Object.h" />
     <ClInclude Include="..\..\Source\Graphics\Polygon.h" />
     <ClInclude Include="..\..\Source\Graphics\Renderer.h" />

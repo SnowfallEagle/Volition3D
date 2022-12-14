@@ -31,6 +31,9 @@ DEFINE_LOG_CHANNEL(hLogGame, "Game");
 
 void VGame::StartUp()
 {
+    ColorARGB Color = { MAP_ARGB32(0xFF, 0xFF, 0xFF, 0xFF) };
+    VL_LOG("%d\n", Color.A);
+
     Object.LoadPLG(
         "tower1.plg",
         { 0.0f, 0.0f, 200.0f },
@@ -259,8 +262,8 @@ void VGame::Render()
         Renderer.DrawText(0, 243, MAP_XRGB32(0xFF, 0xFF, 0xFF), "FPS: %.3f", 1000.0f / Volition.GetDelta());
     }
 #else
-    Renderer.DrawText(0, 5, MAP_XRGB32(0xCC, 0xCC, 0xCC), "FPS: %.3f", 1000.0f / Volition.GetDelta());
-    Renderer.DrawText(0, 35, MAP_XRGB32(0xCC, 0xCC, 0xCC), bBackFaceRemoval ? "BackFace: true" : "BackFace: false");
-    Renderer.DrawText(0, 65, MAP_XRGB32(0xCC, 0xCC, 0xCC), bRenderSolid ? "Render: Solid" : "Render: Wire");
+    Renderer.DrawText(0, 5, MAP_XRGB32(0xFF, 0xFF, 0xFF), "FPS: %.3f", 1000.0f / Volition.GetDelta());
+    Renderer.DrawText(0, 35, MAP_XRGB32(0xFF, 0xFF, 0xFF), bBackFaceRemoval ? "BackFace: true" : "BackFace: false");
+    Renderer.DrawText(0, 65, MAP_XRGB32(0xFF, 0xFF, 0xFF), bRenderSolid ? "Render: Solid" : "Render: Wire");
 #endif
 }

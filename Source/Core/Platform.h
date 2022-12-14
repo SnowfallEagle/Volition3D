@@ -9,6 +9,9 @@
 # include "Core/Impl/Platform_Win.h"
 #endif
 
+#define VL_LITTLE_ENDIAN 1
+#define VL_BIG_ENDIAN 0
+
 // Some macroses
 #define INLINE inline // Compiler decide if it should be inlined
 

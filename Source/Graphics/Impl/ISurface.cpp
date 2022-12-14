@@ -1,6 +1,8 @@
 #include "Math/Vector.h"
 #include "Graphics/Impl/ISurface.h"
-#include "Graphics/Renderer.h" // RGB macroses. TODO(sean): Maybe separate them in header?
+#include "Graphics/Renderer.h"
+
+#if 0
 
 void ISurface::DrawBlended(const VRelRectI* SrcRect, ISurface* Dest, const VRelRectI* DestRect)
 {
@@ -184,3 +186,5 @@ void ISurface::DrawBlended(const VRelRectI* SrcRect, ISurface* Dest, const VRelR
     Unlock();
     Dest->Unlock();
 }
+
+#endif

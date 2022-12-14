@@ -22,7 +22,7 @@ public:
     void StartUp();
     void ShutDown();
 
-    virtual void DrawText(i32 X, i32 Y, u32 Color, const char* Format, ...) override;
+    virtual void DrawText(i32 X, i32 Y, ColorARGB Color, const char* Format, ...) override;
 
 private:
     void Flip();

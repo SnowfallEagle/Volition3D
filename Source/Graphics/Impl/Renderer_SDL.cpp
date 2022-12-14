@@ -69,7 +69,7 @@ void VRenderer::Flip()
     SDL_UpdateWindowSurface(Window.SDLWindow);
 }
 
-void VRenderer::DrawText(i32 X, i32 Y, u32 Color, const char* Format, ...)
+void VRenderer::DrawText(i32 X, i32 Y, ColorARGB Color, const char* Format, ...)
 {
     // Prepare text
     static constexpr i32f TextBufferSize = 512;
@@ -82,10 +82,10 @@ void VRenderer::DrawText(i32 X, i32 Y, u32 Color, const char* Format, ...)
 
     // Convert our color
     SDL_Color SDLColor;
-    SDLColor.a = _GET_ALPHA(Color);
-    SDLColor.r = _GET_RED(Color);
-    SDLColor.g = _GET_GREEN(Color);
-    SDLColor.b = _GET_BLUE(Color);
+    SDLColor.a = Color.A;
+    SDLColor.r = Color.R;
+    SDLColor.g = Color.G;
+    SDLColor.b = Color.B;
 
     // Render text
     SDL_Surface* SDLSurface = TTF_RenderText_Solid(Font, Text, SDLColor);
