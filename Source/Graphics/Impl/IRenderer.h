@@ -34,7 +34,7 @@ protected:
 public:
     IRenderer()
     {
-        Memory.MemSetByte(Materials, 0, sizeof(Materials));
+        ResetMaterials();
     }
     virtual ~IRenderer()
     {
@@ -46,10 +46,20 @@ public:
 
     void ResetMaterials()
     {
+        static b32 bFirstTime = true;
+
+        if (bFirstTime)
+        {
+            Memory.MemSetByte(Materials, 0, sizeof(Materials));
+            bFirstTime = false;
+            return;
+        }
+
         for (i32f I = 0; I < MaxMaterials; ++I)
         {
             Materials[I].Texture.Destroy();
         }
+        Memory.MemSetByte(Materials, 0, sizeof(Materials));
     }
 
     virtual void PrepareToRender()
