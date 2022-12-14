@@ -9,6 +9,7 @@
 #include "Graphics/Surface.h"
 #include "Graphics/Color.h"
 #include "Graphics/Material.h"
+#include "Graphics/Light.h"
 
 class IRenderer
 {
@@ -32,14 +33,19 @@ protected:
     VMaterialV1 Materials[MaxMaterials];
     i32 NumMaterials;
 
+    VLightV1 Lights[MaxLights];
+    i32 NumLights;
+
 public:
     IRenderer()
     {
         ResetMaterials();
+        ResetLights();
     }
     virtual ~IRenderer()
     {
         ResetMaterials();
+        ResetLights();
     }
 
     virtual void StartUp() = 0;
@@ -61,6 +67,13 @@ public:
             Materials[I].Texture.Destroy();
         }
         Memory.MemSetByte(Materials, 0, sizeof(Materials));
+        NumMaterials = 0;
+    }
+
+    void ResetLights()
+    {
+        Memory.MemSetByte(Lights, 0, sizeof(Lights));
+        NumLights = 0;
     }
 
     virtual void PrepareToRender()

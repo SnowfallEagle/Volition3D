@@ -25,7 +25,7 @@ namespace ELightAttrV1
     };
 }
 
-class LightV1
+class VLightV1
 {
 public:
     u32 State;
@@ -34,4 +34,9 @@ public:
 
     VColorRGBA CAmbient, CDiffuse, CSpecular;
     VPoint4D Pos;
+    VVector4D Dir;
+
+    f32 KConst, KLinear, KQuad;
+    f32 SpotInner, SpotOuter;
+    f32 Power; // Falloff for spotlights
 };
