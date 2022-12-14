@@ -6,13 +6,13 @@
 #define _GREEN_SHIFT (8)
 #define _BLUE_SHIFT (0)
 
-#define _RGBA32(A, R, G, B) ( ((A) << _ALPHA_SHIFT) | ((R) << _RED_SHIFT) | ((G) << _GREEN_SHIFT) | ((B)) << _BLUE_SHIFT )
-#define _RGB32(R, G, B) _RGBA32(0, R, G, B)
-
 #define _GET_ALPHA(COLOR) ( ((COLOR) >> _ALPHA_SHIFT) & 0xFF )
 #define _GET_RED(COLOR) ( ((COLOR) >> _RED_SHIFT) & 0xFF )
 #define _GET_GREEN(COLOR) ( ((COLOR) >> _GREEN_SHIFT) & 0xFF )
 #define _GET_BLUE(COLOR) ( ((COLOR) >> _BLUE_SHIFT ) & 0xFF )
+
+#define MAP_ARGB32(A, R, G, B) ( ((A) << _ALPHA_SHIFT) | ((R) << _RED_SHIFT) | ((G) << _GREEN_SHIFT) | ((B)) << _BLUE_SHIFT )
+#define MAP_XRGB32(R, G, B) MAP_ARGB32(0, R, G, B)
 
 #include "Core/Types.h"
 #include "Core/Platform.h"
@@ -41,7 +41,7 @@ protected:
 public:
     virtual void PrepareToRender()
     {
-        BackSurface.FillRectHW(nullptr, _RGB32(0x00, 0x00, 0x00));
+        BackSurface.FillRectHW(nullptr, MAP_XRGB32(0x00, 0x00, 0x00));
     }
     virtual void RenderAndFlip()
     {

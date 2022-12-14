@@ -21,8 +21,9 @@ static VRenderList4DV1 RenderList;
 static VVector2DI V1 = { 300, 90 };
 static VVector2DI V2 = { -100, 180 };
 static VVector2DI V3 = { 100, -20 };
+
 static b32 bRenderSolid = true;
-static b32 bBackFaceRemoval = true;
+static b32 bBackFaceRemoval = false;
 static u32 RenderKeyTicks = 0;
 static u32 BackFaceKeyTicks = 0;
 
@@ -145,7 +146,7 @@ void VGame::Render()
     i32 Pitch;
     Renderer.BackSurface.Lock(Buffer, Pitch);
     {
-        Renderer.DrawTriangle(Buffer, Pitch, V1.X,V1.Y, V2.X,V2.Y, V3.X,V3.Y, _RGB32(0xFF, 0xFF, 0xFF));
+        Renderer.DrawTriangle(Buffer, Pitch, V1.X,V1.Y, V2.X,V2.Y, V3.X,V3.Y, MAP_XRGB32(0xFF, 0xFF, 0xFF));
     }
     Renderer.BackSurface.Unlock();
 #endif
@@ -247,19 +248,19 @@ void VGame::Render()
 #if 0
     // Object info
     {
-        Renderer.DrawText(0, 3, _RGB32(0xFF, 0xFF, 0xFF), "Name: %s", Object.Name);
-        Renderer.DrawText(0, 33, _RGB32(0xFF, 0xFF, 0xFF), "Num vertices: %d", Object.NumVtx);
-        Renderer.DrawText(0, 63, _RGB32(0xFF, 0xFF, 0xFF), "Num poly: %d", Object.NumPoly);
-        Renderer.DrawText(0, 93, _RGB32(0xFF, 0xFF, 0xFF), "World pos: <%.2f, %.2f, %.2f>", Object.WorldPos.X, Object.WorldPos.Y, Object.WorldPos.Z);
-        Renderer.DrawText(0, 123, _RGB32(0xFF, 0xFF, 0xFF), "State: 0x%x", Object.State);
-        Renderer.DrawText(0, 153, _RGB32(0xFF, 0xFF, 0xFF), "Attr: 0x%x", Object.Attr);
-        Renderer.DrawText(0, 183, _RGB32(0xFF, 0xFF, 0xFF), "Avg radius: %.3f", Object.AvgRadius);
-        Renderer.DrawText(0, 213, _RGB32(0xFF, 0xFF, 0xFF), "Max radius: %.3f", Object.MaxRadius);
-        Renderer.DrawText(0, 243, _RGB32(0xFF, 0xFF, 0xFF), "FPS: %.3f", 1000.0f / Volition.GetDelta());
+        Renderer.DrawText(0, 3, MAP_XRGB32(0xFF, 0xFF, 0xFF), "Name: %s", Object.Name);
+        Renderer.DrawText(0, 33, MAP_XRGB32(0xFF, 0xFF, 0xFF), "Num vertices: %d", Object.NumVtx);
+        Renderer.DrawText(0, 63, MAP_XRGB32(0xFF, 0xFF, 0xFF), "Num poly: %d", Object.NumPoly);
+        Renderer.DrawText(0, 93, MAP_XRGB32(0xFF, 0xFF, 0xFF), "World pos: <%.2f, %.2f, %.2f>", Object.WorldPos.X, Object.WorldPos.Y, Object.WorldPos.Z);
+        Renderer.DrawText(0, 123, MAP_XRGB32(0xFF, 0xFF, 0xFF), "State: 0x%x", Object.State);
+        Renderer.DrawText(0, 153, MAP_XRGB32(0xFF, 0xFF, 0xFF), "Attr: 0x%x", Object.Attr);
+        Renderer.DrawText(0, 183, MAP_XRGB32(0xFF, 0xFF, 0xFF), "Avg radius: %.3f", Object.AvgRadius);
+        Renderer.DrawText(0, 213, MAP_XRGB32(0xFF, 0xFF, 0xFF), "Max radius: %.3f", Object.MaxRadius);
+        Renderer.DrawText(0, 243, MAP_XRGB32(0xFF, 0xFF, 0xFF), "FPS: %.3f", 1000.0f / Volition.GetDelta());
     }
 #else
-    Renderer.DrawText(0, 5, _RGB32(0xCC, 0xCC, 0xCC), "FPS: %.3f", 1000.0f / Volition.GetDelta());
-    Renderer.DrawText(0, 35, _RGB32(0xCC, 0xCC, 0xCC), bBackFaceRemoval ? "BackFace: true" : "BackFace: false");
-    Renderer.DrawText(0, 65, _RGB32(0xCC, 0xCC, 0xCC), bRenderSolid ? "Render: Solid" : "Render: Wire");
+    Renderer.DrawText(0, 5, MAP_XRGB32(0xCC, 0xCC, 0xCC), "FPS: %.3f", 1000.0f / Volition.GetDelta());
+    Renderer.DrawText(0, 35, MAP_XRGB32(0xCC, 0xCC, 0xCC), bBackFaceRemoval ? "BackFace: true" : "BackFace: false");
+    Renderer.DrawText(0, 65, MAP_XRGB32(0xCC, 0xCC, 0xCC), bRenderSolid ? "Render: Solid" : "Render: Wire");
 #endif
 }

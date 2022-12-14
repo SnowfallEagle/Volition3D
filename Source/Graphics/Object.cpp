@@ -149,7 +149,7 @@ b32 VObject4DV1::LoadPLG(
                 so 8 bit is 0xFF and we have to shift our colors
              */
             PolyList[I].Attr |= EPolyAttrV1::RGB32;
-            PolyList[I].Color = _RGB32(
+            PolyList[I].Color = MAP_XRGB32(
                 (Color444 & 0xF00) >> 4,
                 Color444 & 0xF0,
                 (Color444 & 0xF) << 4
@@ -158,7 +158,7 @@ b32 VObject4DV1::LoadPLG(
         else
         {
             // Just something like orange with index as blue
-            PolyList[I].Color = _RGB32(255, 255, PolyDesc & EPLX::RGB8Mask);
+            PolyList[I].Color = MAP_XRGB32(255, 255, PolyDesc & EPLX::RGB8Mask);
             VL_WARNING(hObjectV1Log, "There're no 8-bit support");
         }
 

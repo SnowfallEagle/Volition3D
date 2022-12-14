@@ -153,7 +153,7 @@ void ISurface::DrawBlended(const VRelRectI* SrcRect, ISurface* Dest, const VRelR
             f32 InvAlpha = 1.0f - Alpha;
 
             u32 Pixel = (u32)(
-                _RGB32(
+                MAP_XRGB32(
                     (u32)(_GET_RED(SrcPixel) * Alpha),
                     (u32)(_GET_GREEN(SrcPixel) * Alpha),
                     (u32)(_GET_BLUE(SrcPixel) * Alpha)
@@ -161,7 +161,7 @@ void ISurface::DrawBlended(const VRelRectI* SrcRect, ISurface* Dest, const VRelR
 
                 +
 
-                _RGB32(
+                MAP_XRGB32(
                     (u32)(_GET_RED(DestPixel) * InvAlpha),
                     (u32)(_GET_GREEN(DestPixel) * InvAlpha),
                     (u32)(_GET_BLUE(DestPixel) * InvAlpha)
