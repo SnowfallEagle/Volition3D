@@ -19,8 +19,8 @@ class VRenderer final : public IRenderer
     i32 FontCharHeight;
 
 public:
-    void StartUp();
-    void ShutDown();
+    virtual void StartUp() override;
+    virtual void ShutDown() override;
 
     virtual void DrawText(i32 X, i32 Y, ColorARGB Color, const char* Format, ...) override;
 

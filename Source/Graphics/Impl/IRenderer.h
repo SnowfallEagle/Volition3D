@@ -1,21 +1,21 @@
 #pragma once
 
-// TODO(sean): Remove this stuff
-// Macroses for fast mapping ARGB32/XRGB32 format
-
 #include "Core/Types.h"
 #include "Core/Platform.h"
+#include "Core/Memory.h"
 #include "Math/Math.h"
 #include "Math/Rect.h"
 #include "Math/Vector.h"
 #include "Graphics/Surface.h"
 #include "Graphics/Color.h"
+#include "Graphics/Material.h"
 
 class IRenderer
 {
 public:
     static constexpr i32f BytesPerPixel = 4;
     static constexpr i32f BitsPerPixel = 32;
+    static constexpr i32f MaxMaterials = 256;
 
 public:
     VSurface BackSurface;
@@ -28,7 +28,30 @@ protected:
     VVector2D MinClipFloat;
     VVector2D MaxClipFloat;
 
+    VMaterialV1 Materials[MaxMaterials];
+    i32 NumMaterials;
+
 public:
+    IRenderer()
+    {
+        Memory.MemSetByte(Materials, 0, sizeof(Materials));
+    }
+    virtual ~IRenderer()
+    {
+        ResetMaterials();
+    }
+
+    virtual void StartUp() = 0;
+    virtual void ShutDown() = 0;
+
+    void ResetMaterials()
+    {
+        for (i32f I = 0; I < MaxMaterials; ++I)
+        {
+            Materials[I].Texture.Destroy();
+        }
+    }
+
     virtual void PrepareToRender()
     {
         BackSurface.FillRectHW(nullptr, MAP_XRGB32(0x00, 0x00, 0x00));

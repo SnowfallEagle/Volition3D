@@ -27,6 +27,7 @@ public:
     };
 
 public:
+    FINLINE ColorARGB() = default;
     FINLINE ColorARGB(u8 A, u8 R, u8 G, u8 B) :
         ARGB(MAP_ARGB32(A, R, G, B))
     {}
@@ -53,6 +54,7 @@ public:
     };
 
 public:
+    FINLINE ColorRGBA() = default;
     FINLINE ColorRGBA(u8 R, u8 G, u8 B, u8 A) :
         RGBA(MAP_RGBA32(R, G, B, A))
     {}

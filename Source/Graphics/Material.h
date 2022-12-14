@@ -2,8 +2,10 @@
 
 #include "Core/Platform.h"
 #include "Core/Types.h"
+#include "Graphics/Color.h"
+#include "Graphics/Surface.h"
 
-namespace EMatStateV1
+namespace EMaterialStateV1
 {
     enum
     {
@@ -11,7 +13,7 @@ namespace EMatStateV1
     };
 }
 
-namespace EMatAttrV1
+namespace EMaterialAttrV1
 {
     enum
     {
@@ -28,15 +30,25 @@ namespace EMatAttrV1
     };
 }
 
-class VMatV1
+class VMaterialV1
 {
 public:
-    static constexpr i32f MaxMaterials = 256;
     static constexpr i32f NameSize = 64;
+    static constexpr i32f PathSize = 80;
 
 public:
     i32 ID;
     char Name[NameSize];
     i32 State;
     i32 Attr;
+
+    ColorRGBA Color;
+    f32 KAmbient, KDiffuse, KSpecular, Power;
+    f32 RAmbient, RDiffuse, RSpecular; // K * Color
+
+    char Path[PathSize];
+    VSurface Texture;
+
+public:
+    VMaterialV1() = default;
 };

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "cstring"
 #include "Core/Platform.h"
 #include "Core/Types.h"
 
@@ -26,6 +27,11 @@ public:
             *Buffer = Value;
         }
 #endif
+    }
+
+    FINLINE static void MemSetByte(void* Dest, i32 Value, i32 Count)
+    {
+        std::memset(Dest, Value, Count);
     }
 };
 
