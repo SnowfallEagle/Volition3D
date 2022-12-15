@@ -19,7 +19,7 @@ static VSurface Surface;
 static VRenderList4DV1 RenderList;
 
 static b32 bRenderSolid = true;
-static b32 bBackFaceRemoval = false;
+static b32 bBackFaceRemoval = true;
 static u32 RenderKeyTicks = 0;
 static u32 BackFaceKeyTicks = 0;
 
@@ -27,17 +27,14 @@ DEFINE_LOG_CHANNEL(hLogGame, "Game");
 
 void VGame::StartUp()
 {
-    VColorARGB Color = { MAP_ARGB32(0xFF, 0xFF, 0xFF, 0xFF) };
-    VL_LOG("%d\n", Color.A);
-
     Object.LoadPLG(
-        "tower1.plg",
+        "tank3.plg",
         { 0.0f, 0.0f, 200.0f },
         { 1.0f, 1.0f, 1.0f },
         { 0.0f, 0.0f, 0.0f }
     );
 
-    Cam.Init(0, { 0, 0, 0 }, { 0, 0, 0 }, Object.WorldPos, 90, 50, 500, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
+    Cam.Init(0, { 0, 100, 0 }, { 0, 0, 0 }, Object.WorldPos, 90, 50, 500, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
 
     {
         VLightV1 AmbientLight = {
