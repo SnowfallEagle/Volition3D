@@ -6,7 +6,7 @@
 #include "Core/Assert.h"
 #include "Core/Impl/Window_SDL.h"
 
-void VWindow::Create(const char* Title, i32 Width, i32 Height)
+void VSDLWindow::Create(const char* Title, i32 Width, i32 Height)
 {
     // Init SDL
     i32 Res = SDL_Init(SDL_INIT_VIDEO);
@@ -20,13 +20,13 @@ void VWindow::Create(const char* Title, i32 Width, i32 Height)
     ASSERT(SDLWindow);
 }
 
-void VWindow::Destroy()
+void VSDLWindow::Destroy()
 {
     SDL_DestroyWindow(SDLWindow);
     SDL_Quit();
 }
 
-void VWindow::HandleEvents()
+void VSDLWindow::HandleEvents()
 {
     SDL_Event Event;
 

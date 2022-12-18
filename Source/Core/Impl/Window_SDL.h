@@ -3,7 +3,7 @@
 #include "SDL.h"
 #include "Core/Types.h"
 
-class VWindow
+class VSDLWindow
 {
     SDL_Window* SDLWindow;
 
@@ -12,5 +12,7 @@ public:
     void Destroy();
     void HandleEvents();
 
-    friend class VRenderer;
+    friend class VSDLRenderer;
 };
+
+typedef VSDLWindow VWindow;

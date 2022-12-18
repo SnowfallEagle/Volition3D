@@ -9,7 +9,7 @@
 
 DEFINE_LOG_CHANNEL(hLogRenderer, "Renderer");
 
-void VRenderer::StartUp()
+void VSDLRenderer::StartUp()
 {
     // Get window surface
     SDL_Surface* SDLSurface = SDL_GetWindowSurface(Window.SDLWindow);
@@ -49,7 +49,7 @@ void VRenderer::StartUp()
     VL_NOTE(hLogRenderer, "Initialized with %s pixel format\n", SDL_GetPixelFormatName(SDLPixelFormatEnum));
 }
 
-void VRenderer::ShutDown()
+void VSDLRenderer::ShutDown()
 {
     // Shut down TTF
     {
@@ -63,13 +63,13 @@ void VRenderer::ShutDown()
     }
 }
 
-void VRenderer::Flip()
+void VSDLRenderer::Flip()
 {
     SDL_BlitSurface(BackSurface.SDLSurface, nullptr, VideoSurface.SDLSurface, nullptr);
     SDL_UpdateWindowSurface(Window.SDLWindow);
 }
 
-void VRenderer::DrawText(i32 X, i32 Y, VColorARGB Color, const char* Format, ...)
+void VSDLRenderer::DrawText(i32 X, i32 Y, VColorARGB Color, const char* Format, ...)
 {
     // Prepare text
     static constexpr i32f TextBufferSize = 512;

@@ -7,7 +7,7 @@
 #include "Graphics/Renderer.h"
 #include "Graphics/Impl/Surface_SDL.h"
 
-void VSurface::Create(SDL_Surface* InSDLSurface)
+void VSDLSurface::Create(SDL_Surface* InSDLSurface)
 {
     ASSERT(InSDLSurface);
     Destroy();
@@ -17,7 +17,7 @@ void VSurface::Create(SDL_Surface* InSDLSurface)
     Height = InSDLSurface->h;
 }
 
-void VSurface::Create(i32 InWidth, i32 InHeight)
+void VSDLSurface::Create(i32 InWidth, i32 InHeight)
 {
     Destroy();
 
@@ -32,7 +32,7 @@ void VSurface::Create(i32 InWidth, i32 InHeight)
     Height = SDLSurface->h;
 }
 
-void VSurface::Load(const char* Path)
+void VSDLSurface::Load(const char* Path)
 {
     Destroy();
 
@@ -48,7 +48,7 @@ void VSurface::Load(const char* Path)
     Create(Converted);
 }
 
-void VSurface::Destroy()
+void VSDLSurface::Destroy()
 {
     if (SDLSurface)
     {
@@ -63,7 +63,7 @@ void VSurface::Destroy()
     Height = 0;
 }
 
-void VSurface::Lock(u32*& OutBuffer, i32& OutPitch)
+void VSDLSurface::Lock(u32*& OutBuffer, i32& OutPitch)
 {
     ASSERT(!bLocked);
 
@@ -78,20 +78,20 @@ void VSurface::Lock(u32*& OutBuffer, i32& OutPitch)
     bLocked = true;
 }
 
-void VSurface::Unlock()
+void VSDLSurface::Unlock()
 {
     ASSERT(bLocked);
 
     bLocked = false;
 }
 
-void VSurface::FillRectHW(VRelRectI* Rect, u32 Color)
+void VSDLSurface::FillRectHW(VRelRectI* Rect, u32 Color)
 {
     // SDL_Rect has the same footprint as VRelRectI
     SDL_FillRect(SDLSurface, (SDL_Rect*)Rect, Color);
 }
 
-void VSurface::BlitHW(VRelRectI* SourceRect, VSurface* Dest, VRelRectI* DestRect)
+void VSDLSurface::BlitHW(VRelRectI* SourceRect, VSDLSurface* Dest, VRelRectI* DestRect)
 {
     SDL_BlitScaled(SDLSurface, (SDL_Rect*)SourceRect, Dest->SDLSurface, (SDL_Rect*)DestRect);
 }

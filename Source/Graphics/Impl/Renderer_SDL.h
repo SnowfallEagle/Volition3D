@@ -7,7 +7,7 @@
 #include "Graphics/Impl/Surface_SDL.h"
 #include "Graphics/Impl/IRenderer.h"
 
-class VRenderer final : public IRenderer
+class VSDLRenderer final : public IRenderer
 {
     VSurface VideoSurface;
 
@@ -25,7 +25,9 @@ public:
     virtual void DrawText(i32 X, i32 Y, VColorARGB Color, const char* Format, ...) override;
 
 private:
-    void Flip();
+    virtual void Flip() override;
 
-    friend class VSurface;
+    friend class VSDLSurface;
 };
+
+typedef VSDLRenderer VRenderer;
