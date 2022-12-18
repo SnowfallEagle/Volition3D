@@ -169,6 +169,15 @@ public:
         W = 1.0f;
         return *this;
     }
+    FINLINE VVector4D operator*(f32 Scalar) const
+    {
+        return {
+            X * Scalar,
+            Y * Scalar,
+            Z * Scalar,
+            1.0f
+        };
+    }
 
     FINLINE void Zero()
     {

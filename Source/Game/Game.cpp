@@ -1,7 +1,3 @@
-/* TODO:
-    - Sometimes triangles don't rasterized fully, maybe floating point problem
- */
-
 #include "Core/Volition.h"
 #include "Input/Input.h"
 #include "Math/Minimal.h"
@@ -106,33 +102,6 @@ void VGame::Update(f32 Delta)
     {
         Volition.Stop();
     }
-
-#if 0
-    if (Input.IsKeyDown(EKeycode::W))
-    {
-        V1.Y -= 1;
-        V2.Y -= 1;
-        V3.Y -= 1;
-    }
-    if (Input.IsKeyDown(EKeycode::A))
-    {
-        V1.X -= 1;
-        V2.X -= 1;
-        V3.X -= 1;
-    }
-    if (Input.IsKeyDown(EKeycode::S))
-    {
-        V1.Y += 1;
-        V2.Y += 1;
-        V3.Y += 1;
-    }
-    if (Input.IsKeyDown(EKeycode::D))
-    {
-        V1.X += 1;
-        V2.X += 1;
-        V3.X += 1;
-    }
-#endif
 
     if (Input.IsKeyDown(EKeycode::R) && Volition.GetTicks() - RenderKeyTicks > 100)
     {

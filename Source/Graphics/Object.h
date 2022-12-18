@@ -203,7 +203,6 @@ public:
             if (SpherePos.X - MaxRadius > ZTest ||  // Check Sphere's Left with Right side
                 SpherePos.X + MaxRadius < -ZTest)   // Check Sphere's Right with Left side
             {
-                VL_LOG("CULLED X\n");
                 State |= EObjectStateV1::Culled;
                 return true;
             }
@@ -216,7 +215,6 @@ public:
             if (SpherePos.Y - MaxRadius > ZTest ||  // Check Sphere's Bottom with Top side
                 SpherePos.Y + MaxRadius < -ZTest)   // Check Sphere's Top with Bottom side
             {
-                VL_LOG("CULLED Y\n");
                 State |= EObjectStateV1::Culled;
                 return true;
             }
@@ -227,7 +225,6 @@ public:
             if (SpherePos.Z - MaxRadius > Cam.ZFarClip ||
                 SpherePos.Z + MaxRadius < Cam.ZNearClip)
             {
-                VL_LOG("CULLED Z\n");
                 State |= EObjectStateV1::Culled;
                 return true;
             }
