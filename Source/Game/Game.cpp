@@ -1,3 +1,7 @@
+/* TODO:
+    - 
+*/
+
 #include "Core/Volition.h"
 #include "Input/Input.h"
 #include "Math/Minimal.h"
@@ -24,13 +28,13 @@ DEFINE_LOG_CHANNEL(hLogGame, "Game");
 void VGame::StartUp()
 {
     Object.LoadPLG(
-        "tank3.plg",
-        { 0.0f, 0.0f, 200.0f },
-        { 1.0f, 1.0f, 1.0f },
+        "cube2.plg",
+        { 0.0f, 0.0f, 0.0f },
+        { 100.0f, 3.0f, 3.0f },
         { 0.0f, 0.0f, 0.0f }
     );
 
-    Cam.Init(0, { 0, 100, 0 }, { 0, 0, 0 }, Object.WorldPos, 90, 50, 500, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
+    Cam.Init(0, { 0, 100, 0 }, { 0, 0, 0 }, Object.WorldPos, 90, 10, 12000, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
 
     {
         VLightV1 AmbientLight = {
@@ -116,19 +120,13 @@ void VGame::Update(f32 Delta)
 
     if (Input.IsKeyDown(EKeycode::W))
     {
-        Cam.Pos.Z += 0.5f;
+        Cam.Pos.X += Math.FastSin(Cam.Dir.Y);
+        Cam.Pos.Z += Math.FastCos(Cam.Dir.Y);
     }
     if (Input.IsKeyDown(EKeycode::S))
     {
-        Cam.Pos.Z -= 0.5f;
-    }
-    if (Input.IsKeyDown(EKeycode::A))
-    {
-        Cam.Pos.X -= 0.5f;
-    }
-    if (Input.IsKeyDown(EKeycode::D))
-    {
-        Cam.Pos.X += 0.5f;
+        Cam.Pos.X -= Math.FastSin(Cam.Dir.Y);
+        Cam.Pos.Z -= Math.FastCos(Cam.Dir.Y);
     }
 
     if (Input.IsKeyDown(EKeycode::Left))
@@ -165,40 +163,55 @@ void VGame::Update(f32 Delta)
 
 void VGame::Render()
 {
+    Cam.BuildWorldToCameraEulerMat44();
+
+    RenderList.Reset();
+    Object.Reset();
+
+    Object.TransModelToWorld();
+    Object.Cull(Cam);
+
+    if (bBackFaceRemoval)
     {
-        Cam.BuildWorldToCameraEulerMat44();
-
-        RenderList.Reset();
-        Object.Reset();
-
-        Object.TransModelToWorld();
-        Object.Cull(Cam);
-
-        RenderList.InsertObject(Object, false);
-        if (bBackFaceRemoval)
-        {
-            RenderList.RemoveBackFaces(Cam);
-        }
-        RenderList.TransWorldToCamera(Cam.MatCamera);
-        RenderList.TransCameraToScreen(Cam);
+        Object.RemoveBackFaces(Cam);
     }
+    Object.TransWorldToCamera(Cam.MatCamera);
+    Object.TransCameraToScreen(Cam);
 
+    /*
+    RenderList.InsertObject(Object, false);
+    if (bBackFaceRemoval)
     {
-        u32* Buffer;
-        i32 Pitch;
-        Renderer.BackSurface.Lock(Buffer, Pitch);
-        {
-            if (bRenderSolid)
-            {
-                RenderList.RenderSolid(Buffer, Pitch);
-            }
-            else
-            {
-                RenderList.RenderWire(Buffer, Pitch);
-            }
-        }
-        Renderer.BackSurface.Unlock();
+        RenderList.RemoveBackFaces(Cam);
     }
+    RenderList.TransWorldToCamera(Cam.MatCamera);
+    RenderList.TransCameraToScreen(Cam);
+    */
+
+    u32* Buffer;
+    i32 Pitch;
+    Renderer.BackSurface.Lock(Buffer, Pitch);
+    {
+        if (bRenderSolid)
+        {
+            Object.RenderSolid(Buffer, Pitch);
+        }
+        else
+        {
+            Object.RenderWire(Buffer, Pitch);
+        }
+        /*
+        if (bRenderSolid)
+        {
+            RenderList.RenderSolid(Buffer, Pitch);
+        }
+        else
+        {
+            RenderList.RenderWire(Buffer, Pitch);
+        }
+        */
+    }
+    Renderer.BackSurface.Unlock();
 
     Renderer.DrawText(0, 5, MAP_XRGB32(0xFF, 0xFF, 0xFF), "FPS: %.3f", 1000.0f / Volition.GetDelta());
     Renderer.DrawText(0, 35, MAP_XRGB32(0xFF, 0xFF, 0xFF), bBackFaceRemoval ? "BackFace: true" : "BackFace: false");
