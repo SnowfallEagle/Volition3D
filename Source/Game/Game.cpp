@@ -1,5 +1,9 @@
 /* TODO:
-    - 
+    - ViewPlaneSize to 2x(2/AspectRatio)
+    - Check AspectRatio in transforms
+
+    - Maybe remove needless stuff from VObject?
+    - Check camera's functions for matrices
 */
 
 #include "Core/Volition.h"
@@ -28,13 +32,13 @@ DEFINE_LOG_CHANNEL(hLogGame, "Game");
 void VGame::StartUp()
 {
     Object.LoadPLG(
-        "cube2.plg",
-        { 0.0f, 0.0f, 0.0f },
-        { 100.0f, 3.0f, 3.0f },
+        "tower1.plg",
+        { 0.0f, 0.0f, 50.0f },
+        { 3.0f, 3.0f, 3.0f },
         { 0.0f, 0.0f, 0.0f }
     );
 
-    Cam.Init(0, { 0, 100, 0 }, { 0, 0, 0 }, Object.WorldPos, 90, 10, 12000, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
+    Cam.Init(ECamAttrV1::Euler, { 0, 100, 0 }, { 0, 0, 0 }, Object.WorldPos, 120, 200, 12000, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
 
     {
         VLightV1 AmbientLight = {
@@ -171,36 +175,24 @@ void VGame::Render()
     Object.TransModelToWorld();
     Object.Cull(Cam);
 
-    if (bBackFaceRemoval)
-    {
-        Object.RemoveBackFaces(Cam);
-    }
-    Object.TransWorldToCamera(Cam.MatCamera);
-    Object.TransCameraToScreen(Cam);
-
-    /*
     RenderList.InsertObject(Object, false);
     if (bBackFaceRemoval)
     {
         RenderList.RemoveBackFaces(Cam);
     }
     RenderList.TransWorldToCamera(Cam.MatCamera);
-    RenderList.TransCameraToScreen(Cam);
-    */
+    {
+        // RenderList.TransCameraToScreen(Cam);
+    }
+    {
+        RenderList.TransCameraToPerspective(Cam);
+        RenderList.TransPerspectiveToScreen(Cam);
+    }
 
     u32* Buffer;
     i32 Pitch;
     Renderer.BackSurface.Lock(Buffer, Pitch);
     {
-        if (bRenderSolid)
-        {
-            Object.RenderSolid(Buffer, Pitch);
-        }
-        else
-        {
-            Object.RenderWire(Buffer, Pitch);
-        }
-        /*
         if (bRenderSolid)
         {
             RenderList.RenderSolid(Buffer, Pitch);
@@ -209,7 +201,6 @@ void VGame::Render()
         {
             RenderList.RenderWire(Buffer, Pitch);
         }
-        */
     }
     Renderer.BackSurface.Unlock();
 

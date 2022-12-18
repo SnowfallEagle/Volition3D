@@ -15,7 +15,7 @@ enum class EUVNMode
     Spherical
 };
 
-namespace ECamV1State
+namespace ECamStateV1
 {
     enum
     {
@@ -23,7 +23,7 @@ namespace ECamV1State
     };
 }
 
-namespace ECamV1Attr
+namespace ECamAttrV1
 {
     enum
     {
@@ -89,12 +89,12 @@ public:
 
         FOV = InFOV;
         AspectRatio = InViewPortSize.X / InViewPortSize.Y;
-        ViewDist = (InViewPortSize.X * 0.5f) / Math.Tan(FOV * 0.5f);
 
         ZNearClip = InZNearClip;
         ZFarClip = InZFarClip;
 
-        ViewPlaneSize = InViewPortSize; // Or { 2, 2/AspectRatio } when normalized
+        ViewPlaneSize = { 2.0f, 2.0f/AspectRatio };
+        ViewDist = (ViewPlaneSize.X * 0.5f) / Math.Tan(FOV * 0.5f);
         ViewPortSize = InViewPortSize;
         ViewPortCenter = {
             (ViewPortSize.X - 1.0f) * 0.5f, (ViewPortSize.Y - 1.0f) * 0.5f
@@ -132,7 +132,6 @@ public:
 
             f32 MinusViewPlaneWidthDiv2 = -ViewPlaneSize.X * 0.5f;
 
-            // TODO(sean): Check if it works
             VVector3D N = { -ViewDist, 0.0f, MinusViewPlaneWidthDiv2 };
             N.Normalize();
             LeftClipPlane = { Origin, N };
@@ -292,16 +291,11 @@ public:
 
     void BuildCameraToPerspectiveMat44()
     {
-        /* NOTE(sean):
-            This function assumes that later in code
-            we will perform conversion 4D->3D
-         */
-
         MatPerspective = {
             ViewDist, 0.0f, 0.0f, 0.0f,
-            0.0f, ViewDist*AspectRatio, 0.0f, 0.0f,
-            0.0f, 0.0f, 1.0f, 1.0f,
-            0.0f, 0.0f, 0.0f, 0.0f
+            0.0f, ViewDist*AspectRatio, 0.0f, 0.0f, // FIXME(sean): Maybe divide by AspectRatio?
+            0.0f, 0.0f, 1.0f, 0.0f,
+            0.0f, 0.0f, 0.0f, 1.0f
         };
     }
 
@@ -318,7 +312,7 @@ public:
         MatScreen = {
             Alpha, 0.0f, 0.0f, 0.0f,
             0.0f, -Beta, 0.0f, 0.0f,
-            Alpha, Beta, 1.0f, 1.0f,
+            Alpha, Beta, 1.0f, 1.0f, // TODO(sean): I think Alpha and Beta should be in 4th row
             0.0f, 0.0f, 0.0f, 0.0f
         };
     }

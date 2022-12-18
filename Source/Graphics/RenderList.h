@@ -296,10 +296,8 @@ public:
 
             for (i32f V = 0; V < 3; ++V)
             {
-                f32 ViewDistDivZ = Cam.ViewDist / Poly->TransVtx[V].Z;
-
-                Poly->TransVtx[V].X *= ViewDistDivZ;
-                Poly->TransVtx[V].Y *= ViewDistDivZ;
+                Poly->TransVtx[V].X = Cam.ViewDist * Poly->TransVtx[V].X / Poly->TransVtx[V].Z;
+                Poly->TransVtx[V].Y = Cam.ViewDist * Poly->TransVtx[V].Y * Cam.AspectRatio / Poly->TransVtx[V].Z;
             }
         }
     }
@@ -342,14 +340,15 @@ public:
 
             for (i32f V = 0; V < 3; ++V)
             {
-                Poly->TransVtx[V].X = Poly->TransVtx[V].X + Alpha;
-                Poly->TransVtx[V].Y = -Poly->TransVtx[V].Y + Beta;
+                Poly->TransVtx[V].X = Alpha + Alpha * Poly->TransVtx[V].X;
+                Poly->TransVtx[V].Y = Beta - Beta * Poly->TransVtx[V].Y;
             }
         }
     }
 
     void TransCameraToScreen(const VCam4DV1& Cam)
     {
+        // FIXME(sean): idk if it works
         f32 Alpha = Cam.ViewPortSize.X * 0.5f - 0.5f;
         f32 Beta = Cam.ViewPortSize.Y * 0.5f - 0.5f;
 
