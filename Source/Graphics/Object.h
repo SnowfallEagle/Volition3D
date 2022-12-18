@@ -119,7 +119,9 @@ public:
             f32 Dist = LocalVtxList[I].GetLength();
             AvgRadius += Dist;
             if (MaxRadius < Dist)
+            {
                 MaxRadius = Dist;
+            }
         }
 
         AvgRadius /= NumVtx;

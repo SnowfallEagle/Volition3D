@@ -1,7 +1,4 @@
 /* TODO:
-    - ViewPlaneSize to 2x(2/AspectRatio)
-    - Check AspectRatio in transforms
-
     - Maybe remove needless stuff from VObject?
     - Check camera's functions for matrices
 */
@@ -16,7 +13,6 @@
 
 VGame Game;
 
-// DEBUG(sean): Variables to test things
 static VCam4DV1 Cam;
 static VObject4DV1 Object;
 static VSurface Surface;
@@ -32,13 +28,13 @@ DEFINE_LOG_CHANNEL(hLogGame, "Game");
 void VGame::StartUp()
 {
     Object.LoadPLG(
-        "tower1.plg",
+        "tank3.plg",
         { 0.0f, 0.0f, 50.0f },
-        { 3.0f, 3.0f, 3.0f },
+        { 1.0f, 1.0f, 1.0f },
         { 0.0f, 0.0f, 0.0f }
     );
 
-    Cam.Init(ECamAttrV1::Euler, { 0, 100, 0 }, { 0, 0, 0 }, Object.WorldPos, 120, 200, 12000, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
+    Cam.Init(ECamAttrV1::Euler, { 0, 0, 0 }, { 0, 0, 0 }, Object.WorldPos, 120, 265, 12000, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
 
     {
         VLightV1 AmbientLight = {
