@@ -165,116 +165,42 @@ void VGame::Update(f32 Delta)
 
 void VGame::Render()
 {
-    // Camera
     {
         Cam.BuildWorldToCameraEulerMat44();
-        // Cam.BuildWorldToCameraUVNMat44(EUVNMode::Simple);
-    }
 
-    // Object
-    {
+        RenderList.Reset();
         Object.Reset();
+
         Object.TransModelToWorld();
         Object.Cull(Cam);
-        if (bBackFaceRemoval)
-        {
-            Object.RemoveBackFaces(Cam);
-        }
-        Object.TransWorldToCamera(Cam.MatCamera);
-        /*
-        {
-            Object.TransCameraToScreen(Cam);
-        }
-        */
-        {
-            Object.TransCameraToPerspective(Cam);
-            Object.ConvertFromHomogeneous();
-            Object.TransPerspectiveToScreen(Cam);
-        }
-    }
 
-    // Render
-    {
-        u32* Buffer;
-        i32 Pitch;
-        Renderer.BackSurface.Lock(Buffer, Pitch);
-        {
-            if (~Object.State & EObjectStateV1::Culled)
-            {
-                if (bRenderSolid)
-                {
-                    Object.RenderSolid(Buffer, Pitch);
-                }
-                else
-                {
-                    Object.RenderWire(Buffer, Pitch);
-                }
-            }
-        }
-        Renderer.BackSurface.Unlock();
-    }
-
-#if 0
-    // RenderList
-    {
-        RenderList.Reset();
-        RenderList.InsertObject(Object, true);
-        RenderList.TransModelToWorld(Object.WorldPos);
+        RenderList.InsertObject(Object, false);
         if (bBackFaceRemoval)
         {
             RenderList.RemoveBackFaces(Cam);
         }
         RenderList.TransWorldToCamera(Cam.MatCamera);
-        {
-            RenderList.TransCameraToScreen(Cam);
-        }
-        /*
-        {
-            RenderList.TransCameraToPerspective(Cam);
-            RenderList.ConvertFromHomogeneous();
-            RenderList.TransPerspectiveToScreen(Cam);
-        }
-        */
+        RenderList.TransCameraToScreen(Cam);
     }
 
-    // Render
     {
         u32* Buffer;
         i32 Pitch;
         Renderer.BackSurface.Lock(Buffer, Pitch);
         {
-            if (~Object.State & EObjectStateV1::Culled)
+            if (bRenderSolid)
             {
-                if (bRenderSolid)
-                {
-                    RenderList.RenderSolid(Buffer, Pitch);
-                }
-                else
-                {
-                    RenderList.RenderWire(Buffer, Pitch);
-                }
+                RenderList.RenderSolid(Buffer, Pitch);
+            }
+            else
+            {
+                RenderList.RenderWire(Buffer, Pitch);
             }
         }
         Renderer.BackSurface.Unlock();
     }
-#endif
 
-#if 0
-    // Object info
-    {
-        Renderer.DrawText(0, 3, MAP_XRGB32(0xFF, 0xFF, 0xFF), "Name: %s", Object.Name);
-        Renderer.DrawText(0, 33, MAP_XRGB32(0xFF, 0xFF, 0xFF), "Num vertices: %d", Object.NumVtx);
-        Renderer.DrawText(0, 63, MAP_XRGB32(0xFF, 0xFF, 0xFF), "Num poly: %d", Object.NumPoly);
-        Renderer.DrawText(0, 93, MAP_XRGB32(0xFF, 0xFF, 0xFF), "World pos: <%.2f, %.2f, %.2f>", Object.WorldPos.X, Object.WorldPos.Y, Object.WorldPos.Z);
-        Renderer.DrawText(0, 123, MAP_XRGB32(0xFF, 0xFF, 0xFF), "State: 0x%x", Object.State);
-        Renderer.DrawText(0, 153, MAP_XRGB32(0xFF, 0xFF, 0xFF), "Attr: 0x%x", Object.Attr);
-        Renderer.DrawText(0, 183, MAP_XRGB32(0xFF, 0xFF, 0xFF), "Avg radius: %.3f", Object.AvgRadius);
-        Renderer.DrawText(0, 213, MAP_XRGB32(0xFF, 0xFF, 0xFF), "Max radius: %.3f", Object.MaxRadius);
-        Renderer.DrawText(0, 243, MAP_XRGB32(0xFF, 0xFF, 0xFF), "FPS: %.3f", 1000.0f / Volition.GetDelta());
-    }
-#else
     Renderer.DrawText(0, 5, MAP_XRGB32(0xFF, 0xFF, 0xFF), "FPS: %.3f", 1000.0f / Volition.GetDelta());
     Renderer.DrawText(0, 35, MAP_XRGB32(0xFF, 0xFF, 0xFF), bBackFaceRemoval ? "BackFace: true" : "BackFace: false");
     Renderer.DrawText(0, 65, MAP_XRGB32(0xFF, 0xFF, 0xFF), bRenderSolid ? "Render: Solid" : "Render: Wire");
-#endif
 }
