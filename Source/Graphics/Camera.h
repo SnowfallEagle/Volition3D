@@ -293,7 +293,7 @@ public:
     {
         MatPerspective = {
             ViewDist, 0.0f, 0.0f, 0.0f,
-            0.0f, ViewDist*AspectRatio, 0.0f, 0.0f, // FIXME(sean): Maybe divide by AspectRatio?
+            0.0f, ViewDist*AspectRatio, 0.0f, 0.0f,
             0.0f, 0.0f, 1.0f, 0.0f,
             0.0f, 0.0f, 0.0f, 1.0f
         };
@@ -312,8 +312,8 @@ public:
         MatScreen = {
             Alpha, 0.0f, 0.0f, 0.0f,
             0.0f, -Beta, 0.0f, 0.0f,
-            Alpha, Beta, 1.0f, 1.0f, // TODO(sean): I think Alpha and Beta should be in 4th row
-            0.0f, 0.0f, 0.0f, 0.0f
+            0.0f, 0.0f, 1.0f, 1.0f,
+            Alpha, Beta, 0.0f, 0.0f
         };
     }
 

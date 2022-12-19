@@ -207,14 +207,14 @@ void VGame::Render()
     }
     Renderer.BackSurface.Unlock();
 
-#else
+#elseif 0
 
     RenderList.InsertObject(Object, false);
     if (bBackFaceRemoval)
     {
         RenderList.RemoveBackFaces(Cam);
     }
-    RenderList.TransformWorldToCamera(Cam.MatCamera);
+    RenderList.TransformWorldToCamera(Cam);
     {
         RenderList.TransformCameraToScreen(Cam);
     }
@@ -242,6 +242,43 @@ void VGame::Render()
         }
     }
     Renderer.BackSurface.Unlock();
+
+#else
+
+    RenderList.InsertObject(Object, false);
+    if (bBackFaceRemoval)
+    {
+        RenderList.RemoveBackFaces(Cam);
+    }
+    RenderList.TransformWorldToCamera(Cam);
+    {
+        RenderList.TransformCameraToScreen(Cam);
+    }
+    {
+        // RenderList.TransformCameraToPerspective(Cam);
+        // RenderList.TransformPerspectiveToScreen(Cam);
+    }
+
+    VRelRectI Dest = { 0, 0, Volition.WindowWidth, Volition.WindowHeight/2 };
+    Renderer.BackSurface.FillRectHW(&Dest, MAP_XRGB32(100, 20, 255));
+    Dest = { 0, Dest.H, Dest.W, Volition.WindowHeight / 2 - 1 };
+    Renderer.BackSurface.FillRectHW(&Dest, MAP_XRGB32(60, 10, 255));
+
+    u32* Buffer;
+    i32 Pitch;
+    Renderer.BackSurface.Lock(Buffer, Pitch);
+    {
+        if (bRenderSolid)
+        {
+            RenderList.RenderSolid(Buffer, Pitch);
+        }
+        else
+        {
+            RenderList.RenderWire(Buffer, Pitch);
+        }
+    }
+    Renderer.BackSurface.Unlock();
+
 #endif
 
     Renderer.DrawText(0, 5, MAP_XRGB32(0xFF, 0xFF, 0xFF), "FPS: %.3f", 1000.0f / Volition.GetDelta());

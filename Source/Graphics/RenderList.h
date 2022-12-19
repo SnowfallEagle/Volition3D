@@ -258,7 +258,7 @@ public:
         }
     }
 
-    void TransformWorldToCamera(const VMatrix44& MatCamera)
+    void TransformWorldToCamera(const VCam4DV1& Camera)
     {
         for (i32f I = 0; I < NumPoly; ++I)
         {
@@ -274,7 +274,7 @@ public:
             for (i32f V = 0; V < 3; ++V)
             {
                 VVector4D Res;
-                VVector4D::MulMat44(Poly->TransVtx[V], MatCamera, Res);
+                VVector4D::MulMat44(Poly->TransVtx[V], Camera.MatCamera, Res);
                 Poly->TransVtx[V] = Res;
             }
         }
