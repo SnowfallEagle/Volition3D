@@ -2,6 +2,7 @@
 
 #include "Core/Types.h"
 #include "Math/Vector.h"
+#include "Graphics/Color.h"
 
 namespace EPolyStateV1
 {
@@ -35,7 +36,9 @@ class VPoly4DV1
 public:
     u32 State;
     u32 Attr;
-    u32 Color;
+
+    VColorARGB OriginalColor;
+    VColorARGB FinalColor;
 
     VPoint4D* VtxList;
     i32 Vtx[3];
@@ -46,7 +49,8 @@ class VPolyFace4DV1
 public:
     u32 State;
     u32 Attr;
-    u32 Color;
+
+    VColorARGB Color;
 
     VPoint4D LocalVtx[3];
     VPoint4D TransVtx[3];

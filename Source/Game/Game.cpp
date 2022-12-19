@@ -1,5 +1,4 @@
 /* TODO:
-    - Sometimes i used to use PolyList instead of PolyPtrList, fix this
  */
 
 #include "Core/Volition.h"
@@ -207,7 +206,7 @@ void VGame::Render()
     }
     Renderer.BackSurface.Unlock();
 
-#elseif 0
+#elif 1
 
     RenderList.InsertObject(Object, false);
     if (bBackFaceRemoval)
@@ -244,6 +243,7 @@ void VGame::Render()
     Renderer.BackSurface.Unlock();
 
 #else
+
     Cam.BuildCameraToPerspectiveMat44();
     Cam.BuildHomogeneousPerspectiveToScreenMat44();
 

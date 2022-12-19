@@ -28,7 +28,7 @@ public:
         PolyPtrList[NumPoly] = &PolyList[NumPoly];
         PolyList[NumPoly].State = Poly.State;
         PolyList[NumPoly].Attr = Poly.Attr;
-        PolyList[NumPoly].Color = Poly.Color;
+        PolyList[NumPoly].Color = Poly.FinalColor;
 
         for (i32f I = 0; I < 3; ++I)
         {

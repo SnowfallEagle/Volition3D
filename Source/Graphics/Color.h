@@ -34,6 +34,11 @@ public:
     FINLINE VColorARGB(u32 InARGB) :
         ARGB(InARGB)
     {}
+
+    FINLINE operator u32()
+    {
+        return ARGB;
+    }
 };
 
 class VColorRGBA
@@ -61,4 +66,9 @@ public:
     FINLINE VColorRGBA(u32 InRGBA) :
         RGBA(InRGBA)
     {}
+
+    FINLINE operator u32()
+    {
+        return RGBA;
+    }
 };
