@@ -32,7 +32,7 @@ void VGame::StartUp()
         { 0.0f, 0.0f, 0.0f }
     );
 
-    Cam.Init(ECamAttrV1::Euler, { 0, 0, 0 }, { 0, 0, 0 }, Object.WorldPos, 120, 265, 12000, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
+    Cam.Init(ECamAttrV1::Euler, { 0, 75.0f, 0 }, { 0, 0, 0 }, Object.WorldPos, 120, 265, 12000, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
 
     {
         VLightV1 AmbientLight = {
@@ -40,7 +40,7 @@ void VGame::StartUp()
             ELightStateV1::Active,
             ELightAttrV1::Ambient,
 
-            MAP_RGBX32(0xFF, 0xFF, 0xFF), 0, 0,
+            MAP_RGBX32(0x22, 0xFF, 0xFF), 0, 0,
             { 0, 0, 0, 0 }, { 0, 0, 0, 0 },
 
             0, 0, 0,
@@ -53,8 +53,8 @@ void VGame::StartUp()
             ELightStateV1::Active,
             ELightAttrV1::Infinite,
 
-            0, MAP_RGBX32(0xFF, 0xFF, 0x00), 0,
-            { 0, 0, 0, 0 }, { 0, -1.0f, 0, 0 },
+            0, MAP_RGBX32(0xCC, 0xCC, 0xAA), 0,
+            { 0, 0, 0, 0 }, { -1.0f, -1.0f, 0, 0 },
 
             0, 0, 0,
             0, 0,
@@ -168,6 +168,7 @@ void VGame::Render()
 
     Object.TransformModelToWorld();
     Object.Cull(Cam);
+    Object.Light(Cam, Renderer.Lights, Renderer.MaxLights);
 
 #if 0
     if (bBackFaceRemoval)

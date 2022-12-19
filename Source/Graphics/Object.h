@@ -238,6 +238,82 @@ public:
         return false;
     }
 
+    void Light(const VCam4DV1& Cam, const VLightV1* Lights, i32 NumLights)
+    {
+        // NOTE(sean): We can simplify this stuff by converting calculations to floating point
+
+        if (~State & EObjectStateV1::Active ||
+            State & EObjectStateV1::Culled  ||
+            ~State & EObjectStateV1::Visible)
+        {
+            return;
+        }
+
+        for (i32f PolyIndex = 0; PolyIndex < NumPoly; ++PolyIndex)
+        {
+            VPoly4DV1& Poly = PolyList[PolyIndex];
+            if (~Poly.State & EPolyStateV1::Active ||
+                Poly.State & EPolyStateV1::Clipped ||
+                Poly.State & EPolyStateV1::BackFace)
+            {
+                continue;
+            }
+
+            if (~Poly.Attr & EPolyAttrV1::ShadeModeFlat &&
+                ~Poly.Attr & EPolyAttrV1::ShadeModeGouraud)
+            {
+                continue; // As emissive, no changes
+            }
+
+            i32f V0 = Poly.Vtx[0];
+            i32f V1 = Poly.Vtx[1];
+            i32f V2 = Poly.Vtx[2];
+
+            u32 RSum = 0;
+            u32 GSum = 0;
+            u32 BSum = 0;
+
+            for (i32f LightIndex = 0; LightIndex < NumLights; ++LightIndex)
+            {
+                if (~Lights[LightIndex].State & ELightStateV1::Active)
+                {
+                    continue;
+                }
+
+                if (Lights[LightIndex].Attr & ELightAttrV1::Ambient)
+                {
+                    // NOTE(sean): Maybe 255? or even >> 8
+                    RSum += (Poly.OriginalColor.R * Lights[LightIndex].CAmbient.R) / 256;
+                    GSum += (Poly.OriginalColor.G * Lights[LightIndex].CAmbient.G) / 256;
+                    BSum += (Poly.OriginalColor.B * Lights[LightIndex].CAmbient.B) / 256;
+                }
+                else if (Lights[LightIndex].Attr & ELightAttrV1::Infinite)
+                {
+                    VVector4D SurfaceNormal = VVector4D::GetCross(
+                        Poly.VtxList[V1] - Poly.VtxList[V0],
+                        Poly.VtxList[V2] - Poly.VtxList[V0]
+                    );
+
+                    f32 Dot = VVector4D::Dot(SurfaceNormal, Lights[LightIndex].Dir);
+                    if (Dot < 0)
+                    {
+                        // 128 used for fixed point to don't lose accuracy with integers
+                        i32 Intensity = (i32)( 128.0f * (Math.Abs(Dot) / SurfaceNormal.GetLengthFast()) );
+                        RSum += (Poly.OriginalColor.R * Lights[LightIndex].CDiffuse.R * Intensity) / (256 * 128);
+                        GSum += (Poly.OriginalColor.G * Lights[LightIndex].CDiffuse.G * Intensity) / (256 * 128);
+                        BSum += (Poly.OriginalColor.B * Lights[LightIndex].CDiffuse.B * Intensity) / (256 * 128);
+                    }
+                }
+            }
+
+            if (RSum > 255) RSum = 255;
+            if (GSum > 255) GSum = 255;
+            if (BSum > 255) BSum = 255;
+
+            Poly.FinalColor = MAP_XRGB32(RSum, GSum, BSum);
+        }
+    }
+
     void RemoveBackFaces(VCam4DV1 Cam)
     {
         if (State & EObjectStateV1::Culled)

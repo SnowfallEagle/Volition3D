@@ -22,7 +22,6 @@ public:
 public:
     VSurface BackSurface;
 
-protected:
     i32 ScreenWidth;
     i32 ScreenHeight;
     VVector2DI MinClip;
@@ -82,6 +81,7 @@ public:
         {
             Lights[Index] = InLight;
         }
+        ++NumLights;
     }
 
     virtual void PrepareToRender()
