@@ -312,7 +312,7 @@ public:
                     );
                     f32 NormalLength = SurfaceNormal.GetLengthFast();
 
-                    VVector4D Direction = WorldPos - Lights[LightIndex].Pos;
+                    VVector4D Direction = Poly.VtxList[V0] - Lights[LightIndex].Pos;
                     f32 Distance = Direction.GetLengthFast();
 
                     f32 Dot = VVector4D::Dot(SurfaceNormal, Direction);
@@ -338,7 +338,7 @@ public:
                         Poly.VtxList[V1] - Poly.VtxList[V0],
                         Poly.VtxList[V2] - Poly.VtxList[V0]
                     );
-                    f32 Distance = (WorldPos - Lights[LightIndex].Pos).GetLengthFast();
+                    f32 Distance = (TransVtxList[V0] - Lights[LightIndex].Pos).GetLengthFast();
 
                     f32 Dot = VVector4D::Dot(SurfaceNormal, Lights[LightIndex].Dir);
                     if (Dot < 0)
@@ -356,6 +356,10 @@ public:
                         GSum += (Poly.OriginalColor.G * Lights[LightIndex].CDiffuse.G * Intensity) / (256 * 128);
                         BSum += (Poly.OriginalColor.B * Lights[LightIndex].CDiffuse.B * Intensity) / (256 * 128);
                     }
+                }
+                else if (Lights[LightIndex].Attr & ELightAttrV1::ComplexSpotlight)
+                {
+
                 }
             }
 
