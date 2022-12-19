@@ -304,6 +304,34 @@ public:
                         BSum += (Poly.OriginalColor.B * Lights[LightIndex].CDiffuse.B * Intensity) / (256 * 128);
                     }
                 }
+                else if (Lights[LightIndex].Attr & ELightAttrV1::Point)
+                {
+                    VVector4D SurfaceNormal = VVector4D::GetCross(
+                        Poly.VtxList[V1] - Poly.VtxList[V0],
+                        Poly.VtxList[V2] - Poly.VtxList[V0]
+                    );
+                    f32 NormalLength = SurfaceNormal.GetLengthFast();
+
+                    VVector4D Direction = WorldPos - Lights[LightIndex].Pos;
+                    f32 Distance = Direction.GetLengthFast();
+
+                    f32 Dot = VVector4D::Dot(SurfaceNormal, Direction);
+                    if (Dot < 0)
+                    {
+                        // 128 used for fixed point to don't lose accuracy with integers
+                        f32 Atten =
+                            Lights[LightIndex].KConst +
+                            Lights[LightIndex].KLinear * Distance +
+                            Lights[LightIndex].KQuad * Distance * Distance;
+                        i32 Intensity = (i32)(
+                            (128.0f * Math.Abs(Dot)) / (NormalLength * Distance * Atten)
+                        );
+
+                        RSum += (Poly.OriginalColor.R * Lights[LightIndex].CDiffuse.R * Intensity) / (256 * 128);
+                        GSum += (Poly.OriginalColor.G * Lights[LightIndex].CDiffuse.G * Intensity) / (256 * 128);
+                        BSum += (Poly.OriginalColor.B * Lights[LightIndex].CDiffuse.B * Intensity) / (256 * 128);
+                    }
+                }
             }
 
             if (RSum > 255) RSum = 255;

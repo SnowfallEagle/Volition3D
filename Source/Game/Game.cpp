@@ -66,10 +66,10 @@ void VGame::StartUp()
             ELightStateV1::Active,
             ELightAttrV1::Point,
 
-            0, MAP_RGBX32(0xFF, 0xFF, 0x00), 0,
-            { 0, 10000.0f, 0, 0 }, { 0, 0, 0, 0 },
+            0, MAP_RGBX32(0xFF, 0xFF, 0xff), 0,
+            { 1000.0f, 1000.0f, 0, 0 }, { 0, 0, 0, 0 },
 
-            0, 1, 0,
+            0, 0.0001f, 0,
             0, 0,
             0
         };
