@@ -332,6 +332,8 @@ public:
                 }
                 else if (Lights[LightIndex].Attr & ELightAttrV1::SimpleSpotlight)
                 {
+                    // FIXME(sean): I think we should check if dot of normal and vector between surface and position is negative
+
                     VVector4D SurfaceNormal = VVector4D::GetCross(
                         Poly.VtxList[V1] - Poly.VtxList[V0],
                         Poly.VtxList[V2] - Poly.VtxList[V0]
@@ -361,23 +363,38 @@ public:
                         Poly.VtxList[V1] - Poly.VtxList[V0],
                         Poly.VtxList[V2] - Poly.VtxList[V0]
                     );
-                    f32 Dot = VVector4D::Dot(SurfaceNormal, Lights[LightIndex].Dir);
+                    f32 DotNormalDirection = VVector4D::Dot(SurfaceNormal, Lights[LightIndex].Dir);
 
-                    if (Dot < 0)
+                    if (DotNormalDirection < 0)
                     {
-                        // 128 used for fixed point to don't lose accuracy with integers
-                        f32 Distance = (TransVtxList[V0] - Lights[LightIndex].Pos).GetLengthFast();
-                        f32 Atten =
-                            Lights[LightIndex].KConst +
-                            Lights[LightIndex].KLinear * Distance +
-                            Lights[LightIndex].KQuad * Distance * Distance;
-                        i32 Intensity = (i32)(
-                            (128.0f * Math.Abs(Dot)) / (SurfaceNormal.GetLengthFast() * Atten)
-                        );
+                        VVector4D DistanceVector = TransVtxList[V0] - Lights[LightIndex].Pos;
+                        f32 Distance = DistanceVector.GetLengthFast();
+                        f32 DotDistanceDirection = VVector4D::Dot(DistanceVector, Lights[LightIndex].Dir) / Distance;
 
-                        RSum += (Poly.OriginalColor.R * Lights[LightIndex].CDiffuse.R * Intensity) / (256 * 128);
-                        GSum += (Poly.OriginalColor.G * Lights[LightIndex].CDiffuse.G * Intensity) / (256 * 128);
-                        BSum += (Poly.OriginalColor.B * Lights[LightIndex].CDiffuse.B * Intensity) / (256 * 128);
+                        if (DotDistanceDirection > 0)
+                        {
+                            f32 DotDistanceDirectionExp = DotDistanceDirection;
+                            // For optimization use integer power
+                            i32f IntegerExp = (i32f)Lights[LightIndex].Power;
+                            for (i32f I = 1; I < IntegerExp; ++I)
+                            {
+                                DotDistanceDirectionExp *= DotDistanceDirection;
+                            }
+
+                            // 128 used for fixed point to don't lose accuracy with integers
+                            f32 Atten =
+                                Lights[LightIndex].KConst +
+                                Lights[LightIndex].KLinear * Distance +
+                                Lights[LightIndex].KQuad * Distance * Distance;
+                            i32 Intensity = (i32)(
+                                (128.0f * Math.Abs(DotNormalDirection) * DotDistanceDirectionExp) /
+                                (SurfaceNormal.GetLengthFast() * Atten)
+                            );
+
+                            RSum += (Poly.OriginalColor.R * Lights[LightIndex].CDiffuse.R * Intensity) / (256 * 128);
+                            GSum += (Poly.OriginalColor.G * Lights[LightIndex].CDiffuse.G * Intensity) / (256 * 128);
+                            BSum += (Poly.OriginalColor.B * Lights[LightIndex].CDiffuse.B * Intensity) / (256 * 128);
+                        }
                     }
                 }
             }
