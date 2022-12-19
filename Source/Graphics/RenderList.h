@@ -187,7 +187,7 @@ public:
     }
 
     // LocalToTrans or TransOnly
-    void TransModelToWorld(const VPoint4D& WorldPos, ETransformType Type = ETransformType::LocalToTrans)
+    void TransformModelToWorld(const VPoint4D& WorldPos, ETransformType Type = ETransformType::LocalToTrans)
     {
         if (Type == ETransformType::LocalToTrans)
         {
@@ -258,7 +258,7 @@ public:
         }
     }
 
-    void TransWorldToCamera(const VMatrix44& MatCamera)
+    void TransformWorldToCamera(const VMatrix44& MatCamera)
     {
         for (i32f I = 0; I < NumPoly; ++I)
         {
@@ -280,7 +280,7 @@ public:
         }
     }
 
-    void TransCameraToPerspective(const VCam4DV1& Cam)
+    void TransformCameraToPerspective(const VCam4DV1& Cam)
     {
         for (i32f I = 0; I < NumPoly; ++I)
         {
@@ -321,7 +321,7 @@ public:
         }
     }
 
-    void TransPerspectiveToScreen(const VCam4DV1& Cam)
+    void TransformPerspectiveToScreen(const VCam4DV1& Cam)
     {
         f32 Alpha = Cam.ViewPortSize.X * 0.5f - 0.5f;
         f32 Beta = Cam.ViewPortSize.Y * 0.5f - 0.5f;
@@ -345,7 +345,7 @@ public:
         }
     }
 
-    void TransCameraToScreen(const VCam4DV1& Cam)
+    void TransformCameraToScreen(const VCam4DV1& Cam)
     {
         f32 Alpha = Cam.ViewPortSize.X * 0.5f - 0.5f;
         f32 Beta = Cam.ViewPortSize.Y * 0.5f - 0.5f;

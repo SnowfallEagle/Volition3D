@@ -167,21 +167,21 @@ void VGame::Render()
     RenderList.Reset();
     Object.Reset();
 
-    Object.TransModelToWorld();
+    Object.TransformModelToWorld();
     Object.Cull(Cam);
 
-#if 1
+#if 0
     if (bBackFaceRemoval)
     {
         Object.RemoveBackFaces(Cam);
     }
-    Object.TransWorldToCamera(Cam.MatCamera);
+    Object.TransformWorldToCamera(Cam.MatCamera);
     {
-        Object.TransCameraToScreen(Cam);
+        Object.TransformCameraToScreen(Cam);
     }
     {
-        // Object.TransCameraToPerspective(Cam);
-        // Object.TransPerspectiveToScreen(Cam);
+        // Object.TransformCameraToPerspective(Cam);
+        // Object.TransformPerspectiveToScreen(Cam);
     }
 
     VRelRectI Dest = { 0, 0, Volition.WindowWidth, Volition.WindowHeight/2 };
@@ -214,13 +214,13 @@ void VGame::Render()
     {
         RenderList.RemoveBackFaces(Cam);
     }
-    RenderList.TransWorldToCamera(Cam.MatCamera);
+    RenderList.TransformWorldToCamera(Cam.MatCamera);
     {
-        RenderList.TransCameraToScreen(Cam);
+        RenderList.TransformCameraToScreen(Cam);
     }
     {
-        // RenderList.TransCameraToPerspective(Cam);
-        // RenderList.TransPerspectiveToScreen(Cam);
+        // RenderList.TransformCameraToPerspective(Cam);
+        // RenderList.TransformPerspectiveToScreen(Cam);
     }
 
     VRelRectI Dest = { 0, 0, Volition.WindowWidth, Volition.WindowHeight/2 };
