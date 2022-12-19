@@ -247,7 +247,6 @@ public:
             U = Poly->TransVtx[1] - Poly->TransVtx[0];
             V = Poly->TransVtx[2] - Poly->TransVtx[0];
 
-            // FIXME(sean): Maybe we should normalize these values?
             VVector4D::Cross(U, V, N);
             VVector4D View = Cam.Pos - Poly->TransVtx[0];
 
@@ -348,7 +347,6 @@ public:
 
     void TransCameraToScreen(const VCam4DV1& Cam)
     {
-        // FIXME(sean): idk if it works
         f32 Alpha = Cam.ViewPortSize.X * 0.5f - 0.5f;
         f32 Beta = Cam.ViewPortSize.Y * 0.5f - 0.5f;
 
@@ -368,10 +366,10 @@ public:
                 f32 ViewDistDivZ = Cam.ViewDist / Poly->TransVtx[V].Z;
 
                 Poly->TransVtx[V].X = Poly->TransVtx[V].X * ViewDistDivZ;
-                Poly->TransVtx[V].Y = Poly->TransVtx[V].Y * ViewDistDivZ;
+                Poly->TransVtx[V].Y = Poly->TransVtx[V].Y * Cam.AspectRatio * ViewDistDivZ;
 
-                Poly->TransVtx[V].X = Poly->TransVtx[V].X + Alpha;
-                Poly->TransVtx[V].Y = -Poly->TransVtx[V].Y + Beta;
+                Poly->TransVtx[V].X = Alpha + Alpha * Poly->TransVtx[V].X;
+                Poly->TransVtx[V].Y = Beta - Beta * Poly->TransVtx[V].Y;
             }
         }
     }
