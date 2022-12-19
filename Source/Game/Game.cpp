@@ -170,7 +170,7 @@ void VGame::Render()
     Object.TransModelToWorld();
     Object.Cull(Cam);
 
-    /*
+#if 1
     if (bBackFaceRemoval)
     {
         Object.RemoveBackFaces(Cam);
@@ -206,7 +206,8 @@ void VGame::Render()
         }
     }
     Renderer.BackSurface.Unlock();
-    */
+
+#else
 
     RenderList.InsertObject(Object, false);
     if (bBackFaceRemoval)
@@ -241,6 +242,7 @@ void VGame::Render()
         }
     }
     Renderer.BackSurface.Unlock();
+#endif
 
     Renderer.DrawText(0, 5, MAP_XRGB32(0xFF, 0xFF, 0xFF), "FPS: %.3f", 1000.0f / Volition.GetDelta());
     Renderer.DrawText(0, 35, MAP_XRGB32(0xFF, 0xFF, 0xFF), bBackFaceRemoval ? "BackFace: true" : "BackFace: false");
