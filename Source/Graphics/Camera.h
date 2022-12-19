@@ -312,8 +312,8 @@ public:
         MatScreen = {
             Alpha, 0.0f, 0.0f, 0.0f,
             0.0f, -Beta, 0.0f, 0.0f,
-            0.0f, 0.0f, 1.0f, 1.0f,
-            Alpha, Beta, 0.0f, 0.0f
+            Alpha, Beta, 1.0f, 1.0f,
+            0.0f, 0.0f, 0.0f, 0.0f
         };
     }
 

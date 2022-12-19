@@ -1,5 +1,5 @@
 /* TODO:
-    - Check camera's functions for matrices
+    - Sometimes i used to use PolyList instead of PolyPtrList, fix this
  */
 
 #include "Core/Volition.h"
@@ -28,7 +28,7 @@ void VGame::StartUp()
 {
     Object.LoadPLG(
         "tank3.plg",
-        { 0.0f, 0.0f, 50.0f },
+        { 0.0f, 0.0f, 200.0f },
         { 1.0f, 1.0f, 1.0f },
         { 0.0f, 0.0f, 0.0f }
     );
@@ -244,20 +244,19 @@ void VGame::Render()
     Renderer.BackSurface.Unlock();
 
 #else
+    Cam.BuildCameraToPerspectiveMat44();
+    Cam.BuildHomogeneousPerspectiveToScreenMat44();
 
     RenderList.InsertObject(Object, false);
     if (bBackFaceRemoval)
     {
         RenderList.RemoveBackFaces(Cam);
     }
-    RenderList.TransformWorldToCamera(Cam);
-    {
-        RenderList.TransformCameraToScreen(Cam);
-    }
-    {
-        // RenderList.TransformCameraToPerspective(Cam);
-        // RenderList.TransformPerspectiveToScreen(Cam);
-    }
+
+    RenderList.Transform(Cam.MatCamera, ETransformType::TransOnly);
+    RenderList.Transform(Cam.MatPerspective, ETransformType::TransOnly);
+    RenderList.Transform(Cam.MatScreen, ETransformType::TransOnly);
+    RenderList.ConvertFromHomogeneous();
 
     VRelRectI Dest = { 0, 0, Volition.WindowWidth, Volition.WindowHeight/2 };
     Renderer.BackSurface.FillRectHW(&Dest, MAP_XRGB32(100, 20, 255));
