@@ -1,7 +1,6 @@
 /* TODO:
-    - Maybe remove needless stuff from VObject?
     - Check camera's functions for matrices
-*/
+ */
 
 #include "Core/Volition.h"
 #include "Input/Input.h"
@@ -171,6 +170,43 @@ void VGame::Render()
     Object.TransModelToWorld();
     Object.Cull(Cam);
 
+    if (bBackFaceRemoval)
+    {
+        Object.RemoveBackFaces(Cam);
+    }
+    Object.TransWorldToCamera(Cam.MatCamera);
+    {
+        // RenderList.TransCameraToScreen(Cam);
+    }
+    {
+        Object.TransCameraToPerspective(Cam);
+        Object.TransPerspectiveToScreen(Cam);
+    }
+
+    VRelRectI Dest = { 0, 0, Volition.WindowWidth, Volition.WindowHeight/2 };
+    Renderer.BackSurface.FillRectHW(&Dest, MAP_XRGB32(100, 20, 255));
+    Dest = { 0, Dest.H, Dest.W, Volition.WindowHeight / 2 - 1 };
+    Renderer.BackSurface.FillRectHW(&Dest, MAP_XRGB32(60, 10, 255));
+
+    u32* Buffer;
+    i32 Pitch;
+    Renderer.BackSurface.Lock(Buffer, Pitch);
+    {
+        if (~Object.State & EObjectStateV1::Culled)
+        {
+            if (bRenderSolid)
+            {
+                Object.RenderSolid(Buffer, Pitch);
+            }
+            else
+            {
+                Object.RenderWire(Buffer, Pitch);
+            }
+        }
+    }
+    Renderer.BackSurface.Unlock();
+
+    /*
     RenderList.InsertObject(Object, false);
     if (bBackFaceRemoval)
     {
@@ -184,6 +220,11 @@ void VGame::Render()
         RenderList.TransCameraToPerspective(Cam);
         RenderList.TransPerspectiveToScreen(Cam);
     }
+
+    VRelRectI Dest = { 0, 0, Volition.WindowWidth, Volition.WindowHeight/2 };
+    Renderer.BackSurface.FillRectHW(&Dest, MAP_XRGB32(100, 20, 255));
+    Dest = { 0, Dest.H, Dest.W, Volition.WindowHeight / 2 - 1 };
+    Renderer.BackSurface.FillRectHW(&Dest, MAP_XRGB32(60, 10, 255));
 
     u32* Buffer;
     i32 Pitch;
@@ -199,6 +240,7 @@ void VGame::Render()
         }
     }
     Renderer.BackSurface.Unlock();
+    */
 
     Renderer.DrawText(0, 5, MAP_XRGB32(0xFF, 0xFF, 0xFF), "FPS: %.3f", 1000.0f / Volition.GetDelta());
     Renderer.DrawText(0, 35, MAP_XRGB32(0xFF, 0xFF, 0xFF), bBackFaceRemoval ? "BackFace: true" : "BackFace: false");

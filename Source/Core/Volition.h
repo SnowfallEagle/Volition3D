@@ -99,7 +99,7 @@ private:
     void SyncFrame()
     {
         while (GetTicks() - LastTick < MsFrameLimit)
-            {}
+           {}
     }
 };
 

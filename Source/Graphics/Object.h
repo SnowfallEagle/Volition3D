@@ -261,7 +261,6 @@ public:
             U = TransVtxList[Poly.Vtx[1]] - TransVtxList[Poly.Vtx[0]];
             V = TransVtxList[Poly.Vtx[2]] - TransVtxList[Poly.Vtx[0]];
 
-            // FIXME(sean): Maybe we should normalize these values?
             VVector4D::Cross(U, V, N);
             VVector4D View = Cam.Pos - TransVtxList[Poly.Vtx[0]];
 
@@ -290,7 +289,7 @@ public:
             f32 Z = TransVtxList[I].Z;
 
             TransVtxList[I].X = TransVtxList[I].X * (Cam.ViewDist / Z);
-            TransVtxList[I].Y = TransVtxList[I].Y * (Cam.ViewDist / Z);
+            TransVtxList[I].Y = TransVtxList[I].Y * Cam.AspectRatio * (Cam.ViewDist / Z);
             // Z = Z
         }
     }
@@ -310,8 +309,8 @@ public:
 
         for (i32f I = 0; I < NumVtx; ++I)
         {
-            TransVtxList[I].X = Alpha + TransVtxList[I].X;
-            TransVtxList[I].Y = Beta - TransVtxList[I].Y;
+            TransVtxList[I].X = Alpha + Alpha * TransVtxList[I].X;
+            TransVtxList[I].Y = Beta - Beta * TransVtxList[I].Y;
         }
     }
 
