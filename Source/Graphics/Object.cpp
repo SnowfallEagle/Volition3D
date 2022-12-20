@@ -163,7 +163,9 @@ b32 VObject4DV1::LoadPLG(
         }
 
         if (PolyDesc & EPLX::TwoSidedFlag)
+        {
             PolyList[I].Attr |= EPolyAttrV1::TwoSided;
+        }
 
         switch (PolyDesc & EPLX::ShadeModeMask)
         {

@@ -1,11 +1,19 @@
 #pragma once
 
+#include <stdlib.h> // qsort()
 #include "Math/Minimal.h"
 #include "Graphics/Polygon.h"
 #include "Graphics/Camera.h"
 #include "Graphics/TransformType.h"
 #include "Graphics/Renderer.h"
 #include "Graphics/Object.h"
+
+enum class ESortPolygonsMethod
+{
+    Average = 0,
+    Near,
+    Far
+};
 
 class VRenderList4DV1
 {
@@ -277,6 +285,88 @@ public:
                 VVector4D::MulMat44(Poly->TransVtx[V], Camera.MatCamera, Res);
                 Poly->TransVtx[V] = Res;
             }
+        }
+    }
+
+    static i32 SortPolygonsCompareAverage(const void* Arg1, const void* Arg2)
+    {
+        const VPolyFace4DV1* Poly1 = *(const VPolyFace4DV1**)Arg1;
+        const VPolyFace4DV1* Poly2 = *(const VPolyFace4DV1**)Arg2;
+
+        f32 Z1 = 0.33333f * (Poly1->TransVtx[0].Z + Poly1->TransVtx[1].Z + Poly1->TransVtx[2].Z);
+        f32 Z2 = 0.33333f * (Poly2->TransVtx[0].Z + Poly2->TransVtx[1].Z + Poly2->TransVtx[2].Z);
+
+        if (Z1 < Z2)
+        {
+            return 1;
+        }
+        else if (Z1 > Z2)
+        {
+            return -1;
+        }
+        else
+        {
+            return 0;
+        }
+
+        return 1;
+    }
+
+    static i32 SortPolygonsCompareNear(const void* Arg1, const void* Arg2)
+    {
+        const VPolyFace4DV1* Poly1 = *(const VPolyFace4DV1**)Arg1;
+        const VPolyFace4DV1* Poly2 = *(const VPolyFace4DV1**)Arg2;
+
+        f32 ZMin1 = MIN(MIN(Poly1->TransVtx[0].Z, Poly1->TransVtx[1].Z), Poly1->TransVtx[2].Z);
+        f32 ZMin2 = MIN(MIN(Poly2->TransVtx[0].Z, Poly2->TransVtx[1].Z), Poly2->TransVtx[2].Z);
+
+        if (ZMin1 < ZMin2)
+        {
+            return 1;
+        }
+        else if (ZMin1 > ZMin2)
+        {
+            return -1;
+        }
+        else
+        {
+            return 0;
+        }
+
+        return 1;
+    }
+
+    static i32 SortPolygonsCompareFar(const void* Arg1, const void* Arg2)
+    {
+        const VPolyFace4DV1* Poly1 = *(const VPolyFace4DV1**)Arg1;
+        const VPolyFace4DV1* Poly2 = *(const VPolyFace4DV1**)Arg2;
+
+        f32 ZMax1 = MAX(MAX(Poly1->TransVtx[0].Z, Poly1->TransVtx[1].Z), Poly1->TransVtx[2].Z);
+        f32 ZMax2 = MAX(MAX(Poly2->TransVtx[0].Z, Poly2->TransVtx[1].Z), Poly2->TransVtx[2].Z);
+
+        if (ZMax1 < ZMax2)
+        {
+            return 1;
+        }
+        else if (ZMax1 > ZMax2)
+        {
+            return -1;
+        }
+        else
+        {
+            return 0;
+        }
+
+        return 1;
+    }
+
+    void SortPolygons(ESortPolygonsMethod Method = ESortPolygonsMethod::Average)
+    {
+        switch (Method)
+        {
+        case ESortPolygonsMethod::Average: qsort(PolyPtrList, NumPoly, sizeof(*PolyPtrList), SortPolygonsCompareAverage); break;
+        case ESortPolygonsMethod::Near:    qsort(PolyPtrList, NumPoly, sizeof(*PolyPtrList), SortPolygonsCompareNear); break;
+        case ESortPolygonsMethod::Far:     qsort(PolyPtrList, NumPoly, sizeof(*PolyPtrList), SortPolygonsCompareFar); break;
         }
     }
 

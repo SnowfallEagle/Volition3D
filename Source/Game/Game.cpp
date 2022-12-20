@@ -79,10 +79,10 @@ void VGame::StartUp()
             ELightStateV1::Active,
             ELightAttrV1::SimpleSpotlight,
 
-            0, MAP_RGBX32(0xFF, 0xFF, 0xFF), 0,
+            0, MAP_RGBX32(0x11, 0x11, 0x11), 0,
             { 1000.0f, 1000.0f, 0.0f, 0 }, VVector4D(-1.0f, -1.0f, 0.0f).GetNormalized(),
 
-            0, 0.00005f, 0,
+            0, 0.0005f, 0,
             30.0f, 60.0f,
             1.0f
         };
@@ -92,21 +92,19 @@ void VGame::StartUp()
             ELightStateV1::Active,
             ELightAttrV1::ComplexSpotlight,
 
-            0, MAP_RGBX32(0x80, 0x80, 0x80), 0,
-            { 500.0f, 1000.0f, 0.0f, 0 }, VVector4D(-1.0f, -1.0f, 0.0f).GetNormalized(),
+            0, MAP_RGBX32(0xFF, 0xFF, 0xFF), 0,
+            { 0.0f, 1000.0f, 300.0f, 0 }, VVector4D(-0.5f, -1.0f, -1.0f).GetNormalized(),
 
-            0, 0.0001f, 0,
+            0, 0.0005f, 0,
             30.0f, 60.0f,
             1.0f
         };
 
-        /*
         Renderer.InitLight(0, AmbientLight);
-        Renderer.InitLight(1, InfiniteLight);
-        Renderer.InitLight(2, PointLight);
-        Renderer.InitLight(0, SimpleSpotlight);
-        */
-        Renderer.InitLight(0, ComplexSpotlight);
+        Renderer.InitLight(1, ComplexSpotlight);
+        Renderer.InitLight(2, InfiniteLight);
+        // Renderer.InitLight(1, PointLight);
+        // Renderer.InitLight(3, SimpleSpotlight);
     }
 }
 
@@ -186,44 +184,7 @@ void VGame::Render()
     Object.Cull(Cam);
     Object.Light(Cam, Renderer.Lights, Renderer.MaxLights);
 
-#if 0
-    if (bBackFaceRemoval)
-    {
-        Object.RemoveBackFaces(Cam);
-    }
-    Object.TransformWorldToCamera(Cam.MatCamera);
-    {
-        Object.TransformCameraToScreen(Cam);
-    }
-    {
-        // Object.TransformCameraToPerspective(Cam);
-        // Object.TransformPerspectiveToScreen(Cam);
-    }
-
-    VRelRectI Dest = { 0, 0, Volition.WindowWidth, Volition.WindowHeight/2 };
-    Renderer.BackSurface.FillRectHW(&Dest, MAP_XRGB32(100, 20, 255));
-    Dest = { 0, Dest.H, Dest.W, Volition.WindowHeight / 2 - 1 };
-    Renderer.BackSurface.FillRectHW(&Dest, MAP_XRGB32(60, 10, 255));
-
-    u32* Buffer;
-    i32 Pitch;
-    Renderer.BackSurface.Lock(Buffer, Pitch);
-    {
-        if (~Object.State & EObjectStateV1::Culled)
-        {
-            if (bRenderSolid)
-            {
-                Object.RenderSolid(Buffer, Pitch);
-            }
-            else
-            {
-                Object.RenderWire(Buffer, Pitch);
-            }
-        }
-    }
-    Renderer.BackSurface.Unlock();
-
-#elif 1
+#if 1
 
     RenderList.InsertObject(Object, false);
     if (bBackFaceRemoval)
@@ -231,6 +192,7 @@ void VGame::Render()
         RenderList.RemoveBackFaces(Cam);
     }
     RenderList.TransformWorldToCamera(Cam);
+    RenderList.SortPolygons(ESortPolygonsMethod::Average);
     {
         RenderList.TransformCameraToScreen(Cam);
     }
@@ -271,6 +233,7 @@ void VGame::Render()
     }
 
     RenderList.Transform(Cam.MatCamera, ETransformType::TransOnly);
+    RenderList.SortPolygons();
     RenderList.Transform(Cam.MatPerspective, ETransformType::TransOnly);
     RenderList.Transform(Cam.MatScreen, ETransformType::TransOnly);
     RenderList.ConvertFromHomogeneous();
