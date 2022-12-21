@@ -158,42 +158,15 @@ void VGame::Update(f32 Delta)
         Cam.Dir.X += 0.5f;
     }
 
-    if (Input.IsKeyDown(EKeycode::Q))
-    {
-        VMatrix44 Rot;
-        Rot.BuildRotationXYZ(0.0f, 0.5f, 0);
-        Object.Transform(Rot, ETransformType::LocalOnly, true);
-    }
-    if (Input.IsKeyDown(EKeycode::E))
-    {
-        VMatrix44 Rot;
-        Rot.BuildRotationXYZ(0.0f, -0.5f, 0.0f);
-        Object.Transform(Rot, ETransformType::LocalOnly, true);
-    }
-    if (Input.IsKeyDown(EKeycode::F))
-    {
-        VMatrix44 Rot;
-        Rot.BuildRotationXYZ(0.0f, 0.0f, 0.5f);
-        Object.Transform(Rot, ETransformType::LocalOnly, true);
-    }
-    if (Input.IsKeyDown(EKeycode::G))
-    {
-        VMatrix44 Rot;
-        Rot.BuildRotationXYZ(0.0f, 0.0f, -0.5f);
-        Object.Transform(Rot, ETransformType::LocalOnly, true);
-    }
-    if (Input.IsKeyDown(EKeycode::Z))
-    {
-        VMatrix44 Rot;
-        Rot.BuildRotationXYZ(0.5f, 0.0f, 0.0f);
-        Object.Transform(Rot, ETransformType::LocalOnly, true);
-    }
-    if (Input.IsKeyDown(EKeycode::X))
-    {
-        VMatrix44 Rot;
-        Rot.BuildRotationXYZ(-0.5f, 0.0f, 0.0f);
-        Object.Transform(Rot, ETransformType::LocalOnly, true);
-    }
+    VMatrix44 Rot = VMatrix44::Identity;
+    f32 Speed = 0.1f * Delta;
+    if (Input.IsKeyDown(EKeycode::Q)) Rot.BuildRotationXYZ(0, Speed, 0);
+    if (Input.IsKeyDown(EKeycode::E)) Rot.BuildRotationXYZ(0, -Speed, 0);
+    if (Input.IsKeyDown(EKeycode::F)) Rot.BuildRotationXYZ(0, 0, Speed);
+    if (Input.IsKeyDown(EKeycode::G)) Rot.BuildRotationXYZ(0, 0, -Speed);
+    if (Input.IsKeyDown(EKeycode::Z)) Rot.BuildRotationXYZ(Speed, 0, 0);
+    if (Input.IsKeyDown(EKeycode::X)) Rot.BuildRotationXYZ(-Speed, 0, 0);
+    Object.Transform(Rot, ETransformType::LocalOnly, true);
 }
 
 void VGame::Render()
