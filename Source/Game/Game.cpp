@@ -164,11 +164,34 @@ void VGame::Update(f32 Delta)
         Rot.BuildRotationXYZ(0.0f, 0.5f, 0);
         Object.Transform(Rot, ETransformType::LocalOnly, true);
     }
-
     if (Input.IsKeyDown(EKeycode::E))
     {
         VMatrix44 Rot;
         Rot.BuildRotationXYZ(0.0f, -0.5f, 0.0f);
+        Object.Transform(Rot, ETransformType::LocalOnly, true);
+    }
+    if (Input.IsKeyDown(EKeycode::F))
+    {
+        VMatrix44 Rot;
+        Rot.BuildRotationXYZ(0.0f, 0.0f, 0.5f);
+        Object.Transform(Rot, ETransformType::LocalOnly, true);
+    }
+    if (Input.IsKeyDown(EKeycode::G))
+    {
+        VMatrix44 Rot;
+        Rot.BuildRotationXYZ(0.0f, 0.0f, -0.5f);
+        Object.Transform(Rot, ETransformType::LocalOnly, true);
+    }
+    if (Input.IsKeyDown(EKeycode::Z))
+    {
+        VMatrix44 Rot;
+        Rot.BuildRotationXYZ(0.5f, 0.0f, 0.0f);
+        Object.Transform(Rot, ETransformType::LocalOnly, true);
+    }
+    if (Input.IsKeyDown(EKeycode::X))
+    {
+        VMatrix44 Rot;
+        Rot.BuildRotationXYZ(-0.5f, 0.0f, 0.0f);
         Object.Transform(Rot, ETransformType::LocalOnly, true);
     }
 }
