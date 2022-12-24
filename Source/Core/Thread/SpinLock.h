@@ -130,7 +130,6 @@ public:
         --RefCount;
         if (RefCount == 0)
         {
-            // TODO(sean): Ensure about it
             Owner.store(0, std::memory_order_relaxed);
         }
     }

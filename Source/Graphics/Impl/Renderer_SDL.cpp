@@ -2,7 +2,6 @@
 
 #if VL_IMPL_SDL
 
-#include <string.h> // TODO(sean): mem::MemSet, mem::MemCopy()
 #include "Math/Math.h"
 #include "Core/Window.h"
 #include "Graphics/Impl/Renderer_SDL.h"
