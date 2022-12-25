@@ -5,7 +5,7 @@
 #include "Core/Platform.h"
 #include "Core/DebugLog.h"
 
-class VVector4D;
+class VVector4;
 
 class VMatrix44
 {
@@ -35,7 +35,7 @@ public:
         memset(this, 0, sizeof(*this));
     }
 
-    void BuildTranslate(const VVector4D& V);
+    void BuildTranslate(const VVector4& V);
     void BuildRotationXYZ(f32 X, f32 Y, f32 Z);
     static void Mul(const VMatrix44& A, const VMatrix44& B, VMatrix44& R);
     static b32 Inverse(const VMatrix44& A, VMatrix44& R);

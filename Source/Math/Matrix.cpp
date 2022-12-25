@@ -33,7 +33,7 @@ const VMatrix22 VMatrix22::Identity = {
     0, 1,
 };
 
-void VMatrix44::BuildTranslate(const VVector4D& V)
+void VMatrix44::BuildTranslate(const VVector4& V)
 {
     *this = {
         1, 0, 0, 0,

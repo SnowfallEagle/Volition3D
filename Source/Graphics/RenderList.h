@@ -22,11 +22,11 @@ public:
 
 public:
     i32 NumPoly;
-    VPolyFace4DV1* PolyPtrList[MaxPoly];
-    VPolyFace4DV1 PolyList[MaxPoly];
+    VPolyFace4D* PolyPtrList[MaxPoly];
+    VPolyFace4D PolyList[MaxPoly];
 
 public:
-    b32 InsertPoly(const VPoly4DV1& Poly)
+    b32 InsertPoly(const VPoly4D& Poly)
     {
         if (NumPoly >= MaxPoly)
         {
@@ -60,7 +60,7 @@ public:
         return true;
     }
 
-    b32 InsertPolyFace(const VPolyFace4DV1& PolyFace)
+    b32 InsertPolyFace(const VPolyFace4D& PolyFace)
     {
         if (NumPoly >= MaxPoly)
         {
@@ -68,7 +68,7 @@ public:
         }
 
         PolyPtrList[NumPoly] = &PolyList[NumPoly];
-        memcpy(&PolyList[NumPoly], &PolyFace, sizeof(VPolyFace4DV1));
+        memcpy(&PolyList[NumPoly], &PolyFace, sizeof(VPolyFace4D));
 
         PolyList[NumPoly].Next = nullptr;
         if (NumPoly == 0)
@@ -97,16 +97,16 @@ public:
 
         for (i32f I = 0; I < Object.NumPoly; ++I)
         {
-            VPoly4DV1& Poly = Object.PolyList[I];
+            VPoly4D& Poly = Object.PolyList[I];
 
-            if (~Poly.State & EPolyStateV1::Active ||
-                Poly.State & EPolyStateV1::Clipped ||
-                Poly.State & EPolyStateV1::BackFace)
+            if (~Poly.State & EPolyState::Active ||
+                Poly.State & EPolyState::Clipped ||
+                Poly.State & EPolyState::BackFace)
             {
                 continue;
             }
 
-            VPoint4D* OldVtxList = Poly.VtxList;
+            VPoint4* OldVtxList = Poly.VtxList;
             Poly.VtxList = bInsertLocal ? Object.LocalVtxList : Object.TransVtxList;
             b32 bRes = InsertPoly(Poly);
             Poly.VtxList = OldVtxList;
@@ -125,7 +125,7 @@ public:
 
     void Transform(const VMatrix44& M, ETransformType Type)
     {
-        VVector4D Res;
+        VVector4 Res;
 
         switch (Type)
         {
@@ -133,18 +133,18 @@ public:
         {
             for (i32f I = 0; I < NumPoly; ++I)
             {
-                VPolyFace4DV1* Poly = PolyPtrList[I];
+                VPolyFace4D* Poly = PolyPtrList[I];
                 if (!Poly ||
-                    ~Poly->State & EPolyStateV1::Active ||
-                    Poly->State & EPolyStateV1::Clipped ||
-                    Poly->State & EPolyStateV1::BackFace)
+                    ~Poly->State & EPolyState::Active ||
+                    Poly->State & EPolyState::Clipped ||
+                    Poly->State & EPolyState::BackFace)
                 {
                     continue;
                 }
 
                 for (i32f V = 0; V < 3; ++V)
                 {
-                    VVector4D::MulMat44(Poly->LocalVtx[V], M, Res);
+                    VVector4::MulMat44(Poly->LocalVtx[V], M, Res);
                     Poly->LocalVtx[V] = Res;
                 }
             }
@@ -154,18 +154,18 @@ public:
         {
             for (i32f I = 0; I < NumPoly; ++I)
             {
-                VPolyFace4DV1* Poly = PolyPtrList[I];
+                VPolyFace4D* Poly = PolyPtrList[I];
                 if (!Poly ||
-                    ~Poly->State & EPolyStateV1::Active ||
-                    Poly->State & EPolyStateV1::Clipped ||
-                    Poly->State & EPolyStateV1::BackFace)
+                    ~Poly->State & EPolyState::Active ||
+                    Poly->State & EPolyState::Clipped ||
+                    Poly->State & EPolyState::BackFace)
                 {
                     continue;
                 }
 
                 for (i32f V = 0; V < 3; ++V)
                 {
-                    VVector4D::MulMat44(Poly->TransVtx[V], M, Res);
+                    VVector4::MulMat44(Poly->TransVtx[V], M, Res);
                     Poly->TransVtx[V] = Res;
                 }
             }
@@ -175,18 +175,18 @@ public:
         {
             for (i32f I = 0; I < NumPoly; ++I)
             {
-                VPolyFace4DV1* Poly = PolyPtrList[I];
+                VPolyFace4D* Poly = PolyPtrList[I];
                 if (!Poly ||
-                    ~Poly->State & EPolyStateV1::Active ||
-                    Poly->State & EPolyStateV1::Clipped ||
-                    Poly->State & EPolyStateV1::BackFace)
+                    ~Poly->State & EPolyState::Active ||
+                    Poly->State & EPolyState::Clipped ||
+                    Poly->State & EPolyState::BackFace)
                 {
                     continue;
                 }
 
                 for (i32f V = 0; V < 3; ++V)
                 {
-                    VVector4D::MulMat44(Poly->LocalVtx[V], M, Res);
+                    VVector4::MulMat44(Poly->LocalVtx[V], M, Res);
                     Poly->TransVtx[V] = Res;
                 }
             }
@@ -195,17 +195,17 @@ public:
     }
 
     // LocalToTrans or TransOnly
-    void TransformModelToWorld(const VPoint4D& WorldPos, ETransformType Type = ETransformType::LocalToTrans)
+    void TransformModelToWorld(const VPoint4& WorldPos, ETransformType Type = ETransformType::LocalToTrans)
     {
         if (Type == ETransformType::LocalToTrans)
         {
             for (i32f I = 0; I < NumPoly; ++I)
             {
-                VPolyFace4DV1* Poly = PolyPtrList[I];
+                VPolyFace4D* Poly = PolyPtrList[I];
                 if (!Poly ||
-                    ~Poly->State & EPolyStateV1::Active ||
-                    Poly->State & EPolyStateV1::Clipped ||
-                    Poly->State & EPolyStateV1::BackFace)
+                    ~Poly->State & EPolyState::Active ||
+                    Poly->State & EPolyState::Clipped ||
+                    Poly->State & EPolyState::BackFace)
                 {
                     continue;
                 }
@@ -220,11 +220,11 @@ public:
         {
             for (i32f I = 0; I < NumPoly; ++I)
             {
-                VPolyFace4DV1* Poly = PolyPtrList[I];
+                VPolyFace4D* Poly = PolyPtrList[I];
                 if (!Poly ||
-                    ~Poly->State & EPolyStateV1::Active ||
-                    Poly->State & EPolyStateV1::Clipped ||
-                    Poly->State & EPolyStateV1::BackFace)
+                    ~Poly->State & EPolyState::Active ||
+                    Poly->State & EPolyState::Clipped ||
+                    Poly->State & EPolyState::BackFace)
                 {
                     continue;
                 }
@@ -241,27 +241,27 @@ public:
     {
         for (i32f I = 0; I < NumPoly; ++I)
         {
-            VPolyFace4DV1* Poly = PolyPtrList[I];
+            VPolyFace4D* Poly = PolyPtrList[I];
 
-            if (~Poly->State & EPolyStateV1::Active ||
-                Poly->State & EPolyStateV1::Clipped ||
-                Poly->Attr & EPolyAttrV1::TwoSided ||
-                Poly->State & EPolyStateV1::BackFace)
+            if (~Poly->State & EPolyState::Active ||
+                Poly->State & EPolyState::Clipped ||
+                Poly->Attr & EPolyAttr::TwoSided ||
+                Poly->State & EPolyState::BackFace)
             {
                 continue;
             }
 
-            VVector4D U, V, N;
+            VVector4 U, V, N;
             U = Poly->TransVtx[1] - Poly->TransVtx[0];
             V = Poly->TransVtx[2] - Poly->TransVtx[0];
 
-            VVector4D::Cross(U, V, N);
-            VVector4D View = Cam.Pos - Poly->TransVtx[0];
+            VVector4::Cross(U, V, N);
+            VVector4 View = Cam.Pos - Poly->TransVtx[0];
 
             // If > 0 then N watch in the same direction as View vector and visible
-            if (VVector4D::Dot(View, N) <= 0.0f)
+            if (VVector4::Dot(View, N) <= 0.0f)
             {
-                Poly->State |= EPolyStateV1::BackFace;
+                Poly->State |= EPolyState::BackFace;
             }
         }
     }
@@ -270,19 +270,19 @@ public:
     {
         for (i32f I = 0; I < NumPoly; ++I)
         {
-            VPolyFace4DV1* Poly = PolyPtrList[I];
+            VPolyFace4D* Poly = PolyPtrList[I];
             if (!Poly ||
-                ~Poly->State & EPolyStateV1::Active ||
-                Poly->State & EPolyStateV1::Clipped ||
-                Poly->State & EPolyStateV1::BackFace)
+                ~Poly->State & EPolyState::Active ||
+                Poly->State & EPolyState::Clipped ||
+                Poly->State & EPolyState::BackFace)
             {
                 continue;
             }
 
             for (i32f V = 0; V < 3; ++V)
             {
-                VVector4D Res;
-                VVector4D::MulMat44(Poly->TransVtx[V], Camera.MatCamera, Res);
+                VVector4 Res;
+                VVector4::MulMat44(Poly->TransVtx[V], Camera.MatCamera, Res);
                 Poly->TransVtx[V] = Res;
             }
         }
@@ -290,8 +290,8 @@ public:
 
     static i32 SortPolygonsCompareAverage(const void* Arg1, const void* Arg2)
     {
-        const VPolyFace4DV1* Poly1 = *(const VPolyFace4DV1**)Arg1;
-        const VPolyFace4DV1* Poly2 = *(const VPolyFace4DV1**)Arg2;
+        const VPolyFace4D* Poly1 = *(const VPolyFace4D**)Arg1;
+        const VPolyFace4D* Poly2 = *(const VPolyFace4D**)Arg2;
 
         f32 Z1 = 0.33333f * (Poly1->TransVtx[0].Z + Poly1->TransVtx[1].Z + Poly1->TransVtx[2].Z);
         f32 Z2 = 0.33333f * (Poly2->TransVtx[0].Z + Poly2->TransVtx[1].Z + Poly2->TransVtx[2].Z);
@@ -314,8 +314,8 @@ public:
 
     static i32 SortPolygonsCompareNear(const void* Arg1, const void* Arg2)
     {
-        const VPolyFace4DV1* Poly1 = *(const VPolyFace4DV1**)Arg1;
-        const VPolyFace4DV1* Poly2 = *(const VPolyFace4DV1**)Arg2;
+        const VPolyFace4D* Poly1 = *(const VPolyFace4D**)Arg1;
+        const VPolyFace4D* Poly2 = *(const VPolyFace4D**)Arg2;
 
         f32 ZMin1 = MIN(MIN(Poly1->TransVtx[0].Z, Poly1->TransVtx[1].Z), Poly1->TransVtx[2].Z);
         f32 ZMin2 = MIN(MIN(Poly2->TransVtx[0].Z, Poly2->TransVtx[1].Z), Poly2->TransVtx[2].Z);
@@ -338,8 +338,8 @@ public:
 
     static i32 SortPolygonsCompareFar(const void* Arg1, const void* Arg2)
     {
-        const VPolyFace4DV1* Poly1 = *(const VPolyFace4DV1**)Arg1;
-        const VPolyFace4DV1* Poly2 = *(const VPolyFace4DV1**)Arg2;
+        const VPolyFace4D* Poly1 = *(const VPolyFace4D**)Arg1;
+        const VPolyFace4D* Poly2 = *(const VPolyFace4D**)Arg2;
 
         f32 ZMax1 = MAX(MAX(Poly1->TransVtx[0].Z, Poly1->TransVtx[1].Z), Poly1->TransVtx[2].Z);
         f32 ZMax2 = MAX(MAX(Poly2->TransVtx[0].Z, Poly2->TransVtx[1].Z), Poly2->TransVtx[2].Z);
@@ -374,11 +374,11 @@ public:
     {
         for (i32f I = 0; I < NumPoly; ++I)
         {
-            VPolyFace4DV1* Poly = PolyPtrList[I];
+            VPolyFace4D* Poly = PolyPtrList[I];
             if (!Poly ||
-                ~Poly->State & EPolyStateV1::Active ||
-                Poly->State & EPolyStateV1::Clipped ||
-                Poly->State & EPolyStateV1::BackFace)
+                ~Poly->State & EPolyState::Active ||
+                Poly->State & EPolyState::Clipped ||
+                Poly->State & EPolyState::BackFace)
             {
                 continue;
             }
@@ -395,11 +395,11 @@ public:
     {
         for (i32f I = 0; I < NumPoly; ++I)
         {
-            VPolyFace4DV1* Poly = PolyPtrList[I];
+            VPolyFace4D* Poly = PolyPtrList[I];
             if (!Poly ||
-                ~Poly->State & EPolyStateV1::Active ||
-                Poly->State & EPolyStateV1::Clipped ||
-                Poly->State & EPolyStateV1::BackFace)
+                ~Poly->State & EPolyState::Active ||
+                Poly->State & EPolyState::Clipped ||
+                Poly->State & EPolyState::BackFace)
             {
                 continue;
             }
@@ -418,11 +418,11 @@ public:
 
         for (i32f I = 0; I < NumPoly; ++I)
         {
-            VPolyFace4DV1* Poly = PolyPtrList[I];
+            VPolyFace4D* Poly = PolyPtrList[I];
             if (!Poly ||
-                ~Poly->State & EPolyStateV1::Active ||
-                Poly->State & EPolyStateV1::Clipped ||
-                Poly->State & EPolyStateV1::BackFace)
+                ~Poly->State & EPolyState::Active ||
+                Poly->State & EPolyState::Clipped ||
+                Poly->State & EPolyState::BackFace)
             {
                 continue;
             }
@@ -442,11 +442,11 @@ public:
 
         for (i32f I = 0; I < NumPoly; ++I)
         {
-            VPolyFace4DV1* Poly = PolyPtrList[I];
+            VPolyFace4D* Poly = PolyPtrList[I];
             if (!Poly ||
-                ~Poly->State & EPolyStateV1::Active ||
-                Poly->State & EPolyStateV1::Clipped ||
-                Poly->State & EPolyStateV1::BackFace)
+                ~Poly->State & EPolyState::Active ||
+                Poly->State & EPolyState::Clipped ||
+                Poly->State & EPolyState::BackFace)
             {
                 continue;
             }
@@ -468,11 +468,11 @@ public:
     {
         for (i32f I = 0; I < NumPoly; ++I)
         {
-            VPolyFace4DV1* Poly = PolyPtrList[I];
+            VPolyFace4D* Poly = PolyPtrList[I];
             if (!Poly ||
-                ~Poly->State & EPolyStateV1::Active ||
-                Poly->State & EPolyStateV1::BackFace ||
-                Poly->State & EPolyStateV1::Clipped)
+                ~Poly->State & EPolyState::Active ||
+                Poly->State & EPolyState::BackFace ||
+                Poly->State & EPolyState::Clipped)
             {
                 continue;
             }
@@ -502,11 +502,11 @@ public:
     {
         for (i32f I = 0; I < NumPoly; ++I)
         {
-            VPolyFace4DV1* Poly = PolyPtrList[I];
+            VPolyFace4D* Poly = PolyPtrList[I];
             if (!Poly ||
-                ~Poly->State & EPolyStateV1::Active ||
-                Poly->State & EPolyStateV1::BackFace ||
-                Poly->State & EPolyStateV1::Clipped)
+                ~Poly->State & EPolyState::Active ||
+                Poly->State & EPolyState::BackFace ||
+                Poly->State & EPolyState::Clipped)
             {
                 continue;
             }

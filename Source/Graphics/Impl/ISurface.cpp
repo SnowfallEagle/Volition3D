@@ -14,9 +14,9 @@ void ISurface::DrawBlended(const VRelRectI* SrcRect, ISurface* Dest, const VRelR
      */
 
     // Compute position and size
-    VVector2DI SrcPos, DestPos;
-    VVector2DI SrcSize, DestSize;
-    VVector2DI SrcSurfaceSize, DestSurfaceSize;
+    VVector2I SrcPos, DestPos;
+    VVector2I SrcSize, DestSize;
+    VVector2I SrcSurfaceSize, DestSurfaceSize;
     SrcSurfaceSize = { Width, Height };
     DestSurfaceSize = { Dest->GetWidth(), Dest->GetHeight() };
 

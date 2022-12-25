@@ -70,23 +70,23 @@ public:
     f32 AvgRadius;
     f32 MaxRadius;
 
-    VPoint4D WorldPos;
-    VVector4D Dir;
-    VVector4D UX, UY, UZ; // Local axes to track full orientation
+    VPoint4 WorldPos;
+    VVector4 Dir;
+    VVector4 UX, UY, UZ; // Local axes to track full orientation
 
     i32 NumVtx;
-    VPoint4D LocalVtxList[MaxVtx];
-    VPoint4D TransVtxList[MaxVtx];
+    VPoint4 LocalVtxList[MaxVtx];
+    VPoint4 TransVtxList[MaxVtx];
 
     i32 NumPoly;
-    VPoly4DV1 PolyList[MaxPoly];
+    VPoly4D PolyList[MaxPoly];
 
 public:
     b32 LoadPLG(
         const char* Path,
-        const VVector4D& Pos,
-        const VVector4D& Scale,
-        const VVector4D& Rot
+        const VVector4& Pos,
+        const VVector4& Scale,
+        const VVector4& Rot
     );
 
     static char* GetLinePLG(FILE* File, char* Buffer, i32 Size)
@@ -129,7 +129,7 @@ public:
 
     void Transform(const VMatrix44& M, ETransformType Type, b32 bTransBasis)
     {
-        VVector4D Res;
+        VVector4 Res;
 
         switch (Type)
         {
@@ -137,7 +137,7 @@ public:
         {
             for (i32f I = 0; I < NumVtx; ++I)
             {
-                VVector4D::MulMat44(LocalVtxList[I], M, Res);
+                VVector4::MulMat44(LocalVtxList[I], M, Res);
                 LocalVtxList[I] = Res;
             }
         } break;
@@ -146,7 +146,7 @@ public:
         {
             for (i32f I = 0; I < NumVtx; ++I)
             {
-                VVector4D::MulMat44(TransVtxList[I], M, Res);
+                VVector4::MulMat44(TransVtxList[I], M, Res);
                 TransVtxList[I] = Res;
             }
         } break;
@@ -155,7 +155,7 @@ public:
         {
             for (i32f I = 0; I < NumVtx; ++I)
             {
-                VVector4D::MulMat44(LocalVtxList[I], M, Res);
+                VVector4::MulMat44(LocalVtxList[I], M, Res);
                 TransVtxList[I] = Res;
             }
         } break;
@@ -163,13 +163,13 @@ public:
 
         if (bTransBasis)
         {
-            VVector4D::MulMat44(UX, M, Res);
+            VVector4::MulMat44(UX, M, Res);
             UX = Res;
 
-            VVector4D::MulMat44(UY, M, Res);
+            VVector4::MulMat44(UY, M, Res);
             UY = Res;
 
-            VVector4D::MulMat44(UZ, M, Res);
+            VVector4::MulMat44(UZ, M, Res);
             UZ = Res;
         }
     }
@@ -195,8 +195,8 @@ public:
 
     b32 Cull(const VCamera& Cam, u32 CullType = ECullType::XYZ)
     {
-        VVector4D SpherePos;
-        VVector4D::MulMat44(WorldPos, Cam.MatCamera, SpherePos);
+        VVector4 SpherePos;
+        VVector4::MulMat44(WorldPos, Cam.MatCamera, SpherePos);
 
         if (CullType & ECullType::X)
         {
@@ -238,7 +238,7 @@ public:
         return false;
     }
 
-    void Light(const VCamera& Cam, const VLightV1* Lights, i32 NumLights)
+    void Light(const VCamera& Cam, const VLight* Lights, i32 NumLights)
     {
         // NOTE(sean): We can simplify this stuff by converting calculations to floating point
 
@@ -251,16 +251,16 @@ public:
 
         for (i32f PolyIndex = 0; PolyIndex < NumPoly; ++PolyIndex)
         {
-            VPoly4DV1& Poly = PolyList[PolyIndex];
-            if (~Poly.State & EPolyStateV1::Active ||
-                Poly.State & EPolyStateV1::Clipped ||
-                Poly.State & EPolyStateV1::BackFace)
+            VPoly4D& Poly = PolyList[PolyIndex];
+            if (~Poly.State & EPolyState::Active ||
+                Poly.State & EPolyState::Clipped ||
+                Poly.State & EPolyState::BackFace)
             {
                 continue;
             }
 
-            if (~Poly.Attr & EPolyAttrV1::ShadeModeFlat &&
-                ~Poly.Attr & EPolyAttrV1::ShadeModeGouraud)
+            if (~Poly.Attr & EPolyAttr::ShadeModeFlat &&
+                ~Poly.Attr & EPolyAttr::ShadeModeGouraud)
             {
                 continue; // As emissive, no changes
             }
@@ -275,26 +275,26 @@ public:
 
             for (i32f LightIndex = 0; LightIndex < NumLights; ++LightIndex)
             {
-                if (~Lights[LightIndex].State & ELightStateV1::Active)
+                if (~Lights[LightIndex].State & ELightState::Active)
                 {
                     continue;
                 }
 
-                if (Lights[LightIndex].Attr & ELightAttrV1::Ambient)
+                if (Lights[LightIndex].Attr & ELightAttr::Ambient)
                 {
                     // NOTE(sean): Maybe 255? or even >> 8
                     RSum += (Poly.OriginalColor.R * Lights[LightIndex].CAmbient.R) / 256;
                     GSum += (Poly.OriginalColor.G * Lights[LightIndex].CAmbient.G) / 256;
                     BSum += (Poly.OriginalColor.B * Lights[LightIndex].CAmbient.B) / 256;
                 }
-                else if (Lights[LightIndex].Attr & ELightAttrV1::Infinite)
+                else if (Lights[LightIndex].Attr & ELightAttr::Infinite)
                 {
-                    VVector4D SurfaceNormal = VVector4D::GetCross(
+                    VVector4 SurfaceNormal = VVector4::GetCross(
                         Poly.VtxList[V1] - Poly.VtxList[V0],
                         Poly.VtxList[V2] - Poly.VtxList[V0]
                     );
 
-                    f32 Dot = VVector4D::Dot(SurfaceNormal, Lights[LightIndex].Dir);
+                    f32 Dot = VVector4::Dot(SurfaceNormal, Lights[LightIndex].Dir);
                     if (Dot < 0)
                     {
                         // 128 used for fixed point to don't lose accuracy with integers
@@ -304,15 +304,15 @@ public:
                         BSum += (Poly.OriginalColor.B * Lights[LightIndex].CDiffuse.B * Intensity) / (256 * 128);
                     }
                 }
-                else if (Lights[LightIndex].Attr & ELightAttrV1::Point)
+                else if (Lights[LightIndex].Attr & ELightAttr::Point)
                 {
-                    VVector4D SurfaceNormal = VVector4D::GetCross(
+                    VVector4 SurfaceNormal = VVector4::GetCross(
                         Poly.VtxList[V1] - Poly.VtxList[V0],
                         Poly.VtxList[V2] - Poly.VtxList[V0]
                     );
-                    VVector4D Direction = Poly.VtxList[V0] - Lights[LightIndex].Pos;
+                    VVector4 Direction = Poly.VtxList[V0] - Lights[LightIndex].Pos;
 
-                    f32 Dot = VVector4D::Dot(SurfaceNormal, Direction);
+                    f32 Dot = VVector4::Dot(SurfaceNormal, Direction);
                     if (Dot < 0)
                     {
                         // 128 used for fixed point to don't lose accuracy with integers
@@ -330,15 +330,15 @@ public:
                         BSum += (Poly.OriginalColor.B * Lights[LightIndex].CDiffuse.B * Intensity) / (256 * 128);
                     }
                 }
-                else if (Lights[LightIndex].Attr & ELightAttrV1::SimpleSpotlight)
+                else if (Lights[LightIndex].Attr & ELightAttr::SimpleSpotlight)
                 {
                     // FIXME(sean): I think we should check if dot of normal and vector between surface and position is negative
 
-                    VVector4D SurfaceNormal = VVector4D::GetCross(
+                    VVector4 SurfaceNormal = VVector4::GetCross(
                         Poly.VtxList[V1] - Poly.VtxList[V0],
                         Poly.VtxList[V2] - Poly.VtxList[V0]
                     );
-                    f32 Dot = VVector4D::Dot(SurfaceNormal, Lights[LightIndex].Dir);
+                    f32 Dot = VVector4::Dot(SurfaceNormal, Lights[LightIndex].Dir);
 
                     if (Dot < 0)
                     {
@@ -357,19 +357,19 @@ public:
                         BSum += (Poly.OriginalColor.B * Lights[LightIndex].CDiffuse.B * Intensity) / (256 * 128);
                     }
                 }
-                else if (Lights[LightIndex].Attr & ELightAttrV1::ComplexSpotlight)
+                else if (Lights[LightIndex].Attr & ELightAttr::ComplexSpotlight)
                 {
-                    VVector4D SurfaceNormal = VVector4D::GetCross(
+                    VVector4 SurfaceNormal = VVector4::GetCross(
                         Poly.VtxList[V1] - Poly.VtxList[V0],
                         Poly.VtxList[V2] - Poly.VtxList[V0]
                     );
-                    f32 DotNormalDirection = VVector4D::Dot(SurfaceNormal, Lights[LightIndex].Dir);
+                    f32 DotNormalDirection = VVector4::Dot(SurfaceNormal, Lights[LightIndex].Dir);
 
                     if (DotNormalDirection < 0)
                     {
-                        VVector4D DistanceVector = TransVtxList[V0] - Lights[LightIndex].Pos;
+                        VVector4 DistanceVector = TransVtxList[V0] - Lights[LightIndex].Pos;
                         f32 Distance = DistanceVector.GetLengthFast();
-                        f32 DotDistanceDirection = VVector4D::Dot(DistanceVector, Lights[LightIndex].Dir) / Distance;
+                        f32 DotDistanceDirection = VVector4::Dot(DistanceVector, Lights[LightIndex].Dir) / Distance;
 
                         if (DotDistanceDirection > 0)
                         {
@@ -416,27 +416,27 @@ public:
 
         for (i32f I = 0; I < NumPoly; ++I)
         {
-            VPoly4DV1& Poly = PolyList[I];
+            VPoly4D& Poly = PolyList[I];
 
-            if (~Poly.State & EPolyStateV1::Active ||
-                Poly.State & EPolyStateV1::Clipped ||
-                Poly.Attr & EPolyAttrV1::TwoSided ||
-                Poly.State & EPolyStateV1::BackFace)
+            if (~Poly.State & EPolyState::Active ||
+                Poly.State & EPolyState::Clipped ||
+                Poly.Attr & EPolyAttr::TwoSided ||
+                Poly.State & EPolyState::BackFace)
             {
                 continue;
             }
 
-            VVector4D U, V, N;
+            VVector4 U, V, N;
             U = TransVtxList[Poly.Vtx[1]] - TransVtxList[Poly.Vtx[0]];
             V = TransVtxList[Poly.Vtx[2]] - TransVtxList[Poly.Vtx[0]];
 
-            VVector4D::Cross(U, V, N);
-            VVector4D View = Cam.Pos - TransVtxList[Poly.Vtx[0]];
+            VVector4::Cross(U, V, N);
+            VVector4 View = Cam.Pos - TransVtxList[Poly.Vtx[0]];
 
             // If > 0 then N watch in the same direction as View vector and visible
-            if (VVector4D::Dot(View, N) <= 0.0f)
+            if (VVector4::Dot(View, N) <= 0.0f)
             {
-                Poly.State |= EPolyStateV1::BackFace;
+                Poly.State |= EPolyState::BackFace;
             }
         }
     }
@@ -445,8 +445,8 @@ public:
     {
         for (i32f I = 0; I < NumVtx; ++I)
         {
-            VVector4D Res;
-            VVector4D::MulMat44(TransVtxList[I], Camera.MatCamera, Res);
+            VVector4 Res;
+            VVector4::MulMat44(TransVtxList[I], Camera.MatCamera, Res);
             TransVtxList[I] = Res;
         }
     }
@@ -508,14 +508,14 @@ public:
         // Restore polygons
         for (i32f I = 0; I < NumPoly; ++I)
         {
-            VPoly4DV1& Poly = PolyList[I];
-            if (~Poly.State & EPolyStateV1::Active)
+            VPoly4D& Poly = PolyList[I];
+            if (~Poly.State & EPolyState::Active)
             {
                 continue;
             }
 
-            Poly.State &= ~EPolyStateV1::Clipped;
-            Poly.State &= ~EPolyStateV1::BackFace;
+            Poly.State &= ~EPolyState::Clipped;
+            Poly.State &= ~EPolyState::BackFace;
 
             Poly.FinalColor = Poly.OriginalColor;
         }
@@ -525,9 +525,9 @@ public:
     {
         for (i32f I = 0; I < NumPoly; ++I)
         {
-            if (~PolyList[I].State & EPolyStateV1::Active ||
-                PolyList[I].State & EPolyStateV1::Clipped ||
-                PolyList[I].State & EPolyStateV1::BackFace)
+            if (~PolyList[I].State & EPolyState::Active ||
+                PolyList[I].State & EPolyState::Clipped ||
+                PolyList[I].State & EPolyState::BackFace)
             {
                 continue;
             }
@@ -561,9 +561,9 @@ public:
     {
         for (i32f I = 0; I < NumPoly; ++I)
         {
-            if (~PolyList[I].State & EPolyStateV1::Active ||
-                PolyList[I].State & EPolyStateV1::Clipped ||
-                PolyList[I].State & EPolyStateV1::BackFace)
+            if (~PolyList[I].State & EPolyState::Active ||
+                PolyList[I].State & EPolyState::Clipped ||
+                PolyList[I].State & EPolyState::BackFace)
             {
                 continue;
             }

@@ -38,11 +38,11 @@ public:
     u32 State;
     u32 Attr;
 
-    VPoint4D Pos;
-    VVector4D Dir; // Euler angles or look at direction
+    VPoint4 Pos;
+    VVector4 Dir; // Euler angles or look at direction
 
-    VVector4D U, V, N;
-    VPoint4D Target;
+    VVector4 U, V, N;
+    VPoint4 Target;
 
     f32 FOV;
     f32 AspectRatio;
@@ -51,14 +51,14 @@ public:
     f32 ZNearClip;
     f32 ZFarClip;
 
-    VVector2D ViewPlaneSize;
-    VVector2D ViewPortSize;
-    VVector2D ViewPortCenter;
+    VVector2 ViewPlaneSize;
+    VVector2 ViewPortSize;
+    VVector2 ViewPortCenter;
 
-    VPlane3D LeftClipPlane;
-    VPlane3D RightClipPlane;
-    VPlane3D TopClipPlane;
-    VPlane3D BottomClipPlane;
+    VPlane3 LeftClipPlane;
+    VPlane3 RightClipPlane;
+    VPlane3 TopClipPlane;
+    VPlane3 BottomClipPlane;
 
     VMatrix44 MatCamera;      // World->Camera
     VMatrix44 MatPerspective; // Camera->Perspective
@@ -67,13 +67,13 @@ public:
 public:
     void Init(
         u32 InAttr,
-        const VPoint4D& InPos,
-        const VVector4D& InDir,
-        const VPoint4D& InTarget,
+        const VPoint4& InPos,
+        const VVector4& InDir,
+        const VPoint4& InTarget,
         f32 InFOV,
         f32 InZNearClip,
         f32 InZFarClip,
-        const VVector2D& InViewPortSize
+        const VVector2& InViewPortSize
     )
     {
         State = 0;
@@ -106,10 +106,10 @@ public:
 
         if (FOV == 90.0f)
         {
-            VPoint3D Origin;
+            VPoint3 Origin;
             Origin.Zero();
 
-            VVector3D N = { -1.0f, 0.0f, -1.0f };
+            VVector3 N = { -1.0f, 0.0f, -1.0f };
             N.Normalize();
             LeftClipPlane = { Origin, N };
 
@@ -127,12 +127,12 @@ public:
         }
         else
         {
-            VPoint3D Origin;
+            VPoint3 Origin;
             Origin.Zero();
 
             f32 MinusViewPlaneWidthDiv2 = -ViewPlaneSize.X * 0.5f;
 
-            VVector3D N = { -ViewDist, 0.0f, MinusViewPlaneWidthDiv2 };
+            VVector3 N = { -ViewDist, 0.0f, MinusViewPlaneWidthDiv2 };
             N.Normalize();
             LeftClipPlane = { Origin, N };
 
@@ -269,8 +269,8 @@ public:
         // Compute UVN
         N = Target - Pos;
         V = { 0.0f, 1.0f, 0.0f, 1.0f };
-        VVector4D::Cross(V, N, U);
-        VVector4D::Cross(N, U, V);
+        VVector4::Cross(V, N, U);
+        VVector4::Cross(N, U, V);
 
         // Normalize UVN vectors
         U.Normalize();

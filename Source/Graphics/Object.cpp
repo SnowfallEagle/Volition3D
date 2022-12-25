@@ -8,9 +8,9 @@
 
 b32 VObject::LoadPLG(
     const char* Path,
-    const VVector4D& Pos,
-    const VVector4D& Scale,
-    const VVector4D& Rot
+    const VVector4& Pos,
+    const VVector4& Scale,
+    const VVector4& Rot
 )
 {
     static constexpr i32f BufferSize = 256;
@@ -148,7 +148,7 @@ b32 VObject::LoadPLG(
                 4 bit is 0xF but we need 8 since we use rgb32,
                 so 8 bit is 0xFF and we have to shift our colors
              */
-            PolyList[I].Attr |= EPolyAttrV1::RGB32;
+            PolyList[I].Attr |= EPolyAttr::RGB32;
             PolyList[I].OriginalColor = MAP_XRGB32(
                 (Color444 & 0xF00) >> 4,
                 Color444 & 0xF0,
@@ -164,20 +164,20 @@ b32 VObject::LoadPLG(
 
         if (PolyDesc & EPLX::TwoSidedFlag)
         {
-            PolyList[I].Attr |= EPolyAttrV1::TwoSided;
+            PolyList[I].Attr |= EPolyAttr::TwoSided;
         }
 
         switch (PolyDesc & EPLX::ShadeModeMask)
         {
-        case EPLX::ShadeModePhongFlag:   PolyList[I].Attr |= EPolyAttrV1::ShadeModePhong; break;
-        case EPLX::ShadeModeGouraudFlag: PolyList[I].Attr |= EPolyAttrV1::ShadeModeGouraud; break;
-        case EPLX::ShadeModeFlatFlag:    PolyList[I].Attr |= EPolyAttrV1::ShadeModeFlat; break;
-        case EPLX::ShadeModePureFlag:    PolyList[I].Attr |= EPolyAttrV1::ShadeModePure; break;
+        case EPLX::ShadeModePhongFlag:   PolyList[I].Attr |= EPolyAttr::ShadeModePhong; break;
+        case EPLX::ShadeModeGouraudFlag: PolyList[I].Attr |= EPolyAttr::ShadeModeGouraud; break;
+        case EPLX::ShadeModeFlatFlag:    PolyList[I].Attr |= EPolyAttr::ShadeModeFlat; break;
+        case EPLX::ShadeModePureFlag:    PolyList[I].Attr |= EPolyAttr::ShadeModePure; break;
         default: break;
         }
 
         // Final
-        PolyList[I].State = EPolyStateV1::Active;
+        PolyList[I].State = EPolyState::Active;
     }
 
     fclose(File);

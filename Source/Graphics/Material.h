@@ -30,7 +30,7 @@ namespace EMaterialAttrV1
     };
 }
 
-class VMaterialV1
+class VMaterial
 {
 public:
     static constexpr i32f NameSize = 64;
@@ -50,5 +50,5 @@ public:
     VSurface Texture;
 
 public:
-    VMaterialV1() = default;
+    VMaterial() = default;
 };

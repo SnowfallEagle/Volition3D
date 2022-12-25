@@ -5,7 +5,7 @@
 #include "Math/Vector.h"
 #include "Graphics/Color.h"
 
-namespace ELightStateV1
+namespace ELightState
 {
     enum
     {
@@ -13,7 +13,7 @@ namespace ELightStateV1
     };
 }
 
-namespace ELightAttrV1
+namespace ELightAttr
 {
     enum
     {
@@ -25,7 +25,7 @@ namespace ELightAttrV1
     };
 }
 
-class VLightV1
+class VLight
 {
 public:
     i32 ID;
@@ -33,8 +33,8 @@ public:
     u32 Attr;
 
     VColorRGBA CAmbient, CDiffuse, CSpecular;
-    VPoint4D Pos;
-    VVector4D Dir;
+    VPoint4 Pos;
+    VVector4 Dir;
 
     f32 KConst, KLinear, KQuad;
     f32 SpotInner, SpotOuter;

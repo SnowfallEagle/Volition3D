@@ -8,7 +8,7 @@
 class VMatrix44;
 
 template<class T>
-class TVector2D
+class TVector2
 {
 public:
     union
@@ -43,10 +43,10 @@ public:
     }
 };
 
-typedef TVector2D<f32> VVector2D, VPoint2D;
-typedef TVector2D<i32> VVector2DI, VPoint2DI;
+typedef TVector2<f32> VVector2, VPoint2;
+typedef TVector2<i32> VVector2I, VPoint2I;
 
-class VVector3D
+class VVector3
 {
 public:
     union
@@ -86,7 +86,7 @@ public:
         Y *= Inv;
         Z *= Inv;
     }
-    VVector3D GetNormalized()
+    VVector3 GetNormalized()
     {
         f32 Len = GetLength();
 
@@ -97,7 +97,7 @@ public:
         return { X * Inv, Y * Inv, Z * Inv };
     }
 
-    FINLINE static VVector3D GetCross(const VVector3D& A, const VVector3D& B)
+    FINLINE static VVector3 GetCross(const VVector3& A, const VVector3& B)
     {
         return {
             (A.Y * B.Z)   - (A.Z * B.Y),
@@ -105,7 +105,7 @@ public:
             (A.X * B.Y)   - (A.Y * B.X)
         };
     }
-    FINLINE static void Cross(const VVector3D& A, const VVector3D& B, VVector3D& R)
+    FINLINE static void Cross(const VVector3& A, const VVector3& B, VVector3& R)
     {
         R = {
             (A.Y * B.Z)   - (A.Z * B.Y),
@@ -120,9 +120,9 @@ public:
     }
 };
 
-typedef VVector3D VPoint3D;
+typedef VVector3 VPoint3;
 
-class VVector4D
+class VVector4
 {
 public:
     union
@@ -135,19 +135,19 @@ public:
     };
 
 public:
-    VVector4D() = default;
-    VVector4D(f32 InX, f32 InY, f32 InZ, f32 InW = 1.0f)
+    VVector4() = default;
+    VVector4(f32 InX, f32 InY, f32 InZ, f32 InW = 1.0f)
         : X(InX), Y(InY), Z(InZ), W(InW)
     {
     }
 
-    FINLINE VVector4D operator+(const VVector4D& V) const
+    FINLINE VVector4 operator+(const VVector4& V) const
     {
         return {
             X + V.X, Y + V.Y, Z + V.Z, 1.0f
         };
     }
-    FINLINE VVector4D& operator+=(const VVector4D& V)
+    FINLINE VVector4& operator+=(const VVector4& V)
     {
         X += V.X;
         Y += V.Y;
@@ -155,13 +155,13 @@ public:
         W = 1.0f;
         return *this;
     }
-    FINLINE VVector4D operator-(const VVector4D& V) const
+    FINLINE VVector4 operator-(const VVector4& V) const
     {
         return {
             X - V.X, Y - V.Y, Z - V.Z, 1.0f
         };
     }
-    FINLINE VVector4D& operator-=(const VVector4D& V)
+    FINLINE VVector4& operator-=(const VVector4& V)
     {
         X -= V.X;
         Y -= V.Y;
@@ -169,7 +169,7 @@ public:
         W = 1.0f;
         return *this;
     }
-    FINLINE VVector4D operator*(f32 Scalar) const
+    FINLINE VVector4 operator*(f32 Scalar) const
     {
         return {
             X * Scalar,
@@ -222,7 +222,7 @@ public:
         Z *= Inv;
         W = 1.0f;
     }
-    VVector4D GetNormalized() const
+    VVector4 GetNormalized() const
     {
         f32 Len = GetLength();
 
@@ -235,12 +235,12 @@ public:
         return { X * Inv, Y * Inv, Z * Inv, 1.0f };
     }
 
-    FINLINE static f32 Dot(const VVector4D& A, const VVector4D& B)
+    FINLINE static f32 Dot(const VVector4& A, const VVector4& B)
     {
         return A.X*B.X + A.Y*B.Y + A.Z*B.Z;
     }
 
-    FINLINE static VVector4D GetCross(const VVector4D& A, const VVector4D& B)
+    FINLINE static VVector4 GetCross(const VVector4& A, const VVector4& B)
     {
         return {
             A.Y * B.Z - A.Z * B.Y,
@@ -249,7 +249,7 @@ public:
             1.0f
         };
     }
-    FINLINE static void Cross(const VVector4D& A, const VVector4D& B, VVector4D& R)
+    FINLINE static void Cross(const VVector4& A, const VVector4& B, VVector4& R)
     {
         R = {
             A.Y * B.Z - A.Z * B.Y,
@@ -259,8 +259,8 @@ public:
         };
     }
 
-    static void MulMat44(const VVector4D& A, const VMatrix44& M, VVector4D& R);
+    static void MulMat44(const VVector4& A, const VMatrix44& M, VVector4& R);
 };
 
-typedef VVector4D VPoint4D;
+typedef VVector4 VPoint4;
 

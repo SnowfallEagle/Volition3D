@@ -4,7 +4,7 @@
 #include "Math/Vector.h"
 #include "Graphics/Color.h"
 
-namespace EPolyStateV1
+namespace EPolyState
 {
     enum
     {
@@ -14,7 +14,7 @@ namespace EPolyStateV1
     };
 }
 
-namespace EPolyAttrV1
+namespace EPolyAttr
 {
     enum
     {
@@ -31,7 +31,7 @@ namespace EPolyAttrV1
     };
 }
 
-class VPoly4DV1
+class VPoly4D
 {
 public:
     u32 State;
@@ -40,11 +40,11 @@ public:
     VColorARGB OriginalColor;
     VColorARGB FinalColor;
 
-    VPoint4D* VtxList;
+    VPoint4* VtxList;
     i32 Vtx[3];
 };
 
-class VPolyFace4DV1
+class VPolyFace4D
 {
 public:
     u32 State;
@@ -52,9 +52,9 @@ public:
 
     VColorARGB Color;
 
-    VPoint4D LocalVtx[3];
-    VPoint4D TransVtx[3];
+    VPoint4 LocalVtx[3];
+    VPoint4 TransVtx[3];
 
-    VPolyFace4DV1* Prev;
-    VPolyFace4DV1* Next;
+    VPolyFace4D* Prev;
+    VPolyFace4D* Next;
 };

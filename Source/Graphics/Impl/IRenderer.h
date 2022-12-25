@@ -24,15 +24,15 @@ public:
 
     i32 ScreenWidth;
     i32 ScreenHeight;
-    VVector2DI MinClip;
-    VVector2DI MaxClip;
-    VVector2D MinClipFloat;
-    VVector2D MaxClipFloat;
+    VVector2I MinClip;
+    VVector2I MaxClip;
+    VVector2 MinClipFloat;
+    VVector2 MaxClipFloat;
 
-    VMaterialV1 Materials[MaxMaterials];
+    VMaterial Materials[MaxMaterials];
     i32 NumMaterials;
 
-    VLightV1 Lights[MaxLights];
+    VLight Lights[MaxLights];
     i32 NumLights;
 
 public:
@@ -75,7 +75,7 @@ public:
         NumLights = 0;
     }
 
-    void InitLight(i32 Index, const VLightV1& InLight)
+    void InitLight(i32 Index, const VLight& InLight)
     {
         if (Index >= 0 || Index < MaxLights)
         {

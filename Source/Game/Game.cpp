@@ -35,10 +35,10 @@ void VGame::StartUp()
     Cam.Init(ECameraAttr::Euler, { 0, 75.0f, 0 }, { 0, 0, 0 }, Object.WorldPos, 120, 265, 12000, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
 
     {
-        VLightV1 AmbientLight = {
+        VLight AmbientLight = {
             0,
-            ELightStateV1::Active,
-            ELightAttrV1::Ambient,
+            ELightState::Active,
+            ELightAttr::Ambient,
 
             MAP_RGBX32(0x22, 0xFF, 0xFF), 0, 0,
             { 0, 0, 0, 0 }, { 0, 0, 0, 0 },
@@ -48,10 +48,10 @@ void VGame::StartUp()
             0
         };
 
-        VLightV1 InfiniteLight = {
+        VLight InfiniteLight = {
             1,
-            ELightStateV1::Active,
-            ELightAttrV1::Infinite,
+            ELightState::Active,
+            ELightAttr::Infinite,
 
             0, MAP_RGBX32(0xCC, 0xCC, 0xAA), 0,
             { 0, 0, 0, 0 }, { -1.0f, -1.0f, 0, 0 },
@@ -61,10 +61,10 @@ void VGame::StartUp()
             0
         };
 
-        VLightV1 PointLight = {
+        VLight PointLight = {
             2,
-            ELightStateV1::Active,
-            ELightAttrV1::Point,
+            ELightState::Active,
+            ELightAttr::Point,
 
             0, MAP_RGBX32(0xFF, 0xFF, 0xff), 0,
             { 1000.0f, 1000.0f, 0, 0 }, { 0, 0, 0, 0 },
@@ -74,26 +74,26 @@ void VGame::StartUp()
             0
         };
 
-        VLightV1 SimpleSpotlight = {
+        VLight SimpleSpotlight = {
             3,
-            ELightStateV1::Active,
-            ELightAttrV1::SimpleSpotlight,
+            ELightState::Active,
+            ELightAttr::SimpleSpotlight,
 
             0, MAP_RGBX32(0x11, 0x11, 0x11), 0,
-            { 1000.0f, 1000.0f, 0.0f, 0 }, VVector4D(-1.0f, -1.0f, 0.0f).GetNormalized(),
+            { 1000.0f, 1000.0f, 0.0f, 0 }, VVector4(-1.0f, -1.0f, 0.0f).GetNormalized(),
 
             0, 0.0005f, 0,
             30.0f, 60.0f,
             1.0f
         };
 
-        VLightV1 ComplexSpotlight = {
+        VLight ComplexSpotlight = {
             3,
-            ELightStateV1::Active,
-            ELightAttrV1::ComplexSpotlight,
+            ELightState::Active,
+            ELightAttr::ComplexSpotlight,
 
             0, MAP_RGBX32(0xFF, 0xFF, 0xFF), 0,
-            { 0.0f, 1000.0f, 300.0f, 0 }, VVector4D(-0.5f, -1.0f, -1.0f).GetNormalized(),
+            { 0.0f, 1000.0f, 300.0f, 0 }, VVector4(-0.5f, -1.0f, -1.0f).GetNormalized(),
 
             0, 0.0005f, 0,
             30.0f, 60.0f,

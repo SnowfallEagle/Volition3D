@@ -12,7 +12,7 @@
  */
 
 // *** Quaternion ***
-class VQuaternion
+class VQuat
 {
 public:
     union
@@ -21,7 +21,7 @@ public:
         struct
         {
             f32 Q0;
-            VVector3D QV;
+            VVector3 QV;
         };
         struct
         {
@@ -39,7 +39,7 @@ public:
         W = X = Y = Z = 0;
     }
 
-    FINLINE void InitVec3(const VVector3D* V)
+    FINLINE void InitVec3(const VVector3* V)
     {
         W = 0;
         X = V->X;
@@ -54,30 +54,30 @@ public:
 };
 
 // *** Parametric Line ***
-class VParamLine3D
+class VParamLine3
 {
 public:
-    VPoint3D P0, P1;
-    VVector3D V; // P1 - P0 direction vector
+    VPoint3 P0, P1;
+    VVector3 V; // P1 - P0 direction vector
 };
 
 // *** Plane ***
-class VPlane3D
+class VPlane3
 {
 public:
-    VPoint3D P0; // Point to the plane
-    VVector3D N; // It's normal vector
+    VPoint3 P0; // Point to the plane
+    VVector3 N; // It's normal vector
 };
 
 // *** Coordinates ***
-class VPolar2D
+class VPolar2
 {
 public:
     f32 R; // Radius
     f32 Theta; // Angle in radians
 };
 
-class VCylindrical3D
+class VCylindrical3
 {
 public:
     f32 R; // Radius
@@ -85,7 +85,7 @@ public:
     f32 Z; // z-height
 };
 
-class VSpherical3D
+class VSpherical3
 {
 public:
     f32 P; // Distance to the point from the origin

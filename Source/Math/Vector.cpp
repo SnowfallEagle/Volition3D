@@ -1,7 +1,7 @@
 #include "Math/Matrix.h"
 #include "Math/Vector.h"
 
-void VVector4D::MulMat44(const VVector4D& A, const VMatrix44& M, VVector4D& R)
+void VVector4::MulMat44(const VVector4& A, const VMatrix44& M, VVector4& R)
 {
     for (i32f X = 0; X < 4; ++X)
     {
