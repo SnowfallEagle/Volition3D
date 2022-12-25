@@ -31,7 +31,7 @@ namespace EPolyAttr
     };
 }
 
-class VPoly4D
+class VPoly
 {
 public:
     u32 State;
@@ -44,7 +44,7 @@ public:
     i32 Vtx[3];
 };
 
-class VPolyFace4D
+class VPolyFace
 {
 public:
     u32 State;
@@ -55,6 +55,6 @@ public:
     VPoint4 LocalVtx[3];
     VPoint4 TransVtx[3];
 
-    VPolyFace4D* Prev;
-    VPolyFace4D* Next;
+    VPolyFace* Prev;
+    VPolyFace* Next;
 };

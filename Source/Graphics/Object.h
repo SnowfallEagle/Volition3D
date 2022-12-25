@@ -79,7 +79,7 @@ public:
     VPoint4 TransVtxList[MaxVtx];
 
     i32 NumPoly;
-    VPoly4D PolyList[MaxPoly];
+    VPoly PolyList[MaxPoly];
 
 public:
     b32 LoadPLG(
@@ -251,7 +251,7 @@ public:
 
         for (i32f PolyIndex = 0; PolyIndex < NumPoly; ++PolyIndex)
         {
-            VPoly4D& Poly = PolyList[PolyIndex];
+            VPoly& Poly = PolyList[PolyIndex];
             if (~Poly.State & EPolyState::Active ||
                 Poly.State & EPolyState::Clipped ||
                 Poly.State & EPolyState::BackFace)
@@ -416,7 +416,7 @@ public:
 
         for (i32f I = 0; I < NumPoly; ++I)
         {
-            VPoly4D& Poly = PolyList[I];
+            VPoly& Poly = PolyList[I];
 
             if (~Poly.State & EPolyState::Active ||
                 Poly.State & EPolyState::Clipped ||
@@ -508,7 +508,7 @@ public:
         // Restore polygons
         for (i32f I = 0; I < NumPoly; ++I)
         {
-            VPoly4D& Poly = PolyList[I];
+            VPoly& Poly = PolyList[I];
             if (~Poly.State & EPolyState::Active)
             {
                 continue;

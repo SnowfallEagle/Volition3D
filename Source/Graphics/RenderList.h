@@ -22,11 +22,11 @@ public:
 
 public:
     i32 NumPoly;
-    VPolyFace4D* PolyPtrList[MaxPoly];
-    VPolyFace4D PolyList[MaxPoly];
+    VPolyFace* PolyPtrList[MaxPoly];
+    VPolyFace PolyList[MaxPoly];
 
 public:
-    b32 InsertPoly(const VPoly4D& Poly)
+    b32 InsertPoly(const VPoly& Poly)
     {
         if (NumPoly >= MaxPoly)
         {
@@ -60,7 +60,7 @@ public:
         return true;
     }
 
-    b32 InsertPolyFace(const VPolyFace4D& PolyFace)
+    b32 InsertPolyFace(const VPolyFace& PolyFace)
     {
         if (NumPoly >= MaxPoly)
         {
@@ -68,7 +68,7 @@ public:
         }
 
         PolyPtrList[NumPoly] = &PolyList[NumPoly];
-        memcpy(&PolyList[NumPoly], &PolyFace, sizeof(VPolyFace4D));
+        memcpy(&PolyList[NumPoly], &PolyFace, sizeof(VPolyFace));
 
         PolyList[NumPoly].Next = nullptr;
         if (NumPoly == 0)
@@ -97,7 +97,7 @@ public:
 
         for (i32f I = 0; I < Object.NumPoly; ++I)
         {
-            VPoly4D& Poly = Object.PolyList[I];
+            VPoly& Poly = Object.PolyList[I];
 
             if (~Poly.State & EPolyState::Active ||
                 Poly.State & EPolyState::Clipped ||
@@ -133,7 +133,7 @@ public:
         {
             for (i32f I = 0; I < NumPoly; ++I)
             {
-                VPolyFace4D* Poly = PolyPtrList[I];
+                VPolyFace* Poly = PolyPtrList[I];
                 if (!Poly ||
                     ~Poly->State & EPolyState::Active ||
                     Poly->State & EPolyState::Clipped ||
@@ -154,7 +154,7 @@ public:
         {
             for (i32f I = 0; I < NumPoly; ++I)
             {
-                VPolyFace4D* Poly = PolyPtrList[I];
+                VPolyFace* Poly = PolyPtrList[I];
                 if (!Poly ||
                     ~Poly->State & EPolyState::Active ||
                     Poly->State & EPolyState::Clipped ||
@@ -175,7 +175,7 @@ public:
         {
             for (i32f I = 0; I < NumPoly; ++I)
             {
-                VPolyFace4D* Poly = PolyPtrList[I];
+                VPolyFace* Poly = PolyPtrList[I];
                 if (!Poly ||
                     ~Poly->State & EPolyState::Active ||
                     Poly->State & EPolyState::Clipped ||
@@ -201,7 +201,7 @@ public:
         {
             for (i32f I = 0; I < NumPoly; ++I)
             {
-                VPolyFace4D* Poly = PolyPtrList[I];
+                VPolyFace* Poly = PolyPtrList[I];
                 if (!Poly ||
                     ~Poly->State & EPolyState::Active ||
                     Poly->State & EPolyState::Clipped ||
@@ -220,7 +220,7 @@ public:
         {
             for (i32f I = 0; I < NumPoly; ++I)
             {
-                VPolyFace4D* Poly = PolyPtrList[I];
+                VPolyFace* Poly = PolyPtrList[I];
                 if (!Poly ||
                     ~Poly->State & EPolyState::Active ||
                     Poly->State & EPolyState::Clipped ||
@@ -241,7 +241,7 @@ public:
     {
         for (i32f I = 0; I < NumPoly; ++I)
         {
-            VPolyFace4D* Poly = PolyPtrList[I];
+            VPolyFace* Poly = PolyPtrList[I];
 
             if (~Poly->State & EPolyState::Active ||
                 Poly->State & EPolyState::Clipped ||
@@ -270,7 +270,7 @@ public:
     {
         for (i32f I = 0; I < NumPoly; ++I)
         {
-            VPolyFace4D* Poly = PolyPtrList[I];
+            VPolyFace* Poly = PolyPtrList[I];
             if (!Poly ||
                 ~Poly->State & EPolyState::Active ||
                 Poly->State & EPolyState::Clipped ||
@@ -290,8 +290,8 @@ public:
 
     static i32 SortPolygonsCompareAverage(const void* Arg1, const void* Arg2)
     {
-        const VPolyFace4D* Poly1 = *(const VPolyFace4D**)Arg1;
-        const VPolyFace4D* Poly2 = *(const VPolyFace4D**)Arg2;
+        const VPolyFace* Poly1 = *(const VPolyFace**)Arg1;
+        const VPolyFace* Poly2 = *(const VPolyFace**)Arg2;
 
         f32 Z1 = 0.33333f * (Poly1->TransVtx[0].Z + Poly1->TransVtx[1].Z + Poly1->TransVtx[2].Z);
         f32 Z2 = 0.33333f * (Poly2->TransVtx[0].Z + Poly2->TransVtx[1].Z + Poly2->TransVtx[2].Z);
@@ -314,8 +314,8 @@ public:
 
     static i32 SortPolygonsCompareNear(const void* Arg1, const void* Arg2)
     {
-        const VPolyFace4D* Poly1 = *(const VPolyFace4D**)Arg1;
-        const VPolyFace4D* Poly2 = *(const VPolyFace4D**)Arg2;
+        const VPolyFace* Poly1 = *(const VPolyFace**)Arg1;
+        const VPolyFace* Poly2 = *(const VPolyFace**)Arg2;
 
         f32 ZMin1 = MIN(MIN(Poly1->TransVtx[0].Z, Poly1->TransVtx[1].Z), Poly1->TransVtx[2].Z);
         f32 ZMin2 = MIN(MIN(Poly2->TransVtx[0].Z, Poly2->TransVtx[1].Z), Poly2->TransVtx[2].Z);
@@ -338,8 +338,8 @@ public:
 
     static i32 SortPolygonsCompareFar(const void* Arg1, const void* Arg2)
     {
-        const VPolyFace4D* Poly1 = *(const VPolyFace4D**)Arg1;
-        const VPolyFace4D* Poly2 = *(const VPolyFace4D**)Arg2;
+        const VPolyFace* Poly1 = *(const VPolyFace**)Arg1;
+        const VPolyFace* Poly2 = *(const VPolyFace**)Arg2;
 
         f32 ZMax1 = MAX(MAX(Poly1->TransVtx[0].Z, Poly1->TransVtx[1].Z), Poly1->TransVtx[2].Z);
         f32 ZMax2 = MAX(MAX(Poly2->TransVtx[0].Z, Poly2->TransVtx[1].Z), Poly2->TransVtx[2].Z);
@@ -374,7 +374,7 @@ public:
     {
         for (i32f I = 0; I < NumPoly; ++I)
         {
-            VPolyFace4D* Poly = PolyPtrList[I];
+            VPolyFace* Poly = PolyPtrList[I];
             if (!Poly ||
                 ~Poly->State & EPolyState::Active ||
                 Poly->State & EPolyState::Clipped ||
@@ -395,7 +395,7 @@ public:
     {
         for (i32f I = 0; I < NumPoly; ++I)
         {
-            VPolyFace4D* Poly = PolyPtrList[I];
+            VPolyFace* Poly = PolyPtrList[I];
             if (!Poly ||
                 ~Poly->State & EPolyState::Active ||
                 Poly->State & EPolyState::Clipped ||
@@ -418,7 +418,7 @@ public:
 
         for (i32f I = 0; I < NumPoly; ++I)
         {
-            VPolyFace4D* Poly = PolyPtrList[I];
+            VPolyFace* Poly = PolyPtrList[I];
             if (!Poly ||
                 ~Poly->State & EPolyState::Active ||
                 Poly->State & EPolyState::Clipped ||
@@ -442,7 +442,7 @@ public:
 
         for (i32f I = 0; I < NumPoly; ++I)
         {
-            VPolyFace4D* Poly = PolyPtrList[I];
+            VPolyFace* Poly = PolyPtrList[I];
             if (!Poly ||
                 ~Poly->State & EPolyState::Active ||
                 Poly->State & EPolyState::Clipped ||
@@ -468,7 +468,7 @@ public:
     {
         for (i32f I = 0; I < NumPoly; ++I)
         {
-            VPolyFace4D* Poly = PolyPtrList[I];
+            VPolyFace* Poly = PolyPtrList[I];
             if (!Poly ||
                 ~Poly->State & EPolyState::Active ||
                 Poly->State & EPolyState::BackFace ||
@@ -502,7 +502,7 @@ public:
     {
         for (i32f I = 0; I < NumPoly; ++I)
         {
-            VPolyFace4D* Poly = PolyPtrList[I];
+            VPolyFace* Poly = PolyPtrList[I];
             if (!Poly ||
                 ~Poly->State & EPolyState::Active ||
                 Poly->State & EPolyState::BackFace ||

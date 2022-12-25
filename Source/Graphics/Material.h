@@ -5,7 +5,7 @@
 #include "Graphics/Color.h"
 #include "Graphics/Surface.h"
 
-namespace EMaterialStateV1
+namespace EMaterialState
 {
     enum
     {
@@ -13,7 +13,7 @@ namespace EMaterialStateV1
     };
 }
 
-namespace EMaterialAttrV1
+namespace EMaterialAttr
 {
     enum
     {
