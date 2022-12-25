@@ -18,7 +18,8 @@ namespace EObjectAttr
 {
     enum
     {
-
+        MultiFrame  = BIT(1),
+        HasTextures = BIT(2),
     };
 }
 
@@ -57,8 +58,8 @@ class VObject
 {
 public:
     static constexpr i32f NameSize = 64;
-    static constexpr i32f MaxVtx = 64;
-    static constexpr i32f MaxPoly = 128;
+    static constexpr i32f MaxVtx = 1024;
+    static constexpr i32f MaxPoly = 2048;
 
 public:
     i32 ID;

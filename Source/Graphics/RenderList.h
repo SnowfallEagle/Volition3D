@@ -18,7 +18,7 @@ enum class ESortPolygonsMethod
 class VRenderList
 {
 public:
-    static constexpr i32f MaxPoly = 1024;
+    static constexpr i32f MaxPoly = 32768;
 
 public:
     i32 NumPoly;

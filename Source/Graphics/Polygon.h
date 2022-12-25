@@ -11,6 +11,7 @@ namespace EPolyState
         Active   = BIT(1),
         Clipped  = BIT(2),
         BackFace = BIT(3),
+        Lit      = BIT(4)
     };
 }
 
@@ -28,6 +29,8 @@ namespace EPolyAttr
         ShadeModeGouraud  = BIT(6),
         ShadeModePhong    = BIT(7),
         ShadeModeTexture  = BIT(8),
+
+        UseMaterial = BIT(9)
     };
 }
 

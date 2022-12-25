@@ -196,6 +196,7 @@
     <ClInclude Include="..\..\Source\Graphics\RenderList.h" />
     <ClInclude Include="..\..\Source\Graphics\Surface.h" />
     <ClInclude Include="..\..\Source\Graphics\TransformType.h" />
+    <ClInclude Include="..\..\Source\Graphics\Vertex.h" />
     <ClInclude Include="..\..\Source\Input\Impl\Input_SDL.h" />
     <ClInclude Include="..\..\Source\Input\Impl\Keycode_SDL.h" />
     <ClInclude Include="..\..\Source\Input\Impl\MouseButton_SDL.h" />
@@ -314,6 +315,7 @@
     <ClCompile Include="..\..\Source\Graphics\Polygon.cpp" />
     <ClCompile Include="..\..\Source\Graphics\Renderer.cpp" />
     <ClCompile Include="..\..\Source\Graphics\RenderList.cpp" />
+    <ClCompile Include="..\..\Source\Graphics\Vertex.cpp" />
     <ClCompile Include="..\..\Source\Input\Impl\Input_SDL.cpp" />
     <ClCompile Include="..\..\Source\Input\Input.cpp" />
     <ClCompile Include="..\..\Source\main.cpp" />
