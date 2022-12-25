@@ -15,7 +15,7 @@ enum class EUVNMode
     Spherical
 };
 
-namespace ECamStateV1
+namespace ECameraState
 {
     enum
     {
@@ -23,7 +23,7 @@ namespace ECamStateV1
     };
 }
 
-namespace ECamAttrV1
+namespace ECameraAttr
 {
     enum
     {
@@ -32,7 +32,7 @@ namespace ECamAttrV1
     };
 }
 
-class VCam4DV1
+class VCamera
 {
 public:
     u32 State;

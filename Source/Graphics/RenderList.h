@@ -15,7 +15,7 @@ enum class ESortPolygonsMethod
     Far
 };
 
-class VRenderList4DV1
+class VRenderList
 {
 public:
     static constexpr i32f MaxPoly = 1024;
@@ -86,11 +86,11 @@ public:
         return true;
     }
 
-    void InsertObject(VObject4DV1& Object, b32 bInsertLocal)
+    void InsertObject(VObject& Object, b32 bInsertLocal)
     {
-        if (~Object.State & EObjectStateV1::Active  ||
-            ~Object.State & EObjectStateV1::Visible ||
-            Object.State & EObjectStateV1::Culled)
+        if (~Object.State & EObjectState::Active  ||
+            ~Object.State & EObjectState::Visible ||
+            Object.State & EObjectState::Culled)
         {
             return;
         }
@@ -237,7 +237,7 @@ public:
         }
     }
 
-    void RemoveBackFaces(const VCam4DV1& Cam)
+    void RemoveBackFaces(const VCamera& Cam)
     {
         for (i32f I = 0; I < NumPoly; ++I)
         {
@@ -266,7 +266,7 @@ public:
         }
     }
 
-    void TransformWorldToCamera(const VCam4DV1& Camera)
+    void TransformWorldToCamera(const VCamera& Camera)
     {
         for (i32f I = 0; I < NumPoly; ++I)
         {
@@ -370,7 +370,7 @@ public:
         }
     }
 
-    void TransformCameraToPerspective(const VCam4DV1& Cam)
+    void TransformCameraToPerspective(const VCamera& Cam)
     {
         for (i32f I = 0; I < NumPoly; ++I)
         {
@@ -411,7 +411,7 @@ public:
         }
     }
 
-    void TransformPerspectiveToScreen(const VCam4DV1& Cam)
+    void TransformPerspectiveToScreen(const VCamera& Cam)
     {
         f32 Alpha = Cam.ViewPortSize.X * 0.5f - 0.5f;
         f32 Beta = Cam.ViewPortSize.Y * 0.5f - 0.5f;
@@ -435,7 +435,7 @@ public:
         }
     }
 
-    void TransformCameraToScreen(const VCam4DV1& Cam)
+    void TransformCameraToScreen(const VCamera& Cam)
     {
         f32 Alpha = Cam.ViewPortSize.X * 0.5f - 0.5f;
         f32 Beta = Cam.ViewPortSize.Y * 0.5f - 0.5f;

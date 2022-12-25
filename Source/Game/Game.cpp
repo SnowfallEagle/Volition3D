@@ -11,10 +11,10 @@
 
 VGame Game;
 
-static VCam4DV1 Cam;
-static VObject4DV1 Object;
+static VCamera Cam;
+static VObject Object;
 static VSurface Surface;
-static VRenderList4DV1 RenderList;
+static VRenderList RenderList;
 
 static b32 bRenderSolid = true;
 static b32 bBackFaceRemoval = true;
@@ -32,7 +32,7 @@ void VGame::StartUp()
         { 0.0f, 0.0f, 0.0f }
     );
 
-    Cam.Init(ECamAttrV1::Euler, { 0, 75.0f, 0 }, { 0, 0, 0 }, Object.WorldPos, 120, 265, 12000, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
+    Cam.Init(ECameraAttr::Euler, { 0, 75.0f, 0 }, { 0, 0, 0 }, Object.WorldPos, 120, 265, 12000, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
 
     {
         VLightV1 AmbientLight = {

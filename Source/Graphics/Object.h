@@ -4,7 +4,7 @@
 #include "Graphics/Camera.h"
 #include "Graphics/TransformType.h"
 
-namespace EObjectStateV1
+namespace EObjectState
 {
     enum
     {
@@ -14,7 +14,7 @@ namespace EObjectStateV1
     };
 }
 
-namespace EObjectAttrV1
+namespace EObjectAttr
 {
     enum
     {
@@ -53,7 +53,7 @@ namespace ECullType
 
 DEFINE_LOG_CHANNEL(hObjectV1Log, "ObjectV1");
 
-class VObject4DV1
+class VObject
 {
 public:
     static constexpr i32f NameSize = 64;
@@ -193,7 +193,7 @@ public:
         }
     }
 
-    b32 Cull(const VCam4DV1& Cam, u32 CullType = ECullType::XYZ)
+    b32 Cull(const VCamera& Cam, u32 CullType = ECullType::XYZ)
     {
         VVector4D SpherePos;
         VVector4D::MulMat44(WorldPos, Cam.MatCamera, SpherePos);
@@ -206,7 +206,7 @@ public:
                 SpherePos.X + MaxRadius < -ZTest)   // Check Sphere's Right with Left side
             {
                 VL_LOG("Culled X\n");
-                State |= EObjectStateV1::Culled;
+                State |= EObjectState::Culled;
                 return true;
             }
         }
@@ -219,7 +219,7 @@ public:
                 SpherePos.Y + MaxRadius < -ZTest)   // Check Sphere's Top with Bottom side
             {
                 VL_LOG("Culled Y\n");
-                State |= EObjectStateV1::Culled;
+                State |= EObjectState::Culled;
                 return true;
             }
         }
@@ -230,7 +230,7 @@ public:
                 SpherePos.Z + MaxRadius < Cam.ZNearClip)
             {
                 VL_LOG("Culled Z\n");
-                State |= EObjectStateV1::Culled;
+                State |= EObjectState::Culled;
                 return true;
             }
         }
@@ -238,13 +238,13 @@ public:
         return false;
     }
 
-    void Light(const VCam4DV1& Cam, const VLightV1* Lights, i32 NumLights)
+    void Light(const VCamera& Cam, const VLightV1* Lights, i32 NumLights)
     {
         // NOTE(sean): We can simplify this stuff by converting calculations to floating point
 
-        if (~State & EObjectStateV1::Active ||
-            State & EObjectStateV1::Culled  ||
-            ~State & EObjectStateV1::Visible)
+        if (~State & EObjectState::Active ||
+            State & EObjectState::Culled  ||
+            ~State & EObjectState::Visible)
         {
             return;
         }
@@ -407,9 +407,9 @@ public:
         }
     }
 
-    void RemoveBackFaces(VCam4DV1 Cam)
+    void RemoveBackFaces(VCamera Cam)
     {
-        if (State & EObjectStateV1::Culled)
+        if (State & EObjectState::Culled)
         {
             return;
         }
@@ -441,7 +441,7 @@ public:
         }
     }
 
-    void TransformWorldToCamera(const VCam4DV1& Camera)
+    void TransformWorldToCamera(const VCamera& Camera)
     {
         for (i32f I = 0; I < NumVtx; ++I)
         {
@@ -451,7 +451,7 @@ public:
         }
     }
 
-    void TransformCameraToPerspective(const VCam4DV1& Cam)
+    void TransformCameraToPerspective(const VCamera& Cam)
     {
         for (i32f I = 0; I < NumVtx; ++I)
         {
@@ -471,7 +471,7 @@ public:
         }
     }
 
-    void TransformPerspectiveToScreen(const VCam4DV1& Cam)
+    void TransformPerspectiveToScreen(const VCamera& Cam)
     {
         f32 Alpha = Cam.ViewPortSize.X * 0.5f - 0.5f;
         f32 Beta = Cam.ViewPortSize.Y * 0.5f - 0.5f;
@@ -483,7 +483,7 @@ public:
         }
     }
 
-    void TransformCameraToScreen(const VCam4DV1& Cam)
+    void TransformCameraToScreen(const VCamera& Cam)
     {
         f32 Alpha = Cam.ViewPortSize.X * 0.5f - 0.5f;
         f32 Beta = Cam.ViewPortSize.Y * 0.5f - 0.5f;
@@ -503,7 +503,7 @@ public:
     void Reset()
     {
         // Reset object's state
-        State &= ~EObjectStateV1::Culled;
+        State &= ~EObjectState::Culled;
 
         // Restore polygons
         for (i32f I = 0; I < NumPoly; ++I)

@@ -6,7 +6,7 @@
 #include "Graphics/Renderer.h"
 #include "Graphics/Object.h"
 
-b32 VObject4DV1::LoadPLG(
+b32 VObject::LoadPLG(
     const char* Path,
     const VVector4D& Pos,
     const VVector4D& Scale,
@@ -17,7 +17,7 @@ b32 VObject4DV1::LoadPLG(
 
     // Clean object
     memset(this, 0, sizeof(*this));
-    State = EObjectStateV1::Active | EObjectStateV1::Visible;
+    State = EObjectState::Active | EObjectState::Visible;
     WorldPos = Pos;
     UX = { 1.0f, 0.0f, 0.0f };
     UY = { 0.0f, 1.0f, 0.0f };
