@@ -12,7 +12,7 @@ namespace EAnsiAttr
 }
 
 static constexpr const char LogPath[] = "Log.txt";
-DEFINE_LOG_CHANNEL(hLogLog, "DebugLog");
+DEFINE_LOG_CHANNEL(hLogDebugLog, "DebugLog");
 
 VDebugLog DebugLog;
 
@@ -26,7 +26,7 @@ void VDebugLog::StartUp()
         DEBUG_BREAK();
     }
 
-    VL_NOTE(hLogLog, "Hello, world!!!!!\n");
+    VL_NOTE(hLogDebugLog, "DebugLog started\n");
 }
 
 void VDebugLog::ShutDown()

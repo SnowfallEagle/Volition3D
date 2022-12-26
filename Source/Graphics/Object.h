@@ -52,7 +52,7 @@ namespace ECullType
     };
 }
 
-DEFINE_LOG_CHANNEL(hObjectV1Log, "ObjectV1");
+DEFINE_LOG_CHANNEL(hLogObject, "ObjectV1");
 
 class VObject
 {
@@ -68,9 +68,6 @@ public:
     u32 State;
     u32 Attr;
 
-    f32 AvgRadius;
-    f32 MaxRadius;
-
     VPoint4 Position;
     VVector4 Direction;
     VVector4 UX, UY, UZ; // Local axes to track full orientation
@@ -81,6 +78,23 @@ public:
 
     i32 NumPoly;
     VPoly PolyList[MaxPoly];
+
+    union
+    {
+        struct
+        {
+			f32* AverageRadiusList;
+			f32* MaxRadiusList;
+        };
+
+		// TODO(sean): Remove this and union
+        struct
+        {
+			f32 AvgRadius;
+			f32 MaxRadius;
+        };
+    };
+
 
 public:
     b32 LoadPLG(

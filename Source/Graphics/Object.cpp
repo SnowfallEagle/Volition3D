@@ -35,7 +35,7 @@ b32 VObject::LoadPLG(
         // Open
         if (!(File = fopen(Path, "rb")))
         {
-            VL_ERROR(hObjectV1Log, "Can't open %s file: %s\n", Path, strerror(errno));
+            VL_ERROR(hLogObject, "Can't open %s file: %s\n", Path, strerror(errno));
             return false;
         }
 
@@ -43,18 +43,18 @@ b32 VObject::LoadPLG(
         {
             if (!GetLinePLG(File, Buffer, BufferSize))
             {
-                VL_ERROR(hObjectV1Log, "Can't read PLG header\n");
+                VL_ERROR(hLogObject, "Can't read PLG header\n");
                 fclose(File);
                 return false;
             }
             if (sscanf(Buffer, "%s %d %d", Name, &NumVtx, &NumPoly) <= 0)
             {
-                VL_ERROR(hObjectV1Log, "Can't parse PLG header\n");
+                VL_ERROR(hLogObject, "Can't parse PLG header\n");
                 fclose(File);
                 return false;
             }
 
-            VL_NOTE(hObjectV1Log, "Loading %s %d %d\n", Name, NumVtx, NumPoly);
+            VL_NOTE(hLogObject, "Loading %s %d %d\n", Name, NumVtx, NumPoly);
         }
 
 		// Read vertices and compute radius
@@ -65,7 +65,7 @@ b32 VObject::LoadPLG(
             {
                 if (!GetLinePLG(File, Buffer, BufferSize))
                 {
-                    VL_ERROR(hObjectV1Log, "Can't parse PLG vertices\n");
+                    VL_ERROR(hLogObject, "Can't parse PLG vertices\n");
                     fclose(File);
                     return false;
                 }
@@ -74,7 +74,7 @@ b32 VObject::LoadPLG(
                 if (sscanf(Buffer, "%f %f %f",
                     &LocalVtxList[I].X, &LocalVtxList[I].Y, &LocalVtxList[I].Z) <= 0)
                 {
-                    VL_ERROR(hObjectV1Log, "Can't parse vertex\n");
+                    VL_ERROR(hLogObject, "Can't parse vertex\n");
                     fclose(File);
                     return false;
                 }
@@ -105,7 +105,7 @@ b32 VObject::LoadPLG(
             {
                 if (!GetLinePLG(File, Buffer, BufferSize))
                 {
-                    VL_ERROR(hObjectV1Log, "Can't parse PLG polygons\n");
+                    VL_ERROR(hLogObject, "Can't parse PLG polygons\n");
                     fclose(File);
                     return false;
                 }
@@ -116,7 +116,7 @@ b32 VObject::LoadPLG(
                     StrPolyDesc, &NumPolyVtx,
                     &PolyList[I].Vtx[0], &PolyList[I].Vtx[1], &PolyList[I].Vtx[2]) <= 0)
                 {
-                    VL_ERROR(hObjectV1Log, "Can't parse polygon\n");
+                    VL_ERROR(hLogObject, "Can't parse polygon\n");
                     fclose(File);
                     return false;
                 }
@@ -126,7 +126,7 @@ b32 VObject::LoadPLG(
                 {
                     if (sscanf(Buffer, "%x", &PolyDesc) <= 0)
                     {
-                        VL_ERROR(hObjectV1Log, "Can't parse polygon description\n");
+                        VL_ERROR(hLogObject, "Can't parse polygon description\n");
                         fclose(File);
                         return false;
                     }
@@ -135,7 +135,7 @@ b32 VObject::LoadPLG(
                 {
                     if (sscanf(Buffer, "%d", &PolyDesc) <= 0)
                     {
-                        VL_ERROR(hObjectV1Log, "Can't parse polygon description\n");
+                        VL_ERROR(hLogObject, "Can't parse polygon description\n");
                         fclose(File);
                         return false;
                     }
@@ -170,7 +170,7 @@ b32 VObject::LoadPLG(
                 {
                     // Just something like orange with index as blue
                     PolyList[I].OriginalColor = MAP_XRGB32(255, 255, PolyDesc & EPLX::RGB8Mask);
-                    VL_WARNING(hObjectV1Log, "There're no 8-bit support");
+                    VL_WARNING(hLogObject, "There're no 8-bit support");
                 }
 
                 if (PolyDesc & EPLX::TwoSidedFlag)
