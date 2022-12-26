@@ -404,7 +404,7 @@ public:
             if (GSum > 255) GSum = 255;
             if (BSum > 255) BSum = 255;
 
-            Poly.FinalColor = MAP_XRGB32(RSum, GSum, BSum);
+            Poly.LitColor[0] = MAP_XRGB32(RSum, GSum, BSum);
         }
     }
 
@@ -518,7 +518,7 @@ public:
             Poly.State &= ~EPolyState::Clipped;
             Poly.State &= ~EPolyState::BackFace;
 
-            Poly.FinalColor = Poly.OriginalColor;
+            Poly.LitColor[2] = Poly.LitColor[1] = Poly.LitColor[0] = Poly.OriginalColor;
         }
     }
 
@@ -541,19 +541,19 @@ public:
                 Buffer, Pitch,
                 (i32)TransVtxList[V0].X, (i32)TransVtxList[V0].Y,
                 (i32)TransVtxList[V1].X, (i32)TransVtxList[V1].Y,
-                PolyList[I].FinalColor
+                PolyList[I].LitColor[0]
             );
             Renderer.DrawClippedLine(
                 Buffer, Pitch,
                 (i32)TransVtxList[V1].X, (i32)TransVtxList[V1].Y,
                 (i32)TransVtxList[V2].X, (i32)TransVtxList[V2].Y,
-                PolyList[I].FinalColor
+                PolyList[I].LitColor[0]
             );
             Renderer.DrawClippedLine(
                 Buffer, Pitch,
                 (i32)TransVtxList[V2].X, (i32)TransVtxList[V2].Y,
                 (i32)TransVtxList[V0].X, (i32)TransVtxList[V0].Y,
-                PolyList[I].FinalColor
+                PolyList[I].LitColor[0]
             );
         }
     }
@@ -578,7 +578,7 @@ public:
                 (i32)TransVtxList[V0].X, (i32)TransVtxList[V0].Y,
                 (i32)TransVtxList[V1].X, (i32)TransVtxList[V1].Y,
                 (i32)TransVtxList[V2].X, (i32)TransVtxList[V2].Y,
-                PolyList[I].FinalColor
+                PolyList[I].LitColor[0]
             );
         }
     }

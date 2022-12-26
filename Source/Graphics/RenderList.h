@@ -36,7 +36,8 @@ public:
         PolyPtrList[NumPoly] = &PolyList[NumPoly];
         PolyList[NumPoly].State = Poly.State;
         PolyList[NumPoly].Attr = Poly.Attr;
-        PolyList[NumPoly].Color = Poly.FinalColor;
+        PolyList[NumPoly].Color = Poly.LitColor[0];
+        // TODO(sean): What about Lit Colors?
 
         for (i32f I = 0; I < 3; ++I)
         {

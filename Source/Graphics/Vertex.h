@@ -8,14 +8,13 @@ namespace EVertexAttr
 {
 	enum
 	{
-		HasPoint = BIT(1),
-		HasNormal = BIT(2),
+		HasPoint   = BIT(1),
+		HasNormal  = BIT(2),
 		HasTexture = BIT(3),
 	};
 }
 
-// NOTE(sean): We count Attributes and Intensity as Components of Vertex
-class Vertex
+class VVertex
 {
 public:
 	u32 Attr;
