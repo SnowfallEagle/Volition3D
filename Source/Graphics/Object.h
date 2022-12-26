@@ -92,13 +92,6 @@ public:
 	f32* AverageRadiusList;
 	f32* MaxRadiusList;
 
-	// TODO(sean): Remove this
-	struct
-	{
-		f32 AvgRadius;
-		f32 MaxRadius;
-	};
-
 	VSurface* Texture;
 	VPoint2* TextureCoordsList;
 
@@ -155,30 +148,48 @@ public:
 		TransVtxList = &HeadTransVtxList[Frame * NumVtx];
 	}
 
+	void ComputeRadius()
+	{
+		for (i32f FrameIndex = 0; FrameIndex < NumFrames; ++FrameIndex)
+		{
+			VVertex* VtxList = &HeadLocalVtxList[FrameIndex * NumVtx];
+			f32 AverageRadius = 0.0f;
+			f32 MaxRadius = 0.0f;
+
+			for (i32f VtxIndex = 0; VtxIndex < NumVtx; ++VtxIndex)
+			{
+				f32 Distance = VtxList[VtxIndex].Position.GetLength();
+
+				AverageRadius += Distance;
+				if (MaxRadius < Distance)
+				{
+					MaxRadius = Distance;
+				}
+			}
+			AverageRadius /= NumVtx;
+
+			AverageRadiusList[FrameIndex] = AverageRadius;
+			MaxRadiusList[FrameIndex] = MaxRadius;
+
+			VL_NOTE(hLogObject, "\n\tFrame: %d\nAverage radius: %.3f\nMax radius: %.3f\n", FrameIndex, AverageRadius, MaxRadius);
+		}
+	}
+
+	FINLINE f32 GetAverageRadius()
+	{
+		return AverageRadiusList[CurrentFrame];
+	}
+	FINLINE f32 GetMaxRadius()
+	{
+		return MaxRadiusList[CurrentFrame];
+	}
+
 	b32 LoadPLG(
 		const char* Path,
 		const VVector4& Pos,
 		const VVector4& Scale,
 		const VVector4& Rot
 	);
-
-	void ComputeRadius() // TODO(sean): Remake with frames
-	{
-		AvgRadius = 0.0f;
-		MaxRadius = 0.0f;
-
-		for (i32f I = 0; I < NumVtx; ++I)
-		{
-			f32 Dist = LocalVtxList[I].Position.GetLength();
-			AvgRadius += Dist;
-			if (MaxRadius < Dist)
-			{
-				MaxRadius = Dist;
-			}
-		}
-
-		AvgRadius /= NumVtx;
-	}
 
 	void Transform(const VMatrix44& M, ETransformType Type, b32 bTransBasis)
 	{
@@ -250,6 +261,7 @@ public:
 	{
 		VVector4 SpherePos;
 		VVector4::MulMat44(Position, Cam.MatCamera, SpherePos);
+		f32 MaxRadius = GetMaxRadius();
 
 		if (CullType & ECullType::X)
 		{
