@@ -49,6 +49,9 @@ b32 VObject::LoadPLG(
 		UX = { 1.0f, 0.0f, 0.0f };
 		UY = { 0.0f, 1.0f, 0.0f };
 		UZ = { 0.0f, 0.0f, 1.0f };
+
+		NumFrames = 0;
+		CurrentFrame = 1;
 	}
 
 	// Load from file
@@ -63,7 +66,7 @@ b32 VObject::LoadPLG(
 			return false;
 		}
 
-		// Read header
+		// Read header and allocate object
 		{
 			if (!GetLinePLG(File, Buffer, BufferSize))
 			{
@@ -77,6 +80,8 @@ b32 VObject::LoadPLG(
 				fclose(File);
 				return false;
 			}
+
+			Allocate(NumVtx, NumPoly, NumFrames);
 
 			VL_NOTE(hLogObject, "Loading %s %d %d\n", Name, NumVtx, NumPoly);
 		}
@@ -186,8 +191,8 @@ b32 VObject::LoadPLG(
 					PolyList[I].Attr |= EPolyAttr::RGB32;
 					PolyList[I].OriginalColor = MAP_XRGB32(
 						(Color444 & 0xF00) >> 4,
-						Color444 & 0xF0,
-						(Color444 & 0xF) << 4
+						(Color444 & 0xF0),
+						(Color444 & 0xF)   << 4
 					);
 				}
 				else
