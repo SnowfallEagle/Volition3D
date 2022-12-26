@@ -6,6 +6,24 @@
 #include "Graphics/Renderer.h"
 #include "Graphics/Object.h"
 
+namespace EPLX
+{
+	enum
+	{
+		RGBFlag = BIT(16),
+		TwoSidedFlag = BIT(13),
+
+		ShadeModeMask        = BIT(15) | BIT(14),
+		ShadeModePureFlag    = 0,
+		ShadeModeFlatFlag    = BIT(14),
+		ShadeModeGouraudFlag = BIT(15),
+		ShadeModePhongFlag   = BIT(14) | BIT(15),
+
+		RGB16Mask = 0x0FFF,
+		RGB8Mask  = 0x00FF,
+	};
+}
+
 char* GetLinePLG(FILE* File, char* Buffer, i32 Size)
 {
 	for (;;)

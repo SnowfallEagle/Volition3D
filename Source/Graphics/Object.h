@@ -1,6 +1,8 @@
 /* TODO:
 	- ComputePolyNormals()
 	- ComputeVtxNormals()
+	- Upgrade PLX loader
+	- LoadCOB()
  */
 
 #pragma once
@@ -14,9 +16,9 @@ namespace EObjectState
 {
 	enum
 	{
-		Active = BIT(1),
+		Active  = BIT(1),
 		Visible = BIT(2),
-		Culled = BIT(3)
+		Culled  = BIT(3)
 	};
 }
 
@@ -26,24 +28,6 @@ namespace EObjectAttr
 	{
 		MultiFrame  = BIT(1),
 		HasTextures = BIT(2),
-	};
-}
-
-namespace EPLX
-{
-	enum
-	{
-		RGBFlag = BIT(16),
-
-		ShadeModeMask = BIT(15) | BIT(14),
-		ShadeModePureFlag = 0,
-		ShadeModeFlatFlag = BIT(14),
-		ShadeModeGouraudFlag = BIT(15),
-		ShadeModePhongFlag = BIT(14) | BIT(15),
-
-		TwoSidedFlag = BIT(13),
-		RGB16Mask = 0x0FFF,
-		RGB8Mask = 0x00FF,
 	};
 }
 
