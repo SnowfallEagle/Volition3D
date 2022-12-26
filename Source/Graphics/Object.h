@@ -71,8 +71,8 @@ public:
     f32 AvgRadius;
     f32 MaxRadius;
 
-    VPoint4 WorldPos;
-    VVector4 Dir;
+    VPoint4 Position;
+    VVector4 Direction;
     VVector4 UX, UY, UZ; // Local axes to track full orientation
 
     i32 NumVtx;
@@ -182,14 +182,14 @@ public:
         {
             for (i32f I = 0; I < NumVtx; ++I)
             {
-                TransVtxList[I] = LocalVtxList[I] + WorldPos;
+                TransVtxList[I] = LocalVtxList[I] + Position;
             }
         }
         else // TransOnly
         {
             for (i32f I = 0; I < NumVtx; ++I)
             {
-                TransVtxList[I] += WorldPos;
+                TransVtxList[I] += Position;
             }
         }
     }
@@ -197,7 +197,7 @@ public:
     b32 Cull(const VCamera& Cam, u32 CullType = ECullType::XYZ)
     {
         VVector4 SpherePos;
-        VVector4::MulMat44(WorldPos, Cam.MatCamera, SpherePos);
+        VVector4::MulMat44(Position, Cam.MatCamera, SpherePos);
 
         if (CullType & ECullType::X)
         {

@@ -32,7 +32,7 @@ void VGame::StartUp()
         { 0.0f, 0.0f, 0.0f }
     );
 
-    Cam.Init(ECameraAttr::Euler, { 0, 75.0f, 0 }, { 0, 0, 0 }, Object.WorldPos, 120, 265, 12000, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
+    Cam.Init(ECameraAttr::Euler, { 0, 75.0f, 0 }, { 0, 0, 0 }, Object.Position, 120, 265, 12000, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
 
     {
         VLight AmbientLight = {

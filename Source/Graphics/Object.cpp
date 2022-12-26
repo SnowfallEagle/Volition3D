@@ -21,7 +21,7 @@ b32 VObject::LoadPLG(
 
         State = EObjectState::Active | EObjectState::Visible;
 
-        WorldPos = Pos;
+        Position = Pos;
         UX = { 1.0f, 0.0f, 0.0f };
         UY = { 0.0f, 1.0f, 0.0f };
         UZ = { 0.0f, 0.0f, 1.0f };
