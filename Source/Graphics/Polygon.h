@@ -52,7 +52,7 @@ public:
     VPoint4* VtxList; // TODO(sean)
     i32 Vtx[3];
 
-    VPoint2I* TextureCoordsList; // TODO(sean)
+    VPoint2* TextureCoordsList; // TODO(sean)
     i32 TextureCoordsIndices[3]; // TODO(sean)
 
     f32 NormalLength; // TODO(sean)

@@ -3,6 +3,7 @@
 #include "Graphics/Polygon.h"
 #include "Graphics/Camera.h"
 #include "Graphics/TransformType.h"
+#include "Graphics/Vertex.h"
 
 namespace EObjectState
 {
@@ -72,9 +73,28 @@ public:
     VVector4 Direction;
     VVector4 UX, UY, UZ; // Local axes to track full orientation
 
+    i32 NumFrames;
+    i32 CurrentFrame;
+
     i32 NumVtx;
-    VPoint4 LocalVtxList[MaxVtx];
-    VPoint4 TransVtxList[MaxVtx];
+    i32 TotalNumVtx; // TODO(sean)
+    union
+    {
+        struct
+        {
+            VVertex* _LocalVtxList; // TODO(sean)
+            VVertex* _TransVtxList; // TODO(sean)
+        };
+        // TODO(sean): Remove this and union
+        struct
+        {
+			VPoint4 LocalVtxList[MaxVtx];
+			VPoint4 TransVtxList[MaxVtx];
+        };
+    };
+    // TODO(sean)
+    VVertex* HeadLocalVtxList;
+    VVertex* TransLocalVtxList;
 
     i32 NumPoly;
     VPoly PolyList[MaxPoly];
@@ -95,6 +115,11 @@ public:
         };
     };
 
+    // TODO(sean)
+    VSurface* Texture;
+    VPoint2* TextureCoordsList;
+
+    VMaterial* Material;
 
 public:
     b32 LoadPLG(
