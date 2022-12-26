@@ -1,8 +1,8 @@
 #pragma once
 
-#include <string.h>
 #include "Core/Types.h"
 #include "Core/Platform.h"
+#include "Core/Memory.h"
 #include "Core/DebugLog.h"
 
 class VVector4;
@@ -32,7 +32,7 @@ public:
     }
     FINLINE void Zero()
     {
-        memset(this, 0, sizeof(*this));
+        Memory.MemSetByte(this, 0, sizeof(*this));
     }
 
     void BuildTranslate(const VVector4& V);
@@ -82,7 +82,7 @@ public:
 
     FINLINE void Zero()
     {
-        memset(this, 0, sizeof(*this));
+        Memory.MemSetByte(this, 0, sizeof(*this));
     }
 };
 
@@ -109,7 +109,7 @@ public:
 
     FINLINE void Zero()
     {
-        memset(this, 0, sizeof(*this));
+        Memory.MemSetByte(this, 0, sizeof(*this));
     }
 };
 
@@ -139,7 +139,7 @@ public:
 
     FINLINE void Zero()
     {
-        memset(this, 0, sizeof(*this));
+        Memory.MemSetByte(this, 0, sizeof(*this));
     }
 };
 
@@ -168,7 +168,7 @@ public:
 
     FINLINE void Zero()
     {
-        memset(this, 0, sizeof(*this));
+        Memory.MemSetByte(this, 0, sizeof(*this));
     }
 };
 
@@ -195,7 +195,7 @@ public:
 
     FINLINE void Zero()
     {
-        memset(this, 0, sizeof(*this));
+        Memory.MemSetByte(this, 0, sizeof(*this));
     }
 };
 
@@ -223,7 +223,7 @@ public:
 
     FINLINE void Zero()
     {
-        memset(this, 0, sizeof(*this));
+        Memory.MemSetByte(this, 0, sizeof(*this));
     }
 };
 
@@ -250,7 +250,7 @@ public:
 
     FINLINE void Zero()
     {
-        memset(this, 0, sizeof(*this));
+        Memory.MemSetByte(this, 0, sizeof(*this));
     }
 };
 
