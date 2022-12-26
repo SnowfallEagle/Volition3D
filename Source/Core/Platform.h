@@ -21,4 +21,20 @@
 
 #define BIT(N) ( 1 << ((N)-1) )
 
-// TODO(sean): SAFE_DELETE, SAFE_DELETE_ARRAY
+#define SAFE_DELETE(X) \
+	{ \
+		if ((X)) \
+		{ \
+			delete (X); \
+			X = nullptr; \
+		} \
+	}
+
+#define SAFE_DELETE_ARRAY(X) \
+	{ \
+		if ((X)) \
+		{ \
+			delete[] (X); \
+			X = nullptr; \
+		} \
+	}

@@ -3,6 +3,7 @@
 #include "Core/Types.h"
 #include "Math/Vector.h"
 #include "Graphics/Color.h"
+#include "Graphics/Vertex.h"
 #include "Graphics/Surface.h"
 #include "Graphics/Material.h"
 
@@ -43,19 +44,23 @@ public:
 	u32 Attr;
 
 	VColorARGB OriginalColor;
-	// TODO(sean)
 	VColorARGB LitColor[3]; // For each vertex, 0 for flat shading
 
-	VSurface* Texture; // TODO(sean)
-	VMaterial* Material; // TODO(sean)
+	VSurface* Texture;
+	VMaterial* Material;
 
-	VPoint4* VtxList; // TODO(sean)
+	// TODO(sean)
+	union
+	{
+		VVertex* _VtxList;
+		VPoint4* VtxList;
+	};
 	i32 Vtx[3];
 
-	VPoint2* TextureCoordsList; // TODO(sean)
-	i32 TextureCoordsIndices[3]; // TODO(sean)
+	VPoint2* TextureCoordsList;
+	i32 TextureCoordsIndices[3];
 
-	f32 NormalLength; // TODO(sean)
+	f32 NormalLength;
 };
 
 class VPolyFace
@@ -64,7 +69,7 @@ public:
 	u32 State;
 	u32 Attr;
 
-	VColorARGB OriginalColor; // TODO(sean)
+	VColorARGB OriginalColor; // FIXME(sean): Do we need this field?
 	VColorARGB LitColor[3]; // For each vertex, 0 for flat shading
 
 	VSurface* Texture;
@@ -75,6 +80,18 @@ public:
 
 	f32 AverageZ;
 
-	VPoint4 LocalVtx[3];
-	VPoint4 TransVtx[3];
+	// TODO(sean)
+	union
+	{
+		struct
+		{
+			VVertex _LocalVtx[3];
+			VVertex _TransVtx[3];
+		};
+		struct
+		{
+			VPoint4 LocalVtx[3];
+			VPoint4 TransVtx[3];
+		};
+	};
 };

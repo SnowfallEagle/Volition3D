@@ -8,9 +8,9 @@ namespace EVertexAttr
 {
 	enum
 	{
-		HasPoint   = BIT(1),
-		HasNormal  = BIT(2),
-		HasTexture = BIT(3),
+		HasPosition      = BIT(1),
+		HasNormal        = BIT(2),
+		HasTextureCoords = BIT(3),
 	};
 }
 

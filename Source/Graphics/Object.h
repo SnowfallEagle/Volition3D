@@ -59,11 +59,8 @@ class VObject
 {
 public:
 	static constexpr i32f NameSize = 64;
-	static constexpr i32f MaxVtx = 1024;
-	static constexpr i32f MaxPoly = 2048;
 
 public:
-	i32 ID;
 	char Name[NameSize];
 
 	u32 State;
@@ -88,8 +85,8 @@ public:
 		// TODO(sean): Remove this and union
 		struct
 		{
-			VPoint4 LocalVtxList[MaxVtx];
-			VPoint4 TransVtxList[MaxVtx];
+			VPoint4 LocalVtxList[1024];
+			VPoint4 TransVtxList[1024];
 		};
 	};
 	VVertex* HeadLocalVtxList;
@@ -101,7 +98,7 @@ public:
 	f32* AverageRadiusList;
 	f32* MaxRadiusList;
 
-	// TODO(sean): Remove this and union
+	// TODO(sean): Remove this
 	struct
 	{
 		f32 AvgRadius;
@@ -134,39 +131,12 @@ public:
 
 	void Destroy()
 	{
-		if (HeadLocalVtxList)
-		{
-			delete[] HeadLocalVtxList;
-			HeadLocalVtxList = nullptr;
-		}
-		if (HeadTransVtxList)
-		{
-			delete[] HeadTransVtxList;
-			HeadTransVtxList = nullptr;
-		}
-
-		if (PolyList)
-		{
-			delete[] PolyList;
-			PolyList = nullptr;
-		}
-
-		if (AverageRadiusList)
-		{
-			delete[] AverageRadiusList;
-			AverageRadiusList = nullptr;
-		}
-		if (MaxRadiusList)
-		{
-			delete[] MaxRadiusList;
-			MaxRadiusList = nullptr;
-		}
-
-		if (TextureCoordsList)
-		{
-			delete[] TextureCoordsList;
-			TextureCoordsList = nullptr;
-		}
+		SAFE_DELETE_ARRAY(HeadLocalVtxList);
+		SAFE_DELETE_ARRAY(HeadTransVtxList);
+		SAFE_DELETE_ARRAY(PolyList);
+		SAFE_DELETE_ARRAY(AverageRadiusList);
+		SAFE_DELETE_ARRAY(MaxRadiusList);
+		SAFE_DELETE_ARRAY(TextureCoordsList);
 	}
 
 	void SetFrame(i32 Frame)
@@ -199,7 +169,7 @@ public:
 		const VVector4& Rot
 	);
 
-	void ComputeRadius()
+	void ComputeRadius() // TODO(sean): Remake with frames
 	{
 		AvgRadius = 0.0f;
 		MaxRadius = 0.0f;

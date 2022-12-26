@@ -50,8 +50,8 @@ b32 VObject::LoadPLG(
 		UY = { 0.0f, 1.0f, 0.0f };
 		UZ = { 0.0f, 0.0f, 1.0f };
 
-		NumFrames = 0;
-		CurrentFrame = 1;
+		NumFrames = 1;
+		CurrentFrame = 0;
 	}
 
 	// Load from file
