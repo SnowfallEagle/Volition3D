@@ -36,13 +36,12 @@ public:
 		PolyPtrList[NumPoly] = &PolyList[NumPoly];
 		PolyList[NumPoly].State = Poly.State;
 		PolyList[NumPoly].Attr = Poly.Attr;
-		PolyList[NumPoly].OriginalColor = Poly.LitColor[0];
-		// TODO(sean): What about Lit Colors?
+		PolyList[NumPoly].OriginalColor = Poly.OriginalColor;
 
 		for (i32f I = 0; I < 3; ++I)
 		{
-			// Copy in PolyFace's trans and local vertices lists
 			PolyList[NumPoly].TransVtx[I] = PolyList[NumPoly].LocalVtx[I] = Poly.VtxList[Poly.Vtx[I]];
+			PolyList[NumPoly].LitColor[I] = Poly.LitColor[I];
 		}
 
 		++NumPoly;
@@ -460,19 +459,19 @@ public:
 				Buffer, Pitch,
 				(i32)Poly->TransVtx[0].X, (i32)Poly->TransVtx[0].Y,
 				(i32)Poly->TransVtx[1].X, (i32)Poly->TransVtx[1].Y,
-				Poly->OriginalColor
+				Poly->LitColor[0]
 			);
 			Renderer.DrawClippedLine(
 				Buffer, Pitch,
 				(i32)Poly->TransVtx[1].X, (i32)Poly->TransVtx[1].Y,
 				(i32)Poly->TransVtx[2].X, (i32)Poly->TransVtx[2].Y,
-				Poly->OriginalColor
+				Poly->LitColor[0]
 			);
 			Renderer.DrawClippedLine(
 				Buffer, Pitch,
 				(i32)Poly->TransVtx[2].X, (i32)Poly->TransVtx[2].Y,
 				(i32)Poly->TransVtx[0].X, (i32)Poly->TransVtx[0].Y,
-				Poly->OriginalColor
+				Poly->LitColor[0]
 			);
 		}
 	}
@@ -495,7 +494,7 @@ public:
 				(i32)Poly->TransVtx[0].X, (i32)Poly->TransVtx[0].Y,
 				(i32)Poly->TransVtx[1].X, (i32)Poly->TransVtx[1].Y,
 				(i32)Poly->TransVtx[2].X, (i32)Poly->TransVtx[2].Y,
-				Poly->OriginalColor
+				Poly->LitColor[0]
 			);
 		}
 	}

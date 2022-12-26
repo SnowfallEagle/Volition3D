@@ -1,6 +1,11 @@
+/* TODO:
+	- MemCopy()
+	- Assembly version of MemSetByte()?
+ */
+
 #pragma once
 
-#include "cstring"
+#include <cstring>
 #include "Core/Platform.h"
 #include "Core/Types.h"
 

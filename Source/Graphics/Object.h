@@ -64,6 +64,7 @@ class VObject
 {
 public:
 	static constexpr i32f NameSize = 64;
+	static constexpr i32f MaxVtx = 1024;
 
 public:
 	char Name[NameSize];
