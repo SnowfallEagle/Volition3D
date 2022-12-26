@@ -20,3 +20,5 @@
 #define SWAP(A, B, T) { T = A; A = B; B = T; }
 
 #define BIT(N) ( 1 << ((N)-1) )
+
+// TODO(sean): SAFE_DELETE, SAFE_DELETE_ARRAY

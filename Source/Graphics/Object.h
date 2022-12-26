@@ -94,10 +94,11 @@ public:
     };
     // TODO(sean)
     VVertex* HeadLocalVtxList;
-    VVertex* TransLocalVtxList;
+    VVertex* HeadTransVtxList;
 
     i32 NumPoly;
     VPoly PolyList[MaxPoly];
+    VPoly* _PolyList; // TODO(sean)
 
     union
     {
@@ -122,32 +123,91 @@ public:
     VMaterial* Material;
 
 public:
+    // Allocates verticies, polygons, radius lists and texture list
+    void Allocate(i32 InNumVtx, i32 InNumPoly, i32 InNumFrames)
+    {
+        HeadLocalVtxList = _LocalVtxList = new VVertex[InNumVtx * InNumFrames];
+        HeadTransVtxList = _TransVtxList = new VVertex[InNumVtx * InNumFrames];
+
+        _PolyList         = new VPoly[InNumPoly];
+        TextureCoordsList = new VPoint2[InNumPoly * 3];
+
+        AverageRadiusList = new f32[InNumFrames];
+        MaxRadiusList     = new f32[InNumFrames];
+
+        NumVtx      = InNumVtx;
+        TotalNumVtx = InNumVtx * InNumFrames;
+        NumPoly     = InNumPoly;
+        NumFrames   = InNumFrames;
+    }
+
+    void Destroy()
+    {
+        if (HeadLocalVtxList)
+        {
+            delete[] HeadLocalVtxList;
+            HeadLocalVtxList = nullptr;
+        }
+        if (HeadTransVtxList)
+        {
+            delete[] HeadTransVtxList;
+            HeadTransVtxList = nullptr;
+        }
+
+        // TODO(sean)
+        if (_PolyList)
+        {
+            delete[] _PolyList;
+            _PolyList = nullptr;
+        }
+
+        if (AverageRadiusList)
+        {
+            delete[] AverageRadiusList;
+            AverageRadiusList = nullptr;
+        }
+        if (MaxRadiusList)
+        {
+            delete[] MaxRadiusList;
+            MaxRadiusList = nullptr;
+        }
+
+        if (TextureCoordsList)
+        {
+            delete[] TextureCoordsList;
+            TextureCoordsList = nullptr;
+        }
+    }
+
+    void SetFrame(i32 Frame)
+    {
+        if (~Attr & EObjectAttr::MultiFrame)
+        {
+            return;
+        }
+
+        if (Frame < 0)
+        {
+            Frame = 0;
+        }
+        else if (Frame >= NumFrames)
+        {
+            Frame = NumFrames - 1;
+        }
+
+        CurrentFrame = Frame;
+
+        // TODO(sean): Remove underscore when we're done with lists
+        _LocalVtxList = &HeadLocalVtxList[Frame * NumVtx];
+        _TransVtxList = &HeadTransVtxList[Frame * NumVtx];
+    }
+
     b32 LoadPLG(
         const char* Path,
         const VVector4& Pos,
         const VVector4& Scale,
         const VVector4& Rot
     );
-
-    static char* GetLinePLG(FILE* File, char* Buffer, i32 Size)
-    {
-        for (;;)
-        {
-            if (!fgets(Buffer, Size, File))
-            {
-                return nullptr;
-            }
-
-            i32f I, Len = strlen(Buffer);
-            for (I = 0; I < Len && (Buffer[I] == ' ' || Buffer[I] == '\t' || Buffer[I] == '\r' || Buffer[I] == '\n'); ++I)
-                {}
-
-            if (I < Len && Buffer[I] != '#')
-            {
-                return &Buffer[I];
-            }
-        }
-    }
 
     void ComputeRadius()
     {
