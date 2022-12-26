@@ -36,24 +36,13 @@ public:
         PolyPtrList[NumPoly] = &PolyList[NumPoly];
         PolyList[NumPoly].State = Poly.State;
         PolyList[NumPoly].Attr = Poly.Attr;
-        PolyList[NumPoly].Color = Poly.LitColor[0];
+        PolyList[NumPoly].OriginalColor = Poly.LitColor[0];
         // TODO(sean): What about Lit Colors?
 
         for (i32f I = 0; I < 3; ++I)
         {
             // Copy in PolyFace's trans and local vertices lists
             PolyList[NumPoly].TransVtx[I] = PolyList[NumPoly].LocalVtx[I] = Poly.VtxList[Poly.Vtx[I]];
-        }
-
-        PolyList[NumPoly].Next = nullptr;
-        if (NumPoly == 0)
-        {
-            PolyList[NumPoly].Prev = nullptr;
-        }
-        else
-        {
-            PolyList[NumPoly].Prev = &PolyList[NumPoly - 1];
-            PolyList[NumPoly - 1].Next = &PolyList[NumPoly];
         }
 
         ++NumPoly;
@@ -70,17 +59,6 @@ public:
 
         PolyPtrList[NumPoly] = &PolyList[NumPoly];
         memcpy(&PolyList[NumPoly], &PolyFace, sizeof(VPolyFace));
-
-        PolyList[NumPoly].Next = nullptr;
-        if (NumPoly == 0)
-        {
-            PolyList[NumPoly].Prev = nullptr;
-        }
-        else
-        {
-            PolyList[NumPoly].Prev = &PolyList[NumPoly - 1];
-            PolyList[NumPoly - 1].Next = &PolyList[NumPoly];
-        }
 
         ++NumPoly;
 
@@ -482,19 +460,19 @@ public:
                 Buffer, Pitch,
                 (i32)Poly->TransVtx[0].X, (i32)Poly->TransVtx[0].Y,
                 (i32)Poly->TransVtx[1].X, (i32)Poly->TransVtx[1].Y,
-                Poly->Color
+                Poly->OriginalColor
             );
             Renderer.DrawClippedLine(
                 Buffer, Pitch,
                 (i32)Poly->TransVtx[1].X, (i32)Poly->TransVtx[1].Y,
                 (i32)Poly->TransVtx[2].X, (i32)Poly->TransVtx[2].Y,
-                Poly->Color
+                Poly->OriginalColor
             );
             Renderer.DrawClippedLine(
                 Buffer, Pitch,
                 (i32)Poly->TransVtx[2].X, (i32)Poly->TransVtx[2].Y,
                 (i32)Poly->TransVtx[0].X, (i32)Poly->TransVtx[0].Y,
-                Poly->Color
+                Poly->OriginalColor
             );
         }
     }
@@ -517,7 +495,7 @@ public:
                 (i32)Poly->TransVtx[0].X, (i32)Poly->TransVtx[0].Y,
                 (i32)Poly->TransVtx[1].X, (i32)Poly->TransVtx[1].Y,
                 (i32)Poly->TransVtx[2].X, (i32)Poly->TransVtx[2].Y,
-                Poly->Color
+                Poly->OriginalColor
             );
         }
     }

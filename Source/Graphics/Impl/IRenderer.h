@@ -77,7 +77,7 @@ public:
 
     void InitLight(i32 Index, const VLight& InLight)
     {
-        if (Index >= 0 || Index < MaxLights)
+        if (Index >= 0 && Index < MaxLights)
         {
             Lights[Index] = InLight;
         }

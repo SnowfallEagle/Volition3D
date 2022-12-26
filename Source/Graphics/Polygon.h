@@ -64,11 +64,17 @@ public:
     u32 State;
     u32 Attr;
 
-    VColorARGB Color;
+    VColorARGB OriginalColor; // TODO(sean)
+    VColorARGB LitColor[3]; // For each vertex, 0 for flat shading
+
+    VSurface* Texture;
+    VMaterial* Material;
+
+    VVector4 Normal;
+    f32 NormalLength;
+
+    f32 AverageZ;
 
     VPoint4 LocalVtx[3];
     VPoint4 TransVtx[3];
-
-    VPolyFace* Prev;
-    VPolyFace* Next;
 };
