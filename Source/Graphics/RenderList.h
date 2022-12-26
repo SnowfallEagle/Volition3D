@@ -85,7 +85,7 @@ public:
 				continue;
 			}
 
-			VPoint4* OldVtxList = Poly.VtxList;
+			VVertex* OldVtxList = Poly.VtxList;
 			Poly.VtxList = bInsertLocal ? Object.LocalVtxList : Object.TransVtxList;
 			b32 bRes = InsertPoly(Poly);
 			Poly.VtxList = OldVtxList;
@@ -123,8 +123,8 @@ public:
 
 				for (i32f V = 0; V < 3; ++V)
 				{
-					VVector4::MulMat44(Poly->LocalVtx[V], M, Res);
-					Poly->LocalVtx[V] = Res;
+					VVector4::MulMat44(Poly->LocalVtx[V].Position, M, Res);
+					Poly->LocalVtx[V].Position = Res;
 				}
 			}
 		} break;
@@ -144,8 +144,8 @@ public:
 
 				for (i32f V = 0; V < 3; ++V)
 				{
-					VVector4::MulMat44(Poly->TransVtx[V], M, Res);
-					Poly->TransVtx[V] = Res;
+					VVector4::MulMat44(Poly->TransVtx[V].Position, M, Res);
+					Poly->TransVtx[V].Position = Res;
 				}
 			}
 		} break;
@@ -165,8 +165,8 @@ public:
 
 				for (i32f V = 0; V < 3; ++V)
 				{
-					VVector4::MulMat44(Poly->LocalVtx[V], M, Res);
-					Poly->TransVtx[V] = Res;
+					VVector4::MulMat44(Poly->LocalVtx[V].Position, M, Res);
+					Poly->TransVtx[V].Position = Res;
 				}
 			}
 		} break;
@@ -191,7 +191,7 @@ public:
 
 				for (i32f V = 0; V < 3; ++V)
 				{
-					Poly->TransVtx[V] = Poly->LocalVtx[V] + WorldPos;
+					Poly->TransVtx[V].Position = Poly->LocalVtx[V].Position + WorldPos;
 				}
 			}
 		}
@@ -210,7 +210,7 @@ public:
 
 				for (i32f V = 0; V < 3; ++V)
 				{
-					Poly->TransVtx[V] += WorldPos;
+					Poly->TransVtx[V].Position += WorldPos;
 				}
 			}
 		}
@@ -231,11 +231,11 @@ public:
 			}
 
 			VVector4 U, V, N;
-			U = Poly->TransVtx[1] - Poly->TransVtx[0];
-			V = Poly->TransVtx[2] - Poly->TransVtx[0];
+			U = Poly->TransVtx[1].Position - Poly->TransVtx[0].Position;
+			V = Poly->TransVtx[2].Position - Poly->TransVtx[0].Position;
 
 			VVector4::Cross(U, V, N);
-			VVector4 View = Cam.Pos - Poly->TransVtx[0];
+			VVector4 View = Cam.Pos - Poly->TransVtx[0].Position;
 
 			// If > 0 then N watch in the same direction as View vector and visible
 			if (VVector4::Dot(View, N) <= 0.0f)
@@ -261,8 +261,8 @@ public:
 			for (i32f V = 0; V < 3; ++V)
 			{
 				VVector4 Res;
-				VVector4::MulMat44(Poly->TransVtx[V], Camera.MatCamera, Res);
-				Poly->TransVtx[V] = Res;
+				VVector4::MulMat44(Poly->TransVtx[V].Position, Camera.MatCamera, Res);
+				Poly->TransVtx[V].Position = Res;
 			}
 		}
 	}
@@ -385,7 +385,7 @@ public:
 
 			for (i32f V = 0; V < 3; ++V)
 			{
-				Poly->TransVtx[V].DivByW();
+				Poly->TransVtx[V].Position.DivByW();
 			}
 		}
 	}

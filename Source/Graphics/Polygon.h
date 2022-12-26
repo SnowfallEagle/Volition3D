@@ -49,12 +49,7 @@ public:
 	VSurface* Texture;
 	VMaterial* Material;
 
-	// TODO(sean)
-	union
-	{
-		VVertex* _VtxList;
-		VPoint4* VtxList;
-	};
+	VVertex* VtxList;
 	i32 Vtx[3];
 
 	VPoint2* TextureCoordsList;
@@ -80,18 +75,6 @@ public:
 
 	f32 AverageZ;
 
-	// TODO(sean)
-	union
-	{
-		struct
-		{
-			VVertex _LocalVtx[3];
-			VVertex _TransVtx[3];
-		};
-		struct
-		{
-			VPoint4 LocalVtx[3];
-			VPoint4 TransVtx[3];
-		};
-	};
+	VVertex LocalVtx[3];
+	VVertex TransVtx[3];
 };

@@ -1,3 +1,8 @@
+/* TODO:
+	- ComputePolyNormals()
+	- ComputeVtxNormals()
+ */
+
 #pragma once
 
 #include "Graphics/Polygon.h"
@@ -53,7 +58,7 @@ namespace ECullType
 	};
 }
 
-DEFINE_LOG_CHANNEL(hLogObject, "ObjectV1");
+DEFINE_LOG_CHANNEL(hLogObject, "Object");
 
 class VObject
 {
@@ -75,20 +80,9 @@ public:
 
 	i32 NumVtx;
 	i32 TotalNumVtx;
-	union
-	{
-		struct
-		{
-			VVertex* _LocalVtxList; // TODO(sean)
-			VVertex* _TransVtxList; // TODO(sean)
-		};
-		// TODO(sean): Remove this and union
-		struct
-		{
-			VPoint4 LocalVtxList[1024];
-			VPoint4 TransVtxList[1024];
-		};
-	};
+
+	VVertex* LocalVtxList;
+	VVertex* TransVtxList;
 	VVertex* HeadLocalVtxList;
 	VVertex* HeadTransVtxList;
 
@@ -114,8 +108,8 @@ public:
 	// Allocates verticies, polygons, radius lists and texture list
 	void Allocate(i32 InNumVtx, i32 InNumPoly, i32 InNumFrames)
 	{
-		HeadLocalVtxList = _LocalVtxList = new VVertex[InNumVtx * InNumFrames];
-		HeadTransVtxList = _TransVtxList = new VVertex[InNumVtx * InNumFrames];
+		HeadLocalVtxList = LocalVtxList = new VVertex[InNumVtx * InNumFrames];
+		HeadTransVtxList = TransVtxList = new VVertex[InNumVtx * InNumFrames];
 
 		PolyList          = new VPoly[InNumPoly];
 		TextureCoordsList = new VPoint2[InNumPoly * 3];
@@ -157,9 +151,8 @@ public:
 
 		CurrentFrame = Frame;
 
-		// TODO(sean): Remove underscore when we're done with lists
-		_LocalVtxList = &HeadLocalVtxList[Frame * NumVtx];
-		_TransVtxList = &HeadTransVtxList[Frame * NumVtx];
+		LocalVtxList = &HeadLocalVtxList[Frame * NumVtx];
+		TransVtxList = &HeadTransVtxList[Frame * NumVtx];
 	}
 
 	b32 LoadPLG(
@@ -176,7 +169,7 @@ public:
 
 		for (i32f I = 0; I < NumVtx; ++I)
 		{
-			f32 Dist = LocalVtxList[I].GetLength();
+			f32 Dist = LocalVtxList[I].Position.GetLength();
 			AvgRadius += Dist;
 			if (MaxRadius < Dist)
 			{
@@ -197,8 +190,8 @@ public:
 		{
 			for (i32f I = 0; I < NumVtx; ++I)
 			{
-				VVector4::MulMat44(LocalVtxList[I], M, Res);
-				LocalVtxList[I] = Res;
+				VVector4::MulMat44(LocalVtxList[I].Position, M, Res);
+				LocalVtxList[I].Position = Res;
 			}
 		} break;
 
@@ -206,8 +199,8 @@ public:
 		{
 			for (i32f I = 0; I < NumVtx; ++I)
 			{
-				VVector4::MulMat44(TransVtxList[I], M, Res);
-				TransVtxList[I] = Res;
+				VVector4::MulMat44(TransVtxList[I].Position, M, Res);
+				TransVtxList[I].Position = Res;
 			}
 		} break;
 
@@ -215,8 +208,8 @@ public:
 		{
 			for (i32f I = 0; I < NumVtx; ++I)
 			{
-				VVector4::MulMat44(LocalVtxList[I], M, Res);
-				TransVtxList[I] = Res;
+				VVector4::MulMat44(LocalVtxList[I].Position, M, Res);
+				TransVtxList[I].Position = Res;
 			}
 		} break;
 		}
@@ -241,14 +234,14 @@ public:
 		{
 			for (i32f I = 0; I < NumVtx; ++I)
 			{
-				TransVtxList[I] = LocalVtxList[I] + Position;
+				TransVtxList[I].Position = LocalVtxList[I].Position + Position;
 			}
 		}
 		else // TransOnly
 		{
 			for (i32f I = 0; I < NumVtx; ++I)
 			{
-				TransVtxList[I] += Position;
+				TransVtxList[I].Position += Position;
 			}
 		}
 	}
@@ -350,8 +343,8 @@ public:
 				else if (Lights[LightIndex].Attr & ELightAttr::Infinite)
 				{
 					VVector4 SurfaceNormal = VVector4::GetCross(
-						Poly.VtxList[V1] - Poly.VtxList[V0],
-						Poly.VtxList[V2] - Poly.VtxList[V0]
+						Poly.VtxList[V1].Position - Poly.VtxList[V0].Position,
+						Poly.VtxList[V2].Position - Poly.VtxList[V0].Position
 					);
 
 					f32 Dot = VVector4::Dot(SurfaceNormal, Lights[LightIndex].Dir);
@@ -367,10 +360,10 @@ public:
 				else if (Lights[LightIndex].Attr & ELightAttr::Point)
 				{
 					VVector4 SurfaceNormal = VVector4::GetCross(
-						Poly.VtxList[V1] - Poly.VtxList[V0],
-						Poly.VtxList[V2] - Poly.VtxList[V0]
+						Poly.VtxList[V1].Position - Poly.VtxList[V0].Position,
+						Poly.VtxList[V2].Position - Poly.VtxList[V0].Position
 					);
-					VVector4 Direction = Poly.VtxList[V0] - Lights[LightIndex].Pos;
+					VVector4 Direction = Poly.VtxList[V0].Position - Lights[LightIndex].Pos;
 
 					f32 Dot = VVector4::Dot(SurfaceNormal, Direction);
 					if (Dot < 0)
@@ -395,15 +388,15 @@ public:
 					// FIXME(sean): I think we should check if dot of normal and vector between surface and position is negative
 
 					VVector4 SurfaceNormal = VVector4::GetCross(
-						Poly.VtxList[V1] - Poly.VtxList[V0],
-						Poly.VtxList[V2] - Poly.VtxList[V0]
+						Poly.VtxList[V1].Position - Poly.VtxList[V0].Position,
+						Poly.VtxList[V2].Position - Poly.VtxList[V0].Position
 					);
 					f32 Dot = VVector4::Dot(SurfaceNormal, Lights[LightIndex].Dir);
 
 					if (Dot < 0)
 					{
 						// 128 used for fixed point to don't lose accuracy with integers
-						f32 Distance = (TransVtxList[V0] - Lights[LightIndex].Pos).GetLengthFast();
+						f32 Distance = (TransVtxList[V0].Position - Lights[LightIndex].Pos).GetLengthFast();
 						f32 Atten =
 							Lights[LightIndex].KConst +
 							Lights[LightIndex].KLinear * Distance +
@@ -420,14 +413,14 @@ public:
 				else if (Lights[LightIndex].Attr & ELightAttr::ComplexSpotlight)
 				{
 					VVector4 SurfaceNormal = VVector4::GetCross(
-						Poly.VtxList[V1] - Poly.VtxList[V0],
-						Poly.VtxList[V2] - Poly.VtxList[V0]
+						Poly.VtxList[V1].Position - Poly.VtxList[V0].Position,
+						Poly.VtxList[V2].Position - Poly.VtxList[V0].Position
 					);
 					f32 DotNormalDirection = VVector4::Dot(SurfaceNormal, Lights[LightIndex].Dir);
 
 					if (DotNormalDirection < 0)
 					{
-						VVector4 DistanceVector = TransVtxList[V0] - Lights[LightIndex].Pos;
+						VVector4 DistanceVector = TransVtxList[V0].Position - Lights[LightIndex].Pos;
 						f32 Distance = DistanceVector.GetLengthFast();
 						f32 DotDistanceDirection = VVector4::Dot(DistanceVector, Lights[LightIndex].Dir) / Distance;
 
@@ -487,11 +480,11 @@ public:
 			}
 
 			VVector4 U, V, N;
-			U = TransVtxList[Poly.Vtx[1]] - TransVtxList[Poly.Vtx[0]];
-			V = TransVtxList[Poly.Vtx[2]] - TransVtxList[Poly.Vtx[0]];
+			U = TransVtxList[Poly.Vtx[1]].Position - TransVtxList[Poly.Vtx[0]].Position;
+			V = TransVtxList[Poly.Vtx[2]].Position - TransVtxList[Poly.Vtx[0]].Position;
 
 			VVector4::Cross(U, V, N);
-			VVector4 View = Cam.Pos - TransVtxList[Poly.Vtx[0]];
+			VVector4 View = Cam.Pos - TransVtxList[Poly.Vtx[0]].Position;
 
 			// If > 0 then N watch in the same direction as View vector and visible
 			if (VVector4::Dot(View, N) <= 0.0f)
@@ -506,8 +499,8 @@ public:
 		for (i32f I = 0; I < NumVtx; ++I)
 		{
 			VVector4 Res;
-			VVector4::MulMat44(TransVtxList[I], Camera.MatCamera, Res);
-			TransVtxList[I] = Res;
+			VVector4::MulMat44(TransVtxList[I].Position, Camera.MatCamera, Res);
+			TransVtxList[I].Position = Res;
 		}
 	}
 
@@ -527,7 +520,7 @@ public:
 	{
 		for (i32f I = 0; I < NumVtx; ++I)
 		{
-			TransVtxList[I].DivByW();
+			TransVtxList[I].Position.DivByW();
 		}
 	}
 
