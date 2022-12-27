@@ -11,7 +11,7 @@
 
 VGame Game;
 
-static VCamera Cam;
+static VCamera Camera;
 static VObject Object;
 static VSurface Surface;
 static VRenderList RenderList;
@@ -32,7 +32,7 @@ void VGame::StartUp()
 		{ 0.0f, 0.0f, 0.0f }
 	);
 
-	Cam.Init(ECameraAttr::Euler, { 0, 75.0f, 0 }, { 0, 0, 0 }, Object.Position, 120, 265, 12000, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
+	Camera.Init(ECameraAttr::Euler, { 0, 75.0f, 0 }, { 0, 0, 0 }, Object.Position, 120, 265, 12000, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
 
 	{
 		VLight AmbientLight = {
@@ -133,30 +133,30 @@ void VGame::Update(f32 Delta)
 
 	if (Input.IsKeyDown(EKeycode::W))
 	{
-		Cam.Pos.X += Math.FastSin(Cam.Dir.Y);
-		Cam.Pos.Z += Math.FastCos(Cam.Dir.Y);
+		Camera.Pos.X += Math.FastSin(Camera.Dir.Y);
+		Camera.Pos.Z += Math.FastCos(Camera.Dir.Y);
 	}
 	if (Input.IsKeyDown(EKeycode::S))
 	{
-		Cam.Pos.X -= Math.FastSin(Cam.Dir.Y);
-		Cam.Pos.Z -= Math.FastCos(Cam.Dir.Y);
+		Camera.Pos.X -= Math.FastSin(Camera.Dir.Y);
+		Camera.Pos.Z -= Math.FastCos(Camera.Dir.Y);
 	}
 
 	if (Input.IsKeyDown(EKeycode::Left))
 	{
-		Cam.Dir.Y -= 0.5f;
+		Camera.Dir.Y -= 0.5f;
 	}
 	if (Input.IsKeyDown(EKeycode::Right))
 	{
-		Cam.Dir.Y += 0.5f;
+		Camera.Dir.Y += 0.5f;
 	}
 	if (Input.IsKeyDown(EKeycode::Up))
 	{
-		Cam.Dir.X -= 0.5f;
+		Camera.Dir.X -= 0.5f;
 	}
 	if (Input.IsKeyDown(EKeycode::Down))
 	{
-		Cam.Dir.X += 0.5f;
+		Camera.Dir.X += 0.5f;
 	}
 
 	VMatrix44 Rot = VMatrix44::Identity;
@@ -172,30 +172,28 @@ void VGame::Update(f32 Delta)
 
 void VGame::Render()
 {
-	Cam.BuildWorldToCameraEulerMat44();
+	Camera.BuildWorldToCameraEulerMat44();
 
 	RenderList.Reset();
 	Object.Reset();
 
 	Object.TransformModelToWorld();
-	Object.Cull(Cam);
-	Object.Light(Cam, Renderer.Lights, Renderer.MaxLights);
-
-#if 1
+	Object.Cull(Camera);
+	Object.Light(Camera, Renderer.Lights, Renderer.MaxLights);
 
 	RenderList.InsertObject(Object, false);
 	if (bBackFaceRemoval)
 	{
-		RenderList.RemoveBackFaces(Cam);
+		RenderList.RemoveBackFaces(Camera);
 	}
-	RenderList.TransformWorldToCamera(Cam);
+	RenderList.TransformWorldToCamera(Camera);
 	RenderList.SortPolygons(ESortPolygonsMethod::Average);
 	{
-		RenderList.TransformCameraToScreen(Cam);
+		RenderList.TransformCameraToScreen(Camera);
 	}
 	{
-		// RenderList.TransformCameraToPerspective(Cam);
-		// RenderList.TransformPerspectiveToScreen(Cam);
+		// RenderList.TransformCameraToPerspective(Camera);
+		// RenderList.TransformPerspectiveToScreen(Camera);
 	}
 
 	VRelRectI Dest = { 0, 0, Volition.WindowWidth, Volition.WindowHeight/2 };
@@ -217,45 +215,6 @@ void VGame::Render()
 		}
 	}
 	Renderer.BackSurface.Unlock();
-
-#else
-
-	Cam.BuildCameraToPerspectiveMat44();
-	Cam.BuildHomogeneousPerspectiveToScreenMat44();
-
-	RenderList.InsertObject(Object, false);
-	if (bBackFaceRemoval)
-	{
-		RenderList.RemoveBackFaces(Cam);
-	}
-
-	RenderList.Transform(Cam.MatCamera, ETransformType::TransOnly);
-	RenderList.SortPolygons();
-	RenderList.Transform(Cam.MatPerspective, ETransformType::TransOnly);
-	RenderList.Transform(Cam.MatScreen, ETransformType::TransOnly);
-	RenderList.ConvertFromHomogeneous();
-
-	VRelRectI Dest = { 0, 0, Volition.WindowWidth, Volition.WindowHeight/2 };
-	Renderer.BackSurface.FillRectHW(&Dest, MAP_XRGB32(100, 20, 255));
-	Dest = { 0, Dest.H, Dest.W, Volition.WindowHeight / 2 - 1 };
-	Renderer.BackSurface.FillRectHW(&Dest, MAP_XRGB32(60, 10, 255));
-
-	u32* Buffer;
-	i32 Pitch;
-	Renderer.BackSurface.Lock(Buffer, Pitch);
-	{
-		if (bRenderSolid)
-		{
-			RenderList.RenderSolid(Buffer, Pitch);
-		}
-		else
-		{
-			RenderList.RenderWire(Buffer, Pitch);
-		}
-	}
-	Renderer.BackSurface.Unlock();
-
-#endif
 
 	Renderer.DrawText(0, 5, MAP_XRGB32(0xFF, 0xFF, 0xFF), "FPS: %.3f", 1000.0f / Volition.GetDelta());
 	Renderer.DrawText(0, 35, MAP_XRGB32(0xFF, 0xFF, 0xFF), bBackFaceRemoval ? "BackFace: true" : "BackFace: false");

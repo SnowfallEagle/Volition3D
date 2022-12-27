@@ -1,3 +1,7 @@
+/* TODO:
+	- Lighting
+ */
+
 #pragma once
 
 #include <stdlib.h> // qsort()

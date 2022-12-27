@@ -27,13 +27,12 @@ namespace EPolyAttr
 		Transparent = BIT(3),
 
 		ShadeModePure     = BIT(4),
-		ShadeModeConstant = ShadeModePure,
 		ShadeModeFlat     = BIT(5),
 		ShadeModeGouraud  = BIT(6),
 		ShadeModePhong    = BIT(7),
 		ShadeModeTexture  = BIT(8),
 
-		UseMaterial = BIT(9)
+		UsesMaterial = BIT(9)
 	};
 }
 
@@ -70,11 +69,11 @@ public:
 	VSurface* Texture;
 	VMaterial* Material;
 
+	VVertex LocalVtx[3];
+	VVertex TransVtx[3];
+
 	VVector4 Normal;
 	f32 NormalLength;
 
 	f32 AverageZ;
-
-	VVertex LocalVtx[3];
-	VVertex TransVtx[3];
 };

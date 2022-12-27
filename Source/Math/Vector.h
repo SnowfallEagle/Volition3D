@@ -155,6 +155,7 @@ public:
         W = 1.0f;
         return *this;
     }
+
     FINLINE VVector4 operator-(const VVector4& V) const
     {
         return {
@@ -169,6 +170,7 @@ public:
         W = 1.0f;
         return *this;
     }
+
     FINLINE VVector4 operator*(f32 Scalar) const
     {
         return {
@@ -177,6 +179,25 @@ public:
             Z * Scalar,
             1.0f
         };
+    }
+
+    FINLINE VVector4 operator/(f32 Scalar) const
+    {
+		f32 InvDiv = 1.0f / Scalar;
+        return {
+            X * Scalar,
+            Y * Scalar,
+            Z * Scalar,
+            1.0f
+        };
+    }
+    FINLINE VVector4& operator/=(f32 Scalar)
+    {
+		f32 InvDiv = 1.0f / Scalar;
+		X *= InvDiv;
+		Y *= InvDiv;
+		Z *= InvDiv;
+		return *this;
     }
 
     FINLINE void Zero()

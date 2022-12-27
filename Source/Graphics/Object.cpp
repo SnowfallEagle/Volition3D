@@ -137,8 +137,6 @@ b32 VObject::LoadPLG(
 					LocalVtxList[I].X, LocalVtxList[I].Y, LocalVtxList[I].Z
 				);
 			}
-
-			ComputeRadius();
 		}
 
 		// Read polygons
@@ -227,11 +225,27 @@ b32 VObject::LoadPLG(
 
 				switch (PolyDesc & EPLX::ShadeModeMask)
 				{
-				case EPLX::ShadeModePhongFlag:   PolyList[I].Attr |= EPolyAttr::ShadeModePhong; break;
-				case EPLX::ShadeModeGouraudFlag: PolyList[I].Attr |= EPolyAttr::ShadeModeGouraud; break;
-				case EPLX::ShadeModeFlatFlag:    PolyList[I].Attr |= EPolyAttr::ShadeModeFlat; break;
-				case EPLX::ShadeModePureFlag:    PolyList[I].Attr |= EPolyAttr::ShadeModePure; break;
-				default: break;
+				case EPLX::ShadeModePureFlag:
+				{
+					PolyList[I].Attr |= EPolyAttr::ShadeModePure;
+				} break;
+
+				case EPLX::ShadeModeFlatFlag:
+				{
+					PolyList[I].Attr |= EPolyAttr::ShadeModeFlat;
+				} break;
+
+				case EPLX::ShadeModeGouraudFlag:
+				{
+					PolyList[I].Attr |= EPolyAttr::ShadeModeGouraud;
+				} break;
+
+				case EPLX::ShadeModePhongFlag:
+				{
+					PolyList[I].Attr |= EPolyAttr::ShadeModePhong;
+				} break;
+
+				default: {} break;
 				}
 
 				// Final
@@ -241,6 +255,10 @@ b32 VObject::LoadPLG(
 
 		fclose(File);
 	}
+
+	ComputeRadius();
+	ComputePolygonNormalsLength();
+	ComputeVertexNormals();
 
 	return true;
 }

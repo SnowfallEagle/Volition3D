@@ -1,6 +1,4 @@
 /* TODO:
-	- ComputePolyNormals()
-	- ComputeVtxNormals()
 	- Upgrade PLX loader
 	- LoadCOB()
  */
@@ -88,12 +86,18 @@ public:
 	{
 		HeadLocalVtxList = LocalVtxList = new VVertex[InNumVtx * InNumFrames];
 		HeadTransVtxList = TransVtxList = new VVertex[InNumVtx * InNumFrames];
+		Memory.MemSetByte(HeadLocalVtxList, 0, sizeof(VVertex) * (InNumVtx * InNumFrames));
+		Memory.MemSetByte(HeadTransVtxList, 0, sizeof(VVertex) * (InNumVtx * InNumFrames));
 
 		PolyList          = new VPoly[InNumPoly];
 		TextureCoordsList = new VPoint2[InNumPoly * 3];
+		Memory.MemSetByte(PolyList, 0, sizeof(VPoly) * InNumPoly);
+		Memory.MemSetByte(TextureCoordsList, 0, sizeof(VPoint2) * (InNumPoly * 3));
 
 		AverageRadiusList = new f32[InNumFrames];
 		MaxRadiusList     = new f32[InNumFrames];
+		Memory.MemSetByte(AverageRadiusList, 0, sizeof(f32) * InNumFrames);
+		Memory.MemSetByte(MaxRadiusList, 0, sizeof(f32) * InNumFrames);
 
 		NumVtx      = InNumVtx;
 		TotalNumVtx = InNumVtx * InNumFrames;
@@ -167,6 +171,69 @@ public:
 	FINLINE f32 GetMaxRadius()
 	{
 		return MaxRadiusList[CurrentFrame];
+	}
+
+	void ComputePolygonNormalsLength()
+	{
+		for (i32f I = 0; I < NumPoly; ++I)
+		{
+			i32f V0 = PolyList[I].Vtx[0];
+			i32f V1 = PolyList[I].Vtx[1];
+			i32f V2 = PolyList[I].Vtx[2];
+
+			VVector4 U = LocalVtxList[V1].Position - LocalVtxList[V0].Position;
+			VVector4 V = LocalVtxList[V2].Position - LocalVtxList[V0].Position;
+
+			PolyList[I].NormalLength = VVector4::GetCross(U, V).GetLength();
+		}
+	}
+
+	void ComputeVertexNormals()
+	{
+		i32* NumPolyTouchVtx = new i32[NumVtx];
+		Memory.MemSetByte(NumPolyTouchVtx, 0, sizeof(i32) * NumVtx); // We also could use MemSetQuad for this case, but whatever...
+
+		for (i32f I = 0; I < NumPoly; ++I)
+		{
+			if (PolyList[I].Attr & EPolyAttr::ShadeModeGouraud ||
+			    PolyList[I].Attr & EPolyAttr::ShadeModePhong)
+			{
+				i32f V0 = PolyList[I].Vtx[0];
+				i32f V1 = PolyList[I].Vtx[1];
+				i32f V2 = PolyList[I].Vtx[2];
+
+				VVector4 U = LocalVtxList[V1].Position - LocalVtxList[V0].Position;
+				VVector4 V = LocalVtxList[V2].Position - LocalVtxList[V0].Position;
+
+				VVector4 Normal;
+				VVector4::Cross(U, V, Normal);
+
+				LocalVtxList[V0].Normal += Normal;
+				LocalVtxList[V1].Normal += Normal;
+				LocalVtxList[V2].Normal += Normal;
+
+				++NumPolyTouchVtx[V0];
+				++NumPolyTouchVtx[V1];
+				++NumPolyTouchVtx[V2];
+			}
+		}
+
+		for (i32f I = 0; I < NumVtx; ++I)
+		{
+			if (NumPolyTouchVtx[I] > 0)
+			{
+				LocalVtxList[I].Normal /= (f32)NumPolyTouchVtx[I];
+				LocalVtxList[I].Normal.Normalize();
+
+				LocalVtxList[I].Attr &= EVertexAttr::HasNormal;
+
+				VL_NOTE(hLogObject, "Vertex normal [%d]: ", I);
+				LocalVtxList[I].Normal.Print();
+				VL_LOG("\n");
+			}
+		}
+
+		delete[] NumPolyTouchVtx;
 	}
 
 	b32 LoadPLG(
