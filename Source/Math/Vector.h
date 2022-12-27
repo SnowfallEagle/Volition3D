@@ -208,7 +208,7 @@ public:
 
     FINLINE void Print()
     {
-        VL_LOG("<%f, %f, %f, %f>", X, Y, Z, W);
+        VL_LOG("<%+f, %+f, %+f, %+f>", X, Y, Z, W);
     }
 
     FINLINE void DivByW()

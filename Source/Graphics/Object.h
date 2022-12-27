@@ -160,7 +160,7 @@ public:
 			AverageRadiusList[FrameIndex] = AverageRadius;
 			MaxRadiusList[FrameIndex] = MaxRadius;
 
-			VL_NOTE(hLogObject, "\n\tFrame: %d\nAverage radius: %.3f\nMax radius: %.3f\n", FrameIndex, AverageRadius, MaxRadius);
+			VL_NOTE(hLogObject, "\n\tFrame: %d\n\tAverage radius: %.3f\n\tMax radius: %.3f\n", FrameIndex, AverageRadius, MaxRadius);
 		}
 	}
 
@@ -173,6 +173,7 @@ public:
 		return MaxRadiusList[CurrentFrame];
 	}
 
+	// TEST(sean)
 	void ComputePolygonNormalsLength()
 	{
 		for (i32f I = 0; I < NumPoly; ++I)
@@ -185,9 +186,12 @@ public:
 			VVector4 V = LocalVtxList[V2].Position - LocalVtxList[V0].Position;
 
 			PolyList[I].NormalLength = VVector4::GetCross(U, V).GetLength();
+
+			VL_NOTE(hLogObject, "Polygon normal length [%d]: %f\n", I, PolyList[I].NormalLength);
 		}
 	}
 
+	// TEST(sean)
 	void ComputeVertexNormals()
 	{
 		i32* NumPolyTouchVtx = new i32[NumVtx];
