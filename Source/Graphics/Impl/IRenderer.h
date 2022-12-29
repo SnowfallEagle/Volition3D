@@ -124,9 +124,6 @@ public:
     // TODO(sean): Rename as default
     void DrawTopTriangleF(u32* Buffer, i32 Pitch, f32 X1, f32 Y1, f32 X2, f32 Y2, f32 X3, f32 Y3, u32 Color)
     {
-        // FIXME(sean): Remove this
-        VL_LOG("Top: <%.3f, %.3f> <%.3f, %.3f> <%.3f, %.3f>\n", X1, Y1, X2, Y2, X3, Y3);
-
         // Sort
         if (X2 < X1)
         {
@@ -170,7 +167,7 @@ public:
             YEnd = (i32f)Math.Ceil(Y3) - 1;
         }
 #else
-        // TODO(sean)
+        // TODO(sean): More fast version
 #endif
 
         Buffer += Pitch * YStart;
@@ -218,12 +215,100 @@ public:
                 Memory.MemSetQuad(Buffer + (u32)XClippedStart, Color, (SizeType)(XClippedEnd - XClippedStart) + 1);
             }
         }
-
     }
     void DrawBottomTriangleF(u32* Buffer, i32 Pitch, f32 X1, f32 Y1, f32 X2, f32 Y2, f32 X3, f32 Y3, u32 Color)
     {
-        // FIXME(sean): Remove this
-        VL_LOG("Bottom: <%.3f, %.3f> <%.3f, %.3f> <%.3f, %.3f>\n", X1, Y1, X2, Y2, X3, Y3);
+        // Sort
+        if (X3 < X2)
+        {
+            f32 Temp;
+            SWAP(X2, X3, Temp);
+        }
+
+        // Set Start End vectors
+        f32 XStart = X1, XEnd = X1;
+        i32f YStart, YEnd;
+
+        // Compute deltas
+        f32 Height = Y3 - Y1;
+        f32 XDeltaStart = (X2 - X1) / Height;
+        f32 XDeltaEnd   = (X3 - X1) / Height;
+
+#if VL_RASTERIZER_MODE == VL_RASTERIZER_MODE_ACCURATE
+        if (Y1 < MinClipFloat.Y)
+        {
+            YStart = MinClip.Y;
+
+            f32 YDiff = (f32)YStart - Y1;
+            XStart += YDiff * XDeltaStart;
+            XEnd   += YDiff * XDeltaEnd;
+        }
+        else
+        {
+            YStart = (i32f)Math.Ceil(Y1);
+
+            f32 YDiff = (f32)YStart - Y1;
+            XStart += YDiff * XDeltaStart;
+            XEnd   += YDiff * XDeltaEnd;
+        }
+
+        if (Y3 > MaxClipFloat.Y)
+        {
+            YEnd = MaxClip.Y;
+        }
+        else
+        {
+            YEnd = (i32f)Math.Ceil(Y3) - 1;
+        }
+#else
+        // TODO(sean): More fast version
+#endif
+
+        Buffer += Pitch * YStart;
+
+        // Test if we don't need X clipping
+        if ((X1 >= MinClip.X && X1 <= MaxClip.X) &&
+            (X2 >= MinClip.X && X2 <= MaxClip.X) &&
+            (X3 >= MinClip.X && X3 <= MaxClip.X))
+        {
+            for (i32f Y = YStart; Y <= YEnd; ++Y, Buffer += Pitch)
+            {
+                Memory.MemSetQuad(Buffer + (u32)XStart, Color, (SizeType)(XEnd - XStart) + 1);
+                XStart += XDeltaStart;
+                XEnd   += XDeltaEnd;
+            }
+        }
+        else
+        {
+            for (i32f Y = YStart; Y <= YEnd; ++Y, Buffer += Pitch)
+            {
+                f32 XClippedStart = XStart;
+                f32 XClippedEnd = XEnd;
+
+                XStart += XDeltaStart;
+                XEnd   += XDeltaEnd;
+
+                if (XClippedStart < MinClipFloat.X)
+                {
+                    if (XClippedEnd < MinClipFloat.X)
+                    {
+                        continue;
+                    }
+                    XClippedStart = MinClipFloat.X;
+                }
+
+                if (XClippedEnd > MaxClipFloat.X)
+                {
+                    if (XClippedStart > MaxClipFloat.X)
+                    {
+                        continue;
+                    }
+                    XClippedEnd = MaxClipFloat.X;
+                }
+
+                Memory.MemSetQuad(Buffer + (u32)XClippedStart, Color, (SizeType)(XClippedEnd - XClippedStart) + 1);
+            }
+        }
     }
     void DrawTriangleF(u32* Buffer, i32 Pitch, f32 X1, f32 Y1, f32 X2, f32 Y2, f32 X3, f32 Y3, u32 Color)
     {
