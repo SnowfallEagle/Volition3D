@@ -1,5 +1,4 @@
 /* TODO:
-	- Upgrade PLX loader
 	- LoadCOB()
  */
 
@@ -361,7 +360,7 @@ public:
 
 	void Light(const VCamera& Cam, const VLight* Lights, i32 NumLights)
 	{
-		// NOTE(sean): We can simplify this stuff by converting calculations to floating point
+		// FIXME(sean): We can simplify this stuff by converting calculations to floating point
 
 		if (~State & EObjectState::Active ||
 			State & EObjectState::Culled  ||
@@ -411,8 +410,8 @@ public:
 				else if (Lights[LightIndex].Attr & ELightAttr::Infinite)
 				{
 					VVector4 SurfaceNormal = VVector4::GetCross(
-						Poly.VtxList[V1].Position - Poly.VtxList[V0].Position,
-						Poly.VtxList[V2].Position - Poly.VtxList[V0].Position
+						TransVtxList[V1].Position - TransVtxList[V0].Position,
+						TransVtxList[V2].Position - TransVtxList[V0].Position
 					);
 
 					f32 Dot = VVector4::Dot(SurfaceNormal, Lights[LightIndex].Dir);
@@ -428,10 +427,10 @@ public:
 				else if (Lights[LightIndex].Attr & ELightAttr::Point)
 				{
 					VVector4 SurfaceNormal = VVector4::GetCross(
-						Poly.VtxList[V1].Position - Poly.VtxList[V0].Position,
-						Poly.VtxList[V2].Position - Poly.VtxList[V0].Position
+						TransVtxList[V1].Position - TransVtxList[V0].Position,
+						TransVtxList[V2].Position - TransVtxList[V0].Position
 					);
-					VVector4 Direction = Poly.VtxList[V0].Position - Lights[LightIndex].Pos;
+					VVector4 Direction = TransVtxList[V0].Position - Lights[LightIndex].Pos;
 
 					f32 Dot = VVector4::Dot(SurfaceNormal, Direction);
 					if (Dot < 0)
@@ -456,8 +455,8 @@ public:
 					// FIXME(sean): I think we should check if dot of normal and vector between surface and position is negative
 
 					VVector4 SurfaceNormal = VVector4::GetCross(
-						Poly.VtxList[V1].Position - Poly.VtxList[V0].Position,
-						Poly.VtxList[V2].Position - Poly.VtxList[V0].Position
+						TransVtxList[V1].Position - TransVtxList[V0].Position,
+						TransVtxList[V2].Position - TransVtxList[V0].Position
 					);
 					f32 Dot = VVector4::Dot(SurfaceNormal, Lights[LightIndex].Dir);
 
@@ -481,8 +480,8 @@ public:
 				else if (Lights[LightIndex].Attr & ELightAttr::ComplexSpotlight)
 				{
 					VVector4 SurfaceNormal = VVector4::GetCross(
-						Poly.VtxList[V1].Position - Poly.VtxList[V0].Position,
-						Poly.VtxList[V2].Position - Poly.VtxList[V0].Position
+						TransVtxList[V1].Position - TransVtxList[V0].Position,
+						TransVtxList[V2].Position - TransVtxList[V0].Position
 					);
 					f32 DotNormalDirection = VVector4::Dot(SurfaceNormal, Lights[LightIndex].Dir);
 
