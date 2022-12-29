@@ -9,12 +9,23 @@
 # include "Core/Impl/Platform_Win.h"
 #endif
 
+// Rasterizer mode
+#define VL_RASTERIZER_MODE_ACCURATE 0
+#define VL_RASTERIZER_MODE_FAST     1
+#define VL_RASTERIZER_MODE_FASTEST  2
+
+#define VL_RASTERIZER_MODE VL_RASTERIZER_MODE_ACCURATE
+
+// Endianness
 #define VL_LITTLE_ENDIAN 1
 #define VL_BIG_ENDIAN 0
 
-// Some macroses
+#define VL_ENDIANNESS VL_LITTLE_ENDIAN
+
+// Defines
 #define INLINE inline // Compiler decide if it should be inlined
 
+// Macroses
 #define MIN(A, B) ((A) < (B) ? (A) : (B))
 #define MAX(A, B) ((A) > (B) ? (A) : (B))
 #define SWAP(A, B, T) { T = A; A = B; B = T; }

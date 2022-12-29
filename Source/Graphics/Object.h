@@ -360,11 +360,11 @@ public:
 
 	void Light(const VCamera& Cam, const VLight* Lights, i32 NumLights)
 	{
-		// FIXME(sean): We can simplify this stuff by converting calculations to floating point
+		// TODO(sean): Use floating point?
 
 		if (~State & EObjectState::Active ||
-			State & EObjectState::Culled  ||
-			~State & EObjectState::Visible)
+		    State & EObjectState::Culled  ||
+		    ~State & EObjectState::Visible)
 		{
 			return;
 		}
@@ -373,14 +373,14 @@ public:
 		{
 			VPoly& Poly = PolyList[PolyIndex];
 			if (~Poly.State & EPolyState::Active ||
-				Poly.State & EPolyState::Clipped ||
-				Poly.State & EPolyState::BackFace)
+			    Poly.State & EPolyState::Clipped ||
+			    Poly.State & EPolyState::BackFace)
 			{
 				continue;
 			}
 
 			if (~Poly.Attr & EPolyAttr::ShadeModeFlat &&
-				~Poly.Attr & EPolyAttr::ShadeModeGouraud)
+			    ~Poly.Attr & EPolyAttr::ShadeModeGouraud)
 			{
 				continue; // As emissive, no changes
 			}
@@ -539,9 +539,9 @@ public:
 			VPoly& Poly = PolyList[I];
 
 			if (~Poly.State & EPolyState::Active ||
-				Poly.State & EPolyState::Clipped ||
-				Poly.Attr & EPolyAttr::TwoSided ||
-				Poly.State & EPolyState::BackFace)
+			    Poly.State & EPolyState::Clipped ||
+			    Poly.Attr & EPolyAttr::TwoSided  ||
+			    Poly.State & EPolyState::BackFace)
 			{
 				continue;
 			}
@@ -646,8 +646,8 @@ public:
 		for (i32f I = 0; I < NumPoly; ++I)
 		{
 			if (~PolyList[I].State & EPolyState::Active ||
-				PolyList[I].State & EPolyState::Clipped ||
-				PolyList[I].State & EPolyState::BackFace)
+			    PolyList[I].State & EPolyState::Clipped ||
+			    PolyList[I].State & EPolyState::BackFace)
 			{
 				continue;
 			}
@@ -682,8 +682,8 @@ public:
 		for (i32f I = 0; I < NumPoly; ++I)
 		{
 			if (~PolyList[I].State & EPolyState::Active ||
-				PolyList[I].State & EPolyState::Clipped ||
-				PolyList[I].State & EPolyState::BackFace)
+			    PolyList[I].State & EPolyState::Clipped ||
+			    PolyList[I].State & EPolyState::BackFace)
 			{
 				continue;
 			}

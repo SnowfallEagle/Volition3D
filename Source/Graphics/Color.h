@@ -17,7 +17,7 @@ public:
         u32 ARGB;
         struct
         {
-#if VL_LITTLE_ENDIAN
+#if VL_ENDIANNESS == VL_LITTLE_ENDIAN
             u8 B, G, R, A;
 #else
             u8 A, R, G, B;
@@ -49,7 +49,7 @@ public:
         u32 RGBA;
         struct
         {
-#if VL_LITTLE_ENDIAN
+#if VL_ENDIANNESS == VL_LITTLE_ENDIAN
             u8 A, B, G, R;
 #else
             u8 R, G, B, A;

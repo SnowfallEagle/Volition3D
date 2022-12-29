@@ -53,7 +53,7 @@ public:
 	VPoint2* TextureCoordsList;
 	i32 TextureCoordsIndices[3];
 
-	f32 NormalLength;
+	f32 NormalLength; // TODO(sean)
 };
 
 class VPolyFace
