@@ -692,7 +692,7 @@ public:
             i32f V1 = PolyList[I].VtxIndices[1];
             i32f V2 = PolyList[I].VtxIndices[2];
 
-            Renderer.DrawTriangleF(
+            Renderer.DrawTriangle(
                 Buffer, Pitch,
                 TransVtxList[V0].X, TransVtxList[V0].Y,
                 TransVtxList[V1].X, TransVtxList[V1].Y,

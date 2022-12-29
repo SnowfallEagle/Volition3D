@@ -384,7 +384,7 @@ b32 IRenderer::ClipLine(i32& X1, i32& Y1, i32& X2, i32& Y2) const
     return true;
 }
 
-void IRenderer::DrawTopTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, i32 X3, i32 Y3, u32 Color)
+void IRenderer::DrawTopTriangleInt(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, i32 X3, i32 Y3, u32 Color)
 {
     // Sort
     if (X1 > X2)
@@ -462,7 +462,7 @@ void IRenderer::DrawTopTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, 
     }
 }
 
-void IRenderer::DrawBottomTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, i32 X3, i32 Y3, u32 Color)
+void IRenderer::DrawBottomTriangleInt(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, i32 X3, i32 Y3, u32 Color)
 {
     // Sort
     if (X2 > X3)
@@ -540,7 +540,7 @@ void IRenderer::DrawBottomTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X
     }
 }
 
-void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, i32 X3, i32 Y3, u32 Color)
+void IRenderer::DrawTriangleInt(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, i32 X3, i32 Y3, u32 Color)
 {
     // Test for vertical and horizontal triangle
     if ((X1 == X2 && X2 == X3) || (Y1 == Y2 && Y2 == Y3))
@@ -576,18 +576,18 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32
 
     if (Y1 == Y2)
     {
-        DrawTopTriangle(Buffer, Pitch, X1, Y1, X2, Y2, X3, Y3, Color);
+        DrawTopTriangleInt(Buffer, Pitch, X1, Y1, X2, Y2, X3, Y3, Color);
     }
     else if (Y2 == Y3)
     {
-        DrawBottomTriangle(Buffer, Pitch, X1, Y1, X2, Y2, X3, Y3, Color);
+        DrawBottomTriangleInt(Buffer, Pitch, X1, Y1, X2, Y2, X3, Y3, Color);
     }
     else
     {
         // Find NewX which will divide triangle on Bottom/Top parts
         i32 NewX = X1 + (i32)(0.5f + (f32)(Y2 - Y1) * ((f32)(X3 - X1) / (f32)(Y3 - Y1)) );
 
-        DrawBottomTriangle(Buffer, Pitch, X1, Y1, NewX, Y2, X2, Y2, Color);
-        DrawTopTriangle(Buffer, Pitch, X2, Y2, NewX, Y2, X3, Y3, Color);
+        DrawBottomTriangleInt(Buffer, Pitch, X1, Y1, NewX, Y2, X2, Y2, Color);
+        DrawTopTriangleInt(Buffer, Pitch, X2, Y2, NewX, Y2, X3, Y3, Color);
     }
 }

@@ -88,10 +88,7 @@ public:
 				continue;
 			}
 
-			VVertex* VtxList = bInsertLocal ? Object.LocalVtxList : Object.TransVtxList;
-			b32 bRes = InsertPoly(Poly, VtxList);
-
-			if (!bRes)
+			if (!InsertPoly(Poly, bInsertLocal ? Object.LocalVtxList : Object.TransVtxList))
 			{
 				return;
 			}
@@ -491,7 +488,7 @@ public:
 				continue;
 			}
 
-			Renderer.DrawTriangleF(
+			Renderer.DrawTriangle(
 				Buffer, Pitch,
 				Poly->TransVtx[0].X, Poly->TransVtx[0].Y,
 				Poly->TransVtx[1].X, Poly->TransVtx[1].Y,

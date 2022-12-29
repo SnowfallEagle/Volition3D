@@ -116,13 +116,11 @@ public:
         }
     }
 
-    // TODO(sean): Rename in integer version
-    void DrawTopTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, i32 X3, i32 Y3, u32 Color);
-    void DrawBottomTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, i32 X3, i32 Y3, u32 Color);
-    void DrawTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, i32 X3, i32 Y3, u32 Color);
+    void DrawTopTriangleInt(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, i32 X3, i32 Y3, u32 Color);
+    void DrawBottomTriangleInt(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, i32 X3, i32 Y3, u32 Color);
+    void DrawTriangleInt(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, i32 X3, i32 Y3, u32 Color);
 
-    // TODO(sean): Rename as default
-    void DrawTopTriangleF(u32* Buffer, i32 Pitch, f32 X1, f32 Y1, f32 X2, f32 Y2, f32 X3, f32 Y3, u32 Color)
+    void DrawTopTriangle(u32* Buffer, i32 Pitch, f32 X1, f32 Y1, f32 X2, f32 Y2, f32 X3, f32 Y3, u32 Color)
     {
         // Sort
         if (X2 < X1)
@@ -216,7 +214,7 @@ public:
             }
         }
     }
-    void DrawBottomTriangleF(u32* Buffer, i32 Pitch, f32 X1, f32 Y1, f32 X2, f32 Y2, f32 X3, f32 Y3, u32 Color)
+    void DrawBottomTriangle(u32* Buffer, i32 Pitch, f32 X1, f32 Y1, f32 X2, f32 Y2, f32 X3, f32 Y3, u32 Color)
     {
         // Sort
         if (X3 < X2)
@@ -310,10 +308,10 @@ public:
             }
         }
     }
-    void DrawTriangleF(u32* Buffer, i32 Pitch, f32 X1, f32 Y1, f32 X2, f32 Y2, f32 X3, f32 Y3, u32 Color)
+    void DrawTriangle(u32* Buffer, i32 Pitch, f32 X1, f32 Y1, f32 X2, f32 Y2, f32 X3, f32 Y3, u32 Color)
     {
-        // FIXME(sean): Maybe killing branch prediction
         // Vertical, horizontal triangle clipping
+        // FIXME(sean): Maybe killing branch prediction
         if ((Math.IsEqualFloat(X1, X2) && Math.IsEqualFloat(X2, X3)) ||
             (Math.IsEqualFloat(Y1, Y2) && Math.IsEqualFloat(Y2, Y3)))
         {
@@ -350,17 +348,17 @@ public:
 
         if (Math.IsEqualFloat(Y1, Y2)) // FIXME(sean): Maybe killing branch prediction
         {
-            DrawTopTriangleF(Buffer, Pitch, X1, Y1, X2, Y2, X3, Y3, Color);
+            DrawTopTriangle(Buffer, Pitch, X1, Y1, X2, Y2, X3, Y3, Color);
         }
         else if (Math.IsEqualFloat(Y2, Y3)) // FIXME(sean): Maybe killing branch prediction
         {
-            DrawBottomTriangleF(Buffer, Pitch, X1, Y1, X2, Y2, X3, Y3, Color);
+            DrawBottomTriangle(Buffer, Pitch, X1, Y1, X2, Y2, X3, Y3, Color);
         }
         else
         {
             f32 NewX = X1 + (Y2 - Y1) * ((X3 - X1) / (Y3 - Y1));
-            DrawBottomTriangleF(Buffer, Pitch, X1, Y1, X2, Y2, NewX, Y2, Color);
-            DrawTopTriangleF(Buffer, Pitch, X2, Y2, NewX, Y2, X3, Y3, Color);
+            DrawBottomTriangle(Buffer, Pitch, X1, Y1, X2, Y2, NewX, Y2, Color);
+            DrawTopTriangle(Buffer, Pitch, X2, Y2, NewX, Y2, X3, Y3, Color);
         }
     }
 

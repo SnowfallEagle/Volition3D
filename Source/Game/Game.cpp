@@ -26,8 +26,8 @@ DEFINE_LOG_CHANNEL(hLogGame, "Game");
 void VGame::StartUp()
 {
 	Object.LoadPLG(
-		"tank3.plg",
-		{ 0.0f, 0.0f, 200.0f },
+		"tankg3.plg",
+		{ 0.0f, 0.0f, 250.0f },
 		{ 1.0f, 1.0f, 1.0f },
 		{ 0.0f, 0.0f, 0.0f }
 	);
