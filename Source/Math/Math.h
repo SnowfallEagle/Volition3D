@@ -44,8 +44,8 @@ public:
         {
             f32 Rad = DegToRad((f32)I);
 
-            SinLook[I] = sinf(Rad);
-            CosLook[I] = cosf(Rad);
+            SinLook[I] = std::sinf(Rad);
+            CosLook[I] = std::cosf(Rad);
         }
     }
     void ShutDown()
@@ -54,17 +54,26 @@ public:
 
     FINLINE static f32 Abs(f32 X)
     {
-        return fabsf(X);
+        return std::fabsf(X);
     }
     FINLINE static i32 Abs(i32 X)
     {
-        return abs(X);
+        return std::abs(X);
     }
 
-	FINLINE static b32 IsEqualFloat(f32 A, f32 B)
-	{
-		return Abs(A - B) < Epsilon3;
-	}
+    FINLINE static f32 Floor(f32 X)
+    {
+        return std::floorf(X);
+    }
+    FINLINE static f32 Ceil(f32 X)
+    {
+        return std::ceilf(X);
+    }
+
+    FINLINE static b32 IsEqualFloat(f32 A, f32 B)
+    {
+        return Abs(A - B) < Epsilon3;
+    }
 
     static f32 FastDist2D(f32 X, f32 Y) // 3.5% Error
     {
@@ -96,11 +105,11 @@ public:
 
     static f32 FastSin(f32 Deg)
     {
-        Deg = fmodf(Deg, 360);
+        Deg = std::fmodf(Deg, 360);
         if (Deg < 0)
-		{
+        {
             Deg += 360;
-		}
+        }
 
         i32f I = (i32f)Deg;
         f32 Remainder = Deg - (f32)I;
@@ -108,11 +117,11 @@ public:
     }
     static f32 FastCos(f32 Deg)
     {
-        Deg = fmodf(Deg, 360);
+        Deg = std::fmodf(Deg, 360);
         if (Deg < 0)
-		{
+        {
             Deg += 360;
-		}
+        }
 
         i32f I = (i32f)Deg;
         f32 Remainder = Deg - (f32)I;
@@ -121,19 +130,19 @@ public:
 
     FINLINE static f32 Sqrt(f32 X)
     {
-        return sqrtf(X);
+        return std::sqrtf(X);
     }
     FINLINE static f32 Sin(f32 Deg)
     {
-        return sinf(Deg * DegToRadConversion);
+        return std::sinf(Deg * DegToRadConversion);
     }
     FINLINE static f32 Cos(f32 Deg)
     {
-        return cosf(Deg * DegToRadConversion);
+        return std::cosf(Deg * DegToRadConversion);
     }
     FINLINE static f32 Tan(f32 Deg)
     {
-        return tanf(Deg * DegToRadConversion);
+        return std::tanf(Deg * DegToRadConversion);
     }
 
     FINLINE static f32 DegToRad(f32 Deg)

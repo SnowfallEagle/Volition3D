@@ -1,5 +1,5 @@
 /* TODO:
-	- Maybe we need [0.0f;1.0f] colors?
+    - Maybe we need [0.0f;1.0f] colors?
  */
 
 #pragma once

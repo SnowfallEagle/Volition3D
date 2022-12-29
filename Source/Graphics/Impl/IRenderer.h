@@ -111,82 +111,173 @@ public:
     void DrawClippedLine(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, u32 Color) const
     {
         if (ClipLine(X1, Y1, X2, Y2))
-		{
+        {
             DrawLine(Buffer, Pitch, X1, Y1, X2, Y2, Color);
-		}
+        }
     }
 
-	// TODO(sean): Rename in integer version
+    // TODO(sean): Rename in integer version
     void DrawTopTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, i32 X3, i32 Y3, u32 Color);
     void DrawBottomTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, i32 X3, i32 Y3, u32 Color);
     void DrawTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, i32 X3, i32 Y3, u32 Color);
 
-	// TODO(sean): Rename as default
-	void DrawTopTriangleF(u32* Buffer, i32 Pitch, f32 X1, f32 Y1, f32 X2, f32 Y2, f32 X3, f32 Y3, u32 Color)
-	{
-		// FIXME(sean): Remove this
-		VL_LOG("Top: <%.3f, %.3f> <%.3f, %.3f> <%.3f, %.3f>\n", X1, Y1, X2, Y2, X3, Y3);
+    // TODO(sean): Rename as default
+    void DrawTopTriangleF(u32* Buffer, i32 Pitch, f32 X1, f32 Y1, f32 X2, f32 Y2, f32 X3, f32 Y3, u32 Color)
+    {
+        // FIXME(sean): Remove this
+        VL_LOG("Top: <%.3f, %.3f> <%.3f, %.3f> <%.3f, %.3f>\n", X1, Y1, X2, Y2, X3, Y3);
 
+        // Sort
+        if (X2 < X1)
+        {
+            f32 Temp;
+            SWAP(X1, X2, Temp);
+        }
 
-	}
-	void DrawBottomTriangleF(u32* Buffer, i32 Pitch, f32 X1, f32 Y1, f32 X2, f32 Y2, f32 X3, f32 Y3, u32 Color)
-	{
-		// FIXME(sean): Remove this
-		VL_LOG("Bottom: <%.3f, %.3f> <%.3f, %.3f> <%.3f, %.3f>\n", X1, Y1, X2, Y2, X3, Y3);
-	}
-	void DrawTriangleF(u32* Buffer, i32 Pitch, f32 X1, f32 Y1, f32 X2, f32 Y2, f32 X3, f32 Y3, u32 Color)
-	{
-		// FIXME(sean): Maybe killing branch prediction
-		// Vertical, horizontal triangle clipping
-		if ((Math.IsEqualFloat(X1, X2) && Math.IsEqualFloat(X2, X3)) ||
-		    (Math.IsEqualFloat(Y1, Y2) && Math.IsEqualFloat(Y2, Y3)))
-		{
-			return;
-		}
+        // Set Start End vectors
+        f32 XStart = X1, XEnd = X2;
+        i32f YStart, YEnd;
 
-		// Sort by Y
-		if (Y2 < Y1)
-		{
-			f32 Temp;
-			SWAP(X1, X2, Temp);
-			SWAP(Y1, Y2, Temp);
-		}
-		if (Y3 < Y1)
-		{
-			f32 Temp;
-			SWAP(X1, X3, Temp);
-			SWAP(Y1, Y3, Temp);
-		}
-		if (Y3 < Y2)
-		{
-			f32 Temp;
-			SWAP(X2, X3, Temp);
-			SWAP(Y2, Y3, Temp);
-		}
+        // Compute deltas
+        f32 Height = Y3 - Y1;
+        f32 XDeltaStart = (X3 - X1) / Height;
+        f32 XDeltaEnd   = (X3 - X2) / Height;
 
-		// Screen space clipping
-		if ((Y3 < MinClipFloat.Y || Y1 > MaxClipFloat.Y) ||
-		    (X1 < MinClipFloat.X && X2 < MinClipFloat.X && X3 < MinClipFloat.X) ||
-		    (X1 > MaxClipFloat.X && X2 > MaxClipFloat.X && X3 > MaxClipFloat.X))
-		{
-			return;
-		}
+#if VL_RASTERIZER_MODE == VL_RASTERIZER_MODE_ACCURATE
+        if (Y1 < MinClipFloat.Y)
+        {
+            YStart = MinClip.Y;
 
-		if (Math.IsEqualFloat(Y1, Y2)) // FIXME(sean): Maybe killing branch prediction
-		{
-			DrawTopTriangleF(Buffer, Pitch, X1, Y1, X2, Y2, X3, Y3, Color);
-		}
-		else if (Math.IsEqualFloat(Y2, Y3)) // FIXME(sean): Maybe killing branch prediction
-		{
-			DrawBottomTriangleF(Buffer, Pitch, X1, Y1, X2, Y2, X3, Y3, Color);
-		}
-		else
-		{
-			f32 NewX = X1 + (Y2 - Y1) * ((X3 - X1) / (Y3 - Y1));
-			DrawBottomTriangleF(Buffer, Pitch, X1, Y1, X2, Y2, NewX, Y2, Color);
-			DrawTopTriangleF(Buffer, Pitch, X2, Y2, NewX, Y2, X3, Y3, Color);
-		}
-	}
+            f32 YDiff = (f32)YStart - Y1;
+            XStart += YDiff * XDeltaStart;
+            XEnd   += YDiff * XDeltaEnd;
+        }
+        else
+        {
+            YStart = (i32f)Math.Ceil(Y1);
+
+            f32 YDiff = (f32)YStart - Y1;
+            XStart += YDiff * XDeltaStart;
+            XEnd   += YDiff * XDeltaEnd;
+        }
+
+        if (Y3 > MaxClipFloat.Y)
+        {
+            YEnd = MaxClip.Y;
+        }
+        else
+        {
+            YEnd = (i32f)Math.Ceil(Y3) - 1;
+        }
+#else
+        // TODO(sean)
+#endif
+
+        Buffer += Pitch * YStart;
+
+        // Test if we don't need X clipping
+        if ((X1 >= MinClip.X && X1 <= MaxClip.X) &&
+            (X2 >= MinClip.X && X2 <= MaxClip.X) &&
+            (X3 >= MinClip.X && X3 <= MaxClip.X))
+        {
+            for (i32f Y = YStart; Y <= YEnd; ++Y, Buffer += Pitch)
+            {
+                Memory.MemSetQuad(Buffer + (u32)XStart, Color, (SizeType)(XEnd - XStart) + 1);
+                XStart += XDeltaStart;
+                XEnd   += XDeltaEnd;
+            }
+        }
+        else
+        {
+            for (i32f Y = YStart; Y <= YEnd; ++Y, Buffer += Pitch)
+            {
+                f32 XClippedStart = XStart;
+                f32 XClippedEnd = XEnd;
+
+                XStart += XDeltaStart;
+                XEnd   += XDeltaEnd;
+
+                if (XClippedStart < MinClipFloat.X)
+                {
+                    if (XClippedEnd < MinClipFloat.X)
+                    {
+                        continue;
+                    }
+                    XClippedStart = MinClipFloat.X;
+                }
+
+                if (XClippedEnd > MaxClipFloat.X)
+                {
+                    if (XClippedStart > MaxClipFloat.X)
+                    {
+                        continue;
+                    }
+                    XClippedEnd = MaxClipFloat.X;
+                }
+
+                Memory.MemSetQuad(Buffer + (u32)XClippedStart, Color, (SizeType)(XClippedEnd - XClippedStart) + 1);
+            }
+        }
+
+    }
+    void DrawBottomTriangleF(u32* Buffer, i32 Pitch, f32 X1, f32 Y1, f32 X2, f32 Y2, f32 X3, f32 Y3, u32 Color)
+    {
+        // FIXME(sean): Remove this
+        VL_LOG("Bottom: <%.3f, %.3f> <%.3f, %.3f> <%.3f, %.3f>\n", X1, Y1, X2, Y2, X3, Y3);
+    }
+    void DrawTriangleF(u32* Buffer, i32 Pitch, f32 X1, f32 Y1, f32 X2, f32 Y2, f32 X3, f32 Y3, u32 Color)
+    {
+        // FIXME(sean): Maybe killing branch prediction
+        // Vertical, horizontal triangle clipping
+        if ((Math.IsEqualFloat(X1, X2) && Math.IsEqualFloat(X2, X3)) ||
+            (Math.IsEqualFloat(Y1, Y2) && Math.IsEqualFloat(Y2, Y3)))
+        {
+            return;
+        }
+
+        // Sort by Y
+        if (Y2 < Y1)
+        {
+            f32 Temp;
+            SWAP(X1, X2, Temp);
+            SWAP(Y1, Y2, Temp);
+        }
+        if (Y3 < Y1)
+        {
+            f32 Temp;
+            SWAP(X1, X3, Temp);
+            SWAP(Y1, Y3, Temp);
+        }
+        if (Y3 < Y2)
+        {
+            f32 Temp;
+            SWAP(X2, X3, Temp);
+            SWAP(Y2, Y3, Temp);
+        }
+
+        // Screen space clipping
+        if ((Y3 < MinClipFloat.Y || Y1 > MaxClipFloat.Y) ||
+            (X1 < MinClipFloat.X && X2 < MinClipFloat.X && X3 < MinClipFloat.X) ||
+            (X1 > MaxClipFloat.X && X2 > MaxClipFloat.X && X3 > MaxClipFloat.X))
+        {
+            return;
+        }
+
+        if (Math.IsEqualFloat(Y1, Y2)) // FIXME(sean): Maybe killing branch prediction
+        {
+            DrawTopTriangleF(Buffer, Pitch, X1, Y1, X2, Y2, X3, Y3, Color);
+        }
+        else if (Math.IsEqualFloat(Y2, Y3)) // FIXME(sean): Maybe killing branch prediction
+        {
+            DrawBottomTriangleF(Buffer, Pitch, X1, Y1, X2, Y2, X3, Y3, Color);
+        }
+        else
+        {
+            f32 NewX = X1 + (Y2 - Y1) * ((X3 - X1) / (Y3 - Y1));
+            DrawBottomTriangleF(Buffer, Pitch, X1, Y1, X2, Y2, NewX, Y2, Color);
+            DrawTopTriangleF(Buffer, Pitch, X2, Y2, NewX, Y2, X3, Y3, Color);
+        }
+    }
 
     virtual void DrawText(i32 X, i32 Y, VColorARGB Color, const char* Format, ...) = 0;
 

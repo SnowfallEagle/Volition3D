@@ -33,19 +33,19 @@
 #define BIT(N) ( 1 << ((N)-1) )
 
 #define SAFE_DELETE(X) \
-	{ \
-		if ((X)) \
-		{ \
-			delete (X); \
-			X = nullptr; \
-		} \
-	}
+    { \
+        if ((X)) \
+        { \
+            delete (X); \
+            X = nullptr; \
+        } \
+    }
 
 #define SAFE_DELETE_ARRAY(X) \
-	{ \
-		if ((X)) \
-		{ \
-			delete[] (X); \
-			X = nullptr; \
-		} \
-	}
+    { \
+        if ((X)) \
+        { \
+            delete[] (X); \
+            X = nullptr; \
+        } \
+    }
