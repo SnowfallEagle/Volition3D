@@ -165,7 +165,22 @@ public:
             YEnd = (i32f)Math.Ceil(Y3) - 1;
         }
 #else
-        // TODO(sean): More fast version
+        if (Y1 < MinClipFloat.Y)
+        {
+            f32 YDiff = (MinClipFloat.Y - Y1);
+            XStart += YDiff * XDeltaStart;
+            XEnd   += YDiff * XDeltaEnd;
+
+            Y1 = MinClipFloat.Y;
+        }
+
+        if (Y3 > MaxClipFloat.Y)
+        {
+            Y3 = MaxClipFloat.Y + 0.5f;
+        }
+
+        YStart = (i32f)Math.Ceil(Y1);
+        YEnd   = (i32f)Math.Ceil(Y3) - 1;
 #endif
 
         Buffer += Pitch * YStart;
@@ -259,7 +274,22 @@ public:
             YEnd = (i32f)Math.Ceil(Y3) - 1;
         }
 #else
-        // TODO(sean): More fast version
+        if (Y1 < MinClipFloat.Y)
+        {
+            f32 YDiff = (MinClipFloat.Y - Y1);
+            XStart += YDiff * XDeltaStart;
+            XEnd   += YDiff * XDeltaEnd;
+
+            Y1 = MinClipFloat.Y;
+        }
+
+        if (Y3 > MaxClipFloat.Y)
+        {
+            Y3 = MaxClipFloat.Y + 0.5f;
+        }
+
+        YStart = (i32f)Math.Ceil(Y1);
+        YEnd   = (i32f)Math.Ceil(Y3) - 1;
 #endif
 
         Buffer += Pitch * YStart;
