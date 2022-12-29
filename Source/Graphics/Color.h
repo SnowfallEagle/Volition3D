@@ -1,3 +1,7 @@
+/* TODO:
+	- Maybe we need [0.0f;1.0f] colors?
+ */
+
 #pragma once
 
 #include "Core/Platform.h"
@@ -41,6 +45,7 @@ public:
     }
 };
 
+// TODO(sean): Do we really need it?
 class VColorRGBA
 {
 public:

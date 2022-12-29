@@ -17,6 +17,7 @@ public:
     static constexpr f32 DegToRadConversion = Pi / 180.0f;
     static constexpr f32 RadToDegConversion = 180.0f / Pi;
 
+    static constexpr f32 Epsilon3 = (f32)(1E-3);
     static constexpr f32 Epsilon4 = (f32)(1E-4);
     static constexpr f32 Epsilon5 = (f32)(1E-5);
     static constexpr f32 Epsilon6 = (f32)(1E-6);
@@ -60,6 +61,11 @@ public:
         return abs(X);
     }
 
+	FINLINE static b32 IsEqualFloat(f32 A, f32 B)
+	{
+		return Abs(A - B) < Epsilon3;
+	}
+
     static f32 FastDist2D(f32 X, f32 Y) // 3.5% Error
     {
         // Absolute integer values
@@ -92,7 +98,9 @@ public:
     {
         Deg = fmodf(Deg, 360);
         if (Deg < 0)
+		{
             Deg += 360;
+		}
 
         i32f I = (i32f)Deg;
         f32 Remainder = Deg - (f32)I;
@@ -102,7 +110,9 @@ public:
     {
         Deg = fmodf(Deg, 360);
         if (Deg < 0)
+		{
             Deg += 360;
+		}
 
         i32f I = (i32f)Deg;
         f32 Remainder = Deg - (f32)I;

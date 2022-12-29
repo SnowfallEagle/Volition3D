@@ -111,12 +111,82 @@ public:
     void DrawClippedLine(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, u32 Color) const
     {
         if (ClipLine(X1, Y1, X2, Y2))
+		{
             DrawLine(Buffer, Pitch, X1, Y1, X2, Y2, Color);
+		}
     }
 
+	// TODO(sean): Rename in integer version
     void DrawTopTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, i32 X3, i32 Y3, u32 Color);
     void DrawBottomTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, i32 X3, i32 Y3, u32 Color);
     void DrawTriangle(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, i32 X3, i32 Y3, u32 Color);
+
+	// TODO(sean): Rename as default
+	void DrawTopTriangleF(u32* Buffer, i32 Pitch, f32 X1, f32 Y1, f32 X2, f32 Y2, f32 X3, f32 Y3, u32 Color)
+	{
+		// FIXME(sean): Remove this
+		VL_LOG("Top: <%.3f, %.3f> <%.3f, %.3f> <%.3f, %.3f>\n", X1, Y1, X2, Y2, X3, Y3);
+
+
+	}
+	void DrawBottomTriangleF(u32* Buffer, i32 Pitch, f32 X1, f32 Y1, f32 X2, f32 Y2, f32 X3, f32 Y3, u32 Color)
+	{
+		// FIXME(sean): Remove this
+		VL_LOG("Bottom: <%.3f, %.3f> <%.3f, %.3f> <%.3f, %.3f>\n", X1, Y1, X2, Y2, X3, Y3);
+	}
+	void DrawTriangleF(u32* Buffer, i32 Pitch, f32 X1, f32 Y1, f32 X2, f32 Y2, f32 X3, f32 Y3, u32 Color)
+	{
+		// FIXME(sean): Maybe killing branch prediction
+		// Vertical, horizontal triangle clipping
+		if ((Math.IsEqualFloat(X1, X2) && Math.IsEqualFloat(X2, X3)) ||
+		    (Math.IsEqualFloat(Y1, Y2) && Math.IsEqualFloat(Y2, Y3)))
+		{
+			return;
+		}
+
+		// Sort by Y
+		if (Y2 < Y1)
+		{
+			f32 Temp;
+			SWAP(X1, X2, Temp);
+			SWAP(Y1, Y2, Temp);
+		}
+		if (Y3 < Y1)
+		{
+			f32 Temp;
+			SWAP(X1, X3, Temp);
+			SWAP(Y1, Y3, Temp);
+		}
+		if (Y3 < Y2)
+		{
+			f32 Temp;
+			SWAP(X2, X3, Temp);
+			SWAP(Y2, Y3, Temp);
+		}
+
+		// Screen space clipping
+		if ((Y3 < MinClipFloat.Y || Y1 > MaxClipFloat.Y) ||
+		    (X1 < MinClipFloat.X && X2 < MinClipFloat.X && X3 < MinClipFloat.X) ||
+		    (X1 > MaxClipFloat.X && X2 > MaxClipFloat.X && X3 > MaxClipFloat.X))
+		{
+			return;
+		}
+
+		if (Math.IsEqualFloat(Y1, Y2)) // FIXME(sean): Maybe killing branch prediction
+		{
+			DrawTopTriangleF(Buffer, Pitch, X1, Y1, X2, Y2, X3, Y3, Color);
+		}
+		else if (Math.IsEqualFloat(Y2, Y3)) // FIXME(sean): Maybe killing branch prediction
+		{
+			DrawBottomTriangleF(Buffer, Pitch, X1, Y1, X2, Y2, X3, Y3, Color);
+		}
+		else
+		{
+			f32 NewX = X1 + (Y2 - Y1) * ((X3 - X1) / (Y3 - Y1));
+			DrawBottomTriangleF(Buffer, Pitch, X1, Y1, X2, Y2, NewX, Y2, Color);
+			DrawTopTriangleF(Buffer, Pitch, X2, Y2, NewX, Y2, X3, Y3, Color);
+		}
+	}
 
     virtual void DrawText(i32 X, i32 Y, VColorARGB Color, const char* Format, ...) = 0;
 
