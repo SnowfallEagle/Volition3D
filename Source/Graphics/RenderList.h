@@ -30,7 +30,7 @@ public:
 	VPolyFace PolyList[MaxPoly];
 
 public:
-	b32 InsertPoly(const VPoly& Poly)
+	b32 InsertPoly(const VPoly& Poly, const VVertex* VtxList)
 	{
 		if (NumPoly >= MaxPoly)
 		{
@@ -44,7 +44,7 @@ public:
 
 		for (i32f I = 0; I < 3; ++I)
 		{
-			PolyList[NumPoly].TransVtx[I] = PolyList[NumPoly].LocalVtx[I] = Poly.VtxList[Poly.Vtx[I]];
+			PolyList[NumPoly].TransVtx[I] = PolyList[NumPoly].LocalVtx[I] = VtxList[Poly.VtxIndices[I]];
 			PolyList[NumPoly].LitColor[I] = Poly.LitColor[I];
 		}
 
@@ -61,7 +61,7 @@ public:
 		}
 
 		PolyPtrList[NumPoly] = &PolyList[NumPoly];
-		memcpy(&PolyList[NumPoly], &PolyFace, sizeof(VPolyFace));
+		Memory.MemCopy(&PolyList[NumPoly], &PolyFace, sizeof(VPolyFace));
 
 		++NumPoly;
 
@@ -88,10 +88,8 @@ public:
 				continue;
 			}
 
-			VVertex* OldVtxList = Poly.VtxList;
-			Poly.VtxList = bInsertLocal ? Object.LocalVtxList : Object.TransVtxList;
-			b32 bRes = InsertPoly(Poly);
-			Poly.VtxList = OldVtxList;
+			VVertex* VtxList = bInsertLocal ? Object.LocalVtxList : Object.TransVtxList;
+			b32 bRes = InsertPoly(Poly, VtxList);
 
 			if (!bRes)
 			{

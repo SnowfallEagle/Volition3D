@@ -177,9 +177,9 @@ public:
 	{
 		for (i32f I = 0; I < NumPoly; ++I)
 		{
-			i32f V0 = PolyList[I].Vtx[0];
-			i32f V1 = PolyList[I].Vtx[1];
-			i32f V2 = PolyList[I].Vtx[2];
+			i32f V0 = PolyList[I].VtxIndices[0];
+			i32f V1 = PolyList[I].VtxIndices[1];
+			i32f V2 = PolyList[I].VtxIndices[2];
 
 			VVector4 U = LocalVtxList[V1].Position - LocalVtxList[V0].Position;
 			VVector4 V = LocalVtxList[V2].Position - LocalVtxList[V0].Position;
@@ -201,9 +201,9 @@ public:
 			if (PolyList[I].Attr & EPolyAttr::ShadeModeGouraud ||
 			    PolyList[I].Attr & EPolyAttr::ShadeModePhong)
 			{
-				i32f V0 = PolyList[I].Vtx[0];
-				i32f V1 = PolyList[I].Vtx[1];
-				i32f V2 = PolyList[I].Vtx[2];
+				i32f V0 = PolyList[I].VtxIndices[0];
+				i32f V1 = PolyList[I].VtxIndices[1];
+				i32f V2 = PolyList[I].VtxIndices[2];
 
 				VVector4 U = LocalVtxList[V1].Position - LocalVtxList[V0].Position;
 				VVector4 V = LocalVtxList[V2].Position - LocalVtxList[V0].Position;
@@ -385,9 +385,9 @@ public:
 				continue; // As emissive, no changes
 			}
 
-			i32f V0 = Poly.Vtx[0];
-			i32f V1 = Poly.Vtx[1];
-			i32f V2 = Poly.Vtx[2];
+			i32f V0 = Poly.VtxIndices[0];
+			i32f V1 = Poly.VtxIndices[1];
+			i32f V2 = Poly.VtxIndices[2];
 
 			u32 RSum = 0;
 			u32 GSum = 0;
@@ -547,11 +547,11 @@ public:
 			}
 
 			VVector4 U, V, N;
-			U = TransVtxList[Poly.Vtx[1]].Position - TransVtxList[Poly.Vtx[0]].Position;
-			V = TransVtxList[Poly.Vtx[2]].Position - TransVtxList[Poly.Vtx[0]].Position;
+			U = TransVtxList[Poly.VtxIndices[1]].Position - TransVtxList[Poly.VtxIndices[0]].Position;
+			V = TransVtxList[Poly.VtxIndices[2]].Position - TransVtxList[Poly.VtxIndices[0]].Position;
 
 			VVector4::Cross(U, V, N);
-			VVector4 View = Cam.Pos - TransVtxList[Poly.Vtx[0]].Position;
+			VVector4 View = Cam.Pos - TransVtxList[Poly.VtxIndices[0]].Position;
 
 			// If > 0 then N watch in the same direction as View vector and visible
 			if (VVector4::Dot(View, N) <= 0.0f)
@@ -652,9 +652,9 @@ public:
 				continue;
 			}
 
-			i32 V0 = PolyList[I].Vtx[0];
-			i32 V1 = PolyList[I].Vtx[1];
-			i32 V2 = PolyList[I].Vtx[2];
+			i32 V0 = PolyList[I].VtxIndices[0];
+			i32 V1 = PolyList[I].VtxIndices[1];
+			i32 V2 = PolyList[I].VtxIndices[2];
 
 			Renderer.DrawClippedLine(
 				Buffer, Pitch,
@@ -688,9 +688,9 @@ public:
 				continue;
 			}
 
-			i32f V0 = PolyList[I].Vtx[0];
-			i32f V1 = PolyList[I].Vtx[1];
-			i32f V2 = PolyList[I].Vtx[2];
+			i32f V0 = PolyList[I].VtxIndices[0];
+			i32f V1 = PolyList[I].VtxIndices[1];
+			i32f V2 = PolyList[I].VtxIndices[2];
 
 			Renderer.DrawTriangle(
 				Buffer, Pitch,

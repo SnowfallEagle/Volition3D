@@ -159,7 +159,7 @@ b32 VObject::LoadPLG(
 				i32 NumPolyVtx;
 				if (sscanf(Buffer, "%255s %d %d %d %d",
 					StrPolyDesc, &NumPolyVtx,
-					&PolyList[I].Vtx[0], &PolyList[I].Vtx[1], &PolyList[I].Vtx[2]) <= 0)
+					&PolyList[I].VtxIndices[0], &PolyList[I].VtxIndices[1], &PolyList[I].VtxIndices[2]) <= 0)
 				{
 					VL_ERROR(hLogObject, "Can't parse polygon\n");
 					fclose(File);
@@ -186,13 +186,10 @@ b32 VObject::LoadPLG(
 					}
 				}
 
-				// Set vertex list
-				PolyList[I].VtxList = LocalVtxList;
-
 				// Log
 				VL_LOG("\t<0x%x, %d, <%d %d %d>>\n",
 					PolyDesc, NumVtx,
-					PolyList[I].Vtx[0], PolyList[I].Vtx[1], PolyList[I].Vtx[2]
+					PolyList[I].VtxIndices[0], PolyList[I].VtxIndices[1], PolyList[I].VtxIndices[2]
 				);
 
 				// Set attributes and color

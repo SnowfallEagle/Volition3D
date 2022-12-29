@@ -28,7 +28,7 @@ public:
 public:
     FINLINE void operator=(const VMatrix44& Mat)
     {
-        memcpy(this, &Mat, sizeof(*this));
+        Memory.MemCopy(this, &Mat, sizeof(*this));
     }
     FINLINE void Zero()
     {
@@ -77,7 +77,7 @@ public:
 public:
     FINLINE void operator=(const VMatrix43& Mat)
     {
-        memcpy(this, &Mat, sizeof(*this));
+        Memory.MemCopy(this, &Mat, sizeof(*this));
     }
 
     FINLINE void Zero()
@@ -104,7 +104,7 @@ public:
 public:
     FINLINE void operator=(const VMatrix14& Mat)
     {
-        memcpy(this, &Mat, sizeof(*this));
+        Memory.MemCopy(this, &Mat, sizeof(*this));
     }
 
     FINLINE void Zero()
@@ -134,7 +134,7 @@ public:
 public:
     FINLINE void operator=(const VMatrix33& Mat)
     {
-        memcpy(this, &Mat, sizeof(*this));
+        Memory.MemCopy(this, &Mat, sizeof(*this));
     }
 
     FINLINE void Zero()
@@ -163,7 +163,7 @@ public:
 public:
     FINLINE void operator=(const VMatrix32& Mat)
     {
-        memcpy(this, &Mat, sizeof(*this));
+        Memory.MemCopy(this, &Mat, sizeof(*this));
     }
 
     FINLINE void Zero()
@@ -190,7 +190,7 @@ public:
 public:
     FINLINE void operator=(const VMatrix13& Mat)
     {
-        memcpy(this, &Mat, sizeof(*this));
+        Memory.MemCopy(this, &Mat, sizeof(*this));
     }
 
     FINLINE void Zero()
@@ -218,7 +218,7 @@ public:
 public:
     FINLINE void operator=(const VMatrix22& Mat)
     {
-        memcpy(this, &Mat, sizeof(*this));
+        Memory.MemCopy(this, &Mat, sizeof(*this));
     }
 
     FINLINE void Zero()
@@ -245,7 +245,7 @@ public:
 public:
     FINLINE void operator=(const VMatrix12& Mat)
     {
-        memcpy(this, &Mat, sizeof(*this));
+        Memory.MemCopy(this, &Mat, sizeof(*this));
     }
 
     FINLINE void Zero()

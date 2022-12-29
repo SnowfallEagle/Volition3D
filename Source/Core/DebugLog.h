@@ -1,7 +1,7 @@
 #pragma once
 
 /* TODO(sean):
-    - VFileSystem?
+	- Declare/Define log channels
  */
 
 #include <stdio.h>

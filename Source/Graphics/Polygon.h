@@ -48,8 +48,7 @@ public:
 	VSurface* Texture;
 	VMaterial* Material;
 
-	VVertex* VtxList;
-	i32 Vtx[3];
+	i32 VtxIndices[3];
 
 	VPoint2* TextureCoordsList;
 	i32 TextureCoordsIndices[3];
@@ -72,8 +71,8 @@ public:
 	VVertex LocalVtx[3];
 	VVertex TransVtx[3];
 
-	VVector4 Normal;
-	f32 NormalLength;
+	VVector4 Normal; // TODO(sean)
+	f32 NormalLength; // TODO(sean)
 
-	f32 AverageZ;
+	f32 AverageZ; // TODO(sean)
 };
