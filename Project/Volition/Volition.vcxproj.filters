@@ -13,9 +13,6 @@
     <Filter Include="Source\Core">
       <UniqueIdentifier>{dd89f4ab-016b-490d-88e0-5ecd48ee2865}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Game">
-      <UniqueIdentifier>{f8ea90f7-f36b-4e3c-a634-5a71e0f0441c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Math">
       <UniqueIdentifier>{443909e1-086d-4c26-b9e3-8e63d2a53793}</UniqueIdentifier>
     </Filter>
@@ -40,6 +37,9 @@
     <Filter Include="Source\Core\Thread">
       <UniqueIdentifier>{afd59d05-394b-4f51-b0c5-12c94f608c06}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\GameFramework">
+      <UniqueIdentifier>{f8ea90f7-f36b-4e3c-a634-5a71e0f0441c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\Input\Input.h">
@@ -56,9 +56,6 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\Core\Window.h">
       <Filter>Source\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Game\Game.h">
-      <Filter>Source\Game</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Core\DebugLog.h">
       <Filter>Source\Core</Filter>
@@ -423,6 +420,9 @@
     <ClInclude Include="..\..\Source\Graphics\Vertex.h">
       <Filter>Source\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\GameFramework\Game.h">
+      <Filter>Source\GameFramework</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\main.cpp">
@@ -436,9 +436,6 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Core\Window.cpp">
       <Filter>Source\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Game\Game.cpp">
-      <Filter>Source\Game</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Core\DebugLog.cpp">
       <Filter>Source\Core</Filter>
@@ -496,6 +493,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Graphics\Vertex.cpp">
       <Filter>Source\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\GameFramework\Game.cpp">
+      <Filter>Source\GameFramework</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

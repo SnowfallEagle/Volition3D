@@ -181,7 +181,7 @@
     <ClInclude Include="..\..\Source\Core\Types.h" />
     <ClInclude Include="..\..\Source\Core\Volition.h" />
     <ClInclude Include="..\..\Source\Core\Window.h" />
-    <ClInclude Include="..\..\Source\Game\Game.h" />
+    <ClInclude Include="..\..\Source\GameFramework\Game.h" />
     <ClInclude Include="..\..\Source\Graphics\Camera.h" />
     <ClInclude Include="..\..\Source\Graphics\Color.h" />
     <ClInclude Include="..\..\Source\Graphics\Impl\Renderer_SDL.h" />
@@ -305,7 +305,7 @@
     <ClCompile Include="..\..\Source\Core\Memory.cpp" />
     <ClCompile Include="..\..\Source\Core\Volition.cpp" />
     <ClCompile Include="..\..\Source\Core\Window.cpp" />
-    <ClCompile Include="..\..\Source\Game\Game.cpp" />
+    <ClCompile Include="..\..\Source\GameFramework\Game.cpp" />
     <ClCompile Include="..\..\Source\Graphics\Camera.cpp" />
     <ClCompile Include="..\..\Source\Graphics\Impl\Renderer_SDL.cpp" />
     <ClCompile Include="..\..\Source\Graphics\Impl\IRenderer.cpp" />

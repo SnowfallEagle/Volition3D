@@ -7,7 +7,7 @@
 #include "Graphics/Renderer.h"
 #include "Graphics/Object.h"
 #include "Graphics/RenderList.h"
-#include "Game/Game.h"
+#include "GameFramework/Game.h"
 
 VGame Game;
 
