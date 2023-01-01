@@ -532,18 +532,55 @@ public:
             }
             else
             {
+                // Align buffer pointer
                 Buffer += Pitch * Y0;
 
+                // Proccess each Y
                 for (i32f Y = Y0; Y < Y2; ++Y)
                 {
+                    // Compute starting values
                     i32f XStart = Fx16ToIntRounded(XLeft);
                     i32f XEnd = Fx16ToIntRounded(XRight);
 
-                    for (i32f X = XStart; X < XEnd; ++X)
+                    fx16 R = RLeft;
+                    fx16 G = GLeft;
+                    fx16 B = BLeft;
+
+                    // Compute deltas for X interpolation
+                    i32f XDiff = XEnd - XStart;
+
+                    fx16 RDeltaByX;
+                    fx16 GDeltaByX;
+                    fx16 BDeltaByX;
+                    if (XDiff > 0)
                     {
-                        Buffer[X] = (u32)Poly.LitColor[0];
+                        RDeltaByX = (RRight - RLeft) / XDiff;
+                        GDeltaByX = (GRight - GLeft) / XDiff;
+                        BDeltaByX = (BRight - BLeft) / XDiff;
+                    }
+                    else
+                    {
+                        RDeltaByX = (RRight - RLeft);
+                        GDeltaByX = (GRight - GLeft);
+                        BDeltaByX = (BRight - BLeft);
                     }
 
+                    // Proccess each X
+                    for (i32f X = XStart; X < XEnd; ++X)
+                    {
+                        Buffer[X] = MAP_XRGB32(
+                            Fx16ToIntRounded(R),
+                            Fx16ToIntRounded(G),
+                            Fx16ToIntRounded(B)
+                        );
+
+                        // Update X values
+                        R += RDeltaByX;
+                        G += GDeltaByX;
+                        B += BDeltaByX;
+                    }
+
+                    // Update Y values
                     XLeft += XDeltaLeftByY;
                     RLeft += RDeltaLeftByY;
                     GLeft += GDeltaLeftByY;
