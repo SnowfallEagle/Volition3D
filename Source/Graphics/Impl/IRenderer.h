@@ -481,41 +481,56 @@ public:
         fx16 XDeltaRightByY;
         fx16 RDeltaRightByY, GDeltaRightByY, BDeltaRightByY;
 
-        switch (TriangleCase)
+        if (TriangleCase == ETriangleCase::Top ||
+            TriangleCase == ETriangleCase::Bottom)
         {
-        case ETriangleCase::Top:
-        {
-            // Compute deltas for coords, colors
-            // TODO(sean): Possible optimization here
             i32 YDiff = Y2 - Y0;
 
-            XDeltaLeftByY = IntToFx16(X2 - X0) / YDiff;
-            RDeltaLeftByY = IntToFx16(Poly.LitColor[V2].R - Poly.LitColor[V0].R) / YDiff;
-            GDeltaLeftByY = IntToFx16(Poly.LitColor[V2].G - Poly.LitColor[V0].G) / YDiff;
-            BDeltaLeftByY = IntToFx16(Poly.LitColor[V2].B - Poly.LitColor[V0].B) / YDiff;
+            if (TriangleCase == ETriangleCase::Top)
+            {
+                // Compute deltas for coords, colors
+                XDeltaLeftByY = IntToFx16(X2 - X0) / YDiff;
+                RDeltaLeftByY = IntToFx16(Poly.LitColor[V2].R - Poly.LitColor[V0].R) / YDiff;
+                GDeltaLeftByY = IntToFx16(Poly.LitColor[V2].G - Poly.LitColor[V0].G) / YDiff;
+                BDeltaLeftByY = IntToFx16(Poly.LitColor[V2].B - Poly.LitColor[V0].B) / YDiff;
 
-            XDeltaRightByY = IntToFx16(X2 - X1) / YDiff;
-            RDeltaRightByY = IntToFx16(Poly.LitColor[V2].R - Poly.LitColor[V1].R) / YDiff;
-            GDeltaRightByY = IntToFx16(Poly.LitColor[V2].G - Poly.LitColor[V1].G) / YDiff;
-            BDeltaRightByY = IntToFx16(Poly.LitColor[V2].B - Poly.LitColor[V1].B) / YDiff;
+                XDeltaRightByY = IntToFx16(X2 - X1) / YDiff;
+                RDeltaRightByY = IntToFx16(Poly.LitColor[V2].R - Poly.LitColor[V1].R) / YDiff;
+                GDeltaRightByY = IntToFx16(Poly.LitColor[V2].G - Poly.LitColor[V1].G) / YDiff;
+                BDeltaRightByY = IntToFx16(Poly.LitColor[V2].B - Poly.LitColor[V1].B) / YDiff;
 
-            // Clipping Y
-            if (Y0 < MinClip.Y)
+                // Clipping Y
+                if (Y0 < MinClip.Y)
+                {
+                    YDiff = MinClip.Y - Y0;
+                    Y0 = MinClip.Y;
+
+                    XLeft = IntToFx16(X0) + YDiff * XDeltaLeftByY;
+                    RLeft = IntToFx16(Poly.LitColor[V0].R) + YDiff * RDeltaLeftByY;
+                    GLeft = IntToFx16(Poly.LitColor[V0].G) + YDiff * GDeltaLeftByY;
+                    BLeft = IntToFx16(Poly.LitColor[V0].B) + YDiff * BDeltaLeftByY;
+
+                    XRight = IntToFx16(X1) + YDiff * XDeltaRightByY;
+                    RRight = IntToFx16(Poly.LitColor[V1].R) + YDiff * RDeltaRightByY;
+                    GRight = IntToFx16(Poly.LitColor[V1].G) + YDiff * GDeltaRightByY;
+                    BRight = IntToFx16(Poly.LitColor[V1].B) + YDiff * BDeltaRightByY;
+                }
+                else
+                {
+                    XLeft = IntToFx16(X0);
+                    RLeft = IntToFx16(Poly.LitColor[V0].R);
+                    GLeft = IntToFx16(Poly.LitColor[V0].G);
+                    BLeft = IntToFx16(Poly.LitColor[V0].B);
+
+                    XRight = IntToFx16(X1);
+                    RRight = IntToFx16(Poly.LitColor[V1].R);
+                    GRight = IntToFx16(Poly.LitColor[V1].G);
+                    BRight = IntToFx16(Poly.LitColor[V1].B);
+                }
+            }
+            else // Bottom case
             {
                 // TODO(sean): Implement
-                return;
-            }
-            else
-            {
-                XLeft = IntToFx16(X0);
-                RLeft = IntToFx16(Poly.LitColor[V0].R);
-                GLeft = IntToFx16(Poly.LitColor[V0].G);
-                BLeft = IntToFx16(Poly.LitColor[V0].B);
-
-                XRight = IntToFx16(X1);
-                RRight = IntToFx16(Poly.LitColor[V1].R);
-                GRight = IntToFx16(Poly.LitColor[V1].G);
-                BRight = IntToFx16(Poly.LitColor[V1].B);
             }
 
             if (Y2 > MaxClip.Y)
@@ -594,19 +609,10 @@ public:
                     Buffer += Pitch;
                 }
             }
-        } break;
-
-        case ETriangleCase::Bottom:
+        }
+        else // General case
         {
-
-        } break;
-
-        case ETriangleCase::General:
-        {
-
-        } break;
-
-        default: {} break;
+            // TODO(sean): Implement
         }
     }
 
