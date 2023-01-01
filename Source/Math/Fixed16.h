@@ -14,8 +14,9 @@ namespace
 
     static constexpr i32f WholePartMask = 0xFFFF0000;
     static constexpr i32f DecimalPartMask = 0x0000FFFF;
-    static constexpr i32f RoundUpMask = 0x00008000;
 }
+
+static constexpr i32f Fx16RoundUp = 0x00008000;
 
 FINLINE fx16 IntToFx16(i32 I)
 {

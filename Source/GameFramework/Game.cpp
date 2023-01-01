@@ -205,14 +205,46 @@ void VGame::Render()
 	i32 Pitch;
 	Renderer.BackSurface.Lock(Buffer, Pitch);
 	{
-		if (bRenderSolid)
-		{
-			RenderList.RenderSolid(Buffer, Pitch);
-		}
-		else
-		{
-			RenderList.RenderWire(Buffer, Pitch);
-		}
+        {
+            if (bRenderSolid)
+            {
+                RenderList.RenderSolid(Buffer, Pitch);
+            }
+            else
+            {
+                RenderList.RenderWire(Buffer, Pitch);
+            }
+        }
+
+        {
+            VPolyFace Poly = {
+                EPolyState::Active,
+                EPolyAttr::ShadeModeGouraud,
+                MAP_XRGB32(255, 255, 255),
+                {
+                    MAP_XRGB32(255, 0, 0),
+                    MAP_XRGB32(0, 255, 0),
+                    MAP_XRGB32(0, 0, 255),
+                },
+                nullptr, nullptr,
+                {},
+                {
+                    {
+                        0, 1.0f,
+                        { 600, 100, 1.0f }
+                    },
+                    {
+                        0, 1.0f,
+                        { 1200, 100, 1.0f }
+                    },
+                    {
+                        0, 1.0f,
+                        { 800, 900, 1.0f }
+                    },
+                }
+            };
+            Renderer.DrawGouraudTriangle(Buffer, Pitch, Poly);
+        }
 	}
 	Renderer.BackSurface.Unlock();
 

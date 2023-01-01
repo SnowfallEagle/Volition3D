@@ -6,10 +6,12 @@
 #include "Math/Math.h"
 #include "Math/Rect.h"
 #include "Math/Vector.h"
+#include "Math/Fixed16.h"
 #include "Graphics/Surface.h"
 #include "Graphics/Color.h"
 #include "Graphics/Material.h"
 #include "Graphics/Light.h"
+#include "Graphics/Polygon.h"
 
 class IRenderer
 {
@@ -390,6 +392,169 @@ public:
             f32 NewX = X1 + (Y2 - Y1) * ((X3 - X1) / (Y3 - Y1));
             DrawBottomTriangle(Buffer, Pitch, X1, Y1, X2, Y2, NewX, Y2, Color);
             DrawTopTriangle(Buffer, Pitch, X2, Y2, NewX, Y2, X3, Y3, Color);
+        }
+    }
+
+    void DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly)
+    {
+        enum class ETriangleCase
+        {
+            Top,
+            Bottom,
+            General
+        };
+
+        i32 V0 = 0, V1 = 1, V2 = 2;
+
+        // Vertical, horizontal triangle clipping
+        if ((Poly.TransVtx[V0].X == Poly.TransVtx[V1].X && Poly.TransVtx[V1].X == Poly.TransVtx[V2].X) ||
+            (Poly.TransVtx[V0].Y == Poly.TransVtx[V1].Y && Poly.TransVtx[V1].Y == Poly.TransVtx[V2].Y))
+        {
+            return;
+        }
+
+        // Sort by Y
+        i32 TempInt;
+        if (Poly.TransVtx[V1].Y < Poly.TransVtx[V0].Y)
+        {
+            SWAP(V0, V1, TempInt);
+        }
+        if (Poly.TransVtx[V2].Y < Poly.TransVtx[V0].Y)
+        {
+            SWAP(V0, V2, TempInt);
+        }
+        if (Poly.TransVtx[V2].Y < Poly.TransVtx[V1].Y)
+        {
+            SWAP(V1, V2, TempInt);
+        }
+
+        // Test if we can't see it
+        if (Poly.TransVtx[V2].Y < MinClipFloat.Y ||
+            Poly.TransVtx[V0].Y > MaxClipFloat.Y ||
+            (Poly.TransVtx[V0].X < MinClipFloat.X && Poly.TransVtx[V1].X < MinClipFloat.X && Poly.TransVtx[V2].X < MinClipFloat.X) ||
+            (Poly.TransVtx[V0].X > MaxClipFloat.X && Poly.TransVtx[V1].X > MaxClipFloat.X && Poly.TransVtx[V2].X > MaxClipFloat.X))
+        {
+            return;
+        }
+
+        // Found triangle case and sort vertices by X
+        ETriangleCase TriangleCase;
+        if (Math.IsEqualFloat(Poly.TransVtx[V0].Y, Poly.TransVtx[V1].Y))
+        {
+            if (Poly.TransVtx[V1].X < Poly.TransVtx[V0].X)
+            {
+                SWAP(V0, V1, TempInt);
+            }
+            TriangleCase = ETriangleCase::Top;
+        }
+        else if (Math.IsEqualFloat(Poly.TransVtx[V1].Y, Poly.TransVtx[V2].Y))
+        {
+            if (Poly.TransVtx[V2].X < Poly.TransVtx[V1].X)
+            {
+                SWAP(V1, V2, TempInt);
+            }
+            TriangleCase = ETriangleCase::Bottom;
+        }
+        else
+        {
+            TriangleCase = ETriangleCase::General;
+        }
+
+        // Convert coords to integer
+        i32 X0 = (i32)(Poly.TransVtx[V0].X + 0.5f);
+        i32 Y0 = (i32)(Poly.TransVtx[V0].Y + 0.5f);
+
+        i32 X1 = (i32)(Poly.TransVtx[V1].X + 0.5f);
+        i32 Y1 = (i32)(Poly.TransVtx[V1].Y + 0.5f);
+
+        i32 X2 = (i32)(Poly.TransVtx[V2].X + 0.5f);
+        i32 Y2 = (i32)(Poly.TransVtx[V2].Y + 0.5f);
+
+        // Fixed coords, color channels for rasterization
+        fx16 XLeft, RLeft, GLeft, BLeft;
+        fx16 XRight, RRight, GRight, BRight;
+
+        // Coords, colors fixed deltas by Y
+        fx16 XDeltaLeftByY;
+        fx16 RDeltaLeftByY, GDeltaLeftByY, BDeltaLeftByY;
+
+        fx16 XDeltaRightByY;
+        fx16 RDeltaRightByY, GDeltaRightByY, BDeltaRightByY;
+
+        switch (TriangleCase)
+        {
+        case ETriangleCase::Top:
+        {
+            // Compute deltas for coords, colors
+            // TODO(sean): Possible optimization here
+            i32 YDiff = Y2 - Y0;
+
+            XDeltaLeftByY = IntToFx16(X2 - X0) / YDiff;
+            RDeltaLeftByY = IntToFx16(Poly.LitColor[V2].R - Poly.LitColor[V0].R) / YDiff;
+            GDeltaLeftByY = IntToFx16(Poly.LitColor[V2].G - Poly.LitColor[V0].G) / YDiff;
+            BDeltaLeftByY = IntToFx16(Poly.LitColor[V2].B - Poly.LitColor[V0].B) / YDiff;
+
+            XDeltaRightByY = IntToFx16(X2 - X1) / YDiff;
+            RDeltaRightByY = IntToFx16(Poly.LitColor[V2].R - Poly.LitColor[V1].R) / YDiff;
+            GDeltaRightByY = IntToFx16(Poly.LitColor[V2].G - Poly.LitColor[V1].G) / YDiff;
+            BDeltaRightByY = IntToFx16(Poly.LitColor[V2].B - Poly.LitColor[V1].B) / YDiff;
+
+            // Clipping Y
+            if (Y0 < MinClip.Y)
+            {
+                // TODO(sean): Implement
+                return;
+            }
+            else
+            {
+                XLeft = IntToFx16(X0);
+                RLeft = IntToFx16(Poly.LitColor[V0].R);
+                GLeft = IntToFx16(Poly.LitColor[V0].G);
+                BLeft = IntToFx16(Poly.LitColor[V0].B);
+
+                XRight = IntToFx16(X1);
+                RRight = IntToFx16(Poly.LitColor[V1].R);
+                GRight = IntToFx16(Poly.LitColor[V1].G);
+                BRight = IntToFx16(Poly.LitColor[V1].B);
+            }
+
+            if (Y2 > MaxClip.Y)
+            {
+                Y2 = MaxClip.Y;
+            }
+
+            // Test for clipping X
+            if (X0 < MinClip.X || X1 < MinClip.X || X2 < MinClip.X ||
+                X0 > MaxClip.X || X1 > MaxClip.X || X2 > MaxClip.X)
+            {
+                // TODO(sean): Implement
+                return;
+            }
+            else
+            {
+                for (i32f Y = Y0; Y < Y2; ++Y)
+                {
+                    i32f XStart = Fx16ToInt(XLeft + Fx16RoundUp); // TODO(sean): Fx16ToIntRound()
+                    i32f XEnd = Fx16ToInt(XRight + Fx16RoundUp); // TODO(sean): Fx16ToIntRound()
+
+                    for (i32f X = XStart; X < XEnd; ++X)
+                    {
+                    }
+                }
+            }
+        } break;
+
+        case ETriangleCase::Bottom:
+        {
+
+        } break;
+
+        case ETriangleCase::General:
+        {
+
+        } break;
+
+        default: {} break;
         }
     }
 
