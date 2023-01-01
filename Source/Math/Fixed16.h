@@ -9,14 +9,13 @@ typedef i32 fx16;
 
 namespace
 {
-    static constexpr i32f Shift = 16;
+    static constexpr i32 Shift = 16;
     static constexpr f32 Magnitude = 65535.0f;
+    static constexpr i32 RoundUp = 0x00008000;
 
-    static constexpr i32f WholePartMask = 0xFFFF0000;
-    static constexpr i32f DecimalPartMask = 0x0000FFFF;
+    static constexpr i32 WholePartMask = 0xFFFF0000;
+    static constexpr i32 DecimalPartMask = 0x0000FFFF;
 }
-
-static constexpr i32f Fx16RoundUp = 0x00008000;
 
 FINLINE fx16 IntToFx16(i32 I)
 {
@@ -31,6 +30,11 @@ FINLINE fx16 FloatToFx16(f32 F)
 FINLINE i32 Fx16ToInt(fx16 Fx)
 {
     return Fx >> Shift;
+}
+
+FINLINE i32 Fx16ToIntRounded(fx16 Fx)
+{
+    return (Fx + RoundUp) >> Shift;
 }
 
 FINLINE f32 Fx16ToFloat(fx16 Fx)

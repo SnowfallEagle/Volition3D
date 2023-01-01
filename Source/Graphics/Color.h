@@ -39,7 +39,7 @@ public:
         ARGB(InARGB)
     {}
 
-    FINLINE operator u32()
+    FINLINE operator u32() const
     {
         return ARGB;
     }
@@ -72,7 +72,7 @@ public:
         RGBA(InRGBA)
     {}
 
-    FINLINE operator u32()
+    FINLINE operator u32() const
     {
         return RGBA;
     }

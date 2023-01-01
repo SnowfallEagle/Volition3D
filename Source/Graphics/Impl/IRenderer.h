@@ -532,14 +532,29 @@ public:
             }
             else
             {
+                Buffer += Pitch * Y0;
+
                 for (i32f Y = Y0; Y < Y2; ++Y)
                 {
-                    i32f XStart = Fx16ToInt(XLeft + Fx16RoundUp); // TODO(sean): Fx16ToIntRound()
-                    i32f XEnd = Fx16ToInt(XRight + Fx16RoundUp); // TODO(sean): Fx16ToIntRound()
+                    i32f XStart = Fx16ToIntRounded(XLeft);
+                    i32f XEnd = Fx16ToIntRounded(XRight);
 
                     for (i32f X = XStart; X < XEnd; ++X)
                     {
+                        Buffer[X] = (u32)Poly.LitColor[0];
                     }
+
+                    XLeft += XDeltaLeftByY;
+                    RLeft += RDeltaLeftByY;
+                    GLeft += GDeltaLeftByY;
+                    BLeft += BDeltaLeftByY;
+
+                    XRight += XDeltaRightByY;
+                    RRight += RDeltaRightByY;
+                    GRight += GDeltaRightByY;
+                    BRight += BDeltaRightByY;
+
+                    Buffer += Pitch;
                 }
             }
         } break;
