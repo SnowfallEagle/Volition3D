@@ -530,9 +530,48 @@ public:
             }
             else // Bottom case
             {
-                // TODO(sean): Implement
+                // Compute deltas for coords, colors
+                XDeltaLeftByY = IntToFx16(X1 - X0) / YDiff;
+                RDeltaLeftByY = IntToFx16(Poly.LitColor[V1].R - Poly.LitColor[V0].R) / YDiff;
+                GDeltaLeftByY = IntToFx16(Poly.LitColor[V1].G - Poly.LitColor[V0].G) / YDiff;
+                BDeltaLeftByY = IntToFx16(Poly.LitColor[V1].B - Poly.LitColor[V0].B) / YDiff;
+
+                XDeltaRightByY = IntToFx16(X2 - X0) / YDiff;
+                RDeltaRightByY = IntToFx16(Poly.LitColor[V2].R - Poly.LitColor[V0].R) / YDiff;
+                GDeltaRightByY = IntToFx16(Poly.LitColor[V2].G - Poly.LitColor[V0].G) / YDiff;
+                BDeltaRightByY = IntToFx16(Poly.LitColor[V2].B - Poly.LitColor[V0].B) / YDiff;
+
+                // Clipping Y
+                if (Y0 < MinClip.Y)
+                {
+                    YDiff = MinClip.Y - Y0;
+                    Y0 = MinClip.Y;
+
+                    XLeft = IntToFx16(X0) + YDiff * XDeltaLeftByY;
+                    RLeft = IntToFx16(Poly.LitColor[V0].R) + YDiff * RDeltaLeftByY;
+                    GLeft = IntToFx16(Poly.LitColor[V0].G) + YDiff * GDeltaLeftByY;
+                    BLeft = IntToFx16(Poly.LitColor[V0].B) + YDiff * BDeltaLeftByY;
+
+                    XRight = IntToFx16(X0) + YDiff * XDeltaRightByY;
+                    RRight = IntToFx16(Poly.LitColor[V0].R) + YDiff * RDeltaRightByY;
+                    GRight = IntToFx16(Poly.LitColor[V0].G) + YDiff * GDeltaRightByY;
+                    BRight = IntToFx16(Poly.LitColor[V0].B) + YDiff * BDeltaRightByY;
+                }
+                else
+                {
+                    XLeft = IntToFx16(X0);
+                    RLeft = IntToFx16(Poly.LitColor[V0].R);
+                    GLeft = IntToFx16(Poly.LitColor[V0].G);
+                    BLeft = IntToFx16(Poly.LitColor[V0].B);
+
+                    XRight = IntToFx16(X0);
+                    RRight = IntToFx16(Poly.LitColor[V0].R);
+                    GRight = IntToFx16(Poly.LitColor[V0].G);
+                    BRight = IntToFx16(Poly.LitColor[V0].B);
+                }
             }
 
+            // Clip bottom Y
             if (Y2 > MaxClip.Y)
             {
                 Y2 = MaxClip.Y;
