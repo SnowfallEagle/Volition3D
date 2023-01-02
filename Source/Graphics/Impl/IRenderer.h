@@ -542,10 +542,84 @@ public:
             if (X0 < MinClip.X || X1 < MinClip.X || X2 < MinClip.X ||
                 X0 > MaxClip.X || X1 > MaxClip.X || X2 > MaxClip.X)
             {
-                // TODO(sean): Implement
-                return;
+                // Align buffer pointer
+                Buffer += Pitch * Y0;
+
+                // Proccess each Y
+                for (i32f Y = Y0; Y < Y2; ++Y)
+                {
+                    // Compute starting values
+                    i32f XStart = Fx16ToIntRounded(XLeft);
+                    i32f XEnd = Fx16ToIntRounded(XRight);
+
+                    fx16 R = RLeft;
+                    fx16 G = GLeft;
+                    fx16 B = BLeft;
+
+                    // Compute deltas for X interpolation
+                    i32f XDiff = XEnd - XStart;
+
+                    fx16 RDeltaByX;
+                    fx16 GDeltaByX;
+                    fx16 BDeltaByX;
+                    if (XDiff > 0)
+                    {
+                        RDeltaByX = (RRight - RLeft) / XDiff;
+                        GDeltaByX = (GRight - GLeft) / XDiff;
+                        BDeltaByX = (BRight - BLeft) / XDiff;
+                    }
+                    else
+                    {
+                        RDeltaByX = (RRight - RLeft);
+                        GDeltaByX = (GRight - GLeft);
+                        BDeltaByX = (BRight - BLeft);
+                    }
+
+                    // X clipping
+                    if (XStart < MinClip.X)
+                    {
+                        i32 XDiff = MinClip.X - XStart;
+                        XStart = MinClip.X;
+
+                        R += XDiff * RDeltaByX;
+                        G += XDiff * GDeltaByX;
+                        B += XDiff * BDeltaByX;
+                    }
+                    if (XEnd > MaxClip.X)
+                    {
+                        XEnd = MaxClip.X;
+                    }
+
+                    // Proccess each X
+                    for (i32f X = XStart; X < XEnd; ++X)
+                    {
+                        Buffer[X] = MAP_XRGB32(
+                            Fx16ToIntRounded(R),
+                            Fx16ToIntRounded(G),
+                            Fx16ToIntRounded(B)
+                        );
+
+                        // Update X values
+                        R += RDeltaByX;
+                        G += GDeltaByX;
+                        B += BDeltaByX;
+                    }
+
+                    // Update Y values
+                    XLeft += XDeltaLeftByY;
+                    RLeft += RDeltaLeftByY;
+                    GLeft += GDeltaLeftByY;
+                    BLeft += BDeltaLeftByY;
+
+                    XRight += XDeltaRightByY;
+                    RRight += RDeltaRightByY;
+                    GRight += GDeltaRightByY;
+                    BRight += BDeltaRightByY;
+
+                    Buffer += Pitch;
+                }
             }
-            else
+            else // Non-clipped version
             {
                 // Align buffer pointer
                 Buffer += Pitch * Y0;
