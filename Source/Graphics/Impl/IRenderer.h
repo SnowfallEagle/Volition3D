@@ -470,6 +470,14 @@ public:
         i32 X2 = (i32)(Poly.TransVtx[V2].X + 0.5f);
         i32 Y2 = (i32)(Poly.TransVtx[V2].Y + 0.5f);
 
+        // TODO(sean): Implement in Top, Bottom cases
+        i32 YStart;
+        i32 YEnd;
+
+        i32 RVtx0 = Poly.LitColor[V0].R, GVtx0 = Poly.LitColor[V0].G, BVtx0 = Poly.LitColor[V0].B;
+        i32 RVtx1 = Poly.LitColor[V1].R, GVtx1 = Poly.LitColor[V1].G, BVtx1 = Poly.LitColor[V1].B;
+        i32 RVtx2 = Poly.LitColor[V2].R, GVtx2 = Poly.LitColor[V2].G, BVtx2 = Poly.LitColor[V2].B;
+
         // Fixed coords, color channels for rasterization
         fx16 XLeft, RLeft, GLeft, BLeft;
         fx16 XRight, RRight, GRight, BRight;
@@ -490,14 +498,14 @@ public:
             {
                 // Compute deltas for coords, colors
                 XDeltaLeftByY = IntToFx16(X2 - X0) / YDiff;
-                RDeltaLeftByY = IntToFx16(Poly.LitColor[V2].R - Poly.LitColor[V0].R) / YDiff;
-                GDeltaLeftByY = IntToFx16(Poly.LitColor[V2].G - Poly.LitColor[V0].G) / YDiff;
-                BDeltaLeftByY = IntToFx16(Poly.LitColor[V2].B - Poly.LitColor[V0].B) / YDiff;
+                RDeltaLeftByY = IntToFx16(RVtx2 - RVtx0) / YDiff;
+                GDeltaLeftByY = IntToFx16(GVtx2 - GVtx0) / YDiff;
+                BDeltaLeftByY = IntToFx16(BVtx2 - BVtx0) / YDiff;
 
                 XDeltaRightByY = IntToFx16(X2 - X1) / YDiff;
-                RDeltaRightByY = IntToFx16(Poly.LitColor[V2].R - Poly.LitColor[V1].R) / YDiff;
-                GDeltaRightByY = IntToFx16(Poly.LitColor[V2].G - Poly.LitColor[V1].G) / YDiff;
-                BDeltaRightByY = IntToFx16(Poly.LitColor[V2].B - Poly.LitColor[V1].B) / YDiff;
+                RDeltaRightByY = IntToFx16(RVtx2 - RVtx1) / YDiff;
+                GDeltaRightByY = IntToFx16(GVtx2 - GVtx1) / YDiff;
+                BDeltaRightByY = IntToFx16(BVtx2 - BVtx1) / YDiff;
 
                 // Clipping Y
                 if (Y0 < MinClip.Y)
@@ -506,40 +514,40 @@ public:
                     Y0 = MinClip.Y;
 
                     XLeft = IntToFx16(X0) + YDiff * XDeltaLeftByY;
-                    RLeft = IntToFx16(Poly.LitColor[V0].R) + YDiff * RDeltaLeftByY;
-                    GLeft = IntToFx16(Poly.LitColor[V0].G) + YDiff * GDeltaLeftByY;
-                    BLeft = IntToFx16(Poly.LitColor[V0].B) + YDiff * BDeltaLeftByY;
+                    RLeft = IntToFx16(RVtx0) + YDiff * RDeltaLeftByY;
+                    GLeft = IntToFx16(GVtx0) + YDiff * GDeltaLeftByY;
+                    BLeft = IntToFx16(BVtx0) + YDiff * BDeltaLeftByY;
 
                     XRight = IntToFx16(X1) + YDiff * XDeltaRightByY;
-                    RRight = IntToFx16(Poly.LitColor[V1].R) + YDiff * RDeltaRightByY;
-                    GRight = IntToFx16(Poly.LitColor[V1].G) + YDiff * GDeltaRightByY;
-                    BRight = IntToFx16(Poly.LitColor[V1].B) + YDiff * BDeltaRightByY;
+                    RRight = IntToFx16(RVtx1) + YDiff * RDeltaRightByY;
+                    GRight = IntToFx16(GVtx1) + YDiff * GDeltaRightByY;
+                    BRight = IntToFx16(BVtx1) + YDiff * BDeltaRightByY;
                 }
                 else
                 {
                     XLeft = IntToFx16(X0);
-                    RLeft = IntToFx16(Poly.LitColor[V0].R);
-                    GLeft = IntToFx16(Poly.LitColor[V0].G);
-                    BLeft = IntToFx16(Poly.LitColor[V0].B);
+                    RLeft = IntToFx16(RVtx0);
+                    GLeft = IntToFx16(GVtx0);
+                    BLeft = IntToFx16(BVtx0);
 
                     XRight = IntToFx16(X1);
-                    RRight = IntToFx16(Poly.LitColor[V1].R);
-                    GRight = IntToFx16(Poly.LitColor[V1].G);
-                    BRight = IntToFx16(Poly.LitColor[V1].B);
+                    RRight = IntToFx16(RVtx1);
+                    GRight = IntToFx16(GVtx1);
+                    BRight = IntToFx16(BVtx1);
                 }
             }
             else // Bottom case
             {
                 // Compute deltas for coords, colors
                 XDeltaLeftByY = IntToFx16(X1 - X0) / YDiff;
-                RDeltaLeftByY = IntToFx16(Poly.LitColor[V1].R - Poly.LitColor[V0].R) / YDiff;
-                GDeltaLeftByY = IntToFx16(Poly.LitColor[V1].G - Poly.LitColor[V0].G) / YDiff;
-                BDeltaLeftByY = IntToFx16(Poly.LitColor[V1].B - Poly.LitColor[V0].B) / YDiff;
+                RDeltaLeftByY = IntToFx16(RVtx1 - RVtx0) / YDiff;
+                GDeltaLeftByY = IntToFx16(GVtx1 - GVtx0) / YDiff;
+                BDeltaLeftByY = IntToFx16(BVtx1 - BVtx0) / YDiff;
 
                 XDeltaRightByY = IntToFx16(X2 - X0) / YDiff;
-                RDeltaRightByY = IntToFx16(Poly.LitColor[V2].R - Poly.LitColor[V0].R) / YDiff;
-                GDeltaRightByY = IntToFx16(Poly.LitColor[V2].G - Poly.LitColor[V0].G) / YDiff;
-                BDeltaRightByY = IntToFx16(Poly.LitColor[V2].B - Poly.LitColor[V0].B) / YDiff;
+                RDeltaRightByY = IntToFx16(RVtx2 - RVtx0) / YDiff;
+                GDeltaRightByY = IntToFx16(GVtx2 - GVtx0) / YDiff;
+                BDeltaRightByY = IntToFx16(BVtx2 - BVtx0) / YDiff;
 
                 // Clipping Y
                 if (Y0 < MinClip.Y)
@@ -548,26 +556,26 @@ public:
                     Y0 = MinClip.Y;
 
                     XLeft = IntToFx16(X0) + YDiff * XDeltaLeftByY;
-                    RLeft = IntToFx16(Poly.LitColor[V0].R) + YDiff * RDeltaLeftByY;
-                    GLeft = IntToFx16(Poly.LitColor[V0].G) + YDiff * GDeltaLeftByY;
-                    BLeft = IntToFx16(Poly.LitColor[V0].B) + YDiff * BDeltaLeftByY;
+                    RLeft = IntToFx16(RVtx0) + YDiff * RDeltaLeftByY;
+                    GLeft = IntToFx16(GVtx0) + YDiff * GDeltaLeftByY;
+                    BLeft = IntToFx16(BVtx0) + YDiff * BDeltaLeftByY;
 
                     XRight = IntToFx16(X0) + YDiff * XDeltaRightByY;
-                    RRight = IntToFx16(Poly.LitColor[V0].R) + YDiff * RDeltaRightByY;
-                    GRight = IntToFx16(Poly.LitColor[V0].G) + YDiff * GDeltaRightByY;
-                    BRight = IntToFx16(Poly.LitColor[V0].B) + YDiff * BDeltaRightByY;
+                    RRight = IntToFx16(RVtx0) + YDiff * RDeltaRightByY;
+                    GRight = IntToFx16(GVtx0) + YDiff * GDeltaRightByY;
+                    BRight = IntToFx16(BVtx0) + YDiff * BDeltaRightByY;
                 }
                 else
                 {
                     XLeft = IntToFx16(X0);
-                    RLeft = IntToFx16(Poly.LitColor[V0].R);
-                    GLeft = IntToFx16(Poly.LitColor[V0].G);
-                    BLeft = IntToFx16(Poly.LitColor[V0].B);
+                    RLeft = IntToFx16(RVtx0);
+                    GLeft = IntToFx16(GVtx0);
+                    BLeft = IntToFx16(BVtx0);
 
                     XRight = IntToFx16(X0);
-                    RRight = IntToFx16(Poly.LitColor[V0].R);
-                    GRight = IntToFx16(Poly.LitColor[V0].G);
-                    BRight = IntToFx16(Poly.LitColor[V0].B);
+                    RRight = IntToFx16(RVtx0);
+                    GRight = IntToFx16(GVtx0);
+                    BRight = IntToFx16(BVtx0);
                 }
             }
 
@@ -585,7 +593,7 @@ public:
                 Buffer += Pitch * Y0;
 
                 // Proccess each Y
-                for (i32f Y = Y0; Y < Y2; ++Y)
+                for (i32f Y = Y0; Y <= Y2; ++Y)
                 {
                     // Compute starting values
                     i32f XStart = Fx16ToIntRounded(XLeft);
@@ -664,7 +672,7 @@ public:
                 Buffer += Pitch * Y0;
 
                 // Proccess each Y
-                for (i32f Y = Y0; Y < Y2; ++Y)
+                for (i32f Y = Y0; Y <= Y2; ++Y)
                 {
                     // Compute starting values
                     i32f XStart = Fx16ToIntRounded(XLeft);
@@ -694,7 +702,7 @@ public:
                     }
 
                     // Proccess each X
-                    for (i32f X = XStart; X < XEnd; ++X)
+                    for (i32f X = XStart; X <= XEnd; ++X)
                     {
                         Buffer[X] = MAP_XRGB32(
                             Fx16ToIntRounded(R),
@@ -725,7 +733,130 @@ public:
         }
         else // General case
         {
-            // TODO(sean): Implement
+            b32 bRestartInterpolationOnRight = false;
+
+            // Clip bottom Y
+            if (Y2 > MaxClip.Y)
+            {
+                Y2 = MaxClip.Y;
+            }
+
+            // Clip top Y
+            if (Y1 < MinClip.Y)
+            {
+                // TODO(sean)
+            }
+            else if (Y0 < MinClip.Y)
+            {
+                // TODO(sean)
+            }
+            else // No top Y clipping
+            {
+                i32 YDiffLeft = (Y1 - Y0);
+                XDeltaLeftByY = IntToFx16(X1 - X0) / YDiffLeft;
+                RDeltaLeftByY = IntToFx16(Poly.LitColor[V1].R - Poly.LitColor[V0].R) / YDiffLeft;
+                GDeltaLeftByY = IntToFx16(Poly.LitColor[V1].G - Poly.LitColor[V0].G) / YDiffLeft;
+                BDeltaLeftByY = IntToFx16(Poly.LitColor[V1].B - Poly.LitColor[V0].B) / YDiffLeft;
+
+                i32 YDiffRight = (Y2 - Y0);
+                XDeltaRightByY = IntToFx16(X2 - X0) / YDiffRight;
+                RDeltaRightByY = IntToFx16(Poly.LitColor[V2].R - Poly.LitColor[V0].R) / YDiffRight;
+                GDeltaRightByY = IntToFx16(Poly.LitColor[V2].G - Poly.LitColor[V0].G) / YDiffRight;
+                BDeltaRightByY = IntToFx16(Poly.LitColor[V2].B - Poly.LitColor[V0].B) / YDiffRight;
+
+                XRight = XLeft = IntToFx16(X0);
+                RRight = RLeft = IntToFx16(Poly.LitColor[V0].R);
+                GRight = GLeft = IntToFx16(Poly.LitColor[V0].G);
+                BRight = BLeft = IntToFx16(Poly.LitColor[V0].B);
+
+                YStart = Y0;
+                YEnd   = Y2;
+
+                if (XDeltaRightByY < XDeltaLeftByY)
+                {
+                    SWAP(XDeltaLeftByY, XDeltaRightByY, TempInt);
+                    SWAP(RDeltaLeftByY, RDeltaRightByY, TempInt);
+                    SWAP(GDeltaLeftByY, GDeltaRightByY, TempInt);
+                    SWAP(BDeltaLeftByY, BDeltaRightByY, TempInt);
+
+                    // TODO(sean): Do we need any swaps here?
+
+                    bRestartInterpolationOnRight = true;
+                }
+
+                // Test for clipping X
+                if (X0 < MinClip.X || X1 < MinClip.X || X2 < MinClip.X ||
+                    X0 > MaxClip.X || X1 > MaxClip.X || X2 > MaxClip.X)
+                {
+                    // TODO(sean)
+                }
+                else
+                {
+                    // Align video buffer
+                    Buffer += Pitch * YStart;
+
+                    // Proccess each Y
+                    for (i32f Y = YStart; Y <= YEnd; ++Y)
+                    {
+                        // Compute initial values
+                        i32 XStart = Fx16ToIntRounded(XLeft);
+                        i32 XEnd   = Fx16ToIntRounded(XRight);
+
+                        fx16 R = RLeft;
+                        fx16 G = GLeft;
+                        fx16 B = BLeft;
+
+                        // Compute interpolants
+                        fx16 RDeltaByX;
+                        fx16 GDeltaByX;
+                        fx16 BDeltaByX;
+
+                        i32 XDiff = XEnd - XStart;
+                        if (XDiff > 0)
+                        {
+                            RDeltaByX = (RRight - RLeft) / XDiff;
+                            GDeltaByX = (GRight - GLeft) / XDiff;
+                            BDeltaByX = (BRight - BLeft) / XDiff;
+                        }
+                        else
+                        {
+                            RDeltaByX = (RRight - RLeft);
+                            GDeltaByX = (GRight - GLeft);
+                            BDeltaByX = (BRight - BLeft);
+                        }
+
+                        // Proccess each X
+                        for (i32f X = XStart; X <= XEnd; ++X)
+                        {
+                            Buffer[X] = MAP_XRGB32(
+                                Fx16ToIntRounded(R),
+                                Fx16ToIntRounded(G),
+                                Fx16ToIntRounded(B)
+                            );
+
+                            R += RDeltaByX;
+                            G += GDeltaByX;
+                            B += BDeltaByX;
+                        }
+
+                        // Update values those change along Y
+                        XLeft += XDeltaLeftByY;
+                        RLeft += RDeltaLeftByY;
+                        GLeft += GDeltaLeftByY;
+                        BLeft += BDeltaLeftByY;
+
+                        XRight += XDeltaRightByY;
+                        RRight += RDeltaRightByY;
+                        GRight += GDeltaRightByY;
+                        BRight += BDeltaRightByY;
+
+                        Buffer += Pitch;
+
+                        // Test for changing interpolant
+                        // TODO(sean)
+                    }
+                }
+            }
         }
     }
 

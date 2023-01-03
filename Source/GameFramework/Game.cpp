@@ -231,15 +231,15 @@ void VGame::Render()
                 {
                     {
                         0, 1.0f,
-                        { -600, -5, 1.0f }
+                        { 600, 600, 1.0f }
                     },
                     {
                         0, 1.0f,
-                        { 1200, 100, 1.0f }
+                        { 100, 100, 1.0f }
                     },
                     {
                         0, 1.0f,
-                        { 800, 100, 1.0f }
+                        { 1100, 100, 1.0f }
                     },
                 }
             };
@@ -249,6 +249,6 @@ void VGame::Render()
 	Renderer.BackSurface.Unlock();
 
 	Renderer.DrawText(0, 5, MAP_XRGB32(0xFF, 0xFF, 0xFF), "FPS: %.3f", 1000.0f / Volition.GetDelta());
-	Renderer.DrawText(0, 35, MAP_XRGB32(0xFF, 0xFF, 0xFF), bBackFaceRemoval ? "BackFace: true" : "BackFace: false");
-	Renderer.DrawText(0, 65, MAP_XRGB32(0xFF, 0xFF, 0xFF), bRenderSolid ? "Render: Solid" : "Render: Wire");
+	Renderer.DrawText(0, 35, MAP_XRGB32(0xFF, 0xFF, 0xFF), bBackFaceRemoval ? "Backface culling: true" : "Backface culling: false");
+	Renderer.DrawText(0, 65, MAP_XRGB32(0xFF, 0xFF, 0xFF), bRenderSolid ? "Render mode: Solid" : "Render mode: Wire");
 }
