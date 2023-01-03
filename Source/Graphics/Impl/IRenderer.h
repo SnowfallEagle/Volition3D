@@ -761,20 +761,20 @@ public:
             {
                 i32 YDiffLeft = (Y1 - Y0);
                 XDeltaLeftByY = IntToFx16(X1 - X0) / YDiffLeft;
-                RDeltaLeftByY = IntToFx16(Poly.LitColor[V1].R - Poly.LitColor[V0].R) / YDiffLeft;
-                GDeltaLeftByY = IntToFx16(Poly.LitColor[V1].G - Poly.LitColor[V0].G) / YDiffLeft;
-                BDeltaLeftByY = IntToFx16(Poly.LitColor[V1].B - Poly.LitColor[V0].B) / YDiffLeft;
+                RDeltaLeftByY = IntToFx16(RVtx1 - RVtx0) / YDiffLeft;
+                GDeltaLeftByY = IntToFx16(GVtx1 - GVtx0) / YDiffLeft;
+                BDeltaLeftByY = IntToFx16(BVtx1 - BVtx0) / YDiffLeft;
 
                 i32 YDiffRight = (Y2 - Y0);
                 XDeltaRightByY = IntToFx16(X2 - X0) / YDiffRight;
-                RDeltaRightByY = IntToFx16(Poly.LitColor[V2].R - Poly.LitColor[V0].R) / YDiffRight;
-                GDeltaRightByY = IntToFx16(Poly.LitColor[V2].G - Poly.LitColor[V0].G) / YDiffRight;
-                BDeltaRightByY = IntToFx16(Poly.LitColor[V2].B - Poly.LitColor[V0].B) / YDiffRight;
+                RDeltaRightByY = IntToFx16(RVtx2 - RVtx0) / YDiffRight;
+                GDeltaRightByY = IntToFx16(GVtx2 - GVtx0) / YDiffRight;
+                BDeltaRightByY = IntToFx16(BVtx2 - BVtx0) / YDiffRight;
 
                 XRight = XLeft = IntToFx16(X0);
-                RRight = RLeft = IntToFx16(Poly.LitColor[V0].R);
-                GRight = GLeft = IntToFx16(Poly.LitColor[V0].G);
-                BRight = BLeft = IntToFx16(Poly.LitColor[V0].B);
+                RRight = RLeft = IntToFx16(RVtx0);
+                GRight = GLeft = IntToFx16(GVtx0);
+                BRight = BLeft = IntToFx16(BVtx0);
 
                 YStart = Y0;
                 YEnd   = Y2;
