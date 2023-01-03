@@ -740,12 +740,17 @@ public:
         }
         else // General case
         {
-            b32 bRestartInterpolationOnRight = false;
+            b32 bRestartInterpolationAtLeftHand = true;
+            i32 YRestartInterpolation = Y1;
 
             // Clip bottom Y
             if (Y2 > MaxClip.Y)
             {
-                Y2 = MaxClip.Y;
+                YEnd = MaxClip.Y;
+            }
+            else
+            {
+                YEnd = Y2;
             }
 
             // Clip top Y
@@ -777,8 +782,13 @@ public:
                 BRight = BLeft = IntToFx16(BVtx0);
 
                 YStart = Y0;
-                YEnd   = Y2;
 
+                /* NOTE(sean):
+                    Test if we need swap to keep rendering left to right.
+                    It can happen because we assume that
+                    Y1 is on left hand side and Y2 on right.
+                 */
+                // TODO(sean): Test if we can simplify it
                 if (XDeltaRightByY < XDeltaLeftByY)
                 {
                     SWAP(XDeltaLeftByY, XDeltaRightByY, TempInt);
@@ -786,9 +796,18 @@ public:
                     SWAP(GDeltaLeftByY, GDeltaRightByY, TempInt);
                     SWAP(BDeltaLeftByY, BDeltaRightByY, TempInt);
 
-                    // TODO(sean): Do we need any swaps here?
+                    SWAP(XLeft, XRight, TempInt);
+                    SWAP(RLeft, RRight, TempInt);
+                    SWAP(GLeft, GRight, TempInt);
+                    SWAP(BLeft, BRight, TempInt);
 
-                    bRestartInterpolationOnRight = true;
+                    SWAP(X1, X2, TempInt);
+                    SWAP(Y1, Y2, TempInt);
+                    SWAP(RVtx1, RVtx2, TempInt);
+                    SWAP(GVtx1, GVtx2, TempInt);
+                    SWAP(BVtx1, BVtx2, TempInt);
+
+                    bRestartInterpolationAtLeftHand = false; // Restart at right hand side
                 }
 
                 // Test for clipping X
@@ -860,7 +879,51 @@ public:
                         Buffer += Pitch;
 
                         // Test for changing interpolant
-                        // TODO(sean)
+                        if (Y == YRestartInterpolation)
+                        {
+                            if (bRestartInterpolationAtLeftHand)
+                            {
+                                // Compute new values to get from Y1 to Y2
+                                i32 YDiff = (Y2 - Y1); // FIXME(sean): Can we get situation where YDiff == 0?
+
+                                XDeltaLeftByY = IntToFx16(X2 - X1) / YDiff;
+                                RDeltaLeftByY = IntToFx16(RVtx2 - RVtx1) / YDiff;
+                                GDeltaLeftByY = IntToFx16(GVtx2 - GVtx1) / YDiff;
+                                BDeltaLeftByY = IntToFx16(BVtx2 - BVtx1) / YDiff;
+
+                                XLeft = IntToFx16(X1);
+                                RLeft = IntToFx16(RVtx1);
+                                GLeft = IntToFx16(GVtx1);
+                                BLeft = IntToFx16(BVtx1);
+
+                                // Align down on 1 Y
+                                XLeft += XDeltaLeftByY;
+                                RLeft += RDeltaLeftByY;
+                                GLeft += GDeltaLeftByY;
+                                BLeft += BDeltaLeftByY;
+                            }
+                            else
+                            {
+                                // Compute new values to get from Y2 to Y1 because we swapped them
+                                i32 YDiff = (Y1 - Y2); // FIXME(sean): Can we get situation where YDiff == 0?
+
+                                XDeltaRightByY = IntToFx16(X1 - X2) / YDiff;
+                                RDeltaRightByY = IntToFx16(RVtx1 - RVtx2) / YDiff;
+                                GDeltaRightByY = IntToFx16(GVtx1 - GVtx2) / YDiff;
+                                BDeltaRightByY = IntToFx16(BVtx1 - BVtx2) / YDiff;
+
+                                XRight = IntToFx16(X2);
+                                RRight = IntToFx16(RVtx2);
+                                GRight = IntToFx16(GVtx2);
+                                BRight = IntToFx16(BVtx2);
+
+                                // Align down on 1 Y
+                                XRight += XDeltaRightByY;
+                                RRight += RDeltaRightByY;
+                                GRight += GDeltaRightByY;
+                                BRight += BDeltaRightByY;
+                            }
+                        }
                     }
                 }
             }
