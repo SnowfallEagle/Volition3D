@@ -470,7 +470,6 @@ public:
         i32 X2 = (i32)(Poly.TransVtx[V2].X + 0.5f);
         i32 Y2 = (i32)(Poly.TransVtx[V2].Y + 0.5f);
 
-        // TODO(sean): Implement in Top, Bottom cases
         i32 YStart;
         i32 YEnd;
 
@@ -511,7 +510,7 @@ public:
                 if (Y0 < MinClip.Y)
                 {
                     YDiff = MinClip.Y - Y0;
-                    Y0 = MinClip.Y;
+                    YStart = MinClip.Y;
 
                     XLeft = IntToFx16(X0) + YDiff * XDeltaLeftByY;
                     RLeft = IntToFx16(RVtx0) + YDiff * RDeltaLeftByY;
@@ -525,6 +524,8 @@ public:
                 }
                 else
                 {
+                    YStart = Y0;
+
                     XLeft = IntToFx16(X0);
                     RLeft = IntToFx16(RVtx0);
                     GLeft = IntToFx16(GVtx0);
@@ -553,7 +554,7 @@ public:
                 if (Y0 < MinClip.Y)
                 {
                     YDiff = MinClip.Y - Y0;
-                    Y0 = MinClip.Y;
+                    YStart = MinClip.Y;
 
                     XLeft = IntToFx16(X0) + YDiff * XDeltaLeftByY;
                     RLeft = IntToFx16(RVtx0) + YDiff * RDeltaLeftByY;
@@ -567,6 +568,8 @@ public:
                 }
                 else
                 {
+                    YStart = Y0;
+
                     XLeft = IntToFx16(X0);
                     RLeft = IntToFx16(RVtx0);
                     GLeft = IntToFx16(GVtx0);
@@ -582,7 +585,11 @@ public:
             // Clip bottom Y
             if (Y2 > MaxClip.Y)
             {
-                Y2 = MaxClip.Y;
+                YEnd = MaxClip.Y;
+            }
+            else
+            {
+                YEnd = Y2;
             }
 
             // Test for clipping X
@@ -590,10 +597,10 @@ public:
                 X0 > MaxClip.X || X1 > MaxClip.X || X2 > MaxClip.X)
             {
                 // Align buffer pointer
-                Buffer += Pitch * Y0;
+                Buffer += Pitch * YStart;
 
                 // Proccess each Y
-                for (i32f Y = Y0; Y <= Y2; ++Y)
+                for (i32f Y = YStart; Y <= YEnd; ++Y)
                 {
                     // Compute starting values
                     i32f XStart = Fx16ToIntRounded(XLeft);
@@ -669,10 +676,10 @@ public:
             else // Non-clipped version
             {
                 // Align buffer pointer
-                Buffer += Pitch * Y0;
+                Buffer += Pitch * YStart;
 
                 // Proccess each Y
-                for (i32f Y = Y0; Y <= Y2; ++Y)
+                for (i32f Y = YStart; Y <= YEnd; ++Y)
                 {
                     // Compute starting values
                     i32f XStart = Fx16ToIntRounded(XLeft);
