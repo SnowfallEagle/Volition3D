@@ -884,7 +884,12 @@ public:
                             if (bRestartInterpolationAtLeftHand)
                             {
                                 // Compute new values to get from Y1 to Y2
-                                i32 YDiff = (Y2 - Y1); // FIXME(sean): Can we get situation where YDiff == 0?
+                                i32 YDiff = (Y2 - Y1);
+                                if (YDiff == 0)
+                                {
+                                    // We are done in this case
+                                    return;
+                                }
 
                                 XDeltaLeftByY = IntToFx16(X2 - X1) / YDiff;
                                 RDeltaLeftByY = IntToFx16(RVtx2 - RVtx1) / YDiff;
@@ -905,7 +910,12 @@ public:
                             else
                             {
                                 // Compute new values to get from Y2 to Y1 because we swapped them
-                                i32 YDiff = (Y1 - Y2); // FIXME(sean): Can we get situation where YDiff == 0?
+                                i32 YDiff = (Y1 - Y2);
+                                if (YDiff == 0)
+                                {
+                                    // We are done in this case
+                                    return;
+                                }
 
                                 XDeltaRightByY = IntToFx16(X1 - X2) / YDiff;
                                 RDeltaRightByY = IntToFx16(RVtx1 - RVtx2) / YDiff;
