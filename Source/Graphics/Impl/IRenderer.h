@@ -437,21 +437,28 @@ public:
             return;
         }
 
+        // Convert Y to integers
+        i32 Y0 = (i32)(Poly.TransVtx[V0].Y + 0.5f);
+        i32 Y1 = (i32)(Poly.TransVtx[V1].Y + 0.5f);
+        i32 Y2 = (i32)(Poly.TransVtx[V2].Y + 0.5f);
+
         // Found triangle case and sort vertices by X
         ETriangleCase TriangleCase;
-        if (Math.IsEqualFloat(Poly.TransVtx[V0].Y, Poly.TransVtx[V1].Y))
+        if (Y0 == Y1)
         {
             if (Poly.TransVtx[V1].X < Poly.TransVtx[V0].X)
             {
                 SWAP(V0, V1, TempInt);
+                SWAP(Y0, Y1, TempInt);
             }
             TriangleCase = ETriangleCase::Top;
         }
-        else if (Math.IsEqualFloat(Poly.TransVtx[V1].Y, Poly.TransVtx[V2].Y))
+        else if (Y1 == Y2)
         {
             if (Poly.TransVtx[V2].X < Poly.TransVtx[V1].X)
             {
                 SWAP(V1, V2, TempInt);
+                SWAP(Y1, Y2, TempInt);
             }
             TriangleCase = ETriangleCase::Bottom;
         }
@@ -462,13 +469,8 @@ public:
 
         // Convert coords to integer
         i32 X0 = (i32)(Poly.TransVtx[V0].X + 0.5f);
-        i32 Y0 = (i32)(Poly.TransVtx[V0].Y + 0.5f);
-
         i32 X1 = (i32)(Poly.TransVtx[V1].X + 0.5f);
-        i32 Y1 = (i32)(Poly.TransVtx[V1].Y + 0.5f);
-
         i32 X2 = (i32)(Poly.TransVtx[V2].X + 0.5f);
-        i32 Y2 = (i32)(Poly.TransVtx[V2].Y + 0.5f);
 
         i32 YStart;
         i32 YEnd;
@@ -885,11 +887,6 @@ public:
                             {
                                 // Compute new values to get from Y1 to Y2
                                 i32 YDiff = (Y2 - Y1);
-                                if (YDiff == 0)
-                                {
-                                    // We are done in this case
-                                    return;
-                                }
 
                                 XDeltaLeftByY = IntToFx16(X2 - X1) / YDiff;
                                 RDeltaLeftByY = IntToFx16(RVtx2 - RVtx1) / YDiff;
@@ -911,11 +908,6 @@ public:
                             {
                                 // Compute new values to get from Y2 to Y1 because we swapped them
                                 i32 YDiff = (Y1 - Y2);
-                                if (YDiff == 0)
-                                {
-                                    // We are done in this case
-                                    return;
-                                }
 
                                 XDeltaRightByY = IntToFx16(X1 - X2) / YDiff;
                                 RDeltaRightByY = IntToFx16(RVtx1 - RVtx2) / YDiff;
