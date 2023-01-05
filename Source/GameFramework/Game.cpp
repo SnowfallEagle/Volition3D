@@ -1,4 +1,5 @@
 /* TODO:
+    - Flat bottom gouraud draw don't count last right X pixels
  */
 
 #include "Core/Volition.h"
@@ -20,6 +21,10 @@ static b32 bRenderSolid = true;
 static b32 bBackFaceRemoval = true;
 static u32 RenderKeyTicks = 0;
 static u32 BackFaceKeyTicks = 0;
+
+static VVector4 PositionVtx0 = { 600, 20, 1.0f };
+static VVector4 PositionVtx1 = { 100, 650, 1.0f };
+static VVector4 PositionVtx2 = { 1100, 600, 1.0f };
 
 DEFINE_LOG_CHANNEL(hLogGame, "Game");
 
@@ -119,6 +124,31 @@ void VGame::Update(f32 Delta)
 	{
 		Volition.Stop();
 	}
+
+    if (Input.IsKeyDown(EKeycode::Up))
+    {
+        PositionVtx0.Y -= 0.2f * Delta;
+        PositionVtx1.Y -= 0.2f * Delta;
+        PositionVtx2.Y -= 0.2f * Delta;
+    }
+    if (Input.IsKeyDown(EKeycode::Right))
+    {
+        PositionVtx0.X += 0.2f * Delta;
+        PositionVtx1.X += 0.2f * Delta;
+        PositionVtx2.X += 0.2f * Delta;
+    }
+    if (Input.IsKeyDown(EKeycode::Left))
+    {
+        PositionVtx0.X -= 0.2f * Delta;
+        PositionVtx1.X -= 0.2f * Delta;
+        PositionVtx2.X -= 0.2f * Delta;
+    }
+    if (Input.IsKeyDown(EKeycode::Down))
+    {
+        PositionVtx0.Y += 0.2f * Delta;
+        PositionVtx1.Y += 0.2f * Delta;
+        PositionVtx2.Y += 0.2f * Delta;
+    }
 
 	if (Input.IsKeyDown(EKeycode::R) && Volition.GetTicks() - RenderKeyTicks > 100)
 	{
@@ -228,21 +258,12 @@ void VGame::Render()
                 },
                 nullptr, nullptr,
                 {},
-                {
-                    {
-                        0, 1.0f,
-                        { 600, 20, 1.0f }
-                    },
-                    {
-                        0, 1.0f,
-                        { 100, 650, 1.0f }
-                    },
-                    {
-                        0, 1.0f,
-                        { 1100, 650.1f, 1.0f }
-                    },
-                }
+                {}
             };
+            Poly.TransVtx[0].Position = PositionVtx0;
+            Poly.TransVtx[1].Position = PositionVtx1;
+            Poly.TransVtx[2].Position = PositionVtx2;
+
             Renderer.DrawGouraudTriangle(Buffer, Pitch, Poly);
         }
 	}

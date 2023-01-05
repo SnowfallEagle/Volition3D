@@ -9,12 +9,6 @@
 # include "Core/Impl/Platform_Win.h"
 #endif
 
-// Rasterizer mode
-#define VL_RASTERIZER_MODE_ACCURATE 0
-#define VL_RASTERIZER_MODE_FAST     1
-
-#define VL_RASTERIZER_MODE VL_RASTERIZER_MODE_ACCURATE
-
 // Endianness
 #define VL_LITTLE_ENDIAN 1
 #define VL_BIG_ENDIAN 0
