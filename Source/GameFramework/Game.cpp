@@ -24,7 +24,7 @@ static u32 BackFaceKeyTicks = 0;
 
 static VVector4 PositionVtx0 = { 600, 20, 1.0f };
 static VVector4 PositionVtx1 = { 100, 650, 1.0f };
-static VVector4 PositionVtx2 = { 1100, 600, 1.0f };
+static VVector4 PositionVtx2 = { 1100, 200, 1.0f };
 
 DEFINE_LOG_CHANNEL(hLogGame, "Game");
 
@@ -125,29 +125,30 @@ void VGame::Update(f32 Delta)
 		Volition.Stop();
 	}
 
+    f32 SpeedTri = 0.5f * Delta;
     if (Input.IsKeyDown(EKeycode::Up))
     {
-        PositionVtx0.Y -= 0.2f * Delta;
-        PositionVtx1.Y -= 0.2f * Delta;
-        PositionVtx2.Y -= 0.2f * Delta;
+        PositionVtx0.Y -= SpeedTri;
+        PositionVtx1.Y -= SpeedTri;
+        PositionVtx2.Y -= SpeedTri;
     }
     if (Input.IsKeyDown(EKeycode::Right))
     {
-        PositionVtx0.X += 0.2f * Delta;
-        PositionVtx1.X += 0.2f * Delta;
-        PositionVtx2.X += 0.2f * Delta;
+        PositionVtx0.X += SpeedTri;
+        PositionVtx1.X += SpeedTri;
+        PositionVtx2.X += SpeedTri;
     }
     if (Input.IsKeyDown(EKeycode::Left))
     {
-        PositionVtx0.X -= 0.2f * Delta;
-        PositionVtx1.X -= 0.2f * Delta;
-        PositionVtx2.X -= 0.2f * Delta;
+        PositionVtx0.X -= SpeedTri;
+        PositionVtx1.X -= SpeedTri;
+        PositionVtx2.X -= SpeedTri;
     }
     if (Input.IsKeyDown(EKeycode::Down))
     {
-        PositionVtx0.Y += 0.2f * Delta;
-        PositionVtx1.Y += 0.2f * Delta;
-        PositionVtx2.Y += 0.2f * Delta;
+        PositionVtx0.Y += SpeedTri;
+        PositionVtx1.Y += SpeedTri;
+        PositionVtx2.Y += SpeedTri;
     }
 
 	if (Input.IsKeyDown(EKeycode::R) && Volition.GetTicks() - RenderKeyTicks > 100)

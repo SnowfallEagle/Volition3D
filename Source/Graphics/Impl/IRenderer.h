@@ -739,11 +739,113 @@ public:
             // Clip top Y
             if (Y1 < MinClip.Y)
             {
-                // TODO(sean)
+                // Compute deltas
+                i32 YDiffLeft = (Y2 - Y1);
+                XDeltaLeftByY = IntToFx16(X2 - X1) / YDiffLeft;
+                RDeltaLeftByY = IntToFx16(RVtx2 - RVtx1) / YDiffLeft;
+                GDeltaLeftByY = IntToFx16(GVtx2 - GVtx1) / YDiffLeft;
+                BDeltaLeftByY = IntToFx16(BVtx2 - BVtx1) / YDiffLeft;
+
+                i32 YDiffRight = (Y2 - Y0);
+                XDeltaRightByY = IntToFx16(X2 - X0) / YDiffRight;
+                RDeltaRightByY = IntToFx16(RVtx2 - RVtx0) / YDiffRight;
+                GDeltaRightByY = IntToFx16(GVtx2 - GVtx0) / YDiffRight;
+                BDeltaRightByY = IntToFx16(BVtx2 - BVtx0) / YDiffRight;
+
+                // Do clipping
+                YDiffLeft = (MinClip.Y - Y1);
+                XLeft = IntToFx16(X1) + YDiffLeft * XDeltaLeftByY;
+                RLeft = IntToFx16(RVtx1) + YDiffLeft * RDeltaLeftByY;
+                GLeft = IntToFx16(GVtx1) + YDiffLeft * GDeltaLeftByY;
+                BLeft = IntToFx16(BVtx1) + YDiffLeft * BDeltaLeftByY;
+
+                YDiffRight = (MinClip.Y - Y0);
+                XRight = IntToFx16(X0) + YDiffRight * XDeltaRightByY;
+                RRight = IntToFx16(RVtx0) + YDiffRight * RDeltaRightByY;
+                GRight = IntToFx16(GVtx0) + YDiffRight * GDeltaRightByY;
+                BRight = IntToFx16(BVtx0) + YDiffRight * BDeltaRightByY;
+
+                YStart = MinClip.Y;
+
+                /* NOTE(sean):
+                    Test if we need swap to keep rendering left to right.
+                    It can happen because we assume that
+                    Y1 is on left hand side and Y2 on right.
+                 */
+                if (XDeltaRightByY > XDeltaLeftByY)
+                {
+                    SWAP(XDeltaLeftByY, XDeltaRightByY, TempInt);
+                    SWAP(RDeltaLeftByY, RDeltaRightByY, TempInt);
+                    SWAP(GDeltaLeftByY, GDeltaRightByY, TempInt);
+                    SWAP(BDeltaLeftByY, BDeltaRightByY, TempInt);
+
+                    SWAP(XLeft, XRight, TempInt);
+                    SWAP(RLeft, RRight, TempInt);
+                    SWAP(GLeft, GRight, TempInt);
+                    SWAP(BLeft, BRight, TempInt);
+
+                    SWAP(X1, X2, TempInt);
+                    SWAP(Y1, Y2, TempInt);
+                    SWAP(RVtx1, RVtx2, TempInt);
+                    SWAP(GVtx1, GVtx2, TempInt);
+                    SWAP(BVtx1, BVtx2, TempInt);
+
+                    bRestartInterpolationAtLeftHand = false; // Restart at right hand side
+                }
             }
             else if (Y0 < MinClip.Y)
             {
-                // TODO(sean)
+                i32 YDiffLeft = (Y1 - Y0);
+                XDeltaLeftByY = IntToFx16(X1 - X0) / YDiffLeft;
+                RDeltaLeftByY = IntToFx16(RVtx1 - RVtx0) / YDiffLeft;
+                GDeltaLeftByY = IntToFx16(GVtx1 - GVtx0) / YDiffLeft;
+                BDeltaLeftByY = IntToFx16(BVtx1 - BVtx0) / YDiffLeft;
+
+                i32 YDiffRight = (Y2 - Y0);
+                XDeltaRightByY = IntToFx16(X2 - X0) / YDiffRight;
+                RDeltaRightByY = IntToFx16(RVtx2 - RVtx0) / YDiffRight;
+                GDeltaRightByY = IntToFx16(GVtx2 - GVtx0) / YDiffRight;
+                BDeltaRightByY = IntToFx16(BVtx2 - BVtx0) / YDiffRight;
+
+                i32 YDiff = (MinClip.Y - Y0);
+                XLeft = IntToFx16(X0) + YDiff * XDeltaLeftByY;
+                RLeft = IntToFx16(RVtx0) + YDiff * RDeltaLeftByY;
+                GLeft = IntToFx16(GVtx0) + YDiff * GDeltaLeftByY;
+                BLeft = IntToFx16(BVtx0) + YDiff * BDeltaLeftByY;
+
+                XRight = IntToFx16(X0) + YDiff * XDeltaRightByY;
+                RRight = IntToFx16(RVtx0) + YDiff * RDeltaRightByY;
+                GRight = IntToFx16(GVtx0) + YDiff * GDeltaRightByY;
+                BRight = IntToFx16(BVtx0) + YDiff * BDeltaRightByY;
+
+                YStart = MinClip.Y;
+
+                /* NOTE(sean):
+                    Test if we need swap to keep rendering left to right.
+                    It can happen because we assume that
+                    Y1 is on left hand side and Y2 on right.
+                 */
+                // TODO(sean): Test if we can simplify it
+                if (XDeltaRightByY < XDeltaLeftByY)
+                {
+                    SWAP(XDeltaLeftByY, XDeltaRightByY, TempInt);
+                    SWAP(RDeltaLeftByY, RDeltaRightByY, TempInt);
+                    SWAP(GDeltaLeftByY, GDeltaRightByY, TempInt);
+                    SWAP(BDeltaLeftByY, BDeltaRightByY, TempInt);
+
+                    SWAP(XLeft, XRight, TempInt);
+                    SWAP(RLeft, RRight, TempInt);
+                    SWAP(GLeft, GRight, TempInt);
+                    SWAP(BLeft, BRight, TempInt);
+
+                    SWAP(X1, X2, TempInt);
+                    SWAP(Y1, Y2, TempInt);
+                    SWAP(RVtx1, RVtx2, TempInt);
+                    SWAP(GVtx1, GVtx2, TempInt);
+                    SWAP(BVtx1, BVtx2, TempInt);
+
+                    bRestartInterpolationAtLeftHand = false; // Restart at right hand side
+                }
             }
             else // No top Y clipping
             {
@@ -792,241 +894,241 @@ public:
 
                     bRestartInterpolationAtLeftHand = false; // Restart at right hand side
                 }
+            }
 
-                // Test for clipping X
-                if (X0 < MinClip.X || X1 < MinClip.X || X2 < MinClip.X ||
-                    X0 > MaxClip.X || X1 > MaxClip.X || X2 > MaxClip.X)
+            // Test for clipping X
+            if (X0 < MinClip.X || X1 < MinClip.X || X2 < MinClip.X ||
+                X0 > MaxClip.X || X1 > MaxClip.X || X2 > MaxClip.X)
+            {
+                // Align video buffer
+                Buffer += Pitch * YStart;
+
+                // Proccess each Y
+                for (i32f Y = YStart; Y <= YEnd; ++Y)
                 {
-                    // Align video buffer
-                    Buffer += Pitch * YStart;
+                    // Compute initial values
+                    i32 XStart = Fx16ToIntRounded(XLeft);
+                    i32 XEnd   = Fx16ToIntRounded(XRight);
 
-                    // Proccess each Y
-                    for (i32f Y = YStart; Y <= YEnd; ++Y)
+                    fx16 R = RLeft;
+                    fx16 G = GLeft;
+                    fx16 B = BLeft;
+
+                    // Compute interpolants
+                    fx16 RDeltaByX;
+                    fx16 GDeltaByX;
+                    fx16 BDeltaByX;
+
+                    i32 XDiff = XEnd - XStart;
+                    if (XDiff > 0)
                     {
-                        // Compute initial values
-                        i32 XStart = Fx16ToIntRounded(XLeft);
-                        i32 XEnd   = Fx16ToIntRounded(XRight);
+                        RDeltaByX = (RRight - RLeft) / XDiff;
+                        GDeltaByX = (GRight - GLeft) / XDiff;
+                        BDeltaByX = (BRight - BLeft) / XDiff;
+                    }
+                    else
+                    {
+                        RDeltaByX = (RRight - RLeft);
+                        GDeltaByX = (GRight - GLeft);
+                        BDeltaByX = (BRight - BLeft);
+                    }
 
-                        fx16 R = RLeft;
-                        fx16 G = GLeft;
-                        fx16 B = BLeft;
+                    // Test if we need clipping
+                    if (XStart < MinClip.X)
+                    {
+                        XDiff = MinClip.X - XStart;
+                        XStart = MinClip.X;
 
-                        // Compute interpolants
-                        fx16 RDeltaByX;
-                        fx16 GDeltaByX;
-                        fx16 BDeltaByX;
+                        R += RDeltaByX * XDiff;
+                        G += GDeltaByX * XDiff;
+                        B += BDeltaByX * XDiff;
+                    }
+                    if (XEnd > MaxClip.X)
+                    {
+                        XEnd = MaxClip.X;
+                    }
 
-                        i32 XDiff = XEnd - XStart;
-                        if (XDiff > 0)
+                    // Proccess each X
+                    for (i32f X = XStart; X <= XEnd; ++X)
+                    {
+                        Buffer[X] = MAP_XRGB32(
+                            Fx16ToIntRounded(R),
+                            Fx16ToIntRounded(G),
+                            Fx16ToIntRounded(B)
+                        );
+
+                        R += RDeltaByX;
+                        G += GDeltaByX;
+                        B += BDeltaByX;
+                    }
+
+                    // Update values those change along Y
+                    XLeft += XDeltaLeftByY;
+                    RLeft += RDeltaLeftByY;
+                    GLeft += GDeltaLeftByY;
+                    BLeft += BDeltaLeftByY;
+
+                    XRight += XDeltaRightByY;
+                    RRight += RDeltaRightByY;
+                    GRight += GDeltaRightByY;
+                    BRight += BDeltaRightByY;
+
+                    Buffer += Pitch;
+
+                    // Test for changing interpolant
+                    if (Y == YRestartInterpolation)
+                    {
+                        if (bRestartInterpolationAtLeftHand)
                         {
-                            RDeltaByX = (RRight - RLeft) / XDiff;
-                            GDeltaByX = (GRight - GLeft) / XDiff;
-                            BDeltaByX = (BRight - BLeft) / XDiff;
+                            // Compute new values to get from Y1 to Y2
+                            i32 YDiff = (Y2 - Y1);
+
+                            XDeltaLeftByY = IntToFx16(X2 - X1) / YDiff;
+                            RDeltaLeftByY = IntToFx16(RVtx2 - RVtx1) / YDiff;
+                            GDeltaLeftByY = IntToFx16(GVtx2 - GVtx1) / YDiff;
+                            BDeltaLeftByY = IntToFx16(BVtx2 - BVtx1) / YDiff;
+
+                            XLeft = IntToFx16(X1);
+                            RLeft = IntToFx16(RVtx1);
+                            GLeft = IntToFx16(GVtx1);
+                            BLeft = IntToFx16(BVtx1);
+
+                            // Align down on 1 Y
+                            XLeft += XDeltaLeftByY;
+                            RLeft += RDeltaLeftByY;
+                            GLeft += GDeltaLeftByY;
+                            BLeft += BDeltaLeftByY;
                         }
                         else
                         {
-                            RDeltaByX = (RRight - RLeft);
-                            GDeltaByX = (GRight - GLeft);
-                            BDeltaByX = (BRight - BLeft);
-                        }
+                            // Compute new values to get from Y2 to Y1 because we swapped them
+                            i32 YDiff = (Y1 - Y2);
 
-                        // Test if we need clipping
-                        if (XStart < MinClip.X)
-                        {
-                            XDiff = MinClip.X - XStart;
-                            XStart = MinClip.X;
+                            XDeltaRightByY = IntToFx16(X1 - X2) / YDiff;
+                            RDeltaRightByY = IntToFx16(RVtx1 - RVtx2) / YDiff;
+                            GDeltaRightByY = IntToFx16(GVtx1 - GVtx2) / YDiff;
+                            BDeltaRightByY = IntToFx16(BVtx1 - BVtx2) / YDiff;
 
-                            R += RDeltaByX * XDiff;
-                            G += GDeltaByX * XDiff;
-                            B += BDeltaByX * XDiff;
-                        }
-                        if (XEnd > MaxClip.X)
-                        {
-                            XEnd = MaxClip.X;
-                        }
+                            XRight = IntToFx16(X2);
+                            RRight = IntToFx16(RVtx2);
+                            GRight = IntToFx16(GVtx2);
+                            BRight = IntToFx16(BVtx2);
 
-                        // Proccess each X
-                        for (i32f X = XStart; X <= XEnd; ++X)
-                        {
-                            Buffer[X] = MAP_XRGB32(
-                                Fx16ToIntRounded(R),
-                                Fx16ToIntRounded(G),
-                                Fx16ToIntRounded(B)
-                            );
-
-                            R += RDeltaByX;
-                            G += GDeltaByX;
-                            B += BDeltaByX;
-                        }
-
-                        // Update values those change along Y
-                        XLeft += XDeltaLeftByY;
-                        RLeft += RDeltaLeftByY;
-                        GLeft += GDeltaLeftByY;
-                        BLeft += BDeltaLeftByY;
-
-                        XRight += XDeltaRightByY;
-                        RRight += RDeltaRightByY;
-                        GRight += GDeltaRightByY;
-                        BRight += BDeltaRightByY;
-
-                        Buffer += Pitch;
-
-                        // Test for changing interpolant
-                        if (Y == YRestartInterpolation)
-                        {
-                            if (bRestartInterpolationAtLeftHand)
-                            {
-                                // Compute new values to get from Y1 to Y2
-                                i32 YDiff = (Y2 - Y1);
-
-                                XDeltaLeftByY = IntToFx16(X2 - X1) / YDiff;
-                                RDeltaLeftByY = IntToFx16(RVtx2 - RVtx1) / YDiff;
-                                GDeltaLeftByY = IntToFx16(GVtx2 - GVtx1) / YDiff;
-                                BDeltaLeftByY = IntToFx16(BVtx2 - BVtx1) / YDiff;
-
-                                XLeft = IntToFx16(X1);
-                                RLeft = IntToFx16(RVtx1);
-                                GLeft = IntToFx16(GVtx1);
-                                BLeft = IntToFx16(BVtx1);
-
-                                // Align down on 1 Y
-                                XLeft += XDeltaLeftByY;
-                                RLeft += RDeltaLeftByY;
-                                GLeft += GDeltaLeftByY;
-                                BLeft += BDeltaLeftByY;
-                            }
-                            else
-                            {
-                                // Compute new values to get from Y2 to Y1 because we swapped them
-                                i32 YDiff = (Y1 - Y2);
-
-                                XDeltaRightByY = IntToFx16(X1 - X2) / YDiff;
-                                RDeltaRightByY = IntToFx16(RVtx1 - RVtx2) / YDiff;
-                                GDeltaRightByY = IntToFx16(GVtx1 - GVtx2) / YDiff;
-                                BDeltaRightByY = IntToFx16(BVtx1 - BVtx2) / YDiff;
-
-                                XRight = IntToFx16(X2);
-                                RRight = IntToFx16(RVtx2);
-                                GRight = IntToFx16(GVtx2);
-                                BRight = IntToFx16(BVtx2);
-
-                                // Align down on 1 Y
-                                XRight += XDeltaRightByY;
-                                RRight += RDeltaRightByY;
-                                GRight += GDeltaRightByY;
-                                BRight += BDeltaRightByY;
-                            }
+                            // Align down on 1 Y
+                            XRight += XDeltaRightByY;
+                            RRight += RDeltaRightByY;
+                            GRight += GDeltaRightByY;
+                            BRight += BDeltaRightByY;
                         }
                     }
                 }
-                else // No X clipping
+            }
+            else // No X clipping
+            {
+                // Align video buffer
+                Buffer += Pitch * YStart;
+
+                // Proccess each Y
+                for (i32f Y = YStart; Y <= YEnd; ++Y)
                 {
-                    // Align video buffer
-                    Buffer += Pitch * YStart;
+                    // Compute initial values
+                    i32 XStart = Fx16ToIntRounded(XLeft);
+                    i32 XEnd   = Fx16ToIntRounded(XRight);
 
-                    // Proccess each Y
-                    for (i32f Y = YStart; Y <= YEnd; ++Y)
+                    fx16 R = RLeft;
+                    fx16 G = GLeft;
+                    fx16 B = BLeft;
+
+                    // Compute interpolants
+                    fx16 RDeltaByX;
+                    fx16 GDeltaByX;
+                    fx16 BDeltaByX;
+
+                    i32 XDiff = XEnd - XStart;
+                    if (XDiff > 0)
                     {
-                        // Compute initial values
-                        i32 XStart = Fx16ToIntRounded(XLeft);
-                        i32 XEnd   = Fx16ToIntRounded(XRight);
+                        RDeltaByX = (RRight - RLeft) / XDiff;
+                        GDeltaByX = (GRight - GLeft) / XDiff;
+                        BDeltaByX = (BRight - BLeft) / XDiff;
+                    }
+                    else
+                    {
+                        RDeltaByX = (RRight - RLeft);
+                        GDeltaByX = (GRight - GLeft);
+                        BDeltaByX = (BRight - BLeft);
+                    }
 
-                        fx16 R = RLeft;
-                        fx16 G = GLeft;
-                        fx16 B = BLeft;
+                    // Proccess each X
+                    for (i32f X = XStart; X <= XEnd; ++X)
+                    {
+                        Buffer[X] = MAP_XRGB32(
+                            Fx16ToIntRounded(R),
+                            Fx16ToIntRounded(G),
+                            Fx16ToIntRounded(B)
+                        );
 
-                        // Compute interpolants
-                        fx16 RDeltaByX;
-                        fx16 GDeltaByX;
-                        fx16 BDeltaByX;
+                        R += RDeltaByX;
+                        G += GDeltaByX;
+                        B += BDeltaByX;
+                    }
 
-                        i32 XDiff = XEnd - XStart;
-                        if (XDiff > 0)
+                    // Update values those change along Y
+                    XLeft += XDeltaLeftByY;
+                    RLeft += RDeltaLeftByY;
+                    GLeft += GDeltaLeftByY;
+                    BLeft += BDeltaLeftByY;
+
+                    XRight += XDeltaRightByY;
+                    RRight += RDeltaRightByY;
+                    GRight += GDeltaRightByY;
+                    BRight += BDeltaRightByY;
+
+                    Buffer += Pitch;
+
+                    // Test for changing interpolant
+                    if (Y == YRestartInterpolation)
+                    {
+                        if (bRestartInterpolationAtLeftHand)
                         {
-                            RDeltaByX = (RRight - RLeft) / XDiff;
-                            GDeltaByX = (GRight - GLeft) / XDiff;
-                            BDeltaByX = (BRight - BLeft) / XDiff;
+                            // Compute new values to get from Y1 to Y2
+                            i32 YDiff = (Y2 - Y1);
+
+                            XDeltaLeftByY = IntToFx16(X2 - X1) / YDiff;
+                            RDeltaLeftByY = IntToFx16(RVtx2 - RVtx1) / YDiff;
+                            GDeltaLeftByY = IntToFx16(GVtx2 - GVtx1) / YDiff;
+                            BDeltaLeftByY = IntToFx16(BVtx2 - BVtx1) / YDiff;
+
+                            XLeft = IntToFx16(X1);
+                            RLeft = IntToFx16(RVtx1);
+                            GLeft = IntToFx16(GVtx1);
+                            BLeft = IntToFx16(BVtx1);
+
+                            // Align down on 1 Y
+                            XLeft += XDeltaLeftByY;
+                            RLeft += RDeltaLeftByY;
+                            GLeft += GDeltaLeftByY;
+                            BLeft += BDeltaLeftByY;
                         }
                         else
                         {
-                            RDeltaByX = (RRight - RLeft);
-                            GDeltaByX = (GRight - GLeft);
-                            BDeltaByX = (BRight - BLeft);
-                        }
+                            // Compute new values to get from Y2 to Y1 because we swapped them
+                            i32 YDiff = (Y1 - Y2);
 
-                        // Proccess each X
-                        for (i32f X = XStart; X <= XEnd; ++X)
-                        {
-                            Buffer[X] = MAP_XRGB32(
-                                Fx16ToIntRounded(R),
-                                Fx16ToIntRounded(G),
-                                Fx16ToIntRounded(B)
-                            );
+                            XDeltaRightByY = IntToFx16(X1 - X2) / YDiff;
+                            RDeltaRightByY = IntToFx16(RVtx1 - RVtx2) / YDiff;
+                            GDeltaRightByY = IntToFx16(GVtx1 - GVtx2) / YDiff;
+                            BDeltaRightByY = IntToFx16(BVtx1 - BVtx2) / YDiff;
 
-                            R += RDeltaByX;
-                            G += GDeltaByX;
-                            B += BDeltaByX;
-                        }
+                            XRight = IntToFx16(X2);
+                            RRight = IntToFx16(RVtx2);
+                            GRight = IntToFx16(GVtx2);
+                            BRight = IntToFx16(BVtx2);
 
-                        // Update values those change along Y
-                        XLeft += XDeltaLeftByY;
-                        RLeft += RDeltaLeftByY;
-                        GLeft += GDeltaLeftByY;
-                        BLeft += BDeltaLeftByY;
-
-                        XRight += XDeltaRightByY;
-                        RRight += RDeltaRightByY;
-                        GRight += GDeltaRightByY;
-                        BRight += BDeltaRightByY;
-
-                        Buffer += Pitch;
-
-                        // Test for changing interpolant
-                        if (Y == YRestartInterpolation)
-                        {
-                            if (bRestartInterpolationAtLeftHand)
-                            {
-                                // Compute new values to get from Y1 to Y2
-                                i32 YDiff = (Y2 - Y1);
-
-                                XDeltaLeftByY = IntToFx16(X2 - X1) / YDiff;
-                                RDeltaLeftByY = IntToFx16(RVtx2 - RVtx1) / YDiff;
-                                GDeltaLeftByY = IntToFx16(GVtx2 - GVtx1) / YDiff;
-                                BDeltaLeftByY = IntToFx16(BVtx2 - BVtx1) / YDiff;
-
-                                XLeft = IntToFx16(X1);
-                                RLeft = IntToFx16(RVtx1);
-                                GLeft = IntToFx16(GVtx1);
-                                BLeft = IntToFx16(BVtx1);
-
-                                // Align down on 1 Y
-                                XLeft += XDeltaLeftByY;
-                                RLeft += RDeltaLeftByY;
-                                GLeft += GDeltaLeftByY;
-                                BLeft += BDeltaLeftByY;
-                            }
-                            else
-                            {
-                                // Compute new values to get from Y2 to Y1 because we swapped them
-                                i32 YDiff = (Y1 - Y2);
-
-                                XDeltaRightByY = IntToFx16(X1 - X2) / YDiff;
-                                RDeltaRightByY = IntToFx16(RVtx1 - RVtx2) / YDiff;
-                                GDeltaRightByY = IntToFx16(GVtx1 - GVtx2) / YDiff;
-                                BDeltaRightByY = IntToFx16(BVtx1 - BVtx2) / YDiff;
-
-                                XRight = IntToFx16(X2);
-                                RRight = IntToFx16(RVtx2);
-                                GRight = IntToFx16(GVtx2);
-                                BRight = IntToFx16(BVtx2);
-
-                                // Align down on 1 Y
-                                XRight += XDeltaRightByY;
-                                RRight += RDeltaRightByY;
-                                GRight += GDeltaRightByY;
-                                BRight += BDeltaRightByY;
-                            }
+                            // Align down on 1 Y
+                            XRight += XDeltaRightByY;
+                            RRight += RDeltaRightByY;
+                            GRight += GDeltaRightByY;
+                            BRight += BDeltaRightByY;
                         }
                     }
                 }
