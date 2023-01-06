@@ -245,7 +245,7 @@ public:
                 LocalVtxList[I].Normal /= (f32)NumPolyTouchVtx[I];
                 LocalVtxList[I].Normal.Normalize();
 
-                LocalVtxList[I].Attr &= EVertexAttr::HasNormal;
+                LocalVtxList[I].Attr |= EVertexAttr::HasNormal;
                 TransVtxList[I].Attr = LocalVtxList[I].Attr;
 
                 VL_NOTE(hLogObject, "Vertex normal [%d]: ", I);
