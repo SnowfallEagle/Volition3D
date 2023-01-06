@@ -240,15 +240,13 @@ void VGame::Render()
 	i32 Pitch;
 	Renderer.BackSurface.Lock(Buffer, Pitch);
 	{
+        if (bRenderSolid)
         {
-            if (bRenderSolid)
-            {
-                RenderList.RenderSolid(Buffer, Pitch);
-            }
-            else
-            {
-                RenderList.RenderWire(Buffer, Pitch);
-            }
+            RenderList.RenderSolid(Buffer, Pitch);
+        }
+        else
+        {
+            RenderList.RenderWire(Buffer, Pitch);
         }
 	}
 	Renderer.BackSurface.Unlock();

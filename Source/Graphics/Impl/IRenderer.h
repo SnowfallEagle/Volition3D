@@ -26,6 +26,7 @@ public:
 
     i32 ScreenWidth;
     i32 ScreenHeight;
+
     VVector2I MinClip;
     VVector2I MaxClip;
     VVector2 MinClipFloat;

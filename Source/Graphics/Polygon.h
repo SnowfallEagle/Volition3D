@@ -53,7 +53,7 @@ public:
 	VPoint2* TextureCoordsList;
 	i32 TextureCoordsIndices[3];
 
-	f32 NormalLength; // TODO(sean)
+	f32 NormalLength;
 };
 
 class VPolyFace
@@ -62,7 +62,7 @@ public:
 	u32 State;
 	u32 Attr;
 
-	VColorARGB OriginalColor; // FIXME(sean): Do we need this field?
+	VColorARGB OriginalColor;
 	VColorARGB LitColor[3]; // For each vertex, 0 for flat shading
 
 	VSurface* Texture;
@@ -72,7 +72,7 @@ public:
 	VVertex TransVtx[3];
 
 	VVector4 Normal; // TODO(sean)
-	f32 NormalLength; // TODO(sean)
+	f32 NormalLength;
 
 	f32 AverageZ; // TODO(sean)
 };

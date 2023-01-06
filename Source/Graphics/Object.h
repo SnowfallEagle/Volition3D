@@ -1,5 +1,7 @@
 /* TODO:
     - LoadCOB()
+    - Recompute vertex normals: On transform, on TransformModelToWorld
+    - Recompute polygon normal length on scaling
  */
 
 #pragma once
@@ -150,9 +152,7 @@ public:
                 continue;
             }
 
-            Poly.State &= ~EPolyState::Clipped;
-            Poly.State &= ~EPolyState::BackFace;
-
+            Poly.State &= ~(EPolyState::Clipped | EPolyState::BackFace | EPolyState::Lit);
             Poly.LitColor[2] = Poly.LitColor[1] = Poly.LitColor[0] = Poly.OriginalColor;
         }
     }
