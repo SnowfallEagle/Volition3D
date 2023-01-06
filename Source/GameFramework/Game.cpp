@@ -31,7 +31,7 @@ DEFINE_LOG_CHANNEL(hLogGame, "Game");
 void VGame::StartUp()
 {
 	Object.LoadPLG(
-		"tankg3.plg",
+		"tank3.plg",
 		{ 0.0f, 0.0f, 250.0f },
 		{ 1.0f, 1.0f, 1.0f },
 		{ 0.0f, 0.0f, 0.0f }
@@ -203,35 +203,39 @@ void VGame::Update(f32 Delta)
 
 void VGame::Render()
 {
+    // Prepare camera
 	Camera.BuildWorldToCameraEulerMat44();
 
-	RenderList.Reset();
-	Object.Reset();
+    // Proccess object
+    {
+        Object.Reset();
+        Object.TransformModelToWorld();
+        Object.Cull(Camera);
+    }
 
-	Object.TransformModelToWorld();
-	Object.Cull(Camera);
-	Object.Light(Camera, Renderer.Lights, Renderer.MaxLights);
+    // Proccess render list
+    {
+        RenderList.Reset();
+        RenderList.InsertObject(Object, false);
+        if (bBackFaceRemoval)
+        {
+            RenderList.RemoveBackFaces(Camera);
+        }
+        RenderList.Light(Camera, Renderer.Lights, Renderer.MaxLights);
+        RenderList.TransformWorldToCamera(Camera);
+        RenderList.SortPolygons(ESortPolygonsMethod::Average);
+        RenderList.TransformCameraToScreen(Camera);
+    }
 
-	RenderList.InsertObject(Object, false);
-	if (bBackFaceRemoval)
-	{
-		RenderList.RemoveBackFaces(Camera);
-	}
-	RenderList.TransformWorldToCamera(Camera);
-	RenderList.SortPolygons(ESortPolygonsMethod::Average);
-	{
-		RenderList.TransformCameraToScreen(Camera);
-	}
-	{
-		// RenderList.TransformCameraToPerspective(Camera);
-		// RenderList.TransformPerspectiveToScreen(Camera);
-	}
+    // Draw background
+    {
+        VRelRectI Dest = { 0, 0, Volition.WindowWidth, Volition.WindowHeight/2 };
+        Renderer.BackSurface.FillRectHW(&Dest, MAP_XRGB32(100, 20, 255));
+        Dest = { 0, Dest.H, Dest.W, Volition.WindowHeight / 2 - 1 };
+        Renderer.BackSurface.FillRectHW(&Dest, MAP_XRGB32(60, 10, 255));
+    }
 
-	VRelRectI Dest = { 0, 0, Volition.WindowWidth, Volition.WindowHeight/2 };
-	Renderer.BackSurface.FillRectHW(&Dest, MAP_XRGB32(100, 20, 255));
-	Dest = { 0, Dest.H, Dest.W, Volition.WindowHeight / 2 - 1 };
-	Renderer.BackSurface.FillRectHW(&Dest, MAP_XRGB32(60, 10, 255));
-
+    // Render stuff
 	u32* Buffer;
 	i32 Pitch;
 	Renderer.BackSurface.Lock(Buffer, Pitch);
@@ -249,7 +253,10 @@ void VGame::Render()
 	}
 	Renderer.BackSurface.Unlock();
 
-	Renderer.DrawText(0, 5, MAP_XRGB32(0xFF, 0xFF, 0xFF), "FPS: %.3f", 1000.0f / Volition.GetDelta());
-	Renderer.DrawText(0, 35, MAP_XRGB32(0xFF, 0xFF, 0xFF), bBackFaceRemoval ? "Backface culling: true" : "Backface culling: false");
-	Renderer.DrawText(0, 65, MAP_XRGB32(0xFF, 0xFF, 0xFF), bRenderSolid ? "Render mode: Solid" : "Render mode: Wire");
+    // Some debug info
+    {
+        Renderer.DrawText(0, 5, MAP_XRGB32(0xFF, 0xFF, 0xFF), "FPS: %.3f", 1000.0f / Volition.GetDelta());
+        Renderer.DrawText(0, 35, MAP_XRGB32(0xFF, 0xFF, 0xFF), bBackFaceRemoval ? "Backface culling: true" : "Backface culling: false");
+        Renderer.DrawText(0, 65, MAP_XRGB32(0xFF, 0xFF, 0xFF), bRenderSolid ? "Render mode: Solid" : "Render mode: Wire");
+    }
 }

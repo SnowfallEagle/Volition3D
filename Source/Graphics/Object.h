@@ -136,6 +136,27 @@ public:
         TransVtxList = &HeadTransVtxList[Frame * NumVtx];
     }
 
+    void Reset()
+    {
+        // Reset object's state
+        State &= ~EObjectState::Culled;
+
+        // Restore polygons
+        for (i32f I = 0; I < NumPoly; ++I)
+        {
+            VPoly& Poly = PolyList[I];
+            if (~Poly.State & EPolyState::Active)
+            {
+                continue;
+            }
+
+            Poly.State &= ~EPolyState::Clipped;
+            Poly.State &= ~EPolyState::BackFace;
+
+            Poly.LitColor[2] = Poly.LitColor[1] = Poly.LitColor[0] = Poly.OriginalColor;
+        }
+    }
+
     void ComputeRadius()
     {
         for (i32f FrameIndex = 0; FrameIndex < NumFrames; ++FrameIndex)
@@ -172,7 +193,6 @@ public:
         return MaxRadiusList[CurrentFrame];
     }
 
-    // TEST(sean)
     void ComputePolygonNormalsLength()
     {
         for (i32f I = 0; I < NumPoly; ++I)
@@ -190,7 +210,6 @@ public:
         }
     }
 
-    // TEST(sean)
     void ComputeVertexNormals()
     {
         i32* NumPolyTouchVtx = new i32[NumVtx];
@@ -358,10 +377,9 @@ public:
         return false;
     }
 
+#if 0 // Now we are doing this kind of stuff in RenderList only
     void Light(const VCamera& Cam, const VLight* Lights, i32 NumLights)
     {
-        // TODO(sean): Use floating point?
-
         if (~State & EObjectState::Active ||
             State & EObjectState::Culled  ||
             ~State & EObjectState::Visible)
@@ -620,27 +638,6 @@ public:
         }
     }
 
-    void Reset()
-    {
-        // Reset object's state
-        State &= ~EObjectState::Culled;
-
-        // Restore polygons
-        for (i32f I = 0; I < NumPoly; ++I)
-        {
-            VPoly& Poly = PolyList[I];
-            if (~Poly.State & EPolyState::Active)
-            {
-                continue;
-            }
-
-            Poly.State &= ~EPolyState::Clipped;
-            Poly.State &= ~EPolyState::BackFace;
-
-            Poly.LitColor[2] = Poly.LitColor[1] = Poly.LitColor[0] = Poly.OriginalColor;
-        }
-    }
-
     void RenderWire(u32* Buffer, i32 Pitch)
     {
         for (i32f I = 0; I < NumPoly; ++I)
@@ -701,4 +698,5 @@ public:
             );
         }
     }
+#endif
 };
