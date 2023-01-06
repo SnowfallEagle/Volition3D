@@ -83,7 +83,7 @@ void VGame::StartUp()
 			ELightState::Active,
 			ELightAttr::SimpleSpotlight,
 
-			0, MAP_RGBX32(0x11, 0x11, 0x11), 0,
+			0, MAP_RGBX32(0xAA, 0xAA, 0xAA), 0,
 			{ 1000.0f, 1000.0f, 0.0f, 0 }, VVector4(-1.0f, -1.0f, 0.0f).GetNormalized(),
 
 			0, 0.0005f, 0,
@@ -106,9 +106,9 @@ void VGame::StartUp()
 
 		//Renderer.InitLight(0, AmbientLight);
 		//Renderer.InitLight(1, ComplexSpotlight);
-		Renderer.InitLight(2, InfiniteLight);
+		//Renderer.InitLight(2, InfiniteLight);
 		//Renderer.InitLight(3, PointLight);
-		// Renderer.InitLight(3, SimpleSpotlight);
+		Renderer.InitLight(0, SimpleSpotlight);
 	}
 }
 

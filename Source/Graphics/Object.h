@@ -277,6 +277,7 @@ public:
                 VVector4::MulMat44(LocalVtxList[I].Position, M, Res);
                 LocalVtxList[I].Position = Res;
 
+                // FIXME(sean): Doesn't see HasNormal
                 if (LocalVtxList[I].Attr & EVertexAttr::HasNormal)
                 {
                     VVector4::MulMat44(LocalVtxList[I].Normal, M, Res);
