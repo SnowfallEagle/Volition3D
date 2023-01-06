@@ -224,7 +224,7 @@ b32 VObject::LoadPLG(
 				{
 				case EPLX::ShadeModePureFlag:
 				{
-					PolyList[I].Attr |= EPolyAttr::ShadeModePure;
+					PolyList[I].Attr |= EPolyAttr::ShadeModeEmissive;
 				} break;
 
 				case EPLX::ShadeModeFlatFlag:

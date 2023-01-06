@@ -21,12 +21,11 @@ namespace EMaterialAttr
         TwoSided    = BIT(2),
         Transparent = BIT(3),
 
-        ShadeModeConstant  = BIT(4),
-        ShadeModeEmissive  = ShadeModeConstant,
-        ShadeModeFlat      = BIT(5),
-        ShadeModeGouraud   = BIT(6),
-        ShadeModeFastPhong = BIT(7),
-        ShadeModeTexture   = BIT(8),
+        ShadeModeEmissive = BIT(4),
+        ShadeModeFlat     = BIT(5),
+        ShadeModeGouraud  = BIT(6),
+        ShadeModePhong    = BIT(7),
+        ShadeModeTexture  = BIT(8),
     };
 }
 

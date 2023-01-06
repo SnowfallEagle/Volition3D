@@ -488,13 +488,20 @@ public:
 				continue;
 			}
 
-			Renderer.DrawTriangle(
-				Buffer, Pitch,
-				Poly->TransVtx[0].X, Poly->TransVtx[0].Y,
-				Poly->TransVtx[1].X, Poly->TransVtx[1].Y,
-				Poly->TransVtx[2].X, Poly->TransVtx[2].Y,
-				Poly->LitColor[0]
-			);
+            if (Poly->Attr & EPolyAttr::ShadeModeGouraud)
+            {
+                Renderer.DrawGouraudTriangle(Buffer, Pitch, *Poly);
+            }
+            else
+            {
+                Renderer.DrawTriangle(
+                    Buffer, Pitch,
+                    Poly->TransVtx[0].X, Poly->TransVtx[0].Y,
+                    Poly->TransVtx[1].X, Poly->TransVtx[1].Y,
+                    Poly->TransVtx[2].X, Poly->TransVtx[2].Y,
+                    Poly->LitColor[0]
+                );
+            }
 		}
 	}
 };

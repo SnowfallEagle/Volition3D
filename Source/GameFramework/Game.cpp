@@ -246,27 +246,6 @@ void VGame::Render()
                 RenderList.RenderWire(Buffer, Pitch);
             }
         }
-
-        {
-            VPolyFace Poly = {
-                EPolyState::Active,
-                EPolyAttr::ShadeModeGouraud,
-                MAP_XRGB32(255, 255, 255),
-                {
-                    MAP_XRGB32(255, 0, 0),
-                    MAP_XRGB32(0, 255, 0),
-                    MAP_XRGB32(0, 0, 255),
-                },
-                nullptr, nullptr,
-                {},
-                {}
-            };
-            Poly.TransVtx[0].Position = PositionVtx0;
-            Poly.TransVtx[1].Position = PositionVtx1;
-            Poly.TransVtx[2].Position = PositionVtx2;
-
-            Renderer.DrawGouraudTriangle(Buffer, Pitch, Poly);
-        }
 	}
 	Renderer.BackSurface.Unlock();
 
