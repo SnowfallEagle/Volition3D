@@ -19,4 +19,4 @@ typedef std::uint_fast64_t u64f;
 typedef float f32;
 typedef double f64;
 
-typedef u32 SizeType;
+typedef u32 VSizeType;

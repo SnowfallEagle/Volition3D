@@ -195,7 +195,7 @@ public:
         {
             for (i32f Y = YStart; Y <= YEnd; ++Y, Buffer += Pitch)
             {
-                Memory.MemSetQuad(Buffer + (u32)XStart, Color, (SizeType)(XEnd - XStart) + 1);
+                Memory.MemSetQuad(Buffer + (u32)XStart, Color, (VSizeType)(XEnd - XStart) + 1);
                 XStart += XDeltaStart;
                 XEnd   += XDeltaEnd;
             }
@@ -228,7 +228,7 @@ public:
                     XClippedEnd = MaxClipFloat.X;
                 }
 
-                Memory.MemSetQuad(Buffer + (u32)XClippedStart, Color, (SizeType)(XClippedEnd - XClippedStart) + 1);
+                Memory.MemSetQuad(Buffer + (u32)XClippedStart, Color, (VSizeType)(XClippedEnd - XClippedStart) + 1);
             }
         }
     }
@@ -285,7 +285,7 @@ public:
         {
             for (i32f Y = YStart; Y <= YEnd; ++Y, Buffer += Pitch)
             {
-                Memory.MemSetQuad(Buffer + (u32)XStart, Color, (SizeType)(XEnd - XStart) + 1);
+                Memory.MemSetQuad(Buffer + (u32)XStart, Color, (VSizeType)(XEnd - XStart) + 1);
                 XStart += XDeltaStart;
                 XEnd   += XDeltaEnd;
             }
@@ -318,7 +318,7 @@ public:
                     XClippedEnd = MaxClipFloat.X;
                 }
 
-                Memory.MemSetQuad(Buffer + (u32)XClippedStart, Color, (SizeType)(XClippedEnd - XClippedStart) + 1);
+                Memory.MemSetQuad(Buffer + (u32)XClippedStart, Color, (VSizeType)(XClippedEnd - XClippedStart) + 1);
             }
         }
     }
@@ -628,7 +628,7 @@ public:
                     }
 
                     // Proccess each X
-                    for (i32f X = XStart; X < XEnd; ++X)
+                    for (i32f X = XStart; X <= XEnd; ++X)
                     {
                         Buffer[X] = MAP_XRGB32(
                             Fx16ToIntRounded(R),

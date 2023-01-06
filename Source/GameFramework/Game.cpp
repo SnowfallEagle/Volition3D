@@ -23,8 +23,8 @@ static u32 RenderKeyTicks = 0;
 static u32 BackFaceKeyTicks = 0;
 
 static VVector4 PositionVtx0 = { 600, 20, 1.0f };
-static VVector4 PositionVtx1 = { 100, 650, 1.0f };
-static VVector4 PositionVtx2 = { 1100, 200, 1.0f };
+static VVector4 PositionVtx1 = { 100, 20, 1.0f };
+static VVector4 PositionVtx2 = { 1100, 650, 1.0f };
 
 DEFINE_LOG_CHANNEL(hLogGame, "Game");
 

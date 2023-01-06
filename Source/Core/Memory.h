@@ -15,7 +15,7 @@ public:
 #ifdef VL_COMPILER_MSVC
     FINLINE
 #endif
-    static void MemSetQuad(void* Dest, i32 Value, SizeType Count)
+    static void MemSetQuad(void* Dest, i32 Value, VSizeType Count)
     {
 #ifdef VL_COMPILER_MSVC
         __asm
@@ -34,12 +34,12 @@ public:
 #endif
     }
 
-    FINLINE static void MemSetByte(void* Dest, i32 Value, SizeType Count)
+    FINLINE static void MemSetByte(void* Dest, i32 Value, VSizeType Count)
     {
         std::memset(Dest, Value, Count);
     }
 
-	FINLINE static void MemCopy(void* Dest, const void* Source, SizeType Size)
+	FINLINE static void MemCopy(void* Dest, const void* Source, VSizeType Size)
 	{
 		std::memcpy(Dest, Source, Size);
 	}
