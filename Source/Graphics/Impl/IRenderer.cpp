@@ -836,13 +836,6 @@ void IRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
 
     i32 V0 = 0, V1 = 1, V2 = 2;
 
-    // Vertical, horizontal triangle clipping
-    if ((Poly.TransVtx[V0].X == Poly.TransVtx[V1].X && Poly.TransVtx[V1].X == Poly.TransVtx[V2].X) ||
-        (Poly.TransVtx[V0].Y == Poly.TransVtx[V1].Y && Poly.TransVtx[V1].Y == Poly.TransVtx[V2].Y))
-    {
-        return;
-    }
-
     // Sort by Y
     i32 TempInt;
     if (Poly.TransVtx[V1].Y < Poly.TransVtx[V0].Y)
@@ -901,6 +894,12 @@ void IRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
     i32 X0 = (i32)(Poly.TransVtx[V0].X + 0.5f);
     i32 X1 = (i32)(Poly.TransVtx[V1].X + 0.5f);
     i32 X2 = (i32)(Poly.TransVtx[V2].X + 0.5f);
+
+    // Vertical, horizontal triangle test
+    if ((Y0 == Y1 && Y1 == Y2) || (X0 == X1 && X1 == X2))
+    {
+        return;
+    }
 
     i32 YStart;
     i32 YEnd;

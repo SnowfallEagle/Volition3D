@@ -393,7 +393,210 @@ public:
             }
             else if (Poly->Attr & EPolyAttr::ShadeModeGouraud)
             {
-                VL_LOG("Light gouraud: PolyIndex [%d]\n", PolyIndex);
+                u32 RSum0 = 0;
+                u32 RSum1 = 0;
+                u32 RSum2 = 0;
+
+                u32 GSum0 = 0;
+                u32 GSum1 = 0;
+                u32 GSum2 = 0;
+
+                u32 BSum0 = 0;
+                u32 BSum1 = 0;
+                u32 BSum2 = 0;
+
+                VVector4 SurfaceNormal = VVector4::GetCross(
+                    Poly->TransVtx[1].Position - Poly->TransVtx[0].Position,
+                    Poly->TransVtx[2].Position - Poly->TransVtx[0].Position
+                );
+                f32 SurfaceNormalLength = Poly->NormalLength;
+
+                for (i32f LightIndex = 0; LightIndex < NumLights; ++LightIndex)
+                {
+                    if (~Lights[LightIndex].State & ELightState::Active)
+                    {
+                        continue;
+                    }
+
+                    if (Lights[LightIndex].Attr & ELightAttr::Ambient)
+                    {
+                        i32 RIntensity = (Poly->OriginalColor.R * Lights[LightIndex].CAmbient.R) / 256;
+                        i32 GIntensity = (Poly->OriginalColor.G * Lights[LightIndex].CAmbient.G) / 256;
+                        i32 BIntensity = (Poly->OriginalColor.B * Lights[LightIndex].CAmbient.B) / 256;
+
+                        RSum0 += RIntensity;
+                        RSum1 += RIntensity;
+                        RSum2 += RIntensity;
+
+                        GSum0 += GIntensity;
+                        GSum1 += GIntensity;
+                        GSum2 += GIntensity;
+
+                        BSum0 += BIntensity;
+                        BSum1 += BIntensity;
+                        BSum2 += BIntensity;
+                    }
+                    else if (Lights[LightIndex].Attr & ELightAttr::Infinite)
+                    {
+                        Poly->TransVtx[0].Normal.Print(); // DEBUG(sean)
+                        VL_LOG("\n");
+
+                        f32 Dot = VVector4::Dot(Poly->TransVtx[0].Normal, Lights[LightIndex].Dir);
+                        if (Dot < 0)
+                        {
+                            // 128 used for fixed point to don't lose accuracy with integers
+                            i32 Intensity = (i32)( 128.0f * Math.Abs(Dot));
+                            RSum0 += (Poly->OriginalColor.R * Lights[LightIndex].CDiffuse.R * Intensity) / (256 * 128);
+                            GSum0 += (Poly->OriginalColor.G * Lights[LightIndex].CDiffuse.G * Intensity) / (256 * 128);
+                            BSum0 += (Poly->OriginalColor.B * Lights[LightIndex].CDiffuse.B * Intensity) / (256 * 128);
+                        }
+
+                        Dot = VVector4::Dot(Poly->TransVtx[1].Normal, Lights[LightIndex].Dir);
+                        if (Dot < 0)
+                        {
+                            // 128 used for fixed point to don't lose accuracy with integers
+                            i32 Intensity = (i32)( 128.0f * Math.Abs(Dot));
+                            RSum1 += (Poly->OriginalColor.R * Lights[LightIndex].CDiffuse.R * Intensity) / (256 * 128);
+                            GSum1 += (Poly->OriginalColor.G * Lights[LightIndex].CDiffuse.G * Intensity) / (256 * 128);
+                            BSum1 += (Poly->OriginalColor.B * Lights[LightIndex].CDiffuse.B * Intensity) / (256 * 128);
+                        }
+
+                        Dot = VVector4::Dot(Poly->TransVtx[2].Normal, Lights[LightIndex].Dir);
+                        if (Dot < 0)
+                        {
+                            // 128 used for fixed point to don't lose accuracy with integers
+                            i32 Intensity = (i32)( 128.0f * Math.Abs(Dot));
+                            RSum2 += (Poly->OriginalColor.R * Lights[LightIndex].CDiffuse.R * Intensity) / (256 * 128);
+                            GSum2 += (Poly->OriginalColor.G * Lights[LightIndex].CDiffuse.G * Intensity) / (256 * 128);
+                            BSum2 += (Poly->OriginalColor.B * Lights[LightIndex].CDiffuse.B * Intensity) / (256 * 128);
+                        }
+                    }
+                    else if (Lights[LightIndex].Attr & ELightAttr::Point)
+                    {
+                        VVector4 Direction = Poly->TransVtx[0].Position - Lights[LightIndex].Pos;
+                        f32 Distance = Direction.GetLengthFast();
+                        f32 Atten =
+                            Lights[LightIndex].KConst +
+                            Lights[LightIndex].KLinear * Distance +
+                            Lights[LightIndex].KQuad * Distance * Distance;
+
+                        f32 Dot = VVector4::Dot(Poly->TransVtx[0].Normal, Direction);
+                        if (Dot < 0)
+                        {
+                            // 128 used for fixed point to don't lose accuracy with integers
+                            i32 Intensity = (i32)(
+                                (128.0f * Math.Abs(Dot)) / (Distance * Atten)
+                            );
+
+                            RSum0 += (Poly->OriginalColor.R * Lights[LightIndex].CDiffuse.R * Intensity) / (256 * 128);
+                            GSum0 += (Poly->OriginalColor.G * Lights[LightIndex].CDiffuse.G * Intensity) / (256 * 128);
+                            BSum0 += (Poly->OriginalColor.B * Lights[LightIndex].CDiffuse.B * Intensity) / (256 * 128);
+                        }
+
+                        Dot = VVector4::Dot(Poly->TransVtx[1].Normal, Direction);
+                        if (Dot < 0)
+                        {
+                            // 128 used for fixed point to don't lose accuracy with integers
+                            i32 Intensity = (i32)(
+                                (128.0f * Math.Abs(Dot)) / (Distance * Atten)
+                            );
+
+                            RSum1 += (Poly->OriginalColor.R * Lights[LightIndex].CDiffuse.R * Intensity) / (256 * 128);
+                            GSum1 += (Poly->OriginalColor.G * Lights[LightIndex].CDiffuse.G * Intensity) / (256 * 128);
+                            BSum1 += (Poly->OriginalColor.B * Lights[LightIndex].CDiffuse.B * Intensity) / (256 * 128);
+                        }
+
+                        Dot = VVector4::Dot(Poly->TransVtx[2].Normal, Direction);
+                        if (Dot < 0)
+                        {
+                            // 128 used for fixed point to don't lose accuracy with integers
+                            i32 Intensity = (i32)(
+                                (128.0f * Math.Abs(Dot)) / (Distance * Atten)
+                            );
+
+                            RSum2 += (Poly->OriginalColor.R * Lights[LightIndex].CDiffuse.R * Intensity) / (256 * 128);
+                            GSum2 += (Poly->OriginalColor.G * Lights[LightIndex].CDiffuse.G * Intensity) / (256 * 128);
+                            BSum2 += (Poly->OriginalColor.B * Lights[LightIndex].CDiffuse.B * Intensity) / (256 * 128);
+                        }
+                    }
+                    #if 0
+                    else if (Lights[LightIndex].Attr & ELightAttr::SimpleSpotlight)
+                    {
+                        f32 Dot = VVector4::Dot(SurfaceNormal, Lights[LightIndex].Dir);
+
+                        if (Dot < 0)
+                        {
+                            // 128 used for fixed point to don't lose accuracy with integers
+                            f32 Distance = (Poly->TransVtx[0].Position - Lights[LightIndex].Pos).GetLengthFast();
+                            f32 Atten =
+                                Lights[LightIndex].KConst +
+                                Lights[LightIndex].KLinear * Distance +
+                                Lights[LightIndex].KQuad * Distance * Distance;
+                            i32 Intensity = (i32)(
+                                (128.0f * Math.Abs(Dot)) / (SurfaceNormalLength * Atten)
+                            );
+
+                            RSum += (Poly->OriginalColor.R * Lights[LightIndex].CDiffuse.R * Intensity) / (256 * 128);
+                            GSum += (Poly->OriginalColor.G * Lights[LightIndex].CDiffuse.G * Intensity) / (256 * 128);
+                            BSum += (Poly->OriginalColor.B * Lights[LightIndex].CDiffuse.B * Intensity) / (256 * 128);
+                        }
+                    }
+                    else if (Lights[LightIndex].Attr & ELightAttr::ComplexSpotlight)
+                    {
+                        f32 DotNormalDirection = VVector4::Dot(SurfaceNormal, Lights[LightIndex].Dir);
+
+                        if (DotNormalDirection < 0)
+                        {
+                            VVector4 DistanceVector = Poly->TransVtx[0].Position - Lights[LightIndex].Pos;
+                            f32 Distance = DistanceVector.GetLengthFast();
+                            f32 DotDistanceDirection = VVector4::Dot(DistanceVector, Lights[LightIndex].Dir) / Distance;
+
+                            if (DotDistanceDirection > 0)
+                            {
+                                f32 DotDistanceDirectionExp = DotDistanceDirection;
+                                // For optimization use integer power
+                                i32f IntegerExp = (i32f)Lights[LightIndex].Power;
+                                for (i32f I = 1; I < IntegerExp; ++I)
+                                {
+                                    DotDistanceDirectionExp *= DotDistanceDirection;
+                                }
+
+                                // 128 used for fixed point to don't lose accuracy with integers
+                                f32 Atten =
+                                    Lights[LightIndex].KConst +
+                                    Lights[LightIndex].KLinear * Distance +
+                                    Lights[LightIndex].KQuad * Distance * Distance;
+                                i32 Intensity = (i32)(
+                                    (128.0f * Math.Abs(DotNormalDirection) * DotDistanceDirectionExp) /
+                                    (SurfaceNormalLength * Atten)
+                                );
+
+                                RSum += (Poly->OriginalColor.R * Lights[LightIndex].CDiffuse.R * Intensity) / (256 * 128);
+                                GSum += (Poly->OriginalColor.G * Lights[LightIndex].CDiffuse.G * Intensity) / (256 * 128);
+                                BSum += (Poly->OriginalColor.B * Lights[LightIndex].CDiffuse.B * Intensity) / (256 * 128);
+                            }
+                        }
+                    }
+                    #endif
+                }
+
+                // Check that we are in range
+                if (RSum0 > 255) RSum0 = 255;
+                if (RSum1 > 255) RSum1 = 255;
+                if (RSum2 > 255) RSum2 = 255;
+
+                if (GSum0 > 255) GSum0 = 255;
+                if (GSum1 > 255) GSum1 = 255;
+                if (GSum2 > 255) GSum2 = 255;
+
+                if (BSum0 > 255) BSum0 = 255;
+                if (BSum1 > 255) BSum1 = 255;
+                if (BSum2 > 255) BSum2 = 255;
+
+                // Put final color
+                Poly->LitColor[0] = MAP_XRGB32(RSum0, GSum0, BSum0);
+                Poly->LitColor[1] = MAP_XRGB32(RSum1, GSum1, BSum1);
+                Poly->LitColor[2] = MAP_XRGB32(RSum2, GSum2, BSum2);
             }
         }
     }

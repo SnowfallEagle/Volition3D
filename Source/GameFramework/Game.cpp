@@ -30,7 +30,7 @@ DEFINE_LOG_CHANNEL(hLogGame, "Game");
 void VGame::StartUp()
 {
 	Object.LoadPLG(
-		"tank3.plg",
+		"tankg3.plg",
 		{ 0.0f, 0.0f, 250.0f },
 		{ 1.0f, 1.0f, 1.0f },
 		{ 0.0f, 0.0f, 0.0f }
@@ -45,7 +45,7 @@ void VGame::StartUp()
 			ELightAttr::Ambient,
 
 			MAP_RGBX32(0x22, 0xFF, 0xFF), 0, 0,
-			{ 0, 0, 0, 0 }, { 0, 0, 0, 0 },
+			{ 0, 0, 0, 0 }, VVector4{ 0, 0, 0, 0 }.GetNormalized(),
 
 			0, 0, 0,
 			0, 0,
@@ -58,7 +58,7 @@ void VGame::StartUp()
 			ELightAttr::Infinite,
 
 			0, MAP_RGBX32(0xCC, 0xCC, 0xAA), 0,
-			{ 0, 0, 0, 0 }, { -1.0f, -1.0f, 0, 0 },
+			{ 0, 0, 0, 0 }, VVector4{ -1.0f, -1.0f, 0, 0 }.GetNormalized(),
 
 			0, 0, 0,
 			0, 0,
@@ -71,7 +71,7 @@ void VGame::StartUp()
 			ELightAttr::Point,
 
 			0, MAP_RGBX32(0xFF, 0xFF, 0xff), 0,
-			{ 1000.0f, 1000.0f, 0, 0 }, { 0, 0, 0, 0 },
+			{ 1000.0f, 1000.0f, 0, 0 }, VVector4{ 0, 0, 0, 0 }.GetNormalized(),
 
 			0, 0.0001f, 0,
 			0, 0,
@@ -104,10 +104,10 @@ void VGame::StartUp()
 			1.0f
 		};
 
-		Renderer.InitLight(0, AmbientLight);
-		Renderer.InitLight(1, ComplexSpotlight);
+		//Renderer.InitLight(0, AmbientLight);
+		//Renderer.InitLight(1, ComplexSpotlight);
 		Renderer.InitLight(2, InfiniteLight);
-		// Renderer.InitLight(1, PointLight);
+		//Renderer.InitLight(3, PointLight);
 		// Renderer.InitLight(3, SimpleSpotlight);
 	}
 }
