@@ -17,7 +17,7 @@ class VVertex
 {
 public:
 	u32 Attr;
-	f32 Intensity;
+	f32 Intensity; // TODO(sean)
 
 	union
 	{

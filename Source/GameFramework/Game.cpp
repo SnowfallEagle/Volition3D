@@ -1,5 +1,4 @@
 /* TODO:
-    - Flat bottom gouraud draw don't count last right X pixels
  */
 
 #include "Core/Volition.h"

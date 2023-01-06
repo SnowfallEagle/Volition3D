@@ -53,21 +53,6 @@ public:
 		return true;
 	}
 
-	b32 InsertPolyFace(const VPolyFace& PolyFace)
-	{
-		if (NumPoly >= MaxPoly)
-		{
-			return false;
-		}
-
-		PolyPtrList[NumPoly] = &PolyList[NumPoly];
-		Memory.MemCopy(&PolyList[NumPoly], &PolyFace, sizeof(VPolyFace));
-
-		++NumPoly;
-
-		return true;
-	}
-
 	void InsertObject(VObject& Object, b32 bInsertLocal)
 	{
 		if (~Object.State & EObjectState::Active  ||
@@ -123,6 +108,12 @@ public:
 				{
 					VVector4::MulMat44(Poly->LocalVtx[V].Position, M, Res);
 					Poly->LocalVtx[V].Position = Res;
+
+                    if (Poly->LocalVtx[V].Attr & EVertexAttr::HasNormal)
+                    {
+                        VVector4::MulMat44(Poly->LocalVtx[V].Normal, M, Res);
+                        Poly->LocalVtx[V].Normal = Res;
+                    }
 				}
 			}
 		} break;
@@ -144,6 +135,12 @@ public:
 				{
 					VVector4::MulMat44(Poly->TransVtx[V].Position, M, Res);
 					Poly->TransVtx[V].Position = Res;
+
+                    if (Poly->TransVtx[V].Attr & EVertexAttr::HasNormal)
+                    {
+                        VVector4::MulMat44(Poly->TransVtx[V].Normal, M, Res);
+                        Poly->TransVtx[V].Normal = Res;
+                    }
 				}
 			}
 		} break;
@@ -163,8 +160,12 @@ public:
 
 				for (i32f V = 0; V < 3; ++V)
 				{
-					VVector4::MulMat44(Poly->LocalVtx[V].Position, M, Res);
-					Poly->TransVtx[V].Position = Res;
+					VVector4::MulMat44(Poly->LocalVtx[V].Position, M, Poly->TransVtx[V].Position);
+
+                    if (Poly->LocalVtx[V].Attr & EVertexAttr::HasNormal)
+                    {
+                        VVector4::MulMat44(Poly->LocalVtx[V].Normal, M, Poly->TransVtx[V].Normal);
+                    }
 				}
 			}
 		} break;
@@ -189,7 +190,9 @@ public:
 
 				for (i32f V = 0; V < 3; ++V)
 				{
+                    // TODO(sean): Maybe we should copy Intensity and Attr too
 					Poly->TransVtx[V].Position = Poly->LocalVtx[V].Position + WorldPos;
+                    Poly->TransVtx[V].Normal = Poly->LocalVtx[V].Normal;
 				}
 			}
 		}

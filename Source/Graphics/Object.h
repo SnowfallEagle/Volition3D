@@ -1,7 +1,6 @@
 /* TODO:
     - LoadCOB()
-    - Recompute vertex normals: On transform, on TransformModelToWorld
-    - Recompute polygon normal length on scaling
+    - Scale: Recompute polygon normal length on scaling
  */
 
 #pragma once
@@ -213,12 +212,11 @@ public:
     void ComputeVertexNormals()
     {
         i32* NumPolyTouchVtx = new i32[NumVtx];
-        Memory.MemSetByte(NumPolyTouchVtx, 0, sizeof(i32) * NumVtx); // We also could use MemSetQuad for this case, but whatever...
+        Memory.MemSetQuad(NumPolyTouchVtx, 0, NumVtx);
 
         for (i32f I = 0; I < NumPoly; ++I)
         {
-            if (PolyList[I].Attr & EPolyAttr::ShadeModeGouraud ||
-                PolyList[I].Attr & EPolyAttr::ShadeModePhong)
+            if (PolyList[I].Attr & EPolyAttr::ShadeModeGouraud)
             {
                 i32f V0 = PolyList[I].VtxIndices[0];
                 i32f V1 = PolyList[I].VtxIndices[1];
@@ -248,6 +246,7 @@ public:
                 LocalVtxList[I].Normal.Normalize();
 
                 LocalVtxList[I].Attr &= EVertexAttr::HasNormal;
+                TransVtxList[I].Attr = LocalVtxList[I].Attr;
 
                 VL_NOTE(hLogObject, "Vertex normal [%d]: ", I);
                 LocalVtxList[I].Normal.Print();
@@ -277,6 +276,12 @@ public:
             {
                 VVector4::MulMat44(LocalVtxList[I].Position, M, Res);
                 LocalVtxList[I].Position = Res;
+
+                if (LocalVtxList[I].Attr & EVertexAttr::HasNormal)
+                {
+                    VVector4::MulMat44(LocalVtxList[I].Normal, M, Res);
+                    LocalVtxList[I].Normal = Res;
+                }
             }
         } break;
 
@@ -286,6 +291,12 @@ public:
             {
                 VVector4::MulMat44(TransVtxList[I].Position, M, Res);
                 TransVtxList[I].Position = Res;
+
+                if (TransVtxList[I].Attr & EVertexAttr::HasNormal)
+                {
+                    VVector4::MulMat44(TransVtxList[I].Normal, M, Res);
+                    TransVtxList[I].Normal = Res;
+                }
             }
         } break;
 
@@ -293,8 +304,12 @@ public:
         {
             for (i32f I = 0; I < NumVtx; ++I)
             {
-                VVector4::MulMat44(LocalVtxList[I].Position, M, Res);
-                TransVtxList[I].Position = Res;
+                VVector4::MulMat44(LocalVtxList[I].Position, M, TransVtxList[I].Position);
+
+                if (LocalVtxList[I].Attr & EVertexAttr::HasNormal)
+                {
+                    VVector4::MulMat44(LocalVtxList[I].Normal, M, TransVtxList[I].Normal);
+                }
             }
         } break;
         }
@@ -320,6 +335,8 @@ public:
             for (i32f I = 0; I < NumVtx; ++I)
             {
                 TransVtxList[I].Position = LocalVtxList[I].Position + Position;
+                TransVtxList[I].Normal = LocalVtxList[I].Normal;
+                // TODO(sean): Should we copy other stuff too?
             }
         }
         else // TransOnly
