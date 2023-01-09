@@ -1,6 +1,6 @@
 /* TODO:
     - LoadCOB()
-    - Scale: Recompute polygon normal length on scaling
+    - Scale: Recompute polygon normal length, recompute average, max radiuses
  */
 
 #pragma once
@@ -46,7 +46,7 @@ class VObject
 {
 public:
     static constexpr i32f NameSize = 64;
-    static constexpr i32f MaxVtx = 1024;
+    static constexpr i32f MaxVtx = 4096;
 
 public:
     char Name[NameSize];
@@ -78,7 +78,7 @@ public:
     VSurface* Texture;
     VPoint2* TextureCoordsList;
 
-    VMaterial* Material;
+    VMaterial* Material; // TODO(sean): ?
 
 public:
     // Allocates verticies, polygons, radius lists and texture list
@@ -137,6 +137,7 @@ public:
         TransVtxList = &HeadTransVtxList[Frame * NumVtx];
     }
 
+    // Call this function before do rendering
     void Reset()
     {
         // Reset object's state
@@ -154,6 +155,21 @@ public:
             Poly.State &= ~(EPolyState::Clipped | EPolyState::BackFace | EPolyState::Lit);
             Poly.LitColor[2] = Poly.LitColor[1] = Poly.LitColor[0] = Poly.OriginalColor;
         }
+    }
+
+    // This function used in initialization, just clean empty object
+    void Clean()
+    {
+        Memory.MemSetByte(this, 0, sizeof(*this));
+
+        State = EObjectState::Active | EObjectState::Visible;
+
+        UX = { 1.0f, 0.0f, 0.0f };
+        UY = { 0.0f, 1.0f, 0.0f };
+        UZ = { 0.0f, 0.0f, 1.0f };
+
+        NumFrames = 1;
+        CurrentFrame = 0;
     }
 
     void ComputeRadius()
@@ -205,7 +221,7 @@ public:
 
             PolyList[I].NormalLength = VVector4::GetCross(U, V).GetLength();
 
-            VL_NOTE(hLogObject, "Polygon normal length [%d]: %f\n", I, PolyList[I].NormalLength);
+            VL_LOG("\tPolygon normal length [%d]: %f\n", I, PolyList[I].NormalLength);
         }
     }
 
@@ -257,12 +273,9 @@ public:
         delete[] NumPolyTouchVtx;
     }
 
-    b32 LoadPLG(
-        const char* Path,
-        const VVector4& Pos,
-        const VVector4& Scale,
-        const VVector4& Rot
-    );
+    // TODO(sean): Remove Position, Scale, Rot from function arguments
+    b32 LoadPLG(const char* Path, const VVector4& InPosition, const VVector4& Scale, const VVector4& Rot);
+    b32 LoadCOB(const char* Path, const VVector4& InPosition, const VVector4& Scale, const VVector4& Rot, u32 Flags = 0);
 
     void Transform(const VMatrix44& M, ETransformType Type, b32 bTransBasis)
     {

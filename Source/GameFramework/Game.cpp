@@ -29,100 +29,109 @@ DEFINE_LOG_CHANNEL(hLogGame, "Game");
 
 void VGame::StartUp()
 {
-	Object.LoadPLG(
-		"tankg3.plg",
-		{ 0.0f, 0.0f, 250.0f },
-		{ 1.0f, 1.0f, 1.0f },
-		{ 0.0f, 0.0f, 0.0f }
-	);
+#if 1
+    Object.LoadCOB(
+        "cube_gouraud_01.cob",
+        { 0.0f, 0.0f, 250.0f },
+        { 1.0f, 1.0f, 1.0f },
+        { 0.0f, 0.0f, 0.0f }
+    );
+#else
+    Object.LoadPLG(
+        "tankg3.plg",
+        { 0.0f, 0.0f, 250.0f },
+        { 1.0f, 1.0f, 1.0f },
+        { 0.0f, 0.0f, 0.0f }
+    );
+#endif
 
-	Camera.Init(ECameraAttr::Euler, { 0, 75.0f, 0 }, { 0, 0, 0 }, Object.Position, 120, 265, 12000, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
+    Camera.Init(ECameraAttr::Euler, { 0, 75.0f, 0 }, { 0, 0, 0 }, Object.Position, 120, 265, 12000, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
 
-	{
-		VLight AmbientLight = {
-			0,
-			ELightState::Active,
-			ELightAttr::Ambient,
+    {
+        VLight AmbientLight = {
+            0,
+            ELightState::Active,
+            ELightAttr::Ambient,
 
-			MAP_RGBX32(0x22, 0xFF, 0xFF), 0, 0,
-			{ 0, 0, 0, 0 }, VVector4{ 0, 0, 0, 0 }.GetNormalized(),
+            MAP_RGBX32(0x22, 0xFF, 0xFF), 0, 0,
+            { 0, 0, 0, 0 }, VVector4{ 0, 0, 0, 0 }.GetNormalized(),
 
-			0, 0, 0,
-			0, 0,
-			0
-		};
+            0, 0, 0,
+            0, 0,
+            0
+        };
 
-		VLight InfiniteLight = {
-			1,
-			ELightState::Active,
-			ELightAttr::Infinite,
+        VLight InfiniteLight = {
+            1,
+            ELightState::Active,
+            ELightAttr::Infinite,
 
-			0, MAP_RGBX32(0xCC, 0xCC, 0xAA), 0,
-			{ 0, 0, 0, 0 }, VVector4{ -1.0f, -1.0f, 0, 0 }.GetNormalized(),
+            0, MAP_RGBX32(0xCC, 0xCC, 0xAA), 0,
+            { 0, 0, 0, 0 }, VVector4{ -1.0f, -1.0f, 0, 0 }.GetNormalized(),
 
-			0, 0, 0,
-			0, 0,
-			0
-		};
+            0, 0, 0,
+            0, 0,
+            0
+        };
 
-		VLight PointLight = {
-			2,
-			ELightState::Active,
-			ELightAttr::Point,
+        VLight PointLight = {
+            2,
+            ELightState::Active,
+            ELightAttr::Point,
 
-			0, MAP_RGBX32(0xFF, 0xFF, 0xff), 0,
-			{ 1000.0f, 1000.0f, 0, 0 }, VVector4{ 0, 0, 0, 0 }.GetNormalized(),
+            0, MAP_RGBX32(0xFF, 0xFF, 0xff), 0,
+            { 1000.0f, 1000.0f, 0, 0 }, VVector4{ 0, 0, 0, 0 }.GetNormalized(),
 
-			0, 0.0001f, 0,
-			0, 0,
-			0
-		};
+            0, 0.0001f, 0,
+            0, 0,
+            0
+        };
 
-		VLight SimpleSpotlight = {
-			3,
-			ELightState::Active,
-			ELightAttr::SimpleSpotlight,
+        VLight SimpleSpotlight = {
+            3,
+            ELightState::Active,
+            ELightAttr::SimpleSpotlight,
 
-			0, MAP_RGBX32(0xAA, 0xAA, 0xAA), 0,
-			{ 1000.0f, 1000.0f, 0.0f, 0 }, VVector4(-1.0f, -1.0f, 0.0f).GetNormalized(),
+            0, MAP_RGBX32(0xAA, 0xAA, 0xAA), 0,
+            { 1000.0f, 1000.0f, 0.0f, 0 }, VVector4(-1.0f, -1.0f, 0.0f).GetNormalized(),
 
-			0, 0.0005f, 0,
-			30.0f, 60.0f,
-			1.0f
-		};
+            0, 0.0005f, 0,
+            30.0f, 60.0f,
+            1.0f
+        };
 
-		VLight ComplexSpotlight = {
-			3,
-			ELightState::Active,
-			ELightAttr::ComplexSpotlight,
+        VLight ComplexSpotlight = {
+            3,
+            ELightState::Active,
+            ELightAttr::ComplexSpotlight,
 
-			0, MAP_RGBX32(0xFF, 0xFF, 0xFF), 0,
-			{ 0.0f, 1000.0f, -300.0f, 0 }, VVector4(-0.5f, -1.0f, 1.0f).GetNormalized(),
+            0, MAP_RGBX32(0xFF, 0xFF, 0xFF), 0,
+            { 0.0f, 1000.0f, -300.0f, 0 }, VVector4(-0.5f, -1.0f, 1.0f).GetNormalized(),
 
-			0, 0.0005f, 0,
-			30.0f, 60.0f,
-			1.0f
-		};
+            0, 0.0005f, 0,
+            30.0f, 60.0f,
+            1.0f
+        };
 
-		//Renderer.InitLight(0, AmbientLight);
-		Renderer.InitLight(0, ComplexSpotlight);
-		//Renderer.InitLight(2, InfiniteLight);
-		//Renderer.InitLight(3, PointLight);
-		//Renderer.InitLight(0, SimpleSpotlight);
-	}
+        //Renderer.InitLight(0, AmbientLight);
+        Renderer.InitLight(0, ComplexSpotlight);
+        //Renderer.InitLight(2, InfiniteLight);
+        //Renderer.InitLight(3, PointLight);
+        //Renderer.InitLight(0, SimpleSpotlight);
+    }
 }
 
 void VGame::ShutDown()
 {
-	Object.Destroy();
+    Object.Destroy();
 }
 
 void VGame::Update(f32 Delta)
 {
-	if (Input.IsKeyDown(EKeycode::Escape))
-	{
-		Volition.Stop();
-	}
+    if (Input.IsKeyDown(EKeycode::Escape))
+    {
+        Volition.Stop();
+    }
 
     f32 SpeedTri = 0.5f * Delta;
     if (Input.IsKeyDown(EKeycode::Up))
@@ -150,60 +159,60 @@ void VGame::Update(f32 Delta)
         PositionVtx2.Y += SpeedTri;
     }
 
-	if (Input.IsKeyDown(EKeycode::R) && Volition.GetTicks() - RenderKeyTicks > 100)
-	{
-		bRenderSolid = !bRenderSolid;
-		RenderKeyTicks = Volition.GetTicks();
-	}
-	if (Input.IsKeyDown(EKeycode::B) && Volition.GetTicks() - BackFaceKeyTicks > 100)
-	{
-		bBackFaceRemoval = !bBackFaceRemoval;
-		BackFaceKeyTicks = Volition.GetTicks();
-	}
+    if (Input.IsKeyDown(EKeycode::R) && Volition.GetTicks() - RenderKeyTicks > 100)
+    {
+        bRenderSolid = !bRenderSolid;
+        RenderKeyTicks = Volition.GetTicks();
+    }
+    if (Input.IsKeyDown(EKeycode::B) && Volition.GetTicks() - BackFaceKeyTicks > 100)
+    {
+        bBackFaceRemoval = !bBackFaceRemoval;
+        BackFaceKeyTicks = Volition.GetTicks();
+    }
 
-	if (Input.IsKeyDown(EKeycode::W))
-	{
-		Camera.Pos.X += Math.FastSin(Camera.Dir.Y);
-		Camera.Pos.Z += Math.FastCos(Camera.Dir.Y);
-	}
-	if (Input.IsKeyDown(EKeycode::S))
-	{
-		Camera.Pos.X -= Math.FastSin(Camera.Dir.Y);
-		Camera.Pos.Z -= Math.FastCos(Camera.Dir.Y);
-	}
+    if (Input.IsKeyDown(EKeycode::W))
+    {
+        Camera.Pos.X += Math.FastSin(Camera.Dir.Y);
+        Camera.Pos.Z += Math.FastCos(Camera.Dir.Y);
+    }
+    if (Input.IsKeyDown(EKeycode::S))
+    {
+        Camera.Pos.X -= Math.FastSin(Camera.Dir.Y);
+        Camera.Pos.Z -= Math.FastCos(Camera.Dir.Y);
+    }
 
-	if (Input.IsKeyDown(EKeycode::Left))
-	{
-		Camera.Dir.Y -= 0.5f;
-	}
-	if (Input.IsKeyDown(EKeycode::Right))
-	{
-		Camera.Dir.Y += 0.5f;
-	}
-	if (Input.IsKeyDown(EKeycode::Up))
-	{
-		Camera.Dir.X -= 0.5f;
-	}
-	if (Input.IsKeyDown(EKeycode::Down))
-	{
-		Camera.Dir.X += 0.5f;
-	}
+    if (Input.IsKeyDown(EKeycode::Left))
+    {
+        Camera.Dir.Y -= 0.5f;
+    }
+    if (Input.IsKeyDown(EKeycode::Right))
+    {
+        Camera.Dir.Y += 0.5f;
+    }
+    if (Input.IsKeyDown(EKeycode::Up))
+    {
+        Camera.Dir.X -= 0.5f;
+    }
+    if (Input.IsKeyDown(EKeycode::Down))
+    {
+        Camera.Dir.X += 0.5f;
+    }
 
-	VMatrix44 Rot = VMatrix44::Identity;
-	f32 Speed = 0.1f * Delta;
-	if (Input.IsKeyDown(EKeycode::Q)) Rot.BuildRotationXYZ(0, Speed, 0);
-	if (Input.IsKeyDown(EKeycode::E)) Rot.BuildRotationXYZ(0, -Speed, 0);
-	if (Input.IsKeyDown(EKeycode::F)) Rot.BuildRotationXYZ(0, 0, Speed);
-	if (Input.IsKeyDown(EKeycode::G)) Rot.BuildRotationXYZ(0, 0, -Speed);
-	if (Input.IsKeyDown(EKeycode::Z)) Rot.BuildRotationXYZ(Speed, 0, 0);
-	if (Input.IsKeyDown(EKeycode::X)) Rot.BuildRotationXYZ(-Speed, 0, 0);
-	Object.Transform(Rot, ETransformType::LocalOnly, true);
+    VMatrix44 Rot = VMatrix44::Identity;
+    f32 Speed = 0.1f * Delta;
+    if (Input.IsKeyDown(EKeycode::Q)) Rot.BuildRotationXYZ(0, Speed, 0);
+    if (Input.IsKeyDown(EKeycode::E)) Rot.BuildRotationXYZ(0, -Speed, 0);
+    if (Input.IsKeyDown(EKeycode::F)) Rot.BuildRotationXYZ(0, 0, Speed);
+    if (Input.IsKeyDown(EKeycode::G)) Rot.BuildRotationXYZ(0, 0, -Speed);
+    if (Input.IsKeyDown(EKeycode::Z)) Rot.BuildRotationXYZ(Speed, 0, 0);
+    if (Input.IsKeyDown(EKeycode::X)) Rot.BuildRotationXYZ(-Speed, 0, 0);
+    Object.Transform(Rot, ETransformType::LocalOnly, true);
 }
 
 void VGame::Render()
 {
     // Prepare camera
-	Camera.BuildWorldToCameraEulerMat44();
+    Camera.BuildWorldToCameraEulerMat44();
 
     // Proccess object
     {
@@ -235,10 +244,10 @@ void VGame::Render()
     }
 
     // Render stuff
-	u32* Buffer;
-	i32 Pitch;
-	Renderer.BackSurface.Lock(Buffer, Pitch);
-	{
+    u32* Buffer;
+    i32 Pitch;
+    Renderer.BackSurface.Lock(Buffer, Pitch);
+    {
         if (bRenderSolid)
         {
             RenderList.RenderSolid(Buffer, Pitch);
@@ -247,8 +256,8 @@ void VGame::Render()
         {
             RenderList.RenderWire(Buffer, Pitch);
         }
-	}
-	Renderer.BackSurface.Unlock();
+    }
+    Renderer.BackSurface.Unlock();
 
     // Some debug info
     {

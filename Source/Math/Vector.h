@@ -1,5 +1,5 @@
 /* TODO:
-	- Fixed point vector?
+    - Fixed point vector?
  */
 
 #pragma once
@@ -32,20 +32,21 @@ public:
 
     FINLINE void Print()
     {
-        if (T == f32)
-        {
-            VL_LOG("<%f, %f>", X, Y);
-        }
-        else if (T == i32)
-        {
-            VL_LOG("<%d, %d>", X, Y);
-        }
-        else
-        {
-            VL_LOG("<Unknown type>");
-        }
+        VL_LOG("<Unknown type>");
     }
 };
+
+template<>
+FINLINE void TVector2<f32>::Print()
+{
+    VL_LOG("<%f, %f>", X, Y);
+}
+
+template<>
+FINLINE void TVector2<i32>::Print()
+{
+    VL_LOG("<%d, %d>", X, Y);
+}
 
 typedef TVector2<f32> VVector2, VPoint2;
 typedef TVector2<i32> VVector2I, VPoint2I;
@@ -187,7 +188,7 @@ public:
 
     FINLINE VVector4 operator/(f32 Scalar) const
     {
-		f32 InvDiv = 1.0f / Scalar;
+        f32 InvDiv = 1.0f / Scalar;
         return {
             X * Scalar,
             Y * Scalar,
@@ -197,11 +198,11 @@ public:
     }
     FINLINE VVector4& operator/=(f32 Scalar)
     {
-		f32 InvDiv = 1.0f / Scalar;
-		X *= InvDiv;
-		Y *= InvDiv;
-		Z *= InvDiv;
-		return *this;
+        f32 InvDiv = 1.0f / Scalar;
+        X *= InvDiv;
+        Y *= InvDiv;
+        Z *= InvDiv;
+        return *this;
     }
 
     FINLINE void Zero()
