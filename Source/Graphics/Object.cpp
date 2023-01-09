@@ -457,8 +457,12 @@ b32 VObject::LoadCOB(const char* Path, const VVector4& InPosition, const VVector
         }
 
         // Read polygon faces
+        i32 NumMaterialsInObject = 0;
+        b32 DoesMaterialAppearFirstTime[Renderer.MaxMaterials];
         i32 MaterialIndexByPolyIndex[MaxPoly];
-        Memory.MemSetQuad(&MaterialIndexByPolyIndex, -1, MaxPoly);
+
+        Memory.MemSetQuad(&MaterialIndexByPolyIndex, 0, MaxPoly);
+        Memory.MemSetQuad(&DoesMaterialAppearFirstTime, (b32)true, Renderer.MaxMaterials);
         {
             Line = FindLineCOB("Faces", File, Buffer, BufferSize);
             std::sscanf(Line, "Faces %d", &NumPoly);
@@ -466,10 +470,18 @@ b32 VObject::LoadCOB(const char* Path, const VVector4& InPosition, const VVector
             for (i32f I = 0; I < NumPoly; ++I)
             {
                 i32 DummyInt;
+                i32 MaterialIndex;
 
                 // Get material index
                 Line = GetLineCOB(File, Buffer, BufferSize);
-                std::sscanf(Line, "Face verts %d flags %d mat %d", &DummyInt, &DummyInt, &MaterialIndexByPolyIndex[I]);
+                std::sscanf(Line, "Face verts %d flags %d mat %d", &DummyInt, &DummyInt, &MaterialIndex);
+
+                MaterialIndexByPolyIndex[I] = MaterialIndex;
+                if (DoesMaterialAppearFirstTime[MaterialIndex])
+                {
+                    ++NumMaterialsInObject;
+                    DoesMaterialAppearFirstTime[MaterialIndex] = false;
+                }
 
                 VL_LOG("\tMaterial index of poly face [%d]: %d\n", I, MaterialIndexByPolyIndex[I]);
 
@@ -493,6 +505,8 @@ b32 VObject::LoadCOB(const char* Path, const VVector4& InPosition, const VVector
 
                 // TODO(sean): Make inverts and swaps here
             }
+
+            VL_LOG("\tNum materials in object: %d\n", NumMaterialsInObject);
         }
 
         // TODO(sean): Read materials
