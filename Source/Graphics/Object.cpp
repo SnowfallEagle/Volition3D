@@ -437,11 +437,13 @@ b32 VObject::LoadCOB(const char* Path, const VVector4& InPosition, const VVector
             }
         }
 
+        // Read texture coords
         {
             i32f NumTextureVtx;
 
             Line = FindLineCOB("Texture Vertices", File, Buffer, BufferSize);
             std::sscanf(Line, "Texture Vertices %d", &NumTextureVtx);
+            VL_LOG("\tNum texture coords: %d\n", NumTextureVtx);
 
             for (i32f I = 0; I < NumTextureVtx; ++I)
             {
@@ -454,8 +456,44 @@ b32 VObject::LoadCOB(const char* Path, const VVector4& InPosition, const VVector
             }
         }
 
-        // TODO(sean): Read polygon faces
-        {}
+        // Read polygon faces
+        i32 MaterialIndexByPolyIndex[MaxPoly];
+        Memory.MemSetQuad(&MaterialIndexByPolyIndex, -1, MaxPoly);
+        {
+            Line = FindLineCOB("Faces", File, Buffer, BufferSize);
+            std::sscanf(Line, "Faces %d", &NumPoly);
+
+            for (i32f I = 0; I < NumPoly; ++I)
+            {
+                i32 DummyInt;
+
+                // Get material index
+                Line = GetLineCOB(File, Buffer, BufferSize);
+                std::sscanf(Line, "Face verts %d flags %d mat %d", &DummyInt, &DummyInt, &MaterialIndexByPolyIndex[I]);
+
+                VL_LOG("\tMaterial index of poly face [%d]: %d\n", I, MaterialIndexByPolyIndex[I]);
+
+                // Get vertex and texture indices
+                Line = GetLineCOB(File, Buffer, BufferSize);
+                std::sscanf(Line, "<%d,%d> <%d,%d> <%d,%d>",
+                    &PolyList[I].VtxIndices[0], &PolyList[I].TextureCoordsIndices[0],
+                    &PolyList[I].VtxIndices[1], &PolyList[I].TextureCoordsIndices[1],
+                    &PolyList[I].VtxIndices[2], &PolyList[I].TextureCoordsIndices[2]
+                );
+
+                VL_LOG("\tVertex and texture indices:\n");
+                for (i32f J = 0; J < 3; ++J)
+                {
+                    VL_LOG("\t<%d, %d>\n", PolyList[I].VtxIndices[J], PolyList[I].TextureCoordsIndices[J]);
+                }
+
+                // Set default stuff
+                PolyList[I].State = EPolyState::Active;
+                PolyList[I].TextureCoordsList = TextureCoordsList;
+
+                // TODO(sean): Make inverts and swaps here
+            }
+        }
 
         // TODO(sean): Read materials
         {}
