@@ -733,12 +733,24 @@ b32 VObject::LoadCOB(const char* Path, const VVector4& InPosition, const VVector
             {
                 for (i32f I = 0; I < NumTextureVtx; ++I)
                 {
-                    i32 TextureScaleWidth = Texture->GetWidth() - 1;
+                    i32 TextureScaleSize = Texture->GetWidth() - 1;
 
-                    TextureCoordsList[I].X *= TextureScaleWidth;
-                    TextureCoordsList[I].Y *= TextureScaleWidth;
+                    TextureCoordsList[I].X *= TextureScaleSize;
+                    TextureCoordsList[I].Y *= TextureScaleSize;
 
-                    // TODO(sean): Inverts
+                    if (ECOB::InvertU)
+                    {
+                        TextureCoordsList[I].X = TextureScaleSize - TextureCoordsList[I].X;
+                    }
+                    if (ECOB::InvertV)
+                    {
+                        TextureCoordsList[I].Y = TextureScaleSize - TextureCoordsList[I].Y;
+                    }
+                    if (ECOB::SwapUV)
+                    {
+                        f32 TempFloat;
+                        SWAP(TextureCoordsList[I].X, TextureCoordsList[I].Y, TempFloat);
+                    }
                 }
             }
         }

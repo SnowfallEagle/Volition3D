@@ -30,11 +30,11 @@ DEFINE_LOG_CHANNEL(hLogGame, "Game");
 void VGame::StartUp()
 {
     Object.LoadCOB(
-        "water_gouraud_01.cob",
+        "cube_flat_textured_01.cob",
         { 0.0f, 0.0f, 250.0f },
         { 30.0f, 30.0f, 30.0f },
         { 0.0f, 0.0f, 0.0f },
-        ECOB::SwapYZ
+        ECOB::SwapYZ | ECOB::InvertU | ECOB::InvertV | ECOB::SwapUV
     );
 
     Camera.Init(ECameraAttr::Euler, { 0, 75.0f, 0 }, { 0, 0, 0 }, Object.Position, 120, 265, 12000, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
