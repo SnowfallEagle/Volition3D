@@ -566,12 +566,25 @@ b32 VObject::LoadCOB(const char* Path, const VVector4& InPosition, const VVector
                     if (0 == std::strncmp(ShaderName, "texture map", ShaderNameSize))
                     {
                         static constexpr i32f TexturePathSize = 256;
+                        char TexturePathRaw[TexturePathSize];
                         char TexturePath[TexturePathSize];
 
+                        // Scan raw texture path
                         Line = FindLineCOB("file name:", File, Buffer, BufferSize);
 
                         std::snprintf(Format, FormatSize, "file name: string \"%%%d[0-9a-zA-Z\\/:. ]\"", TexturePathSize - 1);
-                        std::sscanf(Line, Format, TexturePath);
+                        std::sscanf(Line, Format, TexturePathRaw);
+
+                        // Cut stuff
+                        i32f CharIndex;
+                        for (CharIndex = std::strlen(TexturePathRaw) - 1; CharIndex >= 0; --CharIndex)
+                        {
+                            if (TexturePathRaw[CharIndex] == '\\' || TexturePathRaw[CharIndex] == '/')
+                            {
+                                break;
+                            }
+                        }
+                        std::strncpy(TexturePath, TexturePathRaw + (CharIndex + 1), TexturePathSize);
 
                         VL_LOG("\tMaterial has texture, file path: %s\n", TexturePath);
                     }
