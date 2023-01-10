@@ -31,9 +31,9 @@ void VGame::StartUp()
 {
 #if 1
     Object.LoadCOB(
-        "cube_gouraud_01.cob",
+        "cube_flat_textured_01.cob",
         { 0.0f, 0.0f, 250.0f },
-        { 1.0f, 1.0f, 1.0f },
+        { 30.0f, 30.0f, 30.0f },
         { 0.0f, 0.0f, 0.0f }
     );
 #else

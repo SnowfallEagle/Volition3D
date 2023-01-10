@@ -38,12 +38,13 @@ public:
 public:
     i32 ID;
     char Name[NameSize];
+
     i32 State;
     i32 Attr;
 
     VColorRGBA Color;
     f32 KAmbient, KDiffuse, KSpecular, Power;
-    f32 RAmbient, RDiffuse, RSpecular; // K * Color
+    VColorRGBA RAmbient, RDiffuse, RSpecular; // K * Color
 
     char Path[PathSize];
     VSurface Texture;

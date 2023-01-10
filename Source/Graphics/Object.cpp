@@ -450,7 +450,7 @@ b32 VObject::LoadCOB(const char* Path, const VVector4& InPosition, const VVector
                 Line = GetLineCOB(File, Buffer, BufferSize);
                 std::sscanf(Line, "%f %f", &TextureCoordsList[I].X, &TextureCoordsList[I].Y);
 
-                VL_LOG("\tTexture coord [%d]: ");
+                VL_LOG("\tTexture coord [%d]: ", I);
                 TextureCoordsList[I].Print();
                 VL_LOG("\n");
             }
@@ -509,8 +509,109 @@ b32 VObject::LoadCOB(const char* Path, const VVector4& InPosition, const VVector
             VL_LOG("\tNum materials in object: %d\n", NumMaterialsInObject);
         }
 
-        // TODO(sean): Read materials
-        {}
+        // Read materials
+        {
+            for (i32f I = 0; I < NumMaterialsInObject; ++I)
+            {
+                VMaterial& CurrentMaterial = Renderer.Materials[Renderer.NumMaterials + I];
+
+                static constexpr i32f FormatSize = 256;
+                char Format[FormatSize];
+
+                static constexpr i32f ShaderNameSize = 64;
+                char ShaderName[ShaderNameSize];
+
+                // Read color and material parameters
+                {
+                    f32 R, G, B, A;
+
+                    Line = FindLineCOB("mat#", File, Buffer, BufferSize);
+                    Line = FindLineCOB("rgb", File, Buffer, BufferSize);
+                    std::sscanf(Line, "rgb %f,%f,%f", &R, &G, &B);
+
+                    CurrentMaterial.Color = MAP_RGBX32(
+                        (i32)(R * 255.0f + 0.5f),
+                        (i32)(G * 255.0f + 0.5f),
+                        (i32)(B * 255.0f + 0.5f)
+                    );
+
+                    // Material parameters
+                    Line = FindLineCOB("alpha", File, Buffer, BufferSize);
+                    std::sscanf(Line, "alpha %f ka %f ks %f exp %f",
+                        &A, &CurrentMaterial.KAmbient, &CurrentMaterial.KSpecular, &CurrentMaterial.Power
+                    );
+                    CurrentMaterial.Color.A = (u8)(A * 255.0f + 0.5f);
+
+                    /* NOTE(sean):
+                        We try to find diffuse factor below, but this is default
+                     */
+                    CurrentMaterial.KDiffuse = 1.0f;
+
+                    // Log color
+                    VL_LOG("\tMaterial color [%d]: ", I);
+                    VVector4 ColorVector = { R, G, B, A };
+                    ColorVector.Print();
+                    VL_LOG("\n");
+                }
+
+                // Check if we have texture
+                {
+                    Line = FindLineCOB("Shader class: color", File, Buffer, BufferSize);
+                    Line = GetLineCOB(File, Buffer, BufferSize);
+
+                    std::snprintf(Format, FormatSize, "Shader name: \"%%%d[a-z ]\"", ShaderNameSize - 1);
+                    std::sscanf(Line, Format, ShaderName);
+                    VL_LOG("\tShader name: %s\n", ShaderName);
+
+                    if (0 == std::strncmp(ShaderName, "texture map", ShaderNameSize))
+                    {
+                        static constexpr i32f TexturePathSize = 256;
+                        char TexturePath[TexturePathSize];
+
+                        Line = FindLineCOB("file name:", File, Buffer, BufferSize);
+
+                        std::snprintf(Format, FormatSize, "file name: string \"%%%d[0-9a-zA-Z\\/:. ]\"", TexturePathSize - 1);
+                        std::sscanf(Line, Format, TexturePath);
+
+                        VL_LOG("\tMaterial has texture, file path: %s\n", TexturePath);
+                    }
+                }
+
+                // TODO(sean): Try to find diffuse factor in reflectence shader
+
+                // Precompute reflectivities for engine
+                for (i32f RGBIndex = 0; RGBIndex < 3; ++RGBIndex)
+                {
+                    CurrentMaterial.RAmbient.C[RGBIndex]  = (u8)(CurrentMaterial.KAmbient * CurrentMaterial.Color.C[RGBIndex]);
+                    CurrentMaterial.RDiffuse.C[RGBIndex]  = (u8)(CurrentMaterial.KDiffuse * CurrentMaterial.Color.C[RGBIndex]);
+                    CurrentMaterial.RSpecular.C[RGBIndex] = (u8)(CurrentMaterial.RSpecular * CurrentMaterial.Color.C[RGBIndex]);
+
+                    // Log precomputed colors and factors
+                    VL_LOG("\tRa [%d]: %d\n", RGBIndex, CurrentMaterial.RAmbient.C[RGBIndex]);
+                    VL_LOG("\tRd [%d]: %d\n", RGBIndex, CurrentMaterial.RDiffuse.C[RGBIndex]);
+                    VL_LOG("\tRs [%d]: %d\n", RGBIndex, CurrentMaterial.RSpecular.C[RGBIndex]);
+                }
+
+                // Log factors
+                VL_LOG("\tKa %f Kd %f Ks %f Exp %f\n",
+                    CurrentMaterial.KAmbient,
+                    CurrentMaterial.KDiffuse,
+                    CurrentMaterial.KSpecular,
+                    CurrentMaterial.Power
+                );
+            }
+
+            // Update num materials in engine
+            Renderer.NumMaterials += NumMaterialsInObject;
+        }
+
+        // TODO(sean): Apply materials for polygons
+        {
+        }
+
+        // TODO(sean): Fix texture coords
+        {
+        }
 
         // Close file
         std::fclose(File);
@@ -523,8 +624,6 @@ b32 VObject::LoadCOB(const char* Path, const VVector4& InPosition, const VVector
 
     // Log our success
     VL_NOTE(hLogCOB, "Ended parse object\n");
-
-    ASSERT(false); // DEBUG(sean)
 
     return true;
 }
