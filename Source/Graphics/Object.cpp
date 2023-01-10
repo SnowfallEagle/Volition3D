@@ -342,7 +342,7 @@ b32 VObject::LoadCOB(const char* Path, const VVector4& InPosition, const VVector
         VL_NOTE(hLogCOB, "Starting parse object:\n");
 
         // Open file
-        if (!(File = std::fopen(Path, "rb")))
+        if (!(File = std::fopen(Path, "r")))
         {
             VL_ERROR(hLogCOB, "Can't open %s file: %s\n", Path, strerror(errno));
             return false;
@@ -438,9 +438,8 @@ b32 VObject::LoadCOB(const char* Path, const VVector4& InPosition, const VVector
         }
 
         // Read texture coords
+        i32f NumTextureVtx;
         {
-            i32f NumTextureVtx;
-
             Line = FindLineCOB("Texture Vertices", File, Buffer, BufferSize);
             std::sscanf(Line, "Texture Vertices %d", &NumTextureVtx);
             VL_LOG("\tNum texture coords: %d\n", NumTextureVtx);
@@ -734,9 +733,17 @@ b32 VObject::LoadCOB(const char* Path, const VVector4& InPosition, const VVector
 
         // Fix texture coords
         {
-            for (i32f I = 0; I < NumVtx; ++I)
+            if (Texture)
             {
+                for (i32f I = 0; I < NumTextureVtx; ++I)
+                {
+                    i32 TextureScaleWidth = Texture->GetWidth() - 1;
 
+                    TextureCoordsList[I].X *= TextureScaleWidth;
+                    TextureCoordsList[I].Y *= TextureScaleWidth;
+
+                    // TODO(sean): Inverts
+                }
             }
         }
 
