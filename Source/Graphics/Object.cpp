@@ -625,9 +625,27 @@ b32 VObject::LoadCOB(const char* Path, const VVector4& InPosition, const VVector
                         CurrentMaterial.Attr |= EMaterialAttr::ShadeModeEmissive;
                     }
 
-                    // TODO(sean): Try to find diffuse factor here
-
                     VL_LOG("\tShader name: %s\n", ShaderName);
+
+                    // Try to find diffuse factor
+                    i32 NumParams;
+
+                    Line = FindLineCOB("Number of parameters:", File, Buffer, BufferSize);
+                    std::sscanf(Line, "Number of parameters: %d", &NumParams);
+
+                    const char Pattern[] = "diffuse";
+                    VSizeType PatternLength = std::strlen(Pattern);
+
+                    for (i32f ParamIndex = 0; ParamIndex < NumParams; ++ParamIndex)
+                    {
+                        Line = GetLineCOB(File, Buffer, BufferSize);
+                        if (0 == std::strncmp(Line, Pattern, PatternLength))
+                        {
+                            std::sscanf(Line, "diffuse factor: float %f", &CurrentMaterial.KDiffuse);
+                            VL_LOG("\tDiffuse factor found: %f\n", CurrentMaterial.KDiffuse);
+                            break;
+                        }
+                    }
                 }
 
                 // Precompute reflectivities for engine
