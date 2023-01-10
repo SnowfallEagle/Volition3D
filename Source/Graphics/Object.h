@@ -1,5 +1,4 @@
 /* TODO:
-    - LoadCOB()
     - Scale: Recompute polygon normal length, recompute average, max radiuses
  */
 
@@ -37,6 +36,17 @@ namespace ECullType
         Y = BIT(2),
         Z = BIT(3),
         XYZ = X | Y | Z,
+    };
+}
+
+namespace ECOB
+{
+    enum
+    {
+        SwapYZ  = BIT(1),
+        SwapUV  = BIT(2),
+        InvertU = BIT(3),
+        InvertV = BIT(4),
     };
 }
 

@@ -258,14 +258,6 @@ b32 VObject::LoadPLG(
                     COB Loader
    ============================================== */
 
-namespace ECOB
-{
-    enum
-    {
-
-    };
-}
-
 DEFINE_LOG_CHANNEL(hLogCOB, "COB Loader");
 
 char* GetLineCOB(std::FILE* File, char* Buffer, i32 Size)
@@ -423,7 +415,13 @@ b32 VObject::LoadCOB(const char* Path, const VVector4& InPosition, const VVector
                 VVector4::MulMat44(LocalVtxList[I].Position, MatLocal, TempVector);
                 VVector4::MulMat44(TempVector, MatWorld, LocalVtxList[I].Position);
 
-                // TODO(sean): Flags for inverts, swaps
+                // Swap YZ
+                if (Flags & ECOB::SwapYZ)
+                {
+                    f32 TempFloat;
+                    SWAP(LocalVtxList[I].Y, LocalVtxList[I].Z, TempFloat);
+                    LocalVtxList[I].Z = -LocalVtxList[I].Z;
+                }
 
                 // Scale
                 LocalVtxList[I].X *= Scale.X;
@@ -487,9 +485,9 @@ b32 VObject::LoadCOB(const char* Path, const VVector4& InPosition, const VVector
                 // Get vertex and texture indices
                 Line = GetLineCOB(File, Buffer, BufferSize);
                 std::sscanf(Line, "<%d,%d> <%d,%d> <%d,%d>",
-                    &PolyList[I].VtxIndices[0], &PolyList[I].TextureCoordsIndices[0],
+                    &PolyList[I].VtxIndices[2], &PolyList[I].TextureCoordsIndices[2],
                     &PolyList[I].VtxIndices[1], &PolyList[I].TextureCoordsIndices[1],
-                    &PolyList[I].VtxIndices[2], &PolyList[I].TextureCoordsIndices[2]
+                    &PolyList[I].VtxIndices[0], &PolyList[I].TextureCoordsIndices[0]
                 );
 
                 VL_LOG("\tVertex and texture indices:\n");
@@ -501,8 +499,6 @@ b32 VObject::LoadCOB(const char* Path, const VVector4& InPosition, const VVector
                 // Set default stuff
                 PolyList[I].State = EPolyState::Active;
                 PolyList[I].TextureCoordsList = TextureCoordsList;
-
-                // TODO(sean): Make inverts and swaps here
             }
 
             VL_LOG("\tNum materials in object: %d\n", NumMaterialsInObject);
