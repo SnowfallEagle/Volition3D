@@ -596,8 +596,38 @@ b32 VObject::LoadCOB(const char* Path, const VVector4& InPosition, const VVector
                     }
                 }
 
+                // Read reflectance shader
                 {
+                    Line = FindLineCOB("Shader class: reflectance", File, Buffer, BufferSize);
+                    Line = GetLineCOB(File, Buffer, BufferSize);
 
+                    std::snprintf(Format, FormatSize, "Shader name: \"%%%d[a-z ]\"", ShaderNameSize - 1);
+                    std::sscanf(Line, Format, ShaderName);
+
+                    if (0 == strncmp(ShaderName, "constant", ShaderNameSize))
+                    {
+                        CurrentMaterial.Attr |= EMaterialAttr::ShadeModeEmissive;
+                    }
+                    else if (0 == strncmp(ShaderName, "matte", ShaderNameSize))
+                    {
+                        CurrentMaterial.Attr |= EMaterialAttr::ShadeModeFlat;
+                    }
+                    else if (0 == strncmp(ShaderName, "plastic", ShaderNameSize) ||
+                             0 == strncmp(ShaderName, "phong", ShaderNameSize))
+                    {
+                        /* NOTE(sean):
+                            We have no phong support, so we use gouraud for phong too
+                         */
+                        CurrentMaterial.Attr |= EMaterialAttr::ShadeModeGouraud;
+                    }
+                    else
+                    {
+                        CurrentMaterial.Attr |= EMaterialAttr::ShadeModeEmissive;
+                    }
+
+                    // TODO(sean): Try to find diffuse factor here
+
+                    VL_LOG("\tShader name: %s\n", ShaderName);
                 }
 
                 // Precompute reflectivities for engine
