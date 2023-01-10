@@ -586,9 +586,12 @@ b32 VObject::LoadCOB(const char* Path, const VVector4& InPosition, const VVector
                         }
                         std::strncpy(TexturePath, TexturePathRaw + (CharIndex + 1), TexturePathSize);
 
-                        // Load texture
+                        // Load texture in material
                         std::strncpy(CurrentMaterial.Name, TexturePath, CurrentMaterial.NameSize);
                         CurrentMaterial.Texture.Load(TexturePath);
+                        CurrentMaterial.Attr |= EMaterialAttr::ShadeModeTexture;
+
+                        // Texture in object
                         Texture = &CurrentMaterial.Texture;
                         Attr |= EObjectAttr::HasTexture;
 
@@ -669,17 +672,72 @@ b32 VObject::LoadCOB(const char* Path, const VVector4& InPosition, const VVector
                     CurrentMaterial.Power
                 );
             }
-
-            // Update num materials in engine
-            Renderer.NumMaterials += NumMaterialsInObject;
         }
 
-        // TODO(sean): Apply materials for polygons
+        // Apply materials for polygons
         {
+            for (i32f I = 0; I < NumPoly; ++I)
+            {
+                VPoly& Poly = PolyList[I];
+                VMaterial& PolyMaterial = Renderer.Materials[Renderer.NumMaterials + MaterialIndexByPolyIndex[I]];
+
+                // Set color
+                if (PolyMaterial.Attr & EMaterialAttr::ShadeModeTexture)
+                {
+                    Poly.OriginalColor = MAP_ARGB32(PolyMaterial.Color.A, 255, 255, 255);
+                }
+                else
+                {
+                    Poly.OriginalColor = MAP_ARGB32(
+                        PolyMaterial.Color.A,
+                        PolyMaterial.Color.R,
+                        PolyMaterial.Color.G,
+                        PolyMaterial.Color.B
+                    );
+                }
+
+                // Set shade mode and params
+                if (PolyMaterial.Attr & EMaterialAttr::ShadeModeEmissive)
+                {
+                    Poly.Attr |= EPolyAttr::ShadeModeEmissive;
+                }
+                else if (PolyMaterial.Attr & EMaterialAttr::ShadeModeFlat)
+                {
+                    Poly.Attr |= EPolyAttr::ShadeModeFlat;
+                }
+                else if (PolyMaterial.Attr & EMaterialAttr::ShadeModeGouraud ||
+                         PolyMaterial.Attr & EMaterialAttr::ShadeModePhong)
+                {
+                    Poly.Attr |= EPolyAttr::ShadeModeGouraud;
+                }
+                else if (PolyMaterial.Attr & EMaterialAttr::ShadeModeTexture)
+                {
+                    Poly.Attr |= EPolyAttr::ShadeModeTexture;
+                    Poly.Texture = Texture;
+
+                    TransVtxList[Poly.VtxIndices[0]].Attr =
+                        LocalVtxList[Poly.VtxIndices[0]].Attr |= EVertexAttr::HasTextureCoords;
+                    TransVtxList[Poly.VtxIndices[1]].Attr =
+                        LocalVtxList[Poly.VtxIndices[1]].Attr |= EVertexAttr::HasTextureCoords;
+                    TransVtxList[Poly.VtxIndices[2]].Attr =
+                        LocalVtxList[Poly.VtxIndices[2]].Attr |= EVertexAttr::HasTextureCoords;
+                }
+
+                // Set poly material
+                Poly.Attr |= EPolyAttr::UsesMaterial;
+                Poly.Material = &PolyMaterial;
+            }
         }
 
-        // TODO(sean): Fix texture coords
+        // Update num materials in engine
+        Renderer.NumMaterials += NumMaterialsInObject;
+
+        // Fix texture coords
         {
+            for (i32f I = 0; I < NumVtx; ++I)
+            {
+
+            }
         }
 
         // Close file
