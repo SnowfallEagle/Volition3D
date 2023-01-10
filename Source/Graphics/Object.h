@@ -24,8 +24,8 @@ namespace EObjectAttr
 {
     enum
     {
-        MultiFrame  = BIT(1),
-        HasTextures = BIT(2),
+        MultiFrame = BIT(1),
+        HasTexture = BIT(2),
     };
 }
 

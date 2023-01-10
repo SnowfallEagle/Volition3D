@@ -46,7 +46,6 @@ public:
     f32 KAmbient, KDiffuse, KSpecular, Power;
     VColorRGBA RAmbient, RDiffuse, RSpecular; // K * Color
 
-    char Path[PathSize];
     VSurface Texture;
 
 public:

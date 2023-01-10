@@ -586,11 +586,19 @@ b32 VObject::LoadCOB(const char* Path, const VVector4& InPosition, const VVector
                         }
                         std::strncpy(TexturePath, TexturePathRaw + (CharIndex + 1), TexturePathSize);
 
+                        // Load texture
+                        std::strncpy(CurrentMaterial.Name, TexturePath, CurrentMaterial.NameSize);
+                        CurrentMaterial.Texture.Load(TexturePath);
+                        Texture = &CurrentMaterial.Texture;
+                        Attr |= EObjectAttr::HasTexture;
+
                         VL_LOG("\tMaterial has texture, file path: %s\n", TexturePath);
                     }
                 }
 
-                // TODO(sean): Try to find diffuse factor in reflectence shader
+                {
+
+                }
 
                 // Precompute reflectivities for engine
                 for (i32f RGBIndex = 0; RGBIndex < 3; ++RGBIndex)
