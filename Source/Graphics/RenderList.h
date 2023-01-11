@@ -41,10 +41,16 @@ public:
 		PolyList[NumPoly].Attr = Poly.Attr;
 		PolyList[NumPoly].OriginalColor = Poly.OriginalColor;
         PolyList[NumPoly].NormalLength = Poly.NormalLength;
+        PolyList[NumPoly].Texture = Poly.Texture;
+        PolyList[NumPoly].Material = Poly.Material;
 
 		for (i32f I = 0; I < 3; ++I)
 		{
 			PolyList[NumPoly].TransVtx[I] = PolyList[NumPoly].LocalVtx[I] = VtxList[Poly.VtxIndices[I]];
+            PolyList[NumPoly].TransVtx[I].TextureCoords =
+                PolyList[NumPoly].LocalVtx[I].TextureCoords =
+                    Poly.TextureCoordsList[Poly.TextureCoordsIndices[I]];
+
 			PolyList[NumPoly].LitColor[I] = Poly.LitColor[I];
 		}
 

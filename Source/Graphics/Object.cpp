@@ -709,7 +709,7 @@ b32 VObject::LoadCOB(const char* Path, const VVector4& InPosition, const VVector
                 if (PolyMaterial.Attr & EMaterialAttr::ShadeModeTexture)
                 {
                     Poly.Attr |= EPolyAttr::ShadeModeTexture;
-                    Poly.Texture = Texture;
+                    Poly.Texture = &PolyMaterial.Texture;
 
                     TransVtxList[Poly.VtxIndices[0]].Attr =
                         LocalVtxList[Poly.VtxIndices[0]].Attr |= EVertexAttr::HasTextureCoords;

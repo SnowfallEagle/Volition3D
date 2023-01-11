@@ -32,9 +32,9 @@ void VGame::StartUp()
     Object.LoadCOB(
         "cube_flat_textured_01.cob",
         { 0.0f, 0.0f, 250.0f },
-        { 30.0f, 30.0f, 30.0f },
+        { 50.0f, 50.0f, 50.0f },
         { 0.0f, 0.0f, 0.0f },
-        ECOB::SwapYZ | ECOB::InvertU | ECOB::InvertV | ECOB::SwapUV
+        ECOB::SwapYZ
     );
 
     Camera.Init(ECameraAttr::Euler, { 0, 75.0f, 0 }, { 0, 0, 0 }, Object.Position, 120, 265, 12000, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
@@ -71,7 +71,7 @@ void VGame::StartUp()
             ELightState::Active,
             ELightAttr::Point,
 
-            0, MAP_RGBX32(0xFF, 0xFF, 0xff), 0,
+            0, MAP_RGBX32(0xFF, 0xFF, 0xFF), 0,
             { 1000.0f, 1000.0f, 0, 0 }, VVector4{ 0, 0, 0, 0 }.GetNormalized(),
 
             0, 0.0001f, 0,
