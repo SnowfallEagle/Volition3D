@@ -129,6 +129,7 @@ public:
     void DrawTriangle(u32* Buffer, i32 Pitch, f32 X1, f32 Y1, f32 X2, f32 Y2, f32 X3, f32 Y3, u32 Color) const;
 
     void DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) const;
+    void DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) const;
 
     virtual void DrawText(i32 X, i32 Y, VColorARGB Color, const char* Format, ...) = 0;
 

@@ -932,7 +932,11 @@ public:
 				continue;
 			}
 
-            if (Poly->Attr & EPolyAttr::ShadeModeGouraud)
+            if (Poly->Attr & EPolyAttr::ShadeModeTexture)
+            {
+                Renderer.DrawTexturedTriangle(Buffer, Pitch, *Poly);
+            }
+            else if (Poly->Attr & EPolyAttr::ShadeModeGouraud)
             {
                 Renderer.DrawGouraudTriangle(Buffer, Pitch, *Poly);
             }

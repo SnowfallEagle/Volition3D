@@ -705,7 +705,8 @@ b32 VObject::LoadCOB(const char* Path, const VVector4& InPosition, const VVector
                 {
                     Poly.Attr |= EPolyAttr::ShadeModeGouraud;
                 }
-                else if (PolyMaterial.Attr & EMaterialAttr::ShadeModeTexture)
+
+                if (PolyMaterial.Attr & EMaterialAttr::ShadeModeTexture)
                 {
                     Poly.Attr |= EPolyAttr::ShadeModeTexture;
                     Poly.Texture = Texture;

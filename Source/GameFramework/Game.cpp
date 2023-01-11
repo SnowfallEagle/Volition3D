@@ -107,7 +107,7 @@ void VGame::StartUp()
 
         Renderer.InitLight(0, AmbientLight);
         Renderer.InitLight(1, InfiniteLight);
-        Renderer.InitLight(2, PointLight);
+        //Renderer.InitLight(2, PointLight);
         Renderer.InitLight(3, ComplexSpotlight);
         //Renderer.InitLight(0, SimpleSpotlight);
     }
