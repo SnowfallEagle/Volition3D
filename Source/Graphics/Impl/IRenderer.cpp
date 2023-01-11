@@ -1678,6 +1678,11 @@ void IRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
     fx16 XDeltaRightByY;
     fx16 UDeltaRightByY, VDeltaRightByY;
 
+    // Extract base color
+    u32 RBase = Poly.LitColor[0].R;
+    u32 GBase = Poly.LitColor[0].G;
+    u32 BBase = Poly.LitColor[0].B;
+
     // Extract texture
     u32* TextureBuffer;
     i32 TexturePitch;
@@ -1825,7 +1830,12 @@ void IRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
                 // Proccess each X
                 for (i32f X = XStart; X <= XEnd; ++X)
                 {
-                    Buffer[X] = TextureBuffer[Fx16ToIntRounded(V) * TexturePitch + Fx16ToIntRounded(U)];
+                    VColorARGB Pixel = TextureBuffer[Fx16ToIntRounded(V) * TexturePitch + Fx16ToIntRounded(U)];
+                    Pixel.R = (Pixel.R * RBase) >> 8;
+                    Pixel.G = (Pixel.G * GBase) >> 8;
+                    Pixel.B = (Pixel.B * BBase) >> 8;
+
+                    Buffer[X] = (u32)Pixel;
 
                     // Update X values
                     U += UDeltaByX;
@@ -1878,7 +1888,12 @@ void IRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
                 // Proccess each X
                 for (i32f X = XStart; X <= XEnd; ++X)
                 {
-                    Buffer[X] = TextureBuffer[Fx16ToIntRounded(V) * TexturePitch + Fx16ToIntRounded(U)];
+                    VColorARGB Pixel = TextureBuffer[Fx16ToIntRounded(V) * TexturePitch + Fx16ToIntRounded(U)];
+                    Pixel.R = (Pixel.R * RBase) >> 8;
+                    Pixel.G = (Pixel.G * GBase) >> 8;
+                    Pixel.B = (Pixel.B * BBase) >> 8;
+
+                    Buffer[X] = (u32)Pixel;
 
                     // Update X values
                     U += UDeltaByX;
@@ -2103,7 +2118,12 @@ void IRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
                 // Proccess each X
                 for (i32f X = XStart; X <= XEnd; ++X)
                 {
-                    Buffer[X] = TextureBuffer[Fx16ToIntRounded(V) * TexturePitch + Fx16ToIntRounded(U)];
+                    VColorARGB Pixel = TextureBuffer[Fx16ToIntRounded(V) * TexturePitch + Fx16ToIntRounded(U)];
+                    Pixel.R = (Pixel.R * RBase) >> 8;
+                    Pixel.G = (Pixel.G * GBase) >> 8;
+                    Pixel.B = (Pixel.B * BBase) >> 8;
+
+                    Buffer[X] = (u32)Pixel;
 
                     U += UDeltaByX;
                     V += VDeltaByX;
@@ -2196,7 +2216,12 @@ void IRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
                 // Proccess each X
                 for (i32f X = XStart; X <= XEnd; ++X)
                 {
-                    Buffer[X] = TextureBuffer[Fx16ToIntRounded(V) * TexturePitch + Fx16ToIntRounded(U)];
+                    VColorARGB Pixel = TextureBuffer[Fx16ToIntRounded(V) * TexturePitch + Fx16ToIntRounded(U)];
+                    Pixel.R = (Pixel.R * RBase) >> 8;
+                    Pixel.G = (Pixel.G * GBase) >> 8;
+                    Pixel.B = (Pixel.B * BBase) >> 8;
+
+                    Buffer[X] = (u32)Pixel;
 
                     U += UDeltaByX;
                     V += VDeltaByX;
