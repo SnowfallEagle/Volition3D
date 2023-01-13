@@ -32,13 +32,12 @@ void VGame::StartUp()
     Object.LoadCOB(
         "cube_flat_textured_01.cob",
         { 0.0f, 0.0f, 250.0f },
-        { 50.0f, 50.0f, 50.0f },
+        { 100.0f, 100.0f, 100.0f },
         { 0.0f, 0.0f, 0.0f },
         ECOB::SwapYZ
     );
 
-    Camera.Init(ECameraAttr::Euler, { 0, 75.0f, 0 }, { 0, 0, 0 }, Object.Position, 120, 265, 12000, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
-
+    Camera.Init(ECameraAttr::Euler, { 0, 75.0f, 0 }, { 0, 0, 0 }, Object.Position, 90, 100, 12000, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
     {
         VLight AmbientLight = {
             0,
@@ -221,8 +220,9 @@ void VGame::Render()
         {
             RenderList.RemoveBackFaces(Camera);
         }
-        RenderList.Light(Camera, Renderer.Lights, Renderer.MaxLights);
         RenderList.TransformWorldToCamera(Camera);
+        RenderList.Clip(Camera);
+        RenderList.Light(Camera, Renderer.Lights, Renderer.MaxLights);
         RenderList.SortPolygons(ESortPolygonsMethod::Average);
         RenderList.TransformCameraToScreen(Camera);
     }

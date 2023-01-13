@@ -11,246 +11,275 @@
 #include "Graphics/Renderer.h"
 #include "Graphics/Object.h"
 
+namespace EClipFlags
+{
+    enum Type
+    {
+        X = BIT(1),
+        Y = BIT(2),
+        Z = BIT(3),
+
+        Full = X | Y | Z
+    };
+}
+
 enum class ESortPolygonsMethod
 {
-	Average = 0,
-	Near,
-	Far
+    Average = 0,
+    Near,
+    Far
 };
+
+DEFINE_LOG_CHANNEL(hLogRenderList, "RenderList");
 
 class VRenderList
 {
 public:
-	static constexpr i32f MaxPoly = 32768;
+    static constexpr i32f MaxPoly = 32768;
 
 public:
-	i32 NumPoly;
-	VPolyFace* PolyPtrList[MaxPoly];
-	VPolyFace PolyList[MaxPoly];
+    i32 NumPoly;
+    VPolyFace* PolyPtrList[MaxPoly];
+    VPolyFace PolyList[MaxPoly];
 
 public:
-	b32 InsertPoly(const VPoly& Poly, const VVertex* VtxList)
-	{
-		if (NumPoly >= MaxPoly)
-		{
-			return false;
-		}
+    b32 InsertPoly(const VPoly& Poly, const VVertex* VtxList)
+    {
+        if (NumPoly >= MaxPoly)
+        {
+            return false;
+        }
 
-		PolyPtrList[NumPoly] = &PolyList[NumPoly];
-		PolyList[NumPoly].State = Poly.State;
-		PolyList[NumPoly].Attr = Poly.Attr;
-		PolyList[NumPoly].OriginalColor = Poly.OriginalColor;
+        PolyPtrList[NumPoly] = &PolyList[NumPoly];
+        PolyList[NumPoly].State = Poly.State;
+        PolyList[NumPoly].Attr = Poly.Attr;
+        PolyList[NumPoly].OriginalColor = Poly.OriginalColor;
         PolyList[NumPoly].NormalLength = Poly.NormalLength;
         PolyList[NumPoly].Texture = Poly.Texture;
         PolyList[NumPoly].Material = Poly.Material;
 
-		for (i32f I = 0; I < 3; ++I)
-		{
-			PolyList[NumPoly].TransVtx[I] = PolyList[NumPoly].LocalVtx[I] = VtxList[Poly.VtxIndices[I]];
+        for (i32f I = 0; I < 3; ++I)
+        {
+            PolyList[NumPoly].TransVtx[I] = PolyList[NumPoly].LocalVtx[I] = VtxList[Poly.VtxIndices[I]];
             PolyList[NumPoly].TransVtx[I].TextureCoords =
                 PolyList[NumPoly].LocalVtx[I].TextureCoords =
                     Poly.TextureCoordsList[Poly.TextureCoordsIndices[I]];
 
-			PolyList[NumPoly].LitColor[I] = Poly.LitColor[I];
-		}
+            PolyList[NumPoly].LitColor[I] = Poly.LitColor[I];
+        }
 
-		++NumPoly;
+        ++NumPoly;
 
-		return true;
-	}
+        return true;
+    }
 
-	void InsertObject(VObject& Object, b32 bInsertLocal)
-	{
-		if (~Object.State & EObjectState::Active  ||
-			~Object.State & EObjectState::Visible ||
-			Object.State & EObjectState::Culled)
-		{
-			return;
-		}
+    b32 InsertPolyFace(const VPolyFace& Poly)
+    {
+        if (NumPoly >= MaxPoly)
+        {
+            return false;
+        }
 
-		for (i32f I = 0; I < Object.NumPoly; ++I)
-		{
-			VPoly& Poly = Object.PolyList[I];
+        PolyPtrList[NumPoly] = &PolyList[NumPoly];
+        PolyList[NumPoly] = Poly;
 
-			if (~Poly.State & EPolyState::Active ||
-				Poly.State & EPolyState::Clipped ||
-				Poly.State & EPolyState::BackFace)
-			{
-				continue;
-			}
+        ++NumPoly;
 
-			if (!InsertPoly(Poly, bInsertLocal ? Object.LocalVtxList : Object.TransVtxList))
-			{
-				return;
-			}
-		}
-	}
+        return true;
+    }
 
-	void Reset()
-	{
-		NumPoly = 0;
-	}
+    void InsertObject(VObject& Object, b32 bInsertLocal)
+    {
+        if (~Object.State & EObjectState::Active  ||
+            ~Object.State & EObjectState::Visible ||
+            Object.State & EObjectState::Culled)
+        {
+            return;
+        }
 
-	void Transform(const VMatrix44& M, ETransformType Type)
-	{
-		VVector4 Res;
+        for (i32f I = 0; I < Object.NumPoly; ++I)
+        {
+            VPoly& Poly = Object.PolyList[I];
 
-		switch (Type)
-		{
-		case ETransformType::LocalOnly:
-		{
-			for (i32f I = 0; I < NumPoly; ++I)
-			{
-				VPolyFace* Poly = PolyPtrList[I];
-				if (!Poly ||
-					~Poly->State & EPolyState::Active ||
-					Poly->State & EPolyState::Clipped ||
-					Poly->State & EPolyState::BackFace)
-				{
-					continue;
-				}
+            if (~Poly.State & EPolyState::Active ||
+                Poly.State & EPolyState::Clipped ||
+                Poly.State & EPolyState::BackFace)
+            {
+                continue;
+            }
 
-				for (i32f V = 0; V < 3; ++V)
-				{
-					VVector4::MulMat44(Poly->LocalVtx[V].Position, M, Res);
-					Poly->LocalVtx[V].Position = Res;
+            if (!InsertPoly(Poly, bInsertLocal ? Object.LocalVtxList : Object.TransVtxList))
+            {
+                return;
+            }
+        }
+    }
+
+    void Reset()
+    {
+        NumPoly = 0;
+    }
+
+    void Transform(const VMatrix44& M, ETransformType Type)
+    {
+        VVector4 Res;
+
+        switch (Type)
+        {
+        case ETransformType::LocalOnly:
+        {
+            for (i32f I = 0; I < NumPoly; ++I)
+            {
+                VPolyFace* Poly = PolyPtrList[I];
+                if (!Poly ||
+                    ~Poly->State & EPolyState::Active ||
+                    Poly->State & EPolyState::Clipped ||
+                    Poly->State & EPolyState::BackFace)
+                {
+                    continue;
+                }
+
+                for (i32f V = 0; V < 3; ++V)
+                {
+                    VVector4::MulMat44(Poly->LocalVtx[V].Position, M, Res);
+                    Poly->LocalVtx[V].Position = Res;
 
                     if (Poly->LocalVtx[V].Attr & EVertexAttr::HasNormal)
                     {
                         VVector4::MulMat44(Poly->LocalVtx[V].Normal, M, Res);
                         Poly->LocalVtx[V].Normal = Res;
                     }
-				}
-			}
-		} break;
+                }
+            }
+        } break;
 
-		case ETransformType::TransOnly:
-		{
-			for (i32f I = 0; I < NumPoly; ++I)
-			{
-				VPolyFace* Poly = PolyPtrList[I];
-				if (!Poly ||
-					~Poly->State & EPolyState::Active ||
-					Poly->State & EPolyState::Clipped ||
-					Poly->State & EPolyState::BackFace)
-				{
-					continue;
-				}
+        case ETransformType::TransOnly:
+        {
+            for (i32f I = 0; I < NumPoly; ++I)
+            {
+                VPolyFace* Poly = PolyPtrList[I];
+                if (!Poly ||
+                    ~Poly->State & EPolyState::Active ||
+                    Poly->State & EPolyState::Clipped ||
+                    Poly->State & EPolyState::BackFace)
+                {
+                    continue;
+                }
 
-				for (i32f V = 0; V < 3; ++V)
-				{
-					VVector4::MulMat44(Poly->TransVtx[V].Position, M, Res);
-					Poly->TransVtx[V].Position = Res;
+                for (i32f V = 0; V < 3; ++V)
+                {
+                    VVector4::MulMat44(Poly->TransVtx[V].Position, M, Res);
+                    Poly->TransVtx[V].Position = Res;
 
                     if (Poly->TransVtx[V].Attr & EVertexAttr::HasNormal)
                     {
                         VVector4::MulMat44(Poly->TransVtx[V].Normal, M, Res);
                         Poly->TransVtx[V].Normal = Res;
                     }
-				}
-			}
-		} break;
+                }
+            }
+        } break;
 
-		case ETransformType::LocalToTrans:
-		{
-			for (i32f I = 0; I < NumPoly; ++I)
-			{
-				VPolyFace* Poly = PolyPtrList[I];
-				if (!Poly ||
-					~Poly->State & EPolyState::Active ||
-					Poly->State & EPolyState::Clipped ||
-					Poly->State & EPolyState::BackFace)
-				{
-					continue;
-				}
+        case ETransformType::LocalToTrans:
+        {
+            for (i32f I = 0; I < NumPoly; ++I)
+            {
+                VPolyFace* Poly = PolyPtrList[I];
+                if (!Poly ||
+                    ~Poly->State & EPolyState::Active ||
+                    Poly->State & EPolyState::Clipped ||
+                    Poly->State & EPolyState::BackFace)
+                {
+                    continue;
+                }
 
-				for (i32f V = 0; V < 3; ++V)
-				{
-					VVector4::MulMat44(Poly->LocalVtx[V].Position, M, Poly->TransVtx[V].Position);
+                for (i32f V = 0; V < 3; ++V)
+                {
+                    VVector4::MulMat44(Poly->LocalVtx[V].Position, M, Poly->TransVtx[V].Position);
 
                     if (Poly->LocalVtx[V].Attr & EVertexAttr::HasNormal)
                     {
                         VVector4::MulMat44(Poly->LocalVtx[V].Normal, M, Poly->TransVtx[V].Normal);
                     }
-				}
-			}
-		} break;
-		}
-	}
+                }
+            }
+        } break;
+        }
+    }
 
-	// LocalToTrans or TransOnly
-	void TransformModelToWorld(const VPoint4& WorldPos, ETransformType Type = ETransformType::LocalToTrans)
-	{
-		if (Type == ETransformType::LocalToTrans)
-		{
-			for (i32f I = 0; I < NumPoly; ++I)
-			{
-				VPolyFace* Poly = PolyPtrList[I];
-				if (!Poly ||
-					~Poly->State & EPolyState::Active ||
-					Poly->State & EPolyState::Clipped ||
-					Poly->State & EPolyState::BackFace)
-				{
-					continue;
-				}
+    // LocalToTrans or TransOnly
+    void TransformModelToWorld(const VPoint4& WorldPos, ETransformType Type = ETransformType::LocalToTrans)
+    {
+        if (Type == ETransformType::LocalToTrans)
+        {
+            for (i32f I = 0; I < NumPoly; ++I)
+            {
+                VPolyFace* Poly = PolyPtrList[I];
+                if (!Poly ||
+                    ~Poly->State & EPolyState::Active ||
+                    Poly->State & EPolyState::Clipped ||
+                    Poly->State & EPolyState::BackFace)
+                {
+                    continue;
+                }
 
-				for (i32f V = 0; V < 3; ++V)
-				{
+                for (i32f V = 0; V < 3; ++V)
+                {
                     // TODO(sean): Maybe we should copy Intensity and Attr too
-					Poly->TransVtx[V].Position = Poly->LocalVtx[V].Position + WorldPos;
+                    Poly->TransVtx[V].Position = Poly->LocalVtx[V].Position + WorldPos;
                     Poly->TransVtx[V].Normal = Poly->LocalVtx[V].Normal;
-				}
-			}
-		}
-		else // TransOnly
-		{
-			for (i32f I = 0; I < NumPoly; ++I)
-			{
-				VPolyFace* Poly = PolyPtrList[I];
-				if (!Poly ||
-					~Poly->State & EPolyState::Active ||
-					Poly->State & EPolyState::Clipped ||
-					Poly->State & EPolyState::BackFace)
-				{
-					continue;
-				}
+                }
+            }
+        }
+        else // TransOnly
+        {
+            for (i32f I = 0; I < NumPoly; ++I)
+            {
+                VPolyFace* Poly = PolyPtrList[I];
+                if (!Poly ||
+                    ~Poly->State & EPolyState::Active ||
+                    Poly->State & EPolyState::Clipped ||
+                    Poly->State & EPolyState::BackFace)
+                {
+                    continue;
+                }
 
-				for (i32f V = 0; V < 3; ++V)
-				{
-					Poly->TransVtx[V].Position += WorldPos;
-				}
-			}
-		}
-	}
+                for (i32f V = 0; V < 3; ++V)
+                {
+                    Poly->TransVtx[V].Position += WorldPos;
+                }
+            }
+        }
+    }
 
-	void RemoveBackFaces(const VCamera& Cam)
-	{
-		for (i32f I = 0; I < NumPoly; ++I)
-		{
-			VPolyFace* Poly = PolyPtrList[I];
+    void RemoveBackFaces(const VCamera& Cam)
+    {
+        for (i32f I = 0; I < NumPoly; ++I)
+        {
+            VPolyFace* Poly = PolyPtrList[I];
 
-			if (~Poly->State & EPolyState::Active ||
-				Poly->State & EPolyState::Clipped ||
-				Poly->Attr & EPolyAttr::TwoSided ||
-				Poly->State & EPolyState::BackFace)
-			{
-				continue;
-			}
+            if (~Poly->State & EPolyState::Active ||
+                Poly->State & EPolyState::Clipped ||
+                Poly->Attr & EPolyAttr::TwoSided ||
+                Poly->State & EPolyState::BackFace)
+            {
+                continue;
+            }
 
-			VVector4 U, V, N;
-			U = Poly->TransVtx[1].Position - Poly->TransVtx[0].Position;
-			V = Poly->TransVtx[2].Position - Poly->TransVtx[0].Position;
+            VVector4 U, V, N;
+            U = Poly->TransVtx[1].Position - Poly->TransVtx[0].Position;
+            V = Poly->TransVtx[2].Position - Poly->TransVtx[0].Position;
 
-			VVector4::Cross(U, V, N);
-			VVector4 View = Cam.Pos - Poly->TransVtx[0].Position;
+            VVector4::Cross(U, V, N);
+            VVector4 View = Cam.Pos - Poly->TransVtx[0].Position;
 
-			// If > 0 then N watch in the same direction as View vector and visible
-			if (VVector4::Dot(View, N) <= 0.0f)
-			{
-				Poly->State |= EPolyState::BackFace;
-			}
-		}
-	}
+            // If > 0 then N watch in the same direction as View vector and visible
+            if (VVector4::Dot(View, N) <= 0.0f)
+            {
+                Poly->State |= EPolyState::BackFace;
+            }
+        }
+    }
 
     void Light(const VCamera& Cam, const VLight* Lights, i32 NumLights)
     {
@@ -693,250 +722,607 @@ public:
         }
     }
 
-	void TransformWorldToCamera(const VCamera& Camera)
-	{
-		for (i32f I = 0; I < NumPoly; ++I)
-		{
-			VPolyFace* Poly = PolyPtrList[I];
-			if (!Poly ||
-				~Poly->State & EPolyState::Active ||
-				Poly->State & EPolyState::Clipped ||
-				Poly->State & EPolyState::BackFace)
-			{
-				continue;
-			}
+    void TransformWorldToCamera(const VCamera& Camera)
+    {
+        for (i32f I = 0; I < NumPoly; ++I)
+        {
+            VPolyFace* Poly = PolyPtrList[I];
+            if (!Poly ||
+                ~Poly->State & EPolyState::Active ||
+                Poly->State & EPolyState::Clipped ||
+                Poly->State & EPolyState::BackFace)
+            {
+                continue;
+            }
 
-			for (i32f V = 0; V < 3; ++V)
-			{
-				VVector4 Res;
-				VVector4::MulMat44(Poly->TransVtx[V].Position, Camera.MatCamera, Res);
-				Poly->TransVtx[V].Position = Res;
-			}
-		}
-	}
+            for (i32f V = 0; V < 3; ++V)
+            {
+                VVector4 Res;
+                VVector4::MulMat44(Poly->TransVtx[V].Position, Camera.MatCamera, Res);
+                Poly->TransVtx[V].Position = Res;
+            }
+        }
+    }
 
-	static i32 SortPolygonsCompareAverage(const void* Arg1, const void* Arg2)
-	{
-		const VPolyFace* Poly1 = *(const VPolyFace**)Arg1;
-		const VPolyFace* Poly2 = *(const VPolyFace**)Arg2;
+    void Clip(const VCamera& Camera, EClipFlags::Type Flags = EClipFlags::Full)
+    {
+        enum EClipCode
+        {
+            XGreater = BIT(1),
+            XLess    = BIT(2),
 
-		f32 Z1 = 0.33333f * (Poly1->TransVtx[0].Z + Poly1->TransVtx[1].Z + Poly1->TransVtx[2].Z);
-		f32 Z2 = 0.33333f * (Poly2->TransVtx[0].Z + Poly2->TransVtx[1].Z + Poly2->TransVtx[2].Z);
+            YGreater = BIT(3),
+            YLess    = BIT(4),
 
-		if (Z1 < Z2)
-		{
-			return 1;
-		}
-		else if (Z1 > Z2)
-		{
-			return -1;
-		}
-		else
-		{
-			return 0;
-		}
+            ZGreater = BIT(5),
+            ZLess    = BIT(6),
+            ZIn      = BIT(7),
+        };
 
-		return 1;
-	}
+        i32f SavedNumPoly = NumPoly;
 
-	static i32 SortPolygonsCompareNear(const void* Arg1, const void* Arg2)
-	{
-		const VPolyFace* Poly1 = *(const VPolyFace**)Arg1;
-		const VPolyFace* Poly2 = *(const VPolyFace**)Arg2;
+        for (i32f PolyIndex = 0; PolyIndex < SavedNumPoly; ++PolyIndex)
+        {
+            VPolyFace& Poly = *PolyPtrList[PolyIndex];
 
-		f32 ZMin1 = MIN(MIN(Poly1->TransVtx[0].Z, Poly1->TransVtx[1].Z), Poly1->TransVtx[2].Z);
-		f32 ZMin2 = MIN(MIN(Poly2->TransVtx[0].Z, Poly2->TransVtx[1].Z), Poly2->TransVtx[2].Z);
+            if (~Poly.State & EPolyState::Active  ||
+                Poly.State & EPolyState::BackFace ||
+                Poly.State & EPolyState::Clipped)
+            {
+                continue;
+            }
 
-		if (ZMin1 < ZMin2)
-		{
-			return 1;
-		}
-		else if (ZMin1 > ZMin2)
-		{
-			return -1;
-		}
-		else
-		{
-			return 0;
-		}
+            u32 ClipCodes[3] = { 0, 0, 0 };
+            f32 ZFactor;
+            f32 ZTest;
 
-		return 1;
-	}
+            if (Flags & EClipFlags::X)
+            {
+                ZFactor = (0.5f * Camera.ViewPlaneSize.X) / Camera.ViewDist;
+                ZTest = ZFactor * Poly.TransVtx[0].Z;
 
-	static i32 SortPolygonsCompareFar(const void* Arg1, const void* Arg2)
-	{
-		const VPolyFace* Poly1 = *(const VPolyFace**)Arg1;
-		const VPolyFace* Poly2 = *(const VPolyFace**)Arg2;
+                if (Poly.TransVtx[0].X > ZTest)
+                {
+                    ClipCodes[0] |= EClipCode::XGreater;
+                }
+                else if (Poly.TransVtx[0].X < -ZTest)
+                {
+                    ClipCodes[0] |= EClipCode::XLess;
+                }
 
-		f32 ZMax1 = MAX(MAX(Poly1->TransVtx[0].Z, Poly1->TransVtx[1].Z), Poly1->TransVtx[2].Z);
-		f32 ZMax2 = MAX(MAX(Poly2->TransVtx[0].Z, Poly2->TransVtx[1].Z), Poly2->TransVtx[2].Z);
+                ZTest = ZFactor * Poly.TransVtx[1].Z;
 
-		if (ZMax1 < ZMax2)
-		{
-			return 1;
-		}
-		else if (ZMax1 > ZMax2)
-		{
-			return -1;
-		}
-		else
-		{
-			return 0;
-		}
+                if (Poly.TransVtx[1].X > ZTest)
+                {
+                    ClipCodes[1] |= EClipCode::XGreater;
+                }
+                else if (Poly.TransVtx[1].X < -ZTest)
+                {
+                    ClipCodes[1] |= EClipCode::XLess;
+                }
 
-		return 1;
-	}
+                ZTest = ZFactor * Poly.TransVtx[2].Z;
 
-	void SortPolygons(ESortPolygonsMethod Method = ESortPolygonsMethod::Average)
-	{
-		switch (Method)
-		{
-		case ESortPolygonsMethod::Average: qsort(PolyPtrList, NumPoly, sizeof(*PolyPtrList), SortPolygonsCompareAverage); break;
-		case ESortPolygonsMethod::Near:    qsort(PolyPtrList, NumPoly, sizeof(*PolyPtrList), SortPolygonsCompareNear); break;
-		case ESortPolygonsMethod::Far:     qsort(PolyPtrList, NumPoly, sizeof(*PolyPtrList), SortPolygonsCompareFar); break;
-		}
-	}
+                if (Poly.TransVtx[2].X > ZTest)
+                {
+                    ClipCodes[2] |= EClipCode::XGreater;
+                }
+                else if (Poly.TransVtx[2].X < -ZTest)
+                {
+                    ClipCodes[2] |= EClipCode::XLess;
+                }
 
-	void TransformCameraToPerspective(const VCamera& Cam)
-	{
-		for (i32f I = 0; I < NumPoly; ++I)
-		{
-			VPolyFace* Poly = PolyPtrList[I];
-			if (!Poly ||
-				~Poly->State & EPolyState::Active ||
-				Poly->State & EPolyState::Clipped ||
-				Poly->State & EPolyState::BackFace)
-			{
-				continue;
-			}
+                if ((ClipCodes[0] & EClipCode::XLess &&
+                     ClipCodes[1] & EClipCode::XLess &&
+                     ClipCodes[2] & EClipCode::XLess) ||
 
-			for (i32f V = 0; V < 3; ++V)
-			{
-				Poly->TransVtx[V].X = Cam.ViewDist * Poly->TransVtx[V].X / Poly->TransVtx[V].Z;
-				Poly->TransVtx[V].Y = Cam.ViewDist * Poly->TransVtx[V].Y * Cam.AspectRatio / Poly->TransVtx[V].Z;
-			}
-		}
-	}
+                    (ClipCodes[0] & EClipCode::XGreater &&
+                     ClipCodes[1] & EClipCode::XGreater &&
+                     ClipCodes[2] & EClipCode::XGreater))
+                {
+                    Poly.State |= EPolyState::Clipped;
+                    continue;
+                }
+            }
 
-	void ConvertFromHomogeneous()
-	{
-		for (i32f I = 0; I < NumPoly; ++I)
-		{
-			VPolyFace* Poly = PolyPtrList[I];
-			if (!Poly ||
-				~Poly->State & EPolyState::Active ||
-				Poly->State & EPolyState::Clipped ||
-				Poly->State & EPolyState::BackFace)
-			{
-				continue;
-			}
+            if (Flags & EClipFlags::Y)
+            {
+                ZFactor = (0.5f * Camera.ViewPlaneSize.Y) / Camera.ViewDist;
+                ZTest = ZFactor * Poly.TransVtx[0].Z;
 
-			for (i32f V = 0; V < 3; ++V)
-			{
-				Poly->TransVtx[V].Position.DivByW();
-			}
-		}
-	}
+                if (Poly.TransVtx[0].Y > ZTest)
+                {
+                    ClipCodes[0] |= EClipCode::YGreater;
+                }
+                else if (Poly.TransVtx[0].Y < -ZTest)
+                {
+                    ClipCodes[0] |= EClipCode::YLess;
+                }
 
-	void TransformPerspectiveToScreen(const VCamera& Cam)
-	{
-		f32 Alpha = Cam.ViewPortSize.X * 0.5f - 0.5f;
-		f32 Beta = Cam.ViewPortSize.Y * 0.5f - 0.5f;
+                ZTest = ZFactor * Poly.TransVtx[1].Z;
 
-		for (i32f I = 0; I < NumPoly; ++I)
-		{
-			VPolyFace* Poly = PolyPtrList[I];
-			if (!Poly ||
-				~Poly->State & EPolyState::Active ||
-				Poly->State & EPolyState::Clipped ||
-				Poly->State & EPolyState::BackFace)
-			{
-				continue;
-			}
+                if (Poly.TransVtx[1].Y > ZTest)
+                {
+                    ClipCodes[1] |= EClipCode::YGreater;
+                }
+                else if (Poly.TransVtx[1].Y < -ZTest)
+                {
+                    ClipCodes[1] |= EClipCode::YLess;
+                }
 
-			for (i32f V = 0; V < 3; ++V)
-			{
-				Poly->TransVtx[V].X = Alpha + Alpha * Poly->TransVtx[V].X;
-				Poly->TransVtx[V].Y = Beta - Beta * Poly->TransVtx[V].Y;
-			}
-		}
-	}
+                ZTest = ZFactor * Poly.TransVtx[2].Z;
 
-	void TransformCameraToScreen(const VCamera& Cam)
-	{
-		f32 Alpha = Cam.ViewPortSize.X * 0.5f - 0.5f;
-		f32 Beta = Cam.ViewPortSize.Y * 0.5f - 0.5f;
+                if (Poly.TransVtx[2].Y > ZTest)
+                {
+                    ClipCodes[2] |= EClipCode::YGreater;
+                }
+                else if (Poly.TransVtx[2].Y < -ZTest)
+                {
+                    ClipCodes[2] |= EClipCode::YLess;
+                }
 
-		for (i32f I = 0; I < NumPoly; ++I)
-		{
-			VPolyFace* Poly = PolyPtrList[I];
-			if (!Poly ||
-				~Poly->State & EPolyState::Active ||
-				Poly->State & EPolyState::Clipped ||
-				Poly->State & EPolyState::BackFace)
-			{
-				continue;
-			}
+                if ((ClipCodes[0] & EClipCode::YLess &&
+                     ClipCodes[1] & EClipCode::YLess &&
+                     ClipCodes[2] & EClipCode::YLess) ||
 
-			for (i32f V = 0; V < 3; ++V)
-			{
-				f32 ViewDistDivZ = Cam.ViewDist / Poly->TransVtx[V].Z;
+                    (ClipCodes[0] & EClipCode::YGreater &&
+                     ClipCodes[1] & EClipCode::YGreater &&
+                     ClipCodes[2] & EClipCode::YGreater))
+                {
+                    Poly.State |= EPolyState::Clipped;
+                    continue;
+                }
+            }
 
-				Poly->TransVtx[V].X = Poly->TransVtx[V].X * ViewDistDivZ;
-				Poly->TransVtx[V].Y = Poly->TransVtx[V].Y * Cam.AspectRatio * ViewDistDivZ;
+            if (Flags & EClipFlags::Z)
+            {
+                i32f NumVertsIn = 0;
 
-				Poly->TransVtx[V].X = Alpha + Alpha * Poly->TransVtx[V].X;
-				Poly->TransVtx[V].Y = Beta - Beta * Poly->TransVtx[V].Y;
-			}
-		}
-	}
+                if (Poly.TransVtx[0].Z < Camera.ZNearClip)
+                {
+                    ClipCodes[0] |= EClipCode::ZLess;
+                }
+                else if (Poly.TransVtx[0].Z > Camera.ZFarClip)
+                {
+                    ClipCodes[0] |= EClipCode::ZGreater;
+                }
+                else
+                {
+                    ClipCodes[0] |= EClipCode::ZIn;
+                    ++NumVertsIn;
+                }
 
-	void RenderWire(u32* Buffer, i32 Pitch)
-	{
-		for (i32f I = 0; I < NumPoly; ++I)
-		{
-			VPolyFace* Poly = PolyPtrList[I];
-			if (!Poly ||
-				~Poly->State & EPolyState::Active ||
-				Poly->State & EPolyState::BackFace ||
-				Poly->State & EPolyState::Clipped)
-			{
-				continue;
-			}
+                if (Poly.TransVtx[1].Z < Camera.ZNearClip)
+                {
+                    ClipCodes[1] |= EClipCode::ZLess;
+                }
+                else if (Poly.TransVtx[1].Z > Camera.ZFarClip)
+                {
+                    ClipCodes[1] |= EClipCode::ZGreater;
+                }
+                else
+                {
+                    ClipCodes[1] |= EClipCode::ZIn;
+                    ++NumVertsIn;
+                }
 
-			Renderer.DrawClippedLine(
-				Buffer, Pitch,
-				(i32)Poly->TransVtx[0].X, (i32)Poly->TransVtx[0].Y,
-				(i32)Poly->TransVtx[1].X, (i32)Poly->TransVtx[1].Y,
-				Poly->LitColor[0]
-			);
-			Renderer.DrawClippedLine(
-				Buffer, Pitch,
-				(i32)Poly->TransVtx[1].X, (i32)Poly->TransVtx[1].Y,
-				(i32)Poly->TransVtx[2].X, (i32)Poly->TransVtx[2].Y,
-				Poly->LitColor[0]
-			);
-			Renderer.DrawClippedLine(
-				Buffer, Pitch,
-				(i32)Poly->TransVtx[2].X, (i32)Poly->TransVtx[2].Y,
-				(i32)Poly->TransVtx[0].X, (i32)Poly->TransVtx[0].Y,
-				Poly->LitColor[0]
-			);
-		}
-	}
+                if (Poly.TransVtx[2].Z < Camera.ZNearClip)
+                {
+                    ClipCodes[2] |= EClipCode::ZLess;
+                }
+                else if (Poly.TransVtx[2].Z > Camera.ZFarClip)
+                {
+                    ClipCodes[2] |= EClipCode::ZGreater;
+                }
+                else
+                {
+                    ClipCodes[2] |= EClipCode::ZIn;
+                    ++NumVertsIn;
+                }
 
-	void RenderSolid(u32* Buffer, i32 Pitch)
-	{
-		for (i32f I = 0; I < NumPoly; ++I)
-		{
-			VPolyFace* Poly = PolyPtrList[I];
-			if (!Poly ||
-				~Poly->State & EPolyState::Active ||
-				Poly->State & EPolyState::BackFace ||
-				Poly->State & EPolyState::Clipped)
-			{
-				continue;
-			}
+                if ((ClipCodes[0] & EClipCode::ZLess &&
+                     ClipCodes[1] & EClipCode::ZLess &&
+                     ClipCodes[2] & EClipCode::ZLess) ||
+
+                    (ClipCodes[0] & EClipCode::ZGreater &&
+                     ClipCodes[1] & EClipCode::ZGreater &&
+                     ClipCodes[2] & EClipCode::ZGreater))
+                {
+                    Poly.State |= EPolyState::Clipped;
+                    continue;
+                }
+
+                if ((ClipCodes[0] | ClipCodes[1] | ClipCodes[2]) & EClipCode::ZLess)
+                {
+                    i32f V0, V1, V2;
+
+                    if (NumVertsIn == 1)
+                    {
+                        // TODO(sean): Try to optimize it through V0 - V1
+
+                        /*
+                            ZNearClip = Z0 + (Z1 - Z0) * t?
+
+                            t! = (ZNearClip - Z0) / (Z1 - Z0)
+                            NewX = X0 + (X1 - X0) * t!
+                            NewY = Y0 + (Y1 - Y0) * t!
+                        */
+
+                        // Get vertex indices
+                        if (ClipCodes[0] & EClipCode::ZIn)
+                        {
+                            V0 = 0;
+                            V1 = 1;
+                            V2 = 2;
+                        }
+                        else if (ClipCodes[1] & EClipCode::ZIn)
+                        {
+                            V0 = 1;
+                            V1 = 2;
+                            V2 = 0;
+                        }
+                        else
+                        {
+                            V0 = 2;
+                            V1 = 0;
+                            V2 = 1;
+                        }
+
+                        // Recompute X and Y for ZNearClip
+                        VVector4 Direction = Poly.TransVtx[V1].Position - Poly.TransVtx[V0].Position;
+                        f32 T1 = (Camera.ZNearClip - Poly.TransVtx[V0].Z) / Direction.Z;
+
+                        Poly.TransVtx[V1].X = Poly.TransVtx[V0].X + Direction.X * T1;
+                        Poly.TransVtx[V1].Y = Poly.TransVtx[V0].Y + Direction.Y * T1;
+                        Poly.TransVtx[V1].Z = Camera.ZNearClip;
+
+                        Direction = Poly.TransVtx[V2].Position - Poly.TransVtx[V0].Position;
+                        f32 T2 = (Camera.ZNearClip - Poly.TransVtx[V0].Z) / Direction.Z;
+
+                        Poly.TransVtx[V2].X = Poly.TransVtx[V0].X + Direction.X * T2;
+                        Poly.TransVtx[V2].Y = Poly.TransVtx[V0].Y + Direction.Y * T2;
+                        Poly.TransVtx[V2].Z = Camera.ZNearClip;
+
+                        // Recompute texture coords
+                        if (Poly.Attr & EPolyAttr::ShadeModeTexture)
+                        {
+                            VPoint2 TextureDirection = Poly.TransVtx[V1].TextureCoords - Poly.TransVtx[V0].TextureCoords;
+
+                            Poly.TransVtx[V1].U = Poly.TransVtx[V0].U + TextureDirection.X * T1;
+                            Poly.TransVtx[V1].V = Poly.TransVtx[V0].V + TextureDirection.Y * T1;
+
+                            TextureDirection = Poly.TransVtx[V2].TextureCoords - Poly.TransVtx[V0].TextureCoords;
+
+                            Poly.TransVtx[V2].U = Poly.TransVtx[V0].U + TextureDirection.X * T2;
+                            Poly.TransVtx[V2].V = Poly.TransVtx[V0].V + TextureDirection.Y * T2;
+                        }
+
+                        // Recompute poly normal length
+                        VVector4 Vec1 = Poly.TransVtx[V1].Position - Poly.TransVtx[V0].Position;
+                        VVector4 Vec2 = Poly.TransVtx[V2].Position - Poly.TransVtx[V0].Position;
+                        VVector4 VecNormal;
+
+                        VVector4::Cross(Vec1, Vec2, VecNormal);
+                        Poly.NormalLength = VecNormal.GetLengthFast();
+                    }
+                    else
+                    {
+                        // Copy current poly
+                        VPolyFace NewPoly = Poly;
+
+                        // Get vertex indices
+                        if (ClipCodes[0] & EClipCode::ZLess)
+                        {
+                            V0 = 0;
+                            V1 = 1;
+                            V2 = 2;
+                        }
+                        else if (ClipCodes[1] & EClipCode::ZLess)
+                        {
+                            V0 = 1;
+                            V1 = 2;
+                            V2 = 0;
+                        }
+                        else
+                        {
+                            V0 = 2;
+                            V1 = 0;
+                            V2 = 1;
+                        }
+
+                        // Recompute X and Y for ZNearClip
+                        VVector4 Direction = Poly.TransVtx[V1].Position - Poly.TransVtx[V0].Position;
+                        f32 T1 = (Camera.ZNearClip - Poly.TransVtx[V0].Z) / Direction.Z;
+
+                        f32 X01 = Poly.TransVtx[V0].X + Direction.X * T1;
+                        f32 Y01 = Poly.TransVtx[V0].Y + Direction.Y * T1;
+
+                        Direction = Poly.TransVtx[V2].Position - Poly.TransVtx[V0].Position;
+                        f32 T2 = (Camera.ZNearClip - Poly.TransVtx[V0].Z) / Direction.Z;
+
+                        f32 X02 = Poly.TransVtx[V0].X + Direction.X * T2;
+                        f32 Y02 = Poly.TransVtx[V0].Y + Direction.Y * T2;
+
+                        // Put values in polygons
+                        Poly.TransVtx[V0].X = X01;
+                        Poly.TransVtx[V0].Y = Y01;
+                        Poly.TransVtx[V0].Z = Camera.ZNearClip;
+
+                        NewPoly.TransVtx[V0].X = X02;
+                        NewPoly.TransVtx[V0].Y = Y02;
+                        NewPoly.TransVtx[V0].Z = Camera.ZNearClip;
+
+                        NewPoly.TransVtx[V1].X = X01;
+                        NewPoly.TransVtx[V1].Y = Y01;
+                        NewPoly.TransVtx[V1].Z = Camera.ZNearClip;
+
+                        // Recompute texture coords
+                        if (Poly.Attr & EPolyAttr::ShadeModeTexture)
+                        {
+                            VPoint2 TextureDirection = Poly.TransVtx[V1].TextureCoords - Poly.TransVtx[V0].TextureCoords;
+
+                            f32 U01 = Poly.TransVtx[V0].U + TextureDirection.X * T1;
+                            f32 V01 = Poly.TransVtx[V0].V + TextureDirection.Y * T1;
+
+                            TextureDirection = Poly.TransVtx[V2].TextureCoords - Poly.TransVtx[V0].TextureCoords;
+
+                            f32 U02 = Poly.TransVtx[V0].U + TextureDirection.X * T2;
+                            f32 V02 = Poly.TransVtx[V0].V + TextureDirection.Y * T2;
+
+                            Poly.TransVtx[V0].U = U01;
+                            Poly.TransVtx[V0].V = V01;
+
+                            NewPoly.TransVtx[V0].U = U02;
+                            NewPoly.TransVtx[V0].V = V02;
+                            NewPoly.TransVtx[V1].U = U01;
+                            NewPoly.TransVtx[V1].V = V01;
+                        }
+
+                        // Recompute poly normal length
+                        VVector4 Vec1 = Poly.TransVtx[V1].Position - Poly.TransVtx[V0].Position;
+                        VVector4 Vec2 = Poly.TransVtx[V2].Position - Poly.TransVtx[V0].Position;
+                        VVector4 VecNormal;
+
+                        VVector4::Cross(Vec1, Vec2, VecNormal);
+                        Poly.NormalLength = VecNormal.GetLengthFast();
+
+                        Vec1 = NewPoly.TransVtx[V1].Position - NewPoly.TransVtx[V0].Position;
+                        Vec2 = NewPoly.TransVtx[V2].Position - NewPoly.TransVtx[V0].Position;
+                        VecNormal;
+
+                        VVector4::Cross(Vec1, Vec2, VecNormal);
+                        NewPoly.NormalLength = VecNormal.GetLengthFast();
+
+                        // Finally
+                        InsertPolyFace(NewPoly);
+                    }
+                }
+            }
+        }
+    }
+
+    static i32 SortPolygonsCompareAverage(const void* Arg1, const void* Arg2)
+    {
+        const VPolyFace* Poly1 = *(const VPolyFace**)Arg1;
+        const VPolyFace* Poly2 = *(const VPolyFace**)Arg2;
+
+        f32 Z1 = 0.33333f * (Poly1->TransVtx[0].Z + Poly1->TransVtx[1].Z + Poly1->TransVtx[2].Z);
+        f32 Z2 = 0.33333f * (Poly2->TransVtx[0].Z + Poly2->TransVtx[1].Z + Poly2->TransVtx[2].Z);
+
+        if (Z1 < Z2)
+        {
+            return 1;
+        }
+        else if (Z1 > Z2)
+        {
+            return -1;
+        }
+        else
+        {
+            return 0;
+        }
+
+        return 1;
+    }
+
+    static i32 SortPolygonsCompareNear(const void* Arg1, const void* Arg2)
+    {
+        const VPolyFace* Poly1 = *(const VPolyFace**)Arg1;
+        const VPolyFace* Poly2 = *(const VPolyFace**)Arg2;
+
+        f32 ZMin1 = MIN(MIN(Poly1->TransVtx[0].Z, Poly1->TransVtx[1].Z), Poly1->TransVtx[2].Z);
+        f32 ZMin2 = MIN(MIN(Poly2->TransVtx[0].Z, Poly2->TransVtx[1].Z), Poly2->TransVtx[2].Z);
+
+        if (ZMin1 < ZMin2)
+        {
+            return 1;
+        }
+        else if (ZMin1 > ZMin2)
+        {
+            return -1;
+        }
+        else
+        {
+            return 0;
+        }
+
+        return 1;
+    }
+
+    static i32 SortPolygonsCompareFar(const void* Arg1, const void* Arg2)
+    {
+        const VPolyFace* Poly1 = *(const VPolyFace**)Arg1;
+        const VPolyFace* Poly2 = *(const VPolyFace**)Arg2;
+
+        f32 ZMax1 = MAX(MAX(Poly1->TransVtx[0].Z, Poly1->TransVtx[1].Z), Poly1->TransVtx[2].Z);
+        f32 ZMax2 = MAX(MAX(Poly2->TransVtx[0].Z, Poly2->TransVtx[1].Z), Poly2->TransVtx[2].Z);
+
+        if (ZMax1 < ZMax2)
+        {
+            return 1;
+        }
+        else if (ZMax1 > ZMax2)
+        {
+            return -1;
+        }
+        else
+        {
+            return 0;
+        }
+
+        return 1;
+    }
+
+    void SortPolygons(ESortPolygonsMethod Method = ESortPolygonsMethod::Average)
+    {
+        switch (Method)
+        {
+        case ESortPolygonsMethod::Average: qsort(PolyPtrList, NumPoly, sizeof(*PolyPtrList), SortPolygonsCompareAverage); break;
+        case ESortPolygonsMethod::Near:    qsort(PolyPtrList, NumPoly, sizeof(*PolyPtrList), SortPolygonsCompareNear); break;
+        case ESortPolygonsMethod::Far:     qsort(PolyPtrList, NumPoly, sizeof(*PolyPtrList), SortPolygonsCompareFar); break;
+        }
+    }
+
+    void TransformCameraToPerspective(const VCamera& Cam)
+    {
+        for (i32f I = 0; I < NumPoly; ++I)
+        {
+            VPolyFace* Poly = PolyPtrList[I];
+            if (!Poly ||
+                ~Poly->State & EPolyState::Active ||
+                Poly->State & EPolyState::Clipped ||
+                Poly->State & EPolyState::BackFace)
+            {
+                continue;
+            }
+
+            for (i32f V = 0; V < 3; ++V)
+            {
+                Poly->TransVtx[V].X = Cam.ViewDist * Poly->TransVtx[V].X / Poly->TransVtx[V].Z;
+                Poly->TransVtx[V].Y = Cam.ViewDist * Poly->TransVtx[V].Y * Cam.AspectRatio / Poly->TransVtx[V].Z;
+            }
+        }
+    }
+
+    void ConvertFromHomogeneous()
+    {
+        for (i32f I = 0; I < NumPoly; ++I)
+        {
+            VPolyFace* Poly = PolyPtrList[I];
+            if (!Poly ||
+                ~Poly->State & EPolyState::Active ||
+                Poly->State & EPolyState::Clipped ||
+                Poly->State & EPolyState::BackFace)
+            {
+                continue;
+            }
+
+            for (i32f V = 0; V < 3; ++V)
+            {
+                Poly->TransVtx[V].Position.DivByW();
+            }
+        }
+    }
+
+    void TransformPerspectiveToScreen(const VCamera& Cam)
+    {
+        f32 Alpha = Cam.ViewPortSize.X * 0.5f - 0.5f;
+        f32 Beta = Cam.ViewPortSize.Y * 0.5f - 0.5f;
+
+        for (i32f I = 0; I < NumPoly; ++I)
+        {
+            VPolyFace* Poly = PolyPtrList[I];
+            if (!Poly ||
+                ~Poly->State & EPolyState::Active ||
+                Poly->State & EPolyState::Clipped ||
+                Poly->State & EPolyState::BackFace)
+            {
+                continue;
+            }
+
+            for (i32f V = 0; V < 3; ++V)
+            {
+                Poly->TransVtx[V].X = Alpha + Alpha * Poly->TransVtx[V].X;
+                Poly->TransVtx[V].Y = Beta - Beta * Poly->TransVtx[V].Y;
+            }
+        }
+    }
+
+    void TransformCameraToScreen(const VCamera& Cam)
+    {
+        f32 Alpha = Cam.ViewPortSize.X * 0.5f - 0.5f;
+        f32 Beta = Cam.ViewPortSize.Y * 0.5f - 0.5f;
+
+        for (i32f I = 0; I < NumPoly; ++I)
+        {
+            VPolyFace* Poly = PolyPtrList[I];
+            if (!Poly ||
+                ~Poly->State & EPolyState::Active ||
+                Poly->State & EPolyState::Clipped ||
+                Poly->State & EPolyState::BackFace)
+            {
+                continue;
+            }
+
+            for (i32f V = 0; V < 3; ++V)
+            {
+                f32 ViewDistDivZ = Cam.ViewDist / Poly->TransVtx[V].Z;
+
+                Poly->TransVtx[V].X = Poly->TransVtx[V].X * ViewDistDivZ;
+                Poly->TransVtx[V].Y = Poly->TransVtx[V].Y * Cam.AspectRatio * ViewDistDivZ;
+
+                Poly->TransVtx[V].X = Alpha + Alpha * Poly->TransVtx[V].X;
+                Poly->TransVtx[V].Y = Beta - Beta * Poly->TransVtx[V].Y;
+            }
+        }
+    }
+
+    void RenderWire(u32* Buffer, i32 Pitch)
+    {
+        for (i32f I = 0; I < NumPoly; ++I)
+        {
+            VPolyFace* Poly = PolyPtrList[I];
+            if (!Poly ||
+                ~Poly->State & EPolyState::Active ||
+                Poly->State & EPolyState::BackFace ||
+                Poly->State & EPolyState::Clipped)
+            {
+                continue;
+            }
+
+            Renderer.DrawClippedLine(
+                Buffer, Pitch,
+                (i32)Poly->TransVtx[0].X, (i32)Poly->TransVtx[0].Y,
+                (i32)Poly->TransVtx[1].X, (i32)Poly->TransVtx[1].Y,
+                Poly->LitColor[0]
+            );
+            Renderer.DrawClippedLine(
+                Buffer, Pitch,
+                (i32)Poly->TransVtx[1].X, (i32)Poly->TransVtx[1].Y,
+                (i32)Poly->TransVtx[2].X, (i32)Poly->TransVtx[2].Y,
+                Poly->LitColor[0]
+            );
+            Renderer.DrawClippedLine(
+                Buffer, Pitch,
+                (i32)Poly->TransVtx[2].X, (i32)Poly->TransVtx[2].Y,
+                (i32)Poly->TransVtx[0].X, (i32)Poly->TransVtx[0].Y,
+                Poly->LitColor[0]
+            );
+        }
+    }
+
+    void RenderSolid(u32* Buffer, i32 Pitch)
+    {
+        for (i32f I = 0; I < NumPoly; ++I)
+        {
+            VPolyFace* Poly = PolyPtrList[I];
+            if (!Poly ||
+                ~Poly->State & EPolyState::Active ||
+                Poly->State & EPolyState::BackFace ||
+                Poly->State & EPolyState::Clipped)
+            {
+                continue;
+            }
 
             if (Poly->Attr & EPolyAttr::ShadeModeTexture)
             {
@@ -956,6 +1342,6 @@ public:
                     Poly->LitColor[0]
                 );
             }
-		}
-	}
+        }
+    }
 };

@@ -25,6 +25,14 @@ public:
     };
 
 public:
+    FINLINE TVector2<T> operator-(const TVector2<T>& Point)
+    {
+        return {
+            X - Point.X,
+            Y - Point.Y
+        };
+    }
+
     FINLINE void Zero()
     {
         X = Y = 0;
