@@ -487,7 +487,7 @@ public:
                         TransVtxList[V1].Position - TransVtxList[V0].Position,
                         TransVtxList[V2].Position - TransVtxList[V0].Position
                     );
-                    VVector4 Direction = TransVtxList[V0].Position - Lights[LightIndex].Pos;
+                    VVector4 Direction = TransVtxList[V0].Position - Lights[LightIndex].TransPos;
 
                     f32 Dot = VVector4::Dot(SurfaceNormal, Direction);
                     if (Dot < 0)
@@ -520,7 +520,7 @@ public:
                     if (Dot < 0)
                     {
                         // 128 used for fixed point to don't lose accuracy with integers
-                        f32 Distance = (TransVtxList[V0].Position - Lights[LightIndex].Pos).GetLengthFast();
+                        f32 Distance = (TransVtxList[V0].Position - Lights[LightIndex].TransPos).GetLengthFast();
                         f32 Atten =
                             Lights[LightIndex].KConst +
                             Lights[LightIndex].KLinear * Distance +
@@ -544,7 +544,7 @@ public:
 
                     if (DotNormalDirection < 0)
                     {
-                        VVector4 DistanceVector = TransVtxList[V0].Position - Lights[LightIndex].Pos;
+                        VVector4 DistanceVector = TransVtxList[V0].Position - Lights[LightIndex].TransPos;
                         f32 Distance = DistanceVector.GetLengthFast();
                         f32 DotDistanceDirection = VVector4::Dot(DistanceVector, Lights[LightIndex].Dir) / Distance;
 

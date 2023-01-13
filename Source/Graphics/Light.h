@@ -33,8 +33,8 @@ public:
     u32 Attr;
 
     VColorRGBA CAmbient, CDiffuse, CSpecular;
-    VPoint4 Pos;
-    VVector4 Dir;
+    VPoint4 Pos, TransPos;
+    VVector4 Dir, TransDir;
 
     f32 KConst, KLinear, KQuad;
     f32 SpotInner, SpotOuter;

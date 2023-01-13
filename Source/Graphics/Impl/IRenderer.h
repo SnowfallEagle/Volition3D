@@ -12,6 +12,7 @@
 #include "Graphics/Material.h"
 #include "Graphics/Light.h"
 #include "Graphics/Polygon.h"
+#include "Graphics/Camera.h"
 
 class IRenderer
 {
@@ -78,13 +79,22 @@ public:
         NumLights = 0;
     }
 
-    void InitLight(i32 Index, const VLight& InLight)
+    void AddLight(const VLight& InLight)
     {
-        if (Index >= 0 && Index < MaxLights)
-        {
-            Lights[Index] = InLight;
-        }
+        Lights[NumLights] = InLight;
         ++NumLights;
+    }
+
+    void TransformLights(const VCamera& Camera)
+    {
+        VMatrix44 TransMat = Camera.MatCamera;
+        TransMat.C30 = TransMat.C31 = TransMat.C32 = 0.0f;
+
+        for (i32f LightIndex = 0; LightIndex < NumLights; ++LightIndex)
+        {
+            VVector4::MulMat44(Lights[LightIndex].Pos, TransMat, Lights[LightIndex].TransPos);
+            VVector4::MulMat44(Lights[LightIndex].Dir, TransMat, Lights[LightIndex].TransDir);
+        }
     }
 
     virtual void PrepareToRender()

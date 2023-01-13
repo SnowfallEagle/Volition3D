@@ -37,7 +37,7 @@ void VGame::StartUp()
         ECOB::SwapYZ
     );
 
-    Camera.Init(ECameraAttr::Euler, { 0, 75.0f, 0 }, { 0, 0, 0 }, Object.Position, 90, 100, 12000, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
+    Camera.Init(ECameraAttr::Euler, { 0, 75.0f, 0 }, { 0, 0, 0 }, Object.Position, 90, 120, 12000, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
     {
         VLight AmbientLight = {
             0,
@@ -45,7 +45,7 @@ void VGame::StartUp()
             ELightAttr::Ambient,
 
             MAP_RGBX32(0x33, 0x33, 0x33), 0, 0,
-            { 0, 0, 0, 0 }, VVector4{ 0, 0, 0, 0 }.GetNormalized(),
+            { 0, 0, 0, 0 }, { 0, 0, 0, 0}, VVector4{0, 0, 0, 0}.GetNormalized(), { 0 , 0, 0, 0 },
 
             0, 0, 0,
             0, 0,
@@ -58,7 +58,7 @@ void VGame::StartUp()
             ELightAttr::Infinite,
 
             0, MAP_RGBX32(0xCC, 0xCC, 0xAA), 0,
-            { 0, 0, 0, 0 }, VVector4{ -1.0f, -1.0f, 0, 0 }.GetNormalized(),
+            { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, VVector4{ -1.0f, -1.0f, 0, 0 }.GetNormalized(), { 0, 0, 0, 0 },
 
             0, 0, 0,
             0, 0,
@@ -71,7 +71,7 @@ void VGame::StartUp()
             ELightAttr::Point,
 
             0, MAP_RGBX32(0xFF, 0xFF, 0xFF), 0,
-            { 1000.0f, 1000.0f, 0, 0 }, VVector4{ 0, 0, 0, 0 }.GetNormalized(),
+            { 1000.0f, 1000.0f, 0, 0 }, { 0, 0, 0, 0 }, VVector4{ 0, 0, 0, 0 }.GetNormalized(), { 0, 0, 0, 0 },
 
             0, 0.0001f, 0,
             0, 0,
@@ -84,7 +84,7 @@ void VGame::StartUp()
             ELightAttr::SimpleSpotlight,
 
             0, MAP_RGBX32(0xAA, 0xAA, 0xAA), 0,
-            { 1000.0f, 1000.0f, 0.0f, 0 }, VVector4(-1.0f, -1.0f, 0.0f).GetNormalized(),
+            { 1000.0f, 1000.0f, 0.0f, 0 }, { 0, 0, 0, 0 }, VVector4(-1.0f, -1.0f, 0.0f).GetNormalized(), { 0, 0, 0, 0 },
 
             0, 0.0005f, 0,
             30.0f, 60.0f,
@@ -97,18 +97,18 @@ void VGame::StartUp()
             ELightAttr::ComplexSpotlight,
 
             0, MAP_RGBX32(0xFF, 0xFF, 0xFF), 0,
-            { 0.0f, 1000.0f, -300.0f, 0 }, VVector4(-0.5f, -1.0f, 1.0f).GetNormalized(),
+            { 0.0f, 1000.0f, -300.0f, 0 }, { 0, 0, 0, 0 }, VVector4(-0.5f, -1.0f, 1.0f).GetNormalized(), { 0, 0, 0, 0 },
 
             0, 0.0005f, 0,
             30.0f, 60.0f,
             1.0f
         };
 
-        Renderer.InitLight(0, AmbientLight);
-        Renderer.InitLight(1, InfiniteLight);
-        //Renderer.InitLight(2, PointLight);
-        Renderer.InitLight(3, ComplexSpotlight);
-        //Renderer.InitLight(0, SimpleSpotlight);
+        //Renderer.AddLight(AmbientLight);
+        //Renderer.AddLight(InfiniteLight);
+        //Renderer.AddLight(PointLight);
+        Renderer.AddLight(ComplexSpotlight);
+        //Renderer.AddLight(SimpleSpotlight);
     }
 }
 
@@ -222,6 +222,7 @@ void VGame::Render()
         }
         RenderList.TransformWorldToCamera(Camera);
         RenderList.Clip(Camera);
+        Renderer.TransformLights(Camera);
         RenderList.Light(Camera, Renderer.Lights, Renderer.MaxLights);
         RenderList.SortPolygons(ESortPolygonsMethod::Average);
         RenderList.TransformCameraToScreen(Camera);

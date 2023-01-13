@@ -327,7 +327,7 @@ public:
                     }
                     else if (Lights[LightIndex].Attr & ELightAttr::Infinite)
                     {
-                        f32 Dot = VVector4::Dot(SurfaceNormal, Lights[LightIndex].Dir);
+                        f32 Dot = VVector4::Dot(SurfaceNormal, Lights[LightIndex].TransDir);
                         if (Dot < 0)
                         {
                             // 128 used for fixed point to don't lose accuracy with integers
@@ -339,7 +339,7 @@ public:
                     }
                     else if (Lights[LightIndex].Attr & ELightAttr::Point)
                     {
-                        VVector4 Direction = Poly->TransVtx[0].Position - Lights[LightIndex].Pos;
+                        VVector4 Direction = Poly->TransVtx[0].Position - Lights[LightIndex].TransPos;
 
                         f32 Dot = VVector4::Dot(SurfaceNormal, Direction);
                         if (Dot < 0)
@@ -361,12 +361,12 @@ public:
                     }
                     else if (Lights[LightIndex].Attr & ELightAttr::SimpleSpotlight)
                     {
-                        f32 Dot = VVector4::Dot(SurfaceNormal, Lights[LightIndex].Dir);
+                        f32 Dot = VVector4::Dot(SurfaceNormal, Lights[LightIndex].TransDir);
 
                         if (Dot < 0)
                         {
                             // 128 used for fixed point to don't lose accuracy with integers
-                            f32 Distance = (Poly->TransVtx[0].Position - Lights[LightIndex].Pos).GetLengthFast();
+                            f32 Distance = (Poly->TransVtx[0].Position - Lights[LightIndex].TransPos).GetLengthFast();
                             f32 Atten =
                                 Lights[LightIndex].KConst +
                                 Lights[LightIndex].KLinear * Distance +
@@ -382,13 +382,13 @@ public:
                     }
                     else if (Lights[LightIndex].Attr & ELightAttr::ComplexSpotlight)
                     {
-                        f32 DotNormalDirection = VVector4::Dot(SurfaceNormal, Lights[LightIndex].Dir);
+                        f32 DotNormalDirection = VVector4::Dot(SurfaceNormal, Lights[LightIndex].TransDir);
 
                         if (DotNormalDirection < 0)
                         {
-                            VVector4 DistanceVector = Poly->TransVtx[0].Position - Lights[LightIndex].Pos;
+                            VVector4 DistanceVector = Poly->TransVtx[0].Position - Lights[LightIndex].TransPos;
                             f32 Distance = DistanceVector.GetLengthFast();
-                            f32 DotDistanceDirection = VVector4::Dot(DistanceVector, Lights[LightIndex].Dir) / Distance;
+                            f32 DotDistanceDirection = VVector4::Dot(DistanceVector, Lights[LightIndex].TransDir) / Distance;
 
                             if (DotDistanceDirection > 0)
                             {
@@ -473,7 +473,7 @@ public:
                     }
                     else if (Lights[LightIndex].Attr & ELightAttr::Infinite)
                     {
-                        f32 Dot = VVector4::Dot(Poly->TransVtx[0].Normal, Lights[LightIndex].Dir);
+                        f32 Dot = VVector4::Dot(Poly->TransVtx[0].Normal, Lights[LightIndex].TransDir);
                         if (Dot < 0)
                         {
                             // 128 used for fixed point to don't lose accuracy with integers
@@ -483,7 +483,7 @@ public:
                             BSum0 += (Poly->OriginalColor.B * Lights[LightIndex].CDiffuse.B * Intensity) / (256 * 128);
                         }
 
-                        Dot = VVector4::Dot(Poly->TransVtx[1].Normal, Lights[LightIndex].Dir);
+                        Dot = VVector4::Dot(Poly->TransVtx[1].Normal, Lights[LightIndex].TransDir);
                         if (Dot < 0)
                         {
                             // 128 used for fixed point to don't lose accuracy with integers
@@ -493,7 +493,7 @@ public:
                             BSum1 += (Poly->OriginalColor.B * Lights[LightIndex].CDiffuse.B * Intensity) / (256 * 128);
                         }
 
-                        Dot = VVector4::Dot(Poly->TransVtx[2].Normal, Lights[LightIndex].Dir);
+                        Dot = VVector4::Dot(Poly->TransVtx[2].Normal, Lights[LightIndex].TransDir);
                         if (Dot < 0)
                         {
                             // 128 used for fixed point to don't lose accuracy with integers
@@ -505,7 +505,7 @@ public:
                     }
                     else if (Lights[LightIndex].Attr & ELightAttr::Point)
                     {
-                        VVector4 Direction = Poly->TransVtx[0].Position - Lights[LightIndex].Pos;
+                        VVector4 Direction = Poly->TransVtx[0].Position - Lights[LightIndex].TransPos;
                         f32 Distance = Direction.GetLengthFast();
                         f32 Atten =
                             Lights[LightIndex].KConst +
@@ -553,13 +553,13 @@ public:
                     }
                     else if (Lights[LightIndex].Attr & ELightAttr::SimpleSpotlight)
                     {
-                        f32 Distance = (Poly->TransVtx[0].Position - Lights[LightIndex].Pos).GetLengthFast();
+                        f32 Distance = (Poly->TransVtx[0].Position - Lights[LightIndex].TransPos).GetLengthFast();
                         f32 Atten =
                             Lights[LightIndex].KConst +
                             Lights[LightIndex].KLinear * Distance +
                             Lights[LightIndex].KQuad * Distance * Distance;
 
-                        f32 Dot = VVector4::Dot(Poly->TransVtx[0].Normal, Lights[LightIndex].Dir);
+                        f32 Dot = VVector4::Dot(Poly->TransVtx[0].Normal, Lights[LightIndex].TransDir);
                         if (Dot < 0)
                         {
                             // 128 used for fixed point to don't lose accuracy with integers
@@ -572,7 +572,7 @@ public:
                             BSum0 += (Poly->OriginalColor.B * Lights[LightIndex].CDiffuse.B * Intensity) / (256 * 128);
                         }
 
-                        Dot = VVector4::Dot(Poly->TransVtx[1].Normal, Lights[LightIndex].Dir);
+                        Dot = VVector4::Dot(Poly->TransVtx[1].Normal, Lights[LightIndex].TransDir);
                         if (Dot < 0)
                         {
                             // 128 used for fixed point to don't lose accuracy with integers
@@ -585,7 +585,7 @@ public:
                             BSum1 += (Poly->OriginalColor.B * Lights[LightIndex].CDiffuse.B * Intensity) / (256 * 128);
                         }
 
-                        Dot = VVector4::Dot(Poly->TransVtx[2].Normal, Lights[LightIndex].Dir);
+                        Dot = VVector4::Dot(Poly->TransVtx[2].Normal, Lights[LightIndex].TransDir);
                         if (Dot < 0)
                         {
                             // 128 used for fixed point to don't lose accuracy with integers
@@ -600,12 +600,12 @@ public:
                     }
                     else if (Lights[LightIndex].Attr & ELightAttr::ComplexSpotlight)
                     {
-                        f32 DotNormalDirection = VVector4::Dot(Poly->TransVtx[0].Normal, Lights[LightIndex].Dir);
+                        f32 DotNormalDirection = VVector4::Dot(Poly->TransVtx[0].Normal, Lights[LightIndex].TransDir);
                         if (DotNormalDirection < 0)
                         {
-                            VVector4 DistanceVector = Poly->TransVtx[0].Position - Lights[LightIndex].Pos;
+                            VVector4 DistanceVector = Poly->TransVtx[0].Position - Lights[LightIndex].TransPos;
                             f32 Distance = DistanceVector.GetLengthFast();
-                            f32 DotDistanceDirection = VVector4::Dot(DistanceVector, Lights[LightIndex].Dir) / Distance;
+                            f32 DotDistanceDirection = VVector4::Dot(DistanceVector, Lights[LightIndex].TransDir) / Distance;
 
                             if (DotDistanceDirection > 0)
                             {
@@ -633,12 +633,12 @@ public:
                             }
                         }
 
-                        DotNormalDirection = VVector4::Dot(Poly->TransVtx[1].Normal, Lights[LightIndex].Dir);
+                        DotNormalDirection = VVector4::Dot(Poly->TransVtx[1].Normal, Lights[LightIndex].TransDir);
                         if (DotNormalDirection < 0)
                         {
-                            VVector4 DistanceVector = Poly->TransVtx[1].Position - Lights[LightIndex].Pos;
+                            VVector4 DistanceVector = Poly->TransVtx[1].Position - Lights[LightIndex].TransPos;
                             f32 Distance = DistanceVector.GetLengthFast();
-                            f32 DotDistanceDirection = VVector4::Dot(DistanceVector, Lights[LightIndex].Dir) / Distance;
+                            f32 DotDistanceDirection = VVector4::Dot(DistanceVector, Lights[LightIndex].TransDir) / Distance;
 
                             if (DotDistanceDirection > 0)
                             {
@@ -666,12 +666,12 @@ public:
                             }
                         }
 
-                        DotNormalDirection = VVector4::Dot(Poly->TransVtx[2].Normal, Lights[LightIndex].Dir);
+                        DotNormalDirection = VVector4::Dot(Poly->TransVtx[2].Normal, Lights[LightIndex].TransDir);
                         if (DotNormalDirection < 0)
                         {
-                            VVector4 DistanceVector = Poly->TransVtx[2].Position - Lights[LightIndex].Pos;
+                            VVector4 DistanceVector = Poly->TransVtx[2].Position - Lights[LightIndex].TransPos;
                             f32 Distance = DistanceVector.GetLengthFast();
-                            f32 DotDistanceDirection = VVector4::Dot(DistanceVector, Lights[LightIndex].Dir) / Distance;
+                            f32 DotDistanceDirection = VVector4::Dot(DistanceVector, Lights[LightIndex].TransDir) / Distance;
 
                             if (DotDistanceDirection > 0)
                             {
