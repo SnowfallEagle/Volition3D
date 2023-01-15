@@ -2405,16 +2405,23 @@ void IRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
     i32 UVtx1 = (i32)Poly.TransVtx[V1].U, VVtx1 = (i32)Poly.TransVtx[V1].V;
     i32 UVtx2 = (i32)Poly.TransVtx[V2].U, VVtx2 = (i32)Poly.TransVtx[V2].V;
 
+    i32 ZVtx0 = (i32)(Poly.TransVtx[V0].Z + 0.5f);
+    i32 ZVtx1 = (i32)(Poly.TransVtx[V1].Z + 0.5f);
+    i32 ZVtx2 = (i32)(Poly.TransVtx[V2].Z + 0.5f);
+
     // Fixed coords, color channels for rasterization
     fx16 XLeft, VLeft, ULeft;
     fx16 XRight, VRight, URight;
+    fx16 ZLeft, ZRight;
 
     // Coords, colors fixed deltas by Y
     fx16 XDeltaLeftByY;
     fx16 UDeltaLeftByY, VDeltaLeftByY;
+    fx16 ZDeltaLeftByY;
 
     fx16 XDeltaRightByY;
     fx16 UDeltaRightByY, VDeltaRightByY;
+    fx16 ZDeltaRightByY;
 
     // Extract base color
     u32 RBase = Poly.LitColor[0].R;
@@ -2425,6 +2432,9 @@ void IRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
     u32* TextureBuffer;
     i32 TexturePitch;
     Poly.Texture->Lock(TextureBuffer, TexturePitch);
+
+    // Extract z-buffer
+    fx16* ZBufferArray;
 
     if (TriangleCase == ETriangleCase::Top ||
         TriangleCase == ETriangleCase::Bottom)
@@ -2437,10 +2447,12 @@ void IRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
             XDeltaLeftByY = IntToFx16(X2 - X0) / YDiff;
             UDeltaLeftByY = IntToFx16(UVtx2 - UVtx0) / YDiff;
             VDeltaLeftByY = IntToFx16(VVtx2 - VVtx0) / YDiff;
+            ZDeltaLeftByY = IntToFx16(ZVtx2 - ZVtx0) / YDiff;
 
             XDeltaRightByY = IntToFx16(X2 - X1) / YDiff;
             UDeltaRightByY = IntToFx16(UVtx2 - UVtx1) / YDiff;
             VDeltaRightByY = IntToFx16(VVtx2 - VVtx1) / YDiff;
+            ZDeltaRightByY = IntToFx16(ZVtx2 - ZVtx1) / YDiff;
 
             // Clipping Y
             if (Y0 < MinClip.Y)
@@ -2451,10 +2463,12 @@ void IRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
                 XLeft = IntToFx16(X0) + YDiff * XDeltaLeftByY;
                 ULeft = IntToFx16(UVtx0) + YDiff * UDeltaLeftByY;
                 VLeft = IntToFx16(VVtx0) + YDiff * VDeltaLeftByY;
+                ZLeft = IntToFx16(ZVtx0) + YDiff * ZDeltaLeftByY;
 
                 XRight = IntToFx16(X1) + YDiff * XDeltaRightByY;
                 URight = IntToFx16(UVtx1) + YDiff * UDeltaRightByY;
                 VRight = IntToFx16(VVtx1) + YDiff * VDeltaRightByY;
+                ZRight = IntToFx16(ZVtx1) + YDiff * ZDeltaRightByY;
             }
             else
             {
@@ -2463,10 +2477,12 @@ void IRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
                 XLeft = IntToFx16(X0);
                 ULeft = IntToFx16(UVtx0);
                 VLeft = IntToFx16(VVtx0);
+                ZLeft = IntToFx16(ZVtx0);
 
                 XRight = IntToFx16(X1);
                 URight = IntToFx16(UVtx1);
                 VRight = IntToFx16(VVtx1);
+                ZRight = IntToFx16(ZVtx1);
             }
         }
         else // Bottom case
@@ -2475,10 +2491,12 @@ void IRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
             XDeltaLeftByY = IntToFx16(X1 - X0) / YDiff;
             UDeltaLeftByY = IntToFx16(UVtx1 - UVtx0) / YDiff;
             VDeltaLeftByY = IntToFx16(VVtx1 - VVtx0) / YDiff;
+            ZDeltaLeftByY = IntToFx16(ZVtx1 - ZVtx0) / YDiff;
 
             XDeltaRightByY = IntToFx16(X2 - X0) / YDiff;
             UDeltaRightByY = IntToFx16(UVtx2 - UVtx0) / YDiff;
             VDeltaRightByY = IntToFx16(VVtx2 - VVtx0) / YDiff;
+            ZDeltaRightByY = IntToFx16(ZVtx2 - ZVtx0) / YDiff;
 
             // Clipping Y
             if (Y0 < MinClip.Y)
@@ -2489,10 +2507,12 @@ void IRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
                 XLeft = IntToFx16(X0) + YDiff * XDeltaLeftByY;
                 ULeft = IntToFx16(UVtx0) + YDiff * UDeltaLeftByY;
                 VLeft = IntToFx16(VVtx0) + YDiff * VDeltaLeftByY;
+                ZLeft = IntToFx16(ZVtx0) + YDiff * ZDeltaLeftByY;
 
                 XRight = IntToFx16(X0) + YDiff * XDeltaRightByY;
                 URight = IntToFx16(UVtx0) + YDiff * UDeltaRightByY;
                 VRight = IntToFx16(VVtx0) + YDiff * VDeltaRightByY;
+                ZRight = IntToFx16(ZVtx0) + YDiff * ZDeltaRightByY;
             }
             else
             {
@@ -2501,10 +2521,12 @@ void IRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
                 XLeft = IntToFx16(X0);
                 ULeft = IntToFx16(UVtx0);
                 VLeft = IntToFx16(VVtx0);
+                ZLeft = IntToFx16(ZVtx0);
 
                 XRight = IntToFx16(X0);
                 URight = IntToFx16(UVtx0);
                 VRight = IntToFx16(VVtx0);
+                ZRight = IntToFx16(ZVtx0);
             }
         }
 
@@ -2524,6 +2546,7 @@ void IRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
         {
             // Align buffer pointer
             Buffer += Pitch * YStart;
+            ZBufferArray = (fx16*)ZBuffer.Buffer + (ZBuffer.Pitch * YStart);
 
             // Proccess each Y
             for (i32f Y = YStart; Y <= YEnd; ++Y)
@@ -2534,21 +2557,25 @@ void IRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
 
                 fx16 U = ULeft;
                 fx16 V = VLeft;
+                fx16 Z = ZLeft;
 
                 // Compute deltas for X interpolation
                 i32f XDiff = XEnd - XStart;
 
                 fx16 UDeltaByX;
                 fx16 VDeltaByX;
+                fx16 ZDeltaByX;
                 if (XDiff > 0)
                 {
                     UDeltaByX = (URight - ULeft) / XDiff;
                     VDeltaByX = (VRight - VLeft) / XDiff;
+                    ZDeltaByX = (ZRight - ZLeft) / XDiff;
                 }
                 else
                 {
                     UDeltaByX = (URight - ULeft);
                     VDeltaByX = (VRight - VLeft);
+                    ZDeltaByX = (ZRight - ZLeft);
                 }
 
                 // X clipping
@@ -2559,6 +2586,7 @@ void IRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
 
                     U += XDiff * UDeltaByX;
                     V += XDiff * VDeltaByX;
+                    Z += XDiff * ZDeltaByX;
                 }
                 if (XEnd > MaxClip.X)
                 {
@@ -2568,34 +2596,43 @@ void IRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
                 // Proccess each X
                 for (i32f X = XStart; X <= XEnd; ++X)
                 {
-                    VColorARGB Pixel = TextureBuffer[Fx16ToIntRounded(V) * TexturePitch + Fx16ToIntRounded(U)];
-                    Pixel.R = (Pixel.R * RBase) >> 8;
-                    Pixel.G = (Pixel.G * GBase) >> 8;
-                    Pixel.B = (Pixel.B * BBase) >> 8;
+                    if (Z < ZBufferArray[X])
+                    {
+                        VColorARGB Pixel = TextureBuffer[Fx16ToIntRounded(V) * TexturePitch + Fx16ToIntRounded(U)];
+                        Pixel.R = (Pixel.R * RBase) >> 8;
+                        Pixel.G = (Pixel.G * GBase) >> 8;
+                        Pixel.B = (Pixel.B * BBase) >> 8;
+                        Buffer[X] = (u32)Pixel;
 
-                    Buffer[X] = (u32)Pixel;
+                        ZBufferArray[X] = Z;
+                    }
 
                     // Update X values
                     U += UDeltaByX;
                     V += VDeltaByX;
+                    Z += ZDeltaByX;
                 }
 
                 // Update Y values
                 XLeft += XDeltaLeftByY;
                 ULeft += UDeltaLeftByY;
                 VLeft += VDeltaLeftByY;
+                ZLeft += ZDeltaLeftByY;
 
                 XRight += XDeltaRightByY;
                 URight += UDeltaRightByY;
                 VRight += VDeltaRightByY;
+                ZRight += ZDeltaRightByY;
 
                 Buffer += Pitch;
+                ZBufferArray += ZBuffer.Pitch;
             }
         }
         else // Non-clipped version
         {
             // Align buffer pointer
             Buffer += Pitch * YStart;
+            ZBufferArray = (fx16*)ZBuffer.Buffer + (ZBuffer.Pitch * YStart);
 
             // Proccess each Y
             for (i32f Y = YStart; Y <= YEnd; ++Y)
@@ -2606,48 +2643,60 @@ void IRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
 
                 fx16 U = ULeft;
                 fx16 V = VLeft;
+                fx16 Z = ZLeft;
 
                 // Compute deltas for X interpolation
                 i32f XDiff = XEnd - XStart;
 
                 fx16 UDeltaByX;
                 fx16 VDeltaByX;
+                fx16 ZDeltaByX;
                 if (XDiff > 0)
                 {
                     UDeltaByX = (URight - ULeft) / XDiff;
                     VDeltaByX = (VRight - VLeft) / XDiff;
+                    ZDeltaByX = (ZRight - ZLeft) / XDiff;
                 }
                 else
                 {
                     UDeltaByX = (URight - ULeft);
                     VDeltaByX = (VRight - VLeft);
+                    ZDeltaByX = (ZRight - ZLeft);
                 }
 
                 // Proccess each X
                 for (i32f X = XStart; X <= XEnd; ++X)
                 {
-                    VColorARGB Pixel = TextureBuffer[Fx16ToIntRounded(V) * TexturePitch + Fx16ToIntRounded(U)];
-                    Pixel.R = (Pixel.R * RBase) >> 8;
-                    Pixel.G = (Pixel.G * GBase) >> 8;
-                    Pixel.B = (Pixel.B * BBase) >> 8;
+                    if (Z < ZBufferArray[X])
+                    {
+                        VColorARGB Pixel = TextureBuffer[Fx16ToIntRounded(V) * TexturePitch + Fx16ToIntRounded(U)];
+                        Pixel.R = (Pixel.R * RBase) >> 8;
+                        Pixel.G = (Pixel.G * GBase) >> 8;
+                        Pixel.B = (Pixel.B * BBase) >> 8;
+                        Buffer[X] = (u32)Pixel;
 
-                    Buffer[X] = (u32)Pixel;
+                        ZBufferArray[X] = Z;
+                    }
 
                     // Update X values
                     U += UDeltaByX;
                     V += VDeltaByX;
+                    Z += ZDeltaByX;
                 }
 
                 // Update Y values
                 XLeft += XDeltaLeftByY;
                 ULeft += UDeltaLeftByY;
                 VLeft += VDeltaLeftByY;
+                ZLeft += ZDeltaLeftByY;
 
                 XRight += XDeltaRightByY;
                 URight += UDeltaRightByY;
                 VRight += VDeltaRightByY;
+                ZRight += ZDeltaRightByY;
 
                 Buffer += Pitch;
+                ZBufferArray += ZBuffer.Pitch;
             }
         }
     }
@@ -2674,22 +2723,26 @@ void IRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
             XDeltaLeftByY = IntToFx16(X2 - X1) / YDiffLeft;
             UDeltaLeftByY = IntToFx16(UVtx2 - UVtx1) / YDiffLeft;
             VDeltaLeftByY = IntToFx16(VVtx2 - VVtx1) / YDiffLeft;
+            ZDeltaLeftByY = IntToFx16(ZVtx2 - ZVtx1) / YDiffLeft;
 
             i32 YDiffRight = (Y2 - Y0);
             XDeltaRightByY = IntToFx16(X2 - X0) / YDiffRight;
             UDeltaRightByY = IntToFx16(UVtx2 - UVtx0) / YDiffRight;
             VDeltaRightByY = IntToFx16(VVtx2 - VVtx0) / YDiffRight;
+            ZDeltaRightByY = IntToFx16(ZVtx2 - ZVtx0) / YDiffRight;
 
             // Do clipping
             YDiffLeft = (MinClip.Y - Y1);
             XLeft = IntToFx16(X1) + YDiffLeft * XDeltaLeftByY;
             ULeft = IntToFx16(UVtx1) + YDiffLeft * UDeltaLeftByY;
             VLeft = IntToFx16(VVtx1) + YDiffLeft * VDeltaLeftByY;
+            ZLeft = IntToFx16(ZVtx1) + YDiffLeft * ZDeltaLeftByY;
 
             YDiffRight = (MinClip.Y - Y0);
             XRight = IntToFx16(X0) + YDiffRight * XDeltaRightByY;
             URight = IntToFx16(UVtx0) + YDiffRight * UDeltaRightByY;
             VRight = IntToFx16(VVtx0) + YDiffRight * VDeltaRightByY;
+            ZRight = IntToFx16(ZVtx0) + YDiffRight * ZDeltaRightByY;
 
             YStart = MinClip.Y;
 
@@ -2703,15 +2756,18 @@ void IRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
                 SWAP(XDeltaLeftByY, XDeltaRightByY, TempInt);
                 SWAP(UDeltaLeftByY, UDeltaRightByY, TempInt);
                 SWAP(VDeltaLeftByY, VDeltaRightByY, TempInt);
+                SWAP(ZDeltaLeftByY, ZDeltaRightByY, TempInt);
 
                 SWAP(XLeft, XRight, TempInt);
                 SWAP(ULeft, URight, TempInt);
                 SWAP(VLeft, VRight, TempInt);
+                SWAP(ZLeft, ZRight, TempInt);
 
                 SWAP(X1, X2, TempInt);
                 SWAP(Y1, Y2, TempInt);
                 SWAP(UVtx1, UVtx2, TempInt);
                 SWAP(VVtx1, VVtx2, TempInt);
+                SWAP(ZVtx1, ZVtx2, TempInt);
 
                 bRestartInterpolationAtLeftHand = false; // Restart at right hand side
             }
@@ -2722,20 +2778,24 @@ void IRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
             XDeltaLeftByY = IntToFx16(X1 - X0) / YDiffLeft;
             UDeltaLeftByY = IntToFx16(UVtx1 - UVtx0) / YDiffLeft;
             VDeltaLeftByY = IntToFx16(VVtx1 - VVtx0) / YDiffLeft;
+            ZDeltaLeftByY = IntToFx16(ZVtx1 - ZVtx0) / YDiffLeft;
 
             i32 YDiffRight = (Y2 - Y0);
             XDeltaRightByY = IntToFx16(X2 - X0) / YDiffRight;
             UDeltaRightByY = IntToFx16(UVtx2 - UVtx0) / YDiffRight;
             VDeltaRightByY = IntToFx16(VVtx2 - VVtx0) / YDiffRight;
+            ZDeltaRightByY = IntToFx16(ZVtx2 - ZVtx0) / YDiffRight;
 
             i32 YDiff = (MinClip.Y - Y0);
             XLeft = IntToFx16(X0) + YDiff * XDeltaLeftByY;
             ULeft = IntToFx16(UVtx0) + YDiff * UDeltaLeftByY;
             VLeft = IntToFx16(VVtx0) + YDiff * VDeltaLeftByY;
+            ZLeft = IntToFx16(ZVtx0) + YDiff * ZDeltaLeftByY;
 
             XRight = IntToFx16(X0) + YDiff * XDeltaRightByY;
             URight = IntToFx16(UVtx0) + YDiff * UDeltaRightByY;
             VRight = IntToFx16(VVtx0) + YDiff * VDeltaRightByY;
+            ZRight = IntToFx16(ZVtx0) + YDiff * ZDeltaRightByY;
 
             YStart = MinClip.Y;
 
@@ -2750,15 +2810,18 @@ void IRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
                 SWAP(XDeltaLeftByY, XDeltaRightByY, TempInt);
                 SWAP(UDeltaLeftByY, UDeltaRightByY, TempInt);
                 SWAP(VDeltaLeftByY, VDeltaRightByY, TempInt);
+                SWAP(ZDeltaLeftByY, ZDeltaRightByY, TempInt);
 
                 SWAP(XLeft, XRight, TempInt);
                 SWAP(ULeft, URight, TempInt);
                 SWAP(VLeft, VRight, TempInt);
+                SWAP(ZLeft, ZRight, TempInt);
 
                 SWAP(X1, X2, TempInt);
                 SWAP(Y1, Y2, TempInt);
                 SWAP(UVtx1, UVtx2, TempInt);
                 SWAP(VVtx1, VVtx2, TempInt);
+                SWAP(ZVtx1, ZVtx2, TempInt);
 
                 bRestartInterpolationAtLeftHand = false; // Restart at right hand side
             }
@@ -2769,15 +2832,18 @@ void IRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
             XDeltaLeftByY = IntToFx16(X1 - X0) / YDiffLeft;
             UDeltaLeftByY = IntToFx16(UVtx1 - UVtx0) / YDiffLeft;
             VDeltaLeftByY = IntToFx16(VVtx1 - VVtx0) / YDiffLeft;
+            ZDeltaLeftByY = IntToFx16(ZVtx1 - ZVtx0) / YDiffLeft;
 
             i32 YDiffRight = (Y2 - Y0);
             XDeltaRightByY = IntToFx16(X2 - X0) / YDiffRight;
             UDeltaRightByY = IntToFx16(UVtx2 - UVtx0) / YDiffRight;
             VDeltaRightByY = IntToFx16(VVtx2 - VVtx0) / YDiffRight;
+            ZDeltaRightByY = IntToFx16(ZVtx2 - ZVtx0) / YDiffRight;
 
             XRight = XLeft = IntToFx16(X0);
             URight = ULeft = IntToFx16(UVtx0);
             VRight = VLeft = IntToFx16(VVtx0);
+            ZRight = ZLeft = IntToFx16(ZVtx0);
 
             YStart = Y0;
 
@@ -2792,15 +2858,18 @@ void IRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
                 SWAP(XDeltaLeftByY, XDeltaRightByY, TempInt);
                 SWAP(UDeltaLeftByY, UDeltaRightByY, TempInt);
                 SWAP(VDeltaLeftByY, VDeltaRightByY, TempInt);
+                SWAP(ZDeltaLeftByY, ZDeltaRightByY, TempInt);
 
                 SWAP(XLeft, XRight, TempInt);
                 SWAP(ULeft, URight, TempInt);
                 SWAP(VLeft, VRight, TempInt);
+                SWAP(ZLeft, ZRight, TempInt);
 
                 SWAP(X1, X2, TempInt);
                 SWAP(Y1, Y2, TempInt);
                 SWAP(UVtx1, UVtx2, TempInt);
                 SWAP(VVtx1, VVtx2, TempInt);
+                SWAP(ZVtx1, ZVtx2, TempInt);
 
                 bRestartInterpolationAtLeftHand = false; // Restart at right hand side
             }
@@ -2812,6 +2881,7 @@ void IRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
         {
             // Align video buffer
             Buffer += Pitch * YStart;
+            ZBufferArray = (fx16*)ZBuffer.Buffer + (ZBuffer.Pitch * YStart);
 
             // Proccess each Y
             for (i32f Y = YStart; Y <= YEnd; ++Y)
@@ -2822,21 +2892,25 @@ void IRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
 
                 fx16 U = ULeft;
                 fx16 V = VLeft;
+                fx16 Z = ZLeft;
 
                 // Compute interpolants
                 fx16 UDeltaByX;
                 fx16 VDeltaByX;
+                fx16 ZDeltaByX;
 
                 i32 XDiff = XEnd - XStart;
                 if (XDiff > 0)
                 {
                     UDeltaByX = (URight - ULeft) / XDiff;
                     VDeltaByX = (VRight - VLeft) / XDiff;
+                    ZDeltaByX = (ZRight - ZLeft) / XDiff;
                 }
                 else
                 {
                     UDeltaByX = (URight - ULeft);
                     VDeltaByX = (VRight - VLeft);
+                    ZDeltaByX = (ZRight - ZLeft);
                 }
 
                 // Test if we need clipping
@@ -2847,6 +2921,7 @@ void IRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
 
                     U += UDeltaByX * XDiff;
                     V += VDeltaByX * XDiff;
+                    Z += ZDeltaByX * XDiff;
                 }
                 if (XEnd > MaxClip.X)
                 {
@@ -2856,27 +2931,35 @@ void IRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
                 // Proccess each X
                 for (i32f X = XStart; X <= XEnd; ++X)
                 {
-                    VColorARGB Pixel = TextureBuffer[Fx16ToIntRounded(V) * TexturePitch + Fx16ToIntRounded(U)];
-                    Pixel.R = (Pixel.R * RBase) >> 8;
-                    Pixel.G = (Pixel.G * GBase) >> 8;
-                    Pixel.B = (Pixel.B * BBase) >> 8;
+                    if (Z < ZBufferArray[X])
+                    {
+                        VColorARGB Pixel = TextureBuffer[Fx16ToIntRounded(V) * TexturePitch + Fx16ToIntRounded(U)];
+                        Pixel.R = (Pixel.R * RBase) >> 8;
+                        Pixel.G = (Pixel.G * GBase) >> 8;
+                        Pixel.B = (Pixel.B * BBase) >> 8;
+                        Buffer[X] = (u32)Pixel;
 
-                    Buffer[X] = (u32)Pixel;
+                        ZBufferArray[X] = Z;
+                    }
 
                     U += UDeltaByX;
                     V += VDeltaByX;
+                    Z += ZDeltaByX;
                 }
 
                 // Update values those change along Y
                 XLeft += XDeltaLeftByY;
                 ULeft += UDeltaLeftByY;
                 VLeft += VDeltaLeftByY;
+                ZLeft += ZDeltaLeftByY;
 
                 XRight += XDeltaRightByY;
                 URight += UDeltaRightByY;
                 VRight += VDeltaRightByY;
+                ZRight += ZDeltaRightByY;
 
                 Buffer += Pitch;
+                ZBufferArray += ZBuffer.Pitch;
 
                 // Test for changing interpolant
                 if (Y == YRestartInterpolation)
@@ -2889,15 +2972,18 @@ void IRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
                         XDeltaLeftByY = IntToFx16(X2 - X1) / YDiff;
                         UDeltaLeftByY = IntToFx16(UVtx2 - UVtx1) / YDiff;
                         VDeltaLeftByY = IntToFx16(VVtx2 - VVtx1) / YDiff;
+                        ZDeltaLeftByY = IntToFx16(ZVtx2 - ZVtx1) / YDiff;
 
                         XLeft = IntToFx16(X1);
                         ULeft = IntToFx16(UVtx1);
                         VLeft = IntToFx16(VVtx1);
+                        ZLeft = IntToFx16(ZVtx1);
 
                         // Align down on 1 Y
                         XLeft += XDeltaLeftByY;
                         ULeft += UDeltaLeftByY;
                         VLeft += VDeltaLeftByY;
+                        ZLeft += ZDeltaLeftByY;
                     }
                     else
                     {
@@ -2907,15 +2993,18 @@ void IRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
                         XDeltaRightByY = IntToFx16(X1 - X2) / YDiff;
                         UDeltaRightByY = IntToFx16(UVtx1 - UVtx2) / YDiff;
                         VDeltaRightByY = IntToFx16(VVtx1 - VVtx2) / YDiff;
+                        ZDeltaRightByY = IntToFx16(ZVtx1 - ZVtx2) / YDiff;
 
                         XRight = IntToFx16(X2);
                         URight = IntToFx16(UVtx2);
                         VRight = IntToFx16(VVtx2);
+                        ZRight = IntToFx16(ZVtx2);
 
                         // Align down on 1 Y
                         XRight += XDeltaRightByY;
                         URight += UDeltaRightByY;
                         VRight += VDeltaRightByY;
+                        ZRight += ZDeltaRightByY;
                     }
                 }
             }
@@ -2924,6 +3013,7 @@ void IRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
         {
             // Align video buffer
             Buffer += Pitch * YStart;
+            ZBufferArray = (fx16*)ZBuffer.Buffer + (ZBuffer.Pitch * YStart);
 
             // Proccess each Y
             for (i32f Y = YStart; Y <= YEnd; ++Y)
@@ -2934,47 +3024,59 @@ void IRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
 
                 fx16 U = ULeft;
                 fx16 V = VLeft;
+                fx16 Z = ZLeft;
 
                 // Compute interpolants
                 fx16 UDeltaByX;
                 fx16 VDeltaByX;
+                fx16 ZDeltaByX;
 
                 i32 XDiff = XEnd - XStart;
                 if (XDiff > 0)
                 {
                     UDeltaByX = (URight - ULeft) / XDiff;
                     VDeltaByX = (VRight - VLeft) / XDiff;
+                    ZDeltaByX = (ZRight - ZLeft) / XDiff;
                 }
                 else
                 {
                     UDeltaByX = (URight - ULeft);
                     VDeltaByX = (VRight - VLeft);
+                    ZDeltaByX = (ZRight - ZLeft);
                 }
 
                 // Proccess each X
                 for (i32f X = XStart; X <= XEnd; ++X)
                 {
-                    VColorARGB Pixel = TextureBuffer[Fx16ToIntRounded(V) * TexturePitch + Fx16ToIntRounded(U)];
-                    Pixel.R = (Pixel.R * RBase) >> 8;
-                    Pixel.G = (Pixel.G * GBase) >> 8;
-                    Pixel.B = (Pixel.B * BBase) >> 8;
+                    if (Z < ZBufferArray[X])
+                    {
+                        VColorARGB Pixel = TextureBuffer[Fx16ToIntRounded(V) * TexturePitch + Fx16ToIntRounded(U)];
+                        Pixel.R = (Pixel.R * RBase) >> 8;
+                        Pixel.G = (Pixel.G * GBase) >> 8;
+                        Pixel.B = (Pixel.B * BBase) >> 8;
+                        Buffer[X] = (u32)Pixel;
 
-                    Buffer[X] = (u32)Pixel;
+                        ZBufferArray[X] = Z;
+                    }
 
                     U += UDeltaByX;
                     V += VDeltaByX;
+                    Z += ZDeltaByX;
                 }
 
                 // Update values those change along Y
                 XLeft += XDeltaLeftByY;
                 ULeft += UDeltaLeftByY;
                 VLeft += VDeltaLeftByY;
+                ZLeft += ZDeltaLeftByY;
 
                 XRight += XDeltaRightByY;
                 URight += UDeltaRightByY;
                 VRight += VDeltaRightByY;
+                ZRight += ZDeltaRightByY;
 
                 Buffer += Pitch;
+                ZBufferArray += ZBuffer.Pitch;
 
                 // Test for changing interpolant
                 if (Y == YRestartInterpolation)
@@ -2987,15 +3089,18 @@ void IRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
                         XDeltaLeftByY = IntToFx16(X2 - X1) / YDiff;
                         UDeltaLeftByY = IntToFx16(UVtx2 - UVtx1) / YDiff;
                         VDeltaLeftByY = IntToFx16(VVtx2 - VVtx1) / YDiff;
+                        ZDeltaLeftByY = IntToFx16(ZVtx2 - ZVtx1) / YDiff;
 
                         XLeft = IntToFx16(X1);
                         ULeft = IntToFx16(UVtx1);
                         VLeft = IntToFx16(VVtx1);
+                        ZLeft = IntToFx16(ZVtx1);
 
                         // Align down on 1 Y
                         XLeft += XDeltaLeftByY;
                         ULeft += UDeltaLeftByY;
                         VLeft += VDeltaLeftByY;
+                        ZLeft += ZDeltaLeftByY;
                     }
                     else
                     {
@@ -3005,15 +3110,18 @@ void IRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
                         XDeltaRightByY = IntToFx16(X1 - X2) / YDiff;
                         UDeltaRightByY = IntToFx16(UVtx1 - UVtx2) / YDiff;
                         VDeltaRightByY = IntToFx16(VVtx1 - VVtx2) / YDiff;
+                        ZDeltaRightByY = IntToFx16(ZVtx1 - ZVtx2) / YDiff;
 
                         XRight = IntToFx16(X2);
                         URight = IntToFx16(UVtx2);
                         VRight = IntToFx16(VVtx2);
+                        ZRight = IntToFx16(ZVtx2);
 
                         // Align down on 1 Y
                         XRight += XDeltaRightByY;
                         URight += UDeltaRightByY;
                         VRight += VDeltaRightByY;
+                        ZRight += ZDeltaRightByY;
                     }
                 }
             }
