@@ -30,7 +30,7 @@ DEFINE_LOG_CHANNEL(hLogGame, "Game");
 void VGame::StartUp()
 {
     Object.LoadCOB(
-        "s.cob",
+        "hammer03.cob",
         { 0.0f, 0.0f, 250.0f },
         { 100.0f, 100.0f, 100.0f },
         { 0.0f, 0.0f, 0.0f },

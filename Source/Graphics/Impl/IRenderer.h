@@ -138,10 +138,13 @@ public:
     void DrawBottomTriangleInt(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, i32 X3, i32 Y3, u32 Color) const;
     void DrawTriangleInt(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, i32 X3, i32 Y3, u32 Color) const;
 
-    // For Emissive and Flat shade modes
-    void DrawTriangle(u32* Buffer, i32 Pitch, f32 X1, f32 Y1, f32 X2, f32 Y2, f32 X3, f32 Y3, u32 Color) const;
-    void DrawTopTriangle(u32* Buffer, i32 Pitch, f32 X1, f32 Y1, f32 X2, f32 Y2, f32 X3, f32 Y3, u32 Color) const;
-    void DrawBottomTriangle(u32* Buffer, i32 Pitch, f32 X1, f32 Y1, f32 X2, f32 Y2, f32 X3, f32 Y3, u32 Color) const;
+    // Flat emissive shade mode without z-buffer
+    void DrawTriangleFloat(u32* Buffer, i32 Pitch, f32 X1, f32 Y1, f32 X2, f32 Y2, f32 X3, f32 Y3, u32 Color) const;
+    void DrawTopTriangleFloat(u32* Buffer, i32 Pitch, f32 X1, f32 Y1, f32 X2, f32 Y2, f32 X3, f32 Y3, u32 Color) const;
+    void DrawBottomTriangleFloat(u32* Buffer, i32 Pitch, f32 X1, f32 Y1, f32 X2, f32 Y2, f32 X3, f32 Y3, u32 Color) const;
+
+    // For emissive and flat shade mode
+    void DrawFlatTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) const;
 
     // For Gouraud shade mode
     void DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) const;

@@ -1334,13 +1334,7 @@ public:
             }
             else
             {
-                Renderer.DrawTriangle(
-                    Buffer, Pitch,
-                    Poly->TransVtx[0].X, Poly->TransVtx[0].Y,
-                    Poly->TransVtx[1].X, Poly->TransVtx[1].Y,
-                    Poly->TransVtx[2].X, Poly->TransVtx[2].Y,
-                    Poly->LitColor[0]
-                );
+                Renderer.DrawFlatTriangle(Buffer, Pitch, *Poly);
             }
         }
     }
