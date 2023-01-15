@@ -13,6 +13,7 @@
 #include "Graphics/Light.h"
 #include "Graphics/Polygon.h"
 #include "Graphics/Camera.h"
+#include "Graphics/ZBuffer.h"
 
 class IRenderer
 {
@@ -38,6 +39,8 @@ public:
 
     VLight Lights[MaxLights];
     i32 NumLights;
+
+    VZBuffer ZBuffer;
 
 public:
     IRenderer()
@@ -100,6 +103,7 @@ public:
     virtual void PrepareToRender()
     {
         BackSurface.FillRectHW(nullptr, MAP_XRGB32(0x00, 0x00, 0x00));
+        ZBuffer.Clear();
     }
     virtual void RenderAndFlip()
     {

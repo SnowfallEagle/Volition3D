@@ -31,6 +31,8 @@ void VSDLRenderer::StartUp()
 
     BackSurface.Create(ScreenWidth, ScreenHeight);
 
+    ZBuffer.Create(ScreenWidth, ScreenHeight);
+
     // Initialize TTF
     i32 Res = TTF_Init();
     ASSERT(Res == 0);
@@ -56,8 +58,9 @@ void VSDLRenderer::ShutDown()
         TTF_Quit();
     }
 
-    // Destroy surfaces
+    // Destroy surfaces and z-buffer
     {
+        ZBuffer.Destroy();
         BackSurface.Destroy();
     }
 }

@@ -30,7 +30,7 @@ DEFINE_LOG_CHANNEL(hLogGame, "Game");
 void VGame::StartUp()
 {
     Object.LoadCOB(
-        "cube_flat_textured_01.cob",
+        "s.cob",
         { 0.0f, 0.0f, 250.0f },
         { 100.0f, 100.0f, 100.0f },
         { 0.0f, 0.0f, 0.0f },
@@ -161,32 +161,34 @@ void VGame::Update(f32 Delta)
         BackFaceKeyTicks = Volition.GetTicks();
     }
 
+    f32 CamPosSpeed = 0.5f * Delta;
     if (Input.IsKeyDown(EKeycode::W))
     {
-        Camera.Pos.X += Math.FastSin(Camera.Dir.Y);
-        Camera.Pos.Z += Math.FastCos(Camera.Dir.Y);
+        Camera.Pos.X += Math.FastSin(Camera.Dir.Y) * CamPosSpeed;
+        Camera.Pos.Z += Math.FastCos(Camera.Dir.Y) * CamPosSpeed;
     }
     if (Input.IsKeyDown(EKeycode::S))
     {
-        Camera.Pos.X -= Math.FastSin(Camera.Dir.Y);
-        Camera.Pos.Z -= Math.FastCos(Camera.Dir.Y);
+        Camera.Pos.X -= Math.FastSin(Camera.Dir.Y) * CamPosSpeed;
+        Camera.Pos.Z -= Math.FastCos(Camera.Dir.Y) * CamPosSpeed;
     }
 
+    f32 CamDirSpeed = 0.5f * Delta;
     if (Input.IsKeyDown(EKeycode::Left))
     {
-        Camera.Dir.Y -= 0.5f;
+        Camera.Dir.Y -= CamDirSpeed;
     }
     if (Input.IsKeyDown(EKeycode::Right))
     {
-        Camera.Dir.Y += 0.5f;
+        Camera.Dir.Y += CamDirSpeed;
     }
     if (Input.IsKeyDown(EKeycode::Up))
     {
-        Camera.Dir.X -= 0.5f;
+        Camera.Dir.X -= CamDirSpeed;
     }
     if (Input.IsKeyDown(EKeycode::Down))
     {
-        Camera.Dir.X += 0.5f;
+        Camera.Dir.X += CamDirSpeed;
     }
 
     VMatrix44 Rot = VMatrix44::Identity;
@@ -202,7 +204,6 @@ void VGame::Update(f32 Delta)
 
 void VGame::Render()
 {
-    // Prepare camera
     Camera.BuildWorldToCameraEulerMat44();
 
     // Proccess object

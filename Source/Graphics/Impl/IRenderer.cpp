@@ -908,16 +908,25 @@ void IRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
     i32 RVtx1 = Poly.LitColor[V1].R, GVtx1 = Poly.LitColor[V1].G, BVtx1 = Poly.LitColor[V1].B;
     i32 RVtx2 = Poly.LitColor[V2].R, GVtx2 = Poly.LitColor[V2].G, BVtx2 = Poly.LitColor[V2].B;
 
+    i32 ZVtx0 = (i32)(Poly.TransVtx[V0].Z + 0.5f);
+    i32 ZVtx1 = (i32)(Poly.TransVtx[V1].Z + 0.5f);
+    i32 ZVtx2 = (i32)(Poly.TransVtx[V2].Z + 0.5f);
+
     // Fixed coords, color channels for rasterization
     fx16 XLeft, RLeft, GLeft, BLeft;
     fx16 XRight, RRight, GRight, BRight;
+    fx16 ZLeft, ZRight;
 
     // Coords, colors fixed deltas by Y
     fx16 XDeltaLeftByY;
     fx16 RDeltaLeftByY, GDeltaLeftByY, BDeltaLeftByY;
+    fx16 ZDeltaLeftByY;
 
     fx16 XDeltaRightByY;
     fx16 RDeltaRightByY, GDeltaRightByY, BDeltaRightByY;
+    fx16 ZDeltaRightByY;
+
+    fx16* ZBufferArray;
 
     if (TriangleCase == ETriangleCase::Top ||
         TriangleCase == ETriangleCase::Bottom)
@@ -931,11 +940,13 @@ void IRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
             RDeltaLeftByY = IntToFx16(RVtx2 - RVtx0) / YDiff;
             GDeltaLeftByY = IntToFx16(GVtx2 - GVtx0) / YDiff;
             BDeltaLeftByY = IntToFx16(BVtx2 - BVtx0) / YDiff;
+            ZDeltaLeftByY = IntToFx16(ZVtx2 - ZVtx0) / YDiff;
 
             XDeltaRightByY = IntToFx16(X2 - X1) / YDiff;
             RDeltaRightByY = IntToFx16(RVtx2 - RVtx1) / YDiff;
             GDeltaRightByY = IntToFx16(GVtx2 - GVtx1) / YDiff;
             BDeltaRightByY = IntToFx16(BVtx2 - BVtx1) / YDiff;
+            ZDeltaRightByY = IntToFx16(ZVtx2 - ZVtx1) / YDiff;
 
             // Clipping Y
             if (Y0 < MinClip.Y)
@@ -947,11 +958,13 @@ void IRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
                 RLeft = IntToFx16(RVtx0) + YDiff * RDeltaLeftByY;
                 GLeft = IntToFx16(GVtx0) + YDiff * GDeltaLeftByY;
                 BLeft = IntToFx16(BVtx0) + YDiff * BDeltaLeftByY;
+                ZLeft = IntToFx16(ZVtx0) + YDiff * ZDeltaLeftByY;
 
                 XRight = IntToFx16(X1) + YDiff * XDeltaRightByY;
                 RRight = IntToFx16(RVtx1) + YDiff * RDeltaRightByY;
                 GRight = IntToFx16(GVtx1) + YDiff * GDeltaRightByY;
                 BRight = IntToFx16(BVtx1) + YDiff * BDeltaRightByY;
+                ZRight = IntToFx16(ZVtx1) + YDiff * ZDeltaRightByY;
             }
             else
             {
@@ -961,11 +974,13 @@ void IRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
                 RLeft = IntToFx16(RVtx0);
                 GLeft = IntToFx16(GVtx0);
                 BLeft = IntToFx16(BVtx0);
+                ZLeft = IntToFx16(ZVtx0);
 
                 XRight = IntToFx16(X1);
                 RRight = IntToFx16(RVtx1);
                 GRight = IntToFx16(GVtx1);
                 BRight = IntToFx16(BVtx1);
+                ZRight = IntToFx16(ZVtx1);
             }
         }
         else // Bottom case
@@ -975,11 +990,13 @@ void IRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
             RDeltaLeftByY = IntToFx16(RVtx1 - RVtx0) / YDiff;
             GDeltaLeftByY = IntToFx16(GVtx1 - GVtx0) / YDiff;
             BDeltaLeftByY = IntToFx16(BVtx1 - BVtx0) / YDiff;
+            ZDeltaLeftByY = IntToFx16(ZVtx1 - ZVtx0) / YDiff;
 
             XDeltaRightByY = IntToFx16(X2 - X0) / YDiff;
             RDeltaRightByY = IntToFx16(RVtx2 - RVtx0) / YDiff;
             GDeltaRightByY = IntToFx16(GVtx2 - GVtx0) / YDiff;
             BDeltaRightByY = IntToFx16(BVtx2 - BVtx0) / YDiff;
+            ZDeltaRightByY = IntToFx16(ZVtx2 - ZVtx0) / YDiff;
 
             // Clipping Y
             if (Y0 < MinClip.Y)
@@ -991,11 +1008,13 @@ void IRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
                 RLeft = IntToFx16(RVtx0) + YDiff * RDeltaLeftByY;
                 GLeft = IntToFx16(GVtx0) + YDiff * GDeltaLeftByY;
                 BLeft = IntToFx16(BVtx0) + YDiff * BDeltaLeftByY;
+                ZLeft = IntToFx16(ZVtx0) + YDiff * ZDeltaLeftByY;
 
                 XRight = IntToFx16(X0) + YDiff * XDeltaRightByY;
                 RRight = IntToFx16(RVtx0) + YDiff * RDeltaRightByY;
                 GRight = IntToFx16(GVtx0) + YDiff * GDeltaRightByY;
                 BRight = IntToFx16(BVtx0) + YDiff * BDeltaRightByY;
+                ZRight = IntToFx16(ZVtx0) + YDiff * ZDeltaRightByY;
             }
             else
             {
@@ -1005,11 +1024,13 @@ void IRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
                 RLeft = IntToFx16(RVtx0);
                 GLeft = IntToFx16(GVtx0);
                 BLeft = IntToFx16(BVtx0);
+                ZLeft = IntToFx16(ZVtx0);
 
                 XRight = IntToFx16(X0);
                 RRight = IntToFx16(RVtx0);
                 GRight = IntToFx16(GVtx0);
                 BRight = IntToFx16(BVtx0);
+                ZRight = IntToFx16(ZVtx0);
             }
         }
 
@@ -1029,6 +1050,7 @@ void IRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
         {
             // Align buffer pointer
             Buffer += Pitch * YStart;
+            ZBufferArray = (fx16*)ZBuffer.Buffer + (ZBuffer.Pitch * YStart);
 
             // Proccess each Y
             for (i32f Y = YStart; Y <= YEnd; ++Y)
@@ -1041,23 +1063,28 @@ void IRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
                 fx16 G = GLeft;
                 fx16 B = BLeft;
 
+                fx16 Z = ZLeft;
+
                 // Compute deltas for X interpolation
                 i32f XDiff = XEnd - XStart;
 
                 fx16 RDeltaByX;
                 fx16 GDeltaByX;
                 fx16 BDeltaByX;
+                fx16 ZDeltaByX;
                 if (XDiff > 0)
                 {
                     RDeltaByX = (RRight - RLeft) / XDiff;
                     GDeltaByX = (GRight - GLeft) / XDiff;
                     BDeltaByX = (BRight - BLeft) / XDiff;
+                    ZDeltaByX = (ZRight - ZLeft) / XDiff;
                 }
                 else
                 {
                     RDeltaByX = (RRight - RLeft);
                     GDeltaByX = (GRight - GLeft);
                     BDeltaByX = (BRight - BLeft);
+                    ZDeltaByX = (ZRight - ZLeft);
                 }
 
                 // X clipping
@@ -1069,6 +1096,7 @@ void IRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
                     R += XDiff * RDeltaByX;
                     G += XDiff * GDeltaByX;
                     B += XDiff * BDeltaByX;
+                    Z += XDiff * ZDeltaByX;
                 }
                 if (XEnd > MaxClip.X)
                 {
@@ -1078,16 +1106,22 @@ void IRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
                 // Proccess each X
                 for (i32f X = XStart; X <= XEnd; ++X)
                 {
-                    Buffer[X] = MAP_XRGB32(
-                        Fx16ToIntRounded(R),
-                        Fx16ToIntRounded(G),
-                        Fx16ToIntRounded(B)
-                    );
+                    if (Z < ZBufferArray[X])
+                    {
+                        Buffer[X] = MAP_XRGB32(
+                            Fx16ToIntRounded(R),
+                            Fx16ToIntRounded(G),
+                            Fx16ToIntRounded(B)
+                        );
+
+                        ZBufferArray[X] = Z;
+                    }
 
                     // Update X values
                     R += RDeltaByX;
                     G += GDeltaByX;
                     B += BDeltaByX;
+                    Z += ZDeltaByX;
                 }
 
                 // Update Y values
@@ -1095,19 +1129,23 @@ void IRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
                 RLeft += RDeltaLeftByY;
                 GLeft += GDeltaLeftByY;
                 BLeft += BDeltaLeftByY;
+                ZLeft += ZDeltaLeftByY;
 
                 XRight += XDeltaRightByY;
                 RRight += RDeltaRightByY;
                 GRight += GDeltaRightByY;
                 BRight += BDeltaRightByY;
+                ZRight += ZDeltaRightByY;
 
                 Buffer += Pitch;
+                ZBufferArray += ZBuffer.Pitch;
             }
         }
         else // Non-clipped version
         {
             // Align buffer pointer
             Buffer += Pitch * YStart;
+            ZBufferArray = (fx16*)ZBuffer.Buffer + (ZBuffer.Pitch * YStart);
 
             // Proccess each Y
             for (i32f Y = YStart; Y <= YEnd; ++Y)
@@ -1119,6 +1157,7 @@ void IRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
                 fx16 R = RLeft;
                 fx16 G = GLeft;
                 fx16 B = BLeft;
+                fx16 Z = ZLeft;
 
                 // Compute deltas for X interpolation
                 i32f XDiff = XEnd - XStart;
@@ -1126,32 +1165,41 @@ void IRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
                 fx16 RDeltaByX;
                 fx16 GDeltaByX;
                 fx16 BDeltaByX;
+                fx16 ZDeltaByX;
                 if (XDiff > 0)
                 {
                     RDeltaByX = (RRight - RLeft) / XDiff;
                     GDeltaByX = (GRight - GLeft) / XDiff;
                     BDeltaByX = (BRight - BLeft) / XDiff;
+                    ZDeltaByX = (ZRight - ZLeft) / XDiff;
                 }
                 else
                 {
                     RDeltaByX = (RRight - RLeft);
                     GDeltaByX = (GRight - GLeft);
                     BDeltaByX = (BRight - BLeft);
+                    ZDeltaByX = (ZRight - ZLeft);
                 }
 
                 // Proccess each X
                 for (i32f X = XStart; X <= XEnd; ++X)
                 {
-                    Buffer[X] = MAP_XRGB32(
-                        Fx16ToIntRounded(R),
-                        Fx16ToIntRounded(G),
-                        Fx16ToIntRounded(B)
-                    );
+                   if (Z < ZBufferArray[X])
+                    {
+                        Buffer[X] = MAP_XRGB32(
+                            Fx16ToIntRounded(R),
+                            Fx16ToIntRounded(G),
+                            Fx16ToIntRounded(B)
+                        );
+
+                        ZBufferArray[X] = Z;
+                    }
 
                     // Update X values
                     R += RDeltaByX;
                     G += GDeltaByX;
                     B += BDeltaByX;
+                    Z += ZDeltaByX;
                 }
 
                 // Update Y values
@@ -1159,13 +1207,16 @@ void IRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
                 RLeft += RDeltaLeftByY;
                 GLeft += GDeltaLeftByY;
                 BLeft += BDeltaLeftByY;
+                ZLeft += ZDeltaLeftByY;
 
                 XRight += XDeltaRightByY;
                 RRight += RDeltaRightByY;
                 GRight += GDeltaRightByY;
                 BRight += BDeltaRightByY;
+                ZRight += ZDeltaRightByY;
 
                 Buffer += Pitch;
+                ZBufferArray += ZBuffer.Pitch;
             }
         }
     }
@@ -1193,12 +1244,14 @@ void IRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
             RDeltaLeftByY = IntToFx16(RVtx2 - RVtx1) / YDiffLeft;
             GDeltaLeftByY = IntToFx16(GVtx2 - GVtx1) / YDiffLeft;
             BDeltaLeftByY = IntToFx16(BVtx2 - BVtx1) / YDiffLeft;
+            ZDeltaLeftByY = IntToFx16(ZVtx2 - ZVtx1) / YDiffLeft;
 
             i32 YDiffRight = (Y2 - Y0);
             XDeltaRightByY = IntToFx16(X2 - X0) / YDiffRight;
             RDeltaRightByY = IntToFx16(RVtx2 - RVtx0) / YDiffRight;
             GDeltaRightByY = IntToFx16(GVtx2 - GVtx0) / YDiffRight;
             BDeltaRightByY = IntToFx16(BVtx2 - BVtx0) / YDiffRight;
+            ZDeltaRightByY = IntToFx16(ZVtx2 - ZVtx0) / YDiffRight;
 
             // Do clipping
             YDiffLeft = (MinClip.Y - Y1);
@@ -1206,12 +1259,14 @@ void IRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
             RLeft = IntToFx16(RVtx1) + YDiffLeft * RDeltaLeftByY;
             GLeft = IntToFx16(GVtx1) + YDiffLeft * GDeltaLeftByY;
             BLeft = IntToFx16(BVtx1) + YDiffLeft * BDeltaLeftByY;
+            ZLeft = IntToFx16(ZVtx1) + YDiffLeft * ZDeltaLeftByY;
 
             YDiffRight = (MinClip.Y - Y0);
             XRight = IntToFx16(X0) + YDiffRight * XDeltaRightByY;
             RRight = IntToFx16(RVtx0) + YDiffRight * RDeltaRightByY;
             GRight = IntToFx16(GVtx0) + YDiffRight * GDeltaRightByY;
             BRight = IntToFx16(BVtx0) + YDiffRight * BDeltaRightByY;
+            ZRight = IntToFx16(ZVtx0) + YDiffRight * ZDeltaRightByY;
 
             YStart = MinClip.Y;
 
@@ -1226,17 +1281,20 @@ void IRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
                 SWAP(RDeltaLeftByY, RDeltaRightByY, TempInt);
                 SWAP(GDeltaLeftByY, GDeltaRightByY, TempInt);
                 SWAP(BDeltaLeftByY, BDeltaRightByY, TempInt);
+                SWAP(ZDeltaLeftByY, ZDeltaRightByY, TempInt);
 
                 SWAP(XLeft, XRight, TempInt);
                 SWAP(RLeft, RRight, TempInt);
                 SWAP(GLeft, GRight, TempInt);
                 SWAP(BLeft, BRight, TempInt);
+                SWAP(ZLeft, ZRight, TempInt);
 
                 SWAP(X1, X2, TempInt);
                 SWAP(Y1, Y2, TempInt);
                 SWAP(RVtx1, RVtx2, TempInt);
                 SWAP(GVtx1, GVtx2, TempInt);
                 SWAP(BVtx1, BVtx2, TempInt);
+                SWAP(ZVtx1, ZVtx2, TempInt);
 
                 bRestartInterpolationAtLeftHand = false; // Restart at right hand side
             }
@@ -1248,23 +1306,27 @@ void IRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
             RDeltaLeftByY = IntToFx16(RVtx1 - RVtx0) / YDiffLeft;
             GDeltaLeftByY = IntToFx16(GVtx1 - GVtx0) / YDiffLeft;
             BDeltaLeftByY = IntToFx16(BVtx1 - BVtx0) / YDiffLeft;
+            ZDeltaLeftByY = IntToFx16(ZVtx1 - ZVtx0) / YDiffLeft;
 
             i32 YDiffRight = (Y2 - Y0);
             XDeltaRightByY = IntToFx16(X2 - X0) / YDiffRight;
             RDeltaRightByY = IntToFx16(RVtx2 - RVtx0) / YDiffRight;
             GDeltaRightByY = IntToFx16(GVtx2 - GVtx0) / YDiffRight;
             BDeltaRightByY = IntToFx16(BVtx2 - BVtx0) / YDiffRight;
+            ZDeltaRightByY = IntToFx16(ZVtx2 - ZVtx0) / YDiffRight;
 
             i32 YDiff = (MinClip.Y - Y0);
             XLeft = IntToFx16(X0) + YDiff * XDeltaLeftByY;
             RLeft = IntToFx16(RVtx0) + YDiff * RDeltaLeftByY;
             GLeft = IntToFx16(GVtx0) + YDiff * GDeltaLeftByY;
             BLeft = IntToFx16(BVtx0) + YDiff * BDeltaLeftByY;
+            ZLeft = IntToFx16(ZVtx0) + YDiff * ZDeltaLeftByY;
 
             XRight = IntToFx16(X0) + YDiff * XDeltaRightByY;
             RRight = IntToFx16(RVtx0) + YDiff * RDeltaRightByY;
             GRight = IntToFx16(GVtx0) + YDiff * GDeltaRightByY;
             BRight = IntToFx16(BVtx0) + YDiff * BDeltaRightByY;
+            ZRight = IntToFx16(ZVtx0) + YDiff * ZDeltaRightByY;
 
             YStart = MinClip.Y;
 
@@ -1280,17 +1342,20 @@ void IRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
                 SWAP(RDeltaLeftByY, RDeltaRightByY, TempInt);
                 SWAP(GDeltaLeftByY, GDeltaRightByY, TempInt);
                 SWAP(BDeltaLeftByY, BDeltaRightByY, TempInt);
+                SWAP(ZDeltaLeftByY, ZDeltaRightByY, TempInt);
 
                 SWAP(XLeft, XRight, TempInt);
                 SWAP(RLeft, RRight, TempInt);
                 SWAP(GLeft, GRight, TempInt);
                 SWAP(BLeft, BRight, TempInt);
+                SWAP(ZLeft, ZRight, TempInt);
 
                 SWAP(X1, X2, TempInt);
                 SWAP(Y1, Y2, TempInt);
                 SWAP(RVtx1, RVtx2, TempInt);
                 SWAP(GVtx1, GVtx2, TempInt);
                 SWAP(BVtx1, BVtx2, TempInt);
+                SWAP(ZVtx1, ZVtx2, TempInt);
 
                 bRestartInterpolationAtLeftHand = false; // Restart at right hand side
             }
@@ -1302,17 +1367,20 @@ void IRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
             RDeltaLeftByY = IntToFx16(RVtx1 - RVtx0) / YDiffLeft;
             GDeltaLeftByY = IntToFx16(GVtx1 - GVtx0) / YDiffLeft;
             BDeltaLeftByY = IntToFx16(BVtx1 - BVtx0) / YDiffLeft;
+            ZDeltaLeftByY = IntToFx16(ZVtx1 - ZVtx0) / YDiffLeft;
 
             i32 YDiffRight = (Y2 - Y0);
             XDeltaRightByY = IntToFx16(X2 - X0) / YDiffRight;
             RDeltaRightByY = IntToFx16(RVtx2 - RVtx0) / YDiffRight;
             GDeltaRightByY = IntToFx16(GVtx2 - GVtx0) / YDiffRight;
             BDeltaRightByY = IntToFx16(BVtx2 - BVtx0) / YDiffRight;
+            ZDeltaRightByY = IntToFx16(ZVtx2 - ZVtx0) / YDiffRight;
 
             XRight = XLeft = IntToFx16(X0);
             RRight = RLeft = IntToFx16(RVtx0);
             GRight = GLeft = IntToFx16(GVtx0);
             BRight = BLeft = IntToFx16(BVtx0);
+            ZRight = ZLeft = IntToFx16(ZVtx0);
 
             YStart = Y0;
 
@@ -1328,17 +1396,20 @@ void IRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
                 SWAP(RDeltaLeftByY, RDeltaRightByY, TempInt);
                 SWAP(GDeltaLeftByY, GDeltaRightByY, TempInt);
                 SWAP(BDeltaLeftByY, BDeltaRightByY, TempInt);
+                SWAP(ZDeltaLeftByY, ZDeltaRightByY, TempInt);
 
                 SWAP(XLeft, XRight, TempInt);
                 SWAP(RLeft, RRight, TempInt);
                 SWAP(GLeft, GRight, TempInt);
                 SWAP(BLeft, BRight, TempInt);
+                SWAP(ZLeft, ZRight, TempInt);
 
                 SWAP(X1, X2, TempInt);
                 SWAP(Y1, Y2, TempInt);
                 SWAP(RVtx1, RVtx2, TempInt);
                 SWAP(GVtx1, GVtx2, TempInt);
                 SWAP(BVtx1, BVtx2, TempInt);
+                SWAP(ZVtx1, ZVtx2, TempInt);
 
                 bRestartInterpolationAtLeftHand = false; // Restart at right hand side
             }
@@ -1350,6 +1421,7 @@ void IRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
         {
             // Align video buffer
             Buffer += Pitch * YStart;
+            ZBufferArray = (fx16*)ZBuffer.Buffer + (ZBuffer.Pitch * YStart);
 
             // Proccess each Y
             for (i32f Y = YStart; Y <= YEnd; ++Y)
@@ -1361,11 +1433,13 @@ void IRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
                 fx16 R = RLeft;
                 fx16 G = GLeft;
                 fx16 B = BLeft;
+                fx16 Z = ZLeft;
 
                 // Compute interpolants
                 fx16 RDeltaByX;
                 fx16 GDeltaByX;
                 fx16 BDeltaByX;
+                fx16 ZDeltaByX;
 
                 i32 XDiff = XEnd - XStart;
                 if (XDiff > 0)
@@ -1373,12 +1447,14 @@ void IRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
                     RDeltaByX = (RRight - RLeft) / XDiff;
                     GDeltaByX = (GRight - GLeft) / XDiff;
                     BDeltaByX = (BRight - BLeft) / XDiff;
+                    ZDeltaByX = (ZRight - ZLeft) / XDiff;
                 }
                 else
                 {
                     RDeltaByX = (RRight - RLeft);
                     GDeltaByX = (GRight - GLeft);
                     BDeltaByX = (BRight - BLeft);
+                    ZDeltaByX = (ZRight - ZLeft);
                 }
 
                 // Test if we need clipping
@@ -1390,6 +1466,7 @@ void IRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
                     R += RDeltaByX * XDiff;
                     G += GDeltaByX * XDiff;
                     B += BDeltaByX * XDiff;
+                    Z += ZDeltaByX * XDiff;
                 }
                 if (XEnd > MaxClip.X)
                 {
@@ -1399,15 +1476,21 @@ void IRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
                 // Proccess each X
                 for (i32f X = XStart; X <= XEnd; ++X)
                 {
-                    Buffer[X] = MAP_XRGB32(
-                        Fx16ToIntRounded(R),
-                        Fx16ToIntRounded(G),
-                        Fx16ToIntRounded(B)
-                    );
+                   if (Z < ZBufferArray[X])
+                    {
+                        Buffer[X] = MAP_XRGB32(
+                            Fx16ToIntRounded(R),
+                            Fx16ToIntRounded(G),
+                            Fx16ToIntRounded(B)
+                        );
+
+                        ZBufferArray[X] = Z;
+                    }
 
                     R += RDeltaByX;
                     G += GDeltaByX;
                     B += BDeltaByX;
+                    Z += ZDeltaByX;
                 }
 
                 // Update values those change along Y
@@ -1415,13 +1498,16 @@ void IRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
                 RLeft += RDeltaLeftByY;
                 GLeft += GDeltaLeftByY;
                 BLeft += BDeltaLeftByY;
+                ZLeft += ZDeltaLeftByY;
 
                 XRight += XDeltaRightByY;
                 RRight += RDeltaRightByY;
                 GRight += GDeltaRightByY;
                 BRight += BDeltaRightByY;
+                ZRight += ZDeltaRightByY;
 
                 Buffer += Pitch;
+                ZBufferArray += ZBuffer.Pitch;
 
                 // Test for changing interpolant
                 if (Y == YRestartInterpolation)
@@ -1435,17 +1521,20 @@ void IRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
                         RDeltaLeftByY = IntToFx16(RVtx2 - RVtx1) / YDiff;
                         GDeltaLeftByY = IntToFx16(GVtx2 - GVtx1) / YDiff;
                         BDeltaLeftByY = IntToFx16(BVtx2 - BVtx1) / YDiff;
+                        ZDeltaLeftByY = IntToFx16(ZVtx2 - ZVtx1) / YDiff;
 
                         XLeft = IntToFx16(X1);
                         RLeft = IntToFx16(RVtx1);
                         GLeft = IntToFx16(GVtx1);
                         BLeft = IntToFx16(BVtx1);
+                        ZLeft = IntToFx16(ZVtx1);
 
                         // Align down on 1 Y
                         XLeft += XDeltaLeftByY;
                         RLeft += RDeltaLeftByY;
                         GLeft += GDeltaLeftByY;
                         BLeft += BDeltaLeftByY;
+                        ZLeft += ZDeltaLeftByY;
                     }
                     else
                     {
@@ -1456,17 +1545,20 @@ void IRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
                         RDeltaRightByY = IntToFx16(RVtx1 - RVtx2) / YDiff;
                         GDeltaRightByY = IntToFx16(GVtx1 - GVtx2) / YDiff;
                         BDeltaRightByY = IntToFx16(BVtx1 - BVtx2) / YDiff;
+                        ZDeltaRightByY = IntToFx16(ZVtx1 - ZVtx2) / YDiff;
 
                         XRight = IntToFx16(X2);
                         RRight = IntToFx16(RVtx2);
                         GRight = IntToFx16(GVtx2);
                         BRight = IntToFx16(BVtx2);
+                        ZRight = IntToFx16(ZVtx2);
 
                         // Align down on 1 Y
                         XRight += XDeltaRightByY;
                         RRight += RDeltaRightByY;
                         GRight += GDeltaRightByY;
                         BRight += BDeltaRightByY;
+                        ZRight += ZDeltaRightByY;
                     }
                 }
             }
@@ -1475,6 +1567,7 @@ void IRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
         {
             // Align video buffer
             Buffer += Pitch * YStart;
+            ZBufferArray = (fx16*)ZBuffer.Buffer + (ZBuffer.Pitch * YStart);
 
             // Proccess each Y
             for (i32f Y = YStart; Y <= YEnd; ++Y)
@@ -1486,11 +1579,13 @@ void IRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
                 fx16 R = RLeft;
                 fx16 G = GLeft;
                 fx16 B = BLeft;
+                fx16 Z = ZLeft;
 
                 // Compute interpolants
                 fx16 RDeltaByX;
                 fx16 GDeltaByX;
                 fx16 BDeltaByX;
+                fx16 ZDeltaByX;
 
                 i32 XDiff = XEnd - XStart;
                 if (XDiff > 0)
@@ -1498,26 +1593,34 @@ void IRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
                     RDeltaByX = (RRight - RLeft) / XDiff;
                     GDeltaByX = (GRight - GLeft) / XDiff;
                     BDeltaByX = (BRight - BLeft) / XDiff;
+                    ZDeltaByX = (ZRight - ZLeft) / XDiff;
                 }
                 else
                 {
                     RDeltaByX = (RRight - RLeft);
                     GDeltaByX = (GRight - GLeft);
                     BDeltaByX = (BRight - BLeft);
+                    ZDeltaByX = (ZRight - ZLeft);
                 }
 
                 // Proccess each X
                 for (i32f X = XStart; X <= XEnd; ++X)
                 {
-                    Buffer[X] = MAP_XRGB32(
-                        Fx16ToIntRounded(R),
-                        Fx16ToIntRounded(G),
-                        Fx16ToIntRounded(B)
-                    );
+                   if (Z < ZBufferArray[X])
+                    {
+                        Buffer[X] = MAP_XRGB32(
+                            Fx16ToIntRounded(R),
+                            Fx16ToIntRounded(G),
+                            Fx16ToIntRounded(B)
+                        );
+
+                        ZBufferArray[X] = Z;
+                    }
 
                     R += RDeltaByX;
                     G += GDeltaByX;
                     B += BDeltaByX;
+                    Z += ZDeltaByX;
                 }
 
                 // Update values those change along Y
@@ -1525,13 +1628,16 @@ void IRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
                 RLeft += RDeltaLeftByY;
                 GLeft += GDeltaLeftByY;
                 BLeft += BDeltaLeftByY;
+                ZLeft += ZDeltaLeftByY;
 
                 XRight += XDeltaRightByY;
                 RRight += RDeltaRightByY;
                 GRight += GDeltaRightByY;
                 BRight += BDeltaRightByY;
+                ZRight += ZDeltaRightByY;
 
                 Buffer += Pitch;
+                ZBufferArray += ZBuffer.Pitch;
 
                 // Test for changing interpolant
                 if (Y == YRestartInterpolation)
@@ -1545,17 +1651,20 @@ void IRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
                         RDeltaLeftByY = IntToFx16(RVtx2 - RVtx1) / YDiff;
                         GDeltaLeftByY = IntToFx16(GVtx2 - GVtx1) / YDiff;
                         BDeltaLeftByY = IntToFx16(BVtx2 - BVtx1) / YDiff;
+                        ZDeltaLeftByY = IntToFx16(ZVtx2 - ZVtx1) / YDiff;
 
                         XLeft = IntToFx16(X1);
                         RLeft = IntToFx16(RVtx1);
                         GLeft = IntToFx16(GVtx1);
                         BLeft = IntToFx16(BVtx1);
+                        ZLeft = IntToFx16(ZVtx1);
 
                         // Align down on 1 Y
                         XLeft += XDeltaLeftByY;
                         RLeft += RDeltaLeftByY;
                         GLeft += GDeltaLeftByY;
                         BLeft += BDeltaLeftByY;
+                        ZLeft += ZDeltaLeftByY;
                     }
                     else
                     {
@@ -1566,17 +1675,20 @@ void IRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
                         RDeltaRightByY = IntToFx16(RVtx1 - RVtx2) / YDiff;
                         GDeltaRightByY = IntToFx16(GVtx1 - GVtx2) / YDiff;
                         BDeltaRightByY = IntToFx16(BVtx1 - BVtx2) / YDiff;
+                        ZDeltaRightByY = IntToFx16(ZVtx1 - ZVtx2) / YDiff;
 
                         XRight = IntToFx16(X2);
                         RRight = IntToFx16(RVtx2);
                         GRight = IntToFx16(GVtx2);
                         BRight = IntToFx16(BVtx2);
+                        ZRight = IntToFx16(ZVtx2);
 
                         // Align down on 1 Y
                         XRight += XDeltaRightByY;
                         RRight += RDeltaRightByY;
                         GRight += GDeltaRightByY;
                         BRight += BDeltaRightByY;
+                        ZRight += ZDeltaRightByY;
                     }
                 }
             }

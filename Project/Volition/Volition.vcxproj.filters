@@ -423,6 +423,9 @@
     <ClInclude Include="..\..\Source\GameFramework\Game.h">
       <Filter>Source\GameFramework</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Graphics\ZBuffer.h">
+      <Filter>Source\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\main.cpp">

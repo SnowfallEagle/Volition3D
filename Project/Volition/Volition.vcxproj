@@ -197,6 +197,7 @@
     <ClInclude Include="..\..\Source\Graphics\Surface.h" />
     <ClInclude Include="..\..\Source\Graphics\TransformType.h" />
     <ClInclude Include="..\..\Source\Graphics\Vertex.h" />
+    <ClInclude Include="..\..\Source\Graphics\ZBuffer.h" />
     <ClInclude Include="..\..\Source\Input\Impl\Input_SDL.h" />
     <ClInclude Include="..\..\Source\Input\Impl\Keycode_SDL.h" />
     <ClInclude Include="..\..\Source\Input\Impl\MouseButton_SDL.h" />
