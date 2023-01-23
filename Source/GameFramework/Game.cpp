@@ -12,7 +12,8 @@
 VGame Game;
 
 static VCamera Camera;
-static VObject Object;
+static VObject* Object;
+static VObject Objects[3];
 static VSurface Surface;
 static VRenderList RenderList;
 
@@ -29,22 +30,37 @@ DEFINE_LOG_CHANNEL(hLogGame, "Game");
 
 void VGame::StartUp()
 {
-    Object.LoadCOB(
+    Objects[0].LoadCOB(
+        "s.cob",
+        { 0.0f, 0.0f, 250.0f },
+        { 100.0f, 100.0f, 100.0f },
+        { 0.0f, 0.0f, 0.0f },
+        ECOB::SwapYZ
+    );
+    Objects[1].LoadCOB(
         "jetski05.cob",
         { 0.0f, 0.0f, 250.0f },
         { 100.0f, 100.0f, 100.0f },
         { 0.0f, 0.0f, 0.0f },
         ECOB::SwapYZ | ECOB::InvertV
     );
+    Objects[2].LoadCOB(
+        "tie04.cob",
+        { 0.0f, 0.0f, 250.0f },
+        { 100.0f, 100.0f, 100.0f },
+        { 0.0f, 0.0f, 0.0f },
+        ECOB::SwapYZ
+    );
+    Object = &Objects[0];
 
-    Camera.Init(ECameraAttr::Euler, { 0, 75.0f, 0 }, { 0, 0, 0 }, Object.Position, 90, 120, 12000, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
+    Camera.Init(ECameraAttr::Euler, { 0, 75.0f, 0 }, { 0, 0, 0 }, Object->Position, 90, 120, 12000, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
     {
         VLight AmbientLight = {
             0,
             ELightState::Active,
             ELightAttr::Ambient,
 
-            MAP_RGBX32(0x33, 0x33, 0x33), 0, 0,
+            MAP_RGBX32(0x11, 0x11, 0x11), 0, 0,
             { 0, 0, 0, 0 }, { 0, 0, 0, 0}, VVector4{0, 0, 0, 0}.GetNormalized(), { 0 , 0, 0, 0 },
 
             0, 0, 0,
@@ -57,8 +73,8 @@ void VGame::StartUp()
             ELightState::Active,
             ELightAttr::Infinite,
 
-            0, MAP_RGBX32(0xCC, 0xCC, 0xAA), 0,
-            { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, VVector4{ -1.0f, -1.0f, 0, 0 }.GetNormalized(), { 0, 0, 0, 0 },
+            0, MAP_RGBX32(0x88, 0x44, 0x22), 0,
+            { 0, 1000, 1000, 0 }, { 0, 0, 0, 0 }, VVector4{ -1.0f, -1.0f, 0, 0 }.GetNormalized(), { 0, 0, 0, 0 },
 
             0, 0, 0,
             0, 0,
@@ -96,7 +112,7 @@ void VGame::StartUp()
             ELightState::Active,
             ELightAttr::ComplexSpotlight,
 
-            0, MAP_RGBX32(0xFF, 0xFF, 0xFF), 0,
+            0, MAP_RGBX32(0xCC, 0xCC, 0xCC), 0,
             { 0.0f, 1000.0f, -300.0f, 0 }, { 0, 0, 0, 0 }, VVector4(-0.5f, -1.0f, 1.0f).GetNormalized(), { 0, 0, 0, 0 },
 
             0, 0.0005f, 0,
@@ -104,7 +120,7 @@ void VGame::StartUp()
             1.0f
         };
 
-        //Renderer.AddLight(AmbientLight);
+        Renderer.AddLight(AmbientLight);
         //Renderer.AddLight(InfiniteLight);
         //Renderer.AddLight(PointLight);
         Renderer.AddLight(ComplexSpotlight);
@@ -114,7 +130,9 @@ void VGame::StartUp()
 
 void VGame::ShutDown()
 {
-    Object.Destroy();
+    Objects[0].Destroy();
+    Objects[1].Destroy();
+    Objects[2].Destroy();
 }
 
 void VGame::Update(f32 Delta)
@@ -124,7 +142,11 @@ void VGame::Update(f32 Delta)
         Volition.Stop();
     }
 
-    f32 SpeedTri = 0.5f * Delta;
+    if (Input.IsKeyDown(EKeycode::N1)) Object = &Objects[0];
+    if (Input.IsKeyDown(EKeycode::N2)) Object = &Objects[1];
+    if (Input.IsKeyDown(EKeycode::N3)) Object = &Objects[2];
+
+    f32 SpeedTri = 0.2f * Delta;
     if (Input.IsKeyDown(EKeycode::Up))
     {
         PositionVtx0.Y -= SpeedTri;
@@ -161,7 +183,7 @@ void VGame::Update(f32 Delta)
         BackFaceKeyTicks = Volition.GetTicks();
     }
 
-    f32 CamPosSpeed = 0.5f * Delta;
+    f32 CamPosSpeed = 0.1f * Delta;
     if (Input.IsKeyDown(EKeycode::W))
     {
         Camera.Pos.X += Math.FastSin(Camera.Dir.Y) * CamPosSpeed;
@@ -173,7 +195,7 @@ void VGame::Update(f32 Delta)
         Camera.Pos.Z -= Math.FastCos(Camera.Dir.Y) * CamPosSpeed;
     }
 
-    f32 CamDirSpeed = 0.5f * Delta;
+    f32 CamDirSpeed = 0.2f * Delta;
     if (Input.IsKeyDown(EKeycode::Left))
     {
         Camera.Dir.Y -= CamDirSpeed;
@@ -199,7 +221,7 @@ void VGame::Update(f32 Delta)
     if (Input.IsKeyDown(EKeycode::G)) Rot.BuildRotationXYZ(0, 0, -Speed);
     if (Input.IsKeyDown(EKeycode::Z)) Rot.BuildRotationXYZ(Speed, 0, 0);
     if (Input.IsKeyDown(EKeycode::X)) Rot.BuildRotationXYZ(-Speed, 0, 0);
-    Object.Transform(Rot, ETransformType::LocalOnly, true);
+    Object->Transform(Rot, ETransformType::LocalOnly, true);
 }
 
 void VGame::Render()
@@ -208,15 +230,15 @@ void VGame::Render()
 
     // Proccess object
     {
-        Object.Reset();
-        Object.TransformModelToWorld();
-        Object.Cull(Camera);
+        Object->Reset();
+        Object->TransformModelToWorld();
+        Object->Cull(Camera);
     }
 
     // Proccess render list
     {
         RenderList.Reset();
-        RenderList.InsertObject(Object, false);
+        RenderList.InsertObject(*Object, false);
         if (bBackFaceRemoval)
         {
             RenderList.RemoveBackFaces(Camera);

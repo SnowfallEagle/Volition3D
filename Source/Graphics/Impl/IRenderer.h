@@ -1,3 +1,7 @@
+/* TODO:
+    Move interpolators in Material
+*/
+
 #pragma once
 
 #include "Core/Types.h"
@@ -14,6 +18,8 @@
 #include "Graphics/Polygon.h"
 #include "Graphics/Camera.h"
 #include "Graphics/ZBuffer.h"
+#include "Graphics/Interpolator/IInterpolator.h"
+#include "Graphics/Interpolator/GouraudInterpolator.h"
 
 class IRenderer
 {
@@ -22,6 +28,7 @@ public:
     static constexpr i32f BitsPerPixel = 32;
     static constexpr i32f MaxMaterials = 256;
     static constexpr i32f MaxLights = 8;
+    static constexpr i32f NumInterpolators = 1;
 
 public:
     VSurface BackSurface;
@@ -42,16 +49,24 @@ public:
 
     VZBuffer ZBuffer;
 
+    IInterpolator* Interpolators[NumInterpolators];
+
 public:
     IRenderer()
     {
         ResetMaterials();
         ResetLights();
+
+        // TODO(sean): Put interpolators here
+        Interpolators[0] = new VGouraudInterpolator();
     }
     virtual ~IRenderer()
     {
         ResetMaterials();
         ResetLights();
+
+        // TODO(sean): Delete interpolators
+        delete Interpolators[0];
     }
 
     virtual void StartUp() = 0;
@@ -151,6 +166,9 @@ public:
 
     // For Emissive and Flat shade modes
     void DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) const;
+
+    // General case
+    void DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) const;
 
     virtual void DrawText(i32 X, i32 Y, VColorARGB Color, const char* Format, ...) = 0;
 

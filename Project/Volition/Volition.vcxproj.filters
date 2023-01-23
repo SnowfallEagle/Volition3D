@@ -40,6 +40,9 @@
     <Filter Include="Source\GameFramework">
       <UniqueIdentifier>{f8ea90f7-f36b-4e3c-a634-5a71e0f0441c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Graphics\Interpolator">
+      <UniqueIdentifier>{12429605-81cc-4aeb-a284-06b96140ea54}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\Input\Input.h">
@@ -426,6 +429,18 @@
     <ClInclude Include="..\..\Source\Graphics\ZBuffer.h">
       <Filter>Source\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Graphics\Interpolator\FlatInterpolator.h">
+      <Filter>Source\Graphics\Interpolator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Graphics\Interpolator\GouraudInterpolator.h">
+      <Filter>Source\Graphics\Interpolator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Graphics\Interpolator\IInterpolator.h">
+      <Filter>Source\Graphics\Interpolator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Graphics\Interpolator\TextureInterpolator.h">
+      <Filter>Source\Graphics\Interpolator</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\main.cpp">
@@ -499,6 +514,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\GameFramework\Game.cpp">
       <Filter>Source\GameFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Graphics\Interpolator\IInterpolator.cpp">
+      <Filter>Source\Graphics\Interpolator</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

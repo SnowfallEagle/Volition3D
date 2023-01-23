@@ -188,6 +188,10 @@
     <ClInclude Include="..\..\Source\Graphics\Impl\IRenderer.h" />
     <ClInclude Include="..\..\Source\Graphics\Impl\ISurface.h" />
     <ClInclude Include="..\..\Source\Graphics\Impl\Surface_SDL.h" />
+    <ClInclude Include="..\..\Source\Graphics\Interpolator\FlatInterpolator.h" />
+    <ClInclude Include="..\..\Source\Graphics\Interpolator\GouraudInterpolator.h" />
+    <ClInclude Include="..\..\Source\Graphics\Interpolator\IInterpolator.h" />
+    <ClInclude Include="..\..\Source\Graphics\Interpolator\TextureInterpolator.h" />
     <ClInclude Include="..\..\Source\Graphics\Light.h" />
     <ClInclude Include="..\..\Source\Graphics\Material.h" />
     <ClInclude Include="..\..\Source\Graphics\Object.h" />
@@ -312,6 +316,7 @@
     <ClCompile Include="..\..\Source\Graphics\Impl\IRenderer.cpp" />
     <ClCompile Include="..\..\Source\Graphics\Impl\ISurface.cpp" />
     <ClCompile Include="..\..\Source\Graphics\Impl\Surface_SDL.cpp" />
+    <ClCompile Include="..\..\Source\Graphics\Interpolator\IInterpolator.cpp" />
     <ClCompile Include="..\..\Source\Graphics\Object.cpp" />
     <ClCompile Include="..\..\Source\Graphics\Polygon.cpp" />
     <ClCompile Include="..\..\Source\Graphics\Renderer.cpp" />

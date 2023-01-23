@@ -1324,6 +1324,7 @@ public:
                 continue;
             }
 
+#if 0
             if (Poly->Attr & EPolyAttr::ShadeModeTexture)
             {
                 Renderer.DrawTexturedTriangle(Buffer, Pitch, *Poly);
@@ -1336,6 +1337,9 @@ public:
             {
                 Renderer.DrawFlatTriangle(Buffer, Pitch, *Poly);
             }
+#else
+            Renderer.DrawTriangle(Buffer, Pitch, *Poly);
+#endif
         }
     }
 };

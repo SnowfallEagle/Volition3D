@@ -3130,3 +3130,852 @@ void IRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
 
     Poly.Texture->Unlock();
 }
+
+void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) const
+{
+    enum class ETriangleCase
+    {
+        Top,
+        Bottom,
+        General
+    };
+
+    i32 V0 = 0, V1 = 1, V2 = 2;
+
+    // Sort by Y
+    i32 TempInt;
+    if (Poly.TransVtx[V1].Y < Poly.TransVtx[V0].Y)
+    {
+        SWAP(V0, V1, TempInt);
+    }
+    if (Poly.TransVtx[V2].Y < Poly.TransVtx[V0].Y)
+    {
+        SWAP(V0, V2, TempInt);
+    }
+    if (Poly.TransVtx[V2].Y < Poly.TransVtx[V1].Y)
+    {
+        SWAP(V1, V2, TempInt);
+    }
+
+    // Test if we can't see it
+    if (Poly.TransVtx[V2].Y < MinClipFloat.Y ||
+        Poly.TransVtx[V0].Y > MaxClipFloat.Y ||
+        (Poly.TransVtx[V0].X < MinClipFloat.X && Poly.TransVtx[V1].X < MinClipFloat.X && Poly.TransVtx[V2].X < MinClipFloat.X) ||
+        (Poly.TransVtx[V0].X > MaxClipFloat.X && Poly.TransVtx[V1].X > MaxClipFloat.X && Poly.TransVtx[V2].X > MaxClipFloat.X))
+    {
+        return;
+    }
+
+    // Convert Y to integers
+    i32 Y0 = (i32)(Poly.TransVtx[V0].Y + 0.5f);
+    i32 Y1 = (i32)(Poly.TransVtx[V1].Y + 0.5f);
+    i32 Y2 = (i32)(Poly.TransVtx[V2].Y + 0.5f);
+
+    // Found triangle case and sort vertices by X
+    ETriangleCase TriangleCase;
+    if (Y0 == Y1)
+    {
+        if (Poly.TransVtx[V1].X < Poly.TransVtx[V0].X)
+        {
+            SWAP(V0, V1, TempInt);
+            SWAP(Y0, Y1, TempInt);
+        }
+        TriangleCase = ETriangleCase::Top;
+    }
+    else if (Y1 == Y2)
+    {
+        if (Poly.TransVtx[V2].X < Poly.TransVtx[V1].X)
+        {
+            SWAP(V1, V2, TempInt);
+            SWAP(Y1, Y2, TempInt);
+        }
+        TriangleCase = ETriangleCase::Bottom;
+    }
+    else
+    {
+        TriangleCase = ETriangleCase::General;
+    }
+
+    // Convert coords to integer
+    i32 X0 = (i32)(Poly.TransVtx[V0].X + 0.5f);
+    i32 X1 = (i32)(Poly.TransVtx[V1].X + 0.5f);
+    i32 X2 = (i32)(Poly.TransVtx[V2].X + 0.5f);
+
+    // Vertical, horizontal triangle test
+    if ((Y0 == Y1 && Y1 == Y2) || (X0 == X1 && X1 == X2))
+    {
+        return;
+    }
+
+    i32 YStart;
+    i32 YEnd;
+
+    // Maybe use array from the beginning?
+    i32 VtxIndices[3] = { V0, V1, V2 };
+    for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+    {
+        Interpolators[InterpIndex]->Start(Poly, VtxIndices);
+    }
+
+    i32 ZVtx0 = (i32)(Poly.TransVtx[V0].Z + 0.5f);
+    i32 ZVtx1 = (i32)(Poly.TransVtx[V1].Z + 0.5f);
+    i32 ZVtx2 = (i32)(Poly.TransVtx[V2].Z + 0.5f);
+
+    // Fixed coords, color channels for rasterization
+    fx16 XLeft;
+    fx16 XRight;
+    fx16 ZLeft, ZRight;
+
+    // Coords, colors fixed deltas by Y
+    fx16 XDeltaLeftByY;
+    fx16 ZDeltaLeftByY;
+
+    fx16 XDeltaRightByY;
+    fx16 ZDeltaRightByY;
+
+    fx16* ZBufferArray;
+
+    if (TriangleCase == ETriangleCase::Top ||
+        TriangleCase == ETriangleCase::Bottom)
+    {
+        i32 YDiff = Y2 - Y0;
+
+        if (TriangleCase == ETriangleCase::Top)
+        {
+            // Compute deltas for coords, colors
+            XDeltaLeftByY = IntToFx16(X2 - X0) / YDiff;
+            ZDeltaLeftByY = IntToFx16(ZVtx2 - ZVtx0) / YDiff;
+
+            XDeltaRightByY = IntToFx16(X2 - X1) / YDiff;
+            ZDeltaRightByY = IntToFx16(ZVtx2 - ZVtx1) / YDiff;
+
+            for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+            {
+                Interpolators[InterpIndex]->ComputeYStartsAndDeltas(YDiff, V0, V2, YDiff, V1, V2);
+            }
+
+            // Clipping Y
+            if (Y0 < MinClip.Y)
+            {
+                YDiff = MinClip.Y - Y0;
+                YStart = MinClip.Y;
+
+                XLeft = IntToFx16(X0) + YDiff * XDeltaLeftByY;
+                ZLeft = IntToFx16(ZVtx0) + YDiff * ZDeltaLeftByY;
+
+                XRight = IntToFx16(X1) + YDiff * XDeltaRightByY;
+                ZRight = IntToFx16(ZVtx1) + YDiff * ZDeltaRightByY;
+
+                for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                {
+                    Interpolators[InterpIndex]->InterpolateYOverClip(YDiff, YDiff);
+                }
+            }
+            else
+            {
+                YStart = Y0;
+
+                XLeft = IntToFx16(X0);
+                ZLeft = IntToFx16(ZVtx0);
+
+                XRight = IntToFx16(X1);
+                ZRight = IntToFx16(ZVtx1);
+            }
+        }
+        else // Bottom case
+        {
+            // Compute deltas for coords, colors
+            XDeltaLeftByY = IntToFx16(X1 - X0) / YDiff;
+            ZDeltaLeftByY = IntToFx16(ZVtx1 - ZVtx0) / YDiff;
+
+            XDeltaRightByY = IntToFx16(X2 - X0) / YDiff;
+            ZDeltaRightByY = IntToFx16(ZVtx2 - ZVtx0) / YDiff;
+
+            for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+            {
+                Interpolators[InterpIndex]->ComputeYStartsAndDeltas(YDiff, V0, V1, YDiff, V0, V2);
+            }
+
+            // Clipping Y
+            if (Y0 < MinClip.Y)
+            {
+                YDiff = MinClip.Y - Y0;
+                YStart = MinClip.Y;
+
+                XLeft = IntToFx16(X0) + YDiff * XDeltaLeftByY;
+                ZLeft = IntToFx16(ZVtx0) + YDiff * ZDeltaLeftByY;
+
+                XRight = IntToFx16(X0) + YDiff * XDeltaRightByY;
+                ZRight = IntToFx16(ZVtx0) + YDiff * ZDeltaRightByY;
+
+                for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                {
+                    Interpolators[InterpIndex]->InterpolateYOverClip(YDiff, YDiff);
+                }
+            }
+            else
+            {
+                YStart = Y0;
+
+                XLeft = IntToFx16(X0);
+                ZLeft = IntToFx16(ZVtx0);
+
+                XRight = IntToFx16(X0);
+                ZRight = IntToFx16(ZVtx0);
+            }
+        }
+
+        // Clip bottom Y
+        if (Y2 > MaxClip.Y)
+        {
+            YEnd = MaxClip.Y;
+        }
+        else
+        {
+            YEnd = Y2;
+        }
+
+        // Test for clipping X
+        if (X0 < MinClip.X || X1 < MinClip.X || X2 < MinClip.X ||
+            X0 > MaxClip.X || X1 > MaxClip.X || X2 > MaxClip.X)
+        {
+            // Align buffer pointer
+            Buffer += Pitch * YStart;
+            ZBufferArray = (fx16*)ZBuffer.Buffer + (ZBuffer.Pitch * YStart);
+
+            // Proccess each Y
+            for (i32f Y = YStart; Y <= YEnd; ++Y)
+            {
+                // Compute starting values
+                i32f XStart = Fx16ToIntRounded(XLeft);
+                i32f XEnd = Fx16ToIntRounded(XRight);
+
+                fx16 Z = ZLeft;
+                fx16 ZDeltaByX;
+
+                // Compute deltas for X interpolation
+                i32f XDiff = XEnd - XStart;
+
+                for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                {
+                    Interpolators[InterpIndex]->ComputeXStartsAndDeltas(XDiff);
+                }
+
+                if (XDiff > 0)
+                {
+                    ZDeltaByX = (ZRight - ZLeft) / XDiff;
+                }
+                else
+                {
+                    ZDeltaByX = (ZRight - ZLeft);
+                }
+
+                // X clipping
+                if (XStart < MinClip.X)
+                {
+                    i32 XDiff = MinClip.X - XStart;
+                    XStart = MinClip.X;
+
+                    Z += XDiff * ZDeltaByX;
+
+                    for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                    {
+                        Interpolators[InterpIndex]->InterpolateXOverClip(XDiff);
+                    }
+                }
+                if (XEnd > MaxClip.X)
+                {
+                    XEnd = MaxClip.X;
+                }
+
+                // Proccess each X
+                for (i32f X = XStart; X <= XEnd; ++X)
+                {
+                    if (Z < ZBufferArray[X])
+                    {
+                        VColorARGB FinalPixel = Interpolators[0]->ComputePixel();
+
+                        for (i32f InterpIndex = 1; InterpIndex < NumInterpolators; ++InterpIndex)
+                        {
+                            VColorARGB ComputedPixel = Interpolators[InterpIndex]->ComputePixel();
+
+                            FinalPixel.R = (FinalPixel.R * ComputedPixel.R) << 8;
+                            FinalPixel.G = (FinalPixel.G * ComputedPixel.G) << 8;
+                            FinalPixel.B = (FinalPixel.B * ComputedPixel.B) << 8;
+                        }
+
+                        Buffer[X] = FinalPixel;
+
+                        ZBufferArray[X] = Z;
+                    }
+
+                    // Interpolate by X
+                    Z += ZDeltaByX;
+
+                    for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                    {
+                        Interpolators[InterpIndex]->InterpolateX();
+                    }
+                }
+
+                // Interpolate by Y
+                XLeft += XDeltaLeftByY;
+                ZLeft += ZDeltaLeftByY;
+
+                XRight += XDeltaRightByY;
+                ZRight += ZDeltaRightByY;
+
+                for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                {
+                    Interpolators[InterpIndex]->InterpolateY();
+                }
+
+                Buffer += Pitch;
+                ZBufferArray += ZBuffer.Pitch;
+            }
+        }
+        else // Non-clipped version
+        {
+            // Align buffer pointer
+            Buffer += Pitch * YStart;
+            ZBufferArray = (fx16*)ZBuffer.Buffer + (ZBuffer.Pitch * YStart);
+
+            // Proccess each Y
+            for (i32f Y = YStart; Y <= YEnd; ++Y)
+            {
+                // Compute starting values
+                i32f XStart = Fx16ToIntRounded(XLeft);
+                i32f XEnd = Fx16ToIntRounded(XRight);
+
+                fx16 Z = ZLeft;
+                fx16 ZDeltaByX;
+
+                // Compute deltas for X interpolation
+                i32f XDiff = XEnd - XStart;
+
+                for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                {
+                    Interpolators[InterpIndex]->ComputeXStartsAndDeltas(XDiff);
+                }
+
+                if (XDiff > 0)
+                {
+                    ZDeltaByX = (ZRight - ZLeft) / XDiff;
+                }
+                else
+                {
+                    ZDeltaByX = (ZRight - ZLeft);
+                }
+
+                // Proccess each X
+                for (i32f X = XStart; X <= XEnd; ++X)
+                {
+                    if (Z < ZBufferArray[X])
+                    {
+                        VColorARGB FinalPixel = Interpolators[0]->ComputePixel();
+
+                        for (i32f InterpIndex = 1; InterpIndex < NumInterpolators; ++InterpIndex)
+                        {
+                            VColorARGB ComputedPixel = Interpolators[InterpIndex]->ComputePixel();
+
+                            FinalPixel.R = (FinalPixel.R * ComputedPixel.R) << 8;
+                            FinalPixel.G = (FinalPixel.G * ComputedPixel.G) << 8;
+                            FinalPixel.B = (FinalPixel.B * ComputedPixel.B) << 8;
+                        }
+
+                        Buffer[X] = FinalPixel;
+
+                        ZBufferArray[X] = Z;
+                    }
+
+                    // Interpolate by X
+                    Z += ZDeltaByX;
+
+                    for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                    {
+                        Interpolators[InterpIndex]->InterpolateX();
+                    }
+                }
+
+                // Interpolate by Y
+                XLeft += XDeltaLeftByY;
+                ZLeft += ZDeltaLeftByY;
+
+                XRight += XDeltaRightByY;
+                ZRight += ZDeltaRightByY;
+
+                for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                {
+                    Interpolators[InterpIndex]->InterpolateY();
+                }
+
+                Buffer += Pitch;
+                ZBufferArray += ZBuffer.Pitch;
+            }
+        }
+    }
+    else // General case
+    {
+        b32 bRestartInterpolationAtLeftHand = true;
+        i32 YRestartInterpolation = Y1;
+
+        // Clip bottom Y
+        if (Y2 > MaxClip.Y)
+        {
+            YEnd = MaxClip.Y;
+        }
+        else
+        {
+            YEnd = Y2;
+        }
+
+        // Clip top Y
+        if (Y1 < MinClip.Y)
+        {
+            // Compute deltas
+            i32 YDiffLeft = (Y2 - Y1);
+            XDeltaLeftByY = IntToFx16(X2 - X1) / YDiffLeft;
+            ZDeltaLeftByY = IntToFx16(ZVtx2 - ZVtx1) / YDiffLeft;
+
+            i32 YDiffRight = (Y2 - Y0);
+            XDeltaRightByY = IntToFx16(X2 - X0) / YDiffRight;
+            ZDeltaRightByY = IntToFx16(ZVtx2 - ZVtx0) / YDiffRight;
+
+            // Do clipping
+            i32 YOverClipLeft = (MinClip.Y - Y1);
+            XLeft = IntToFx16(X1) + YOverClipLeft * XDeltaLeftByY;
+            ZLeft = IntToFx16(ZVtx1) + YOverClipLeft * ZDeltaLeftByY;
+
+            i32 YOverClipRight = (MinClip.Y - Y0);
+            XRight = IntToFx16(X0) + YOverClipRight * XDeltaRightByY;
+            ZRight = IntToFx16(ZVtx0) + YOverClipRight * ZDeltaRightByY;
+
+            // Do both for interpolators
+            for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+            {
+                Interpolators[InterpIndex]->ComputeYStartsAndDeltas(YDiffLeft, V1, V2, YDiffRight, V0, V2);
+                Interpolators[InterpIndex]->InterpolateYOverClip(YOverClipLeft, YOverClipRight);
+            }
+
+            YStart = MinClip.Y;
+
+            /* NOTE(sean):
+                Test if we need swap to keep rendering left to right.
+                It can happen because we assume that
+                Y1 is on left hand side and Y2 on right.
+             */
+            if (XDeltaRightByY > XDeltaLeftByY)
+            {
+                SWAP(XDeltaLeftByY, XDeltaRightByY, TempInt);
+                SWAP(ZDeltaLeftByY, ZDeltaRightByY, TempInt);
+
+                SWAP(XLeft, XRight, TempInt);
+                SWAP(ZLeft, ZRight, TempInt);
+
+                SWAP(X1, X2, TempInt);
+                SWAP(Y1, Y2, TempInt);
+                SWAP(ZVtx1, ZVtx2, TempInt);
+
+                for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                {
+                    Interpolators[InterpIndex]->SwapLeftRight();
+                }
+
+                bRestartInterpolationAtLeftHand = false; // Restart at right hand side
+            }
+        }
+        else if (Y0 < MinClip.Y)
+        {
+            // Compute deltas
+            i32 YDiffLeft = (Y1 - Y0);
+            XDeltaLeftByY = IntToFx16(X1 - X0) / YDiffLeft;
+            ZDeltaLeftByY = IntToFx16(ZVtx1 - ZVtx0) / YDiffLeft;
+
+            i32 YDiffRight = (Y2 - Y0);
+            XDeltaRightByY = IntToFx16(X2 - X0) / YDiffRight;
+            ZDeltaRightByY = IntToFx16(ZVtx2 - ZVtx0) / YDiffRight;
+
+            // Do clipping
+            i32 YOverClip = (MinClip.Y - Y0);
+            XLeft = IntToFx16(X0) + YOverClip * XDeltaLeftByY;
+            ZLeft = IntToFx16(ZVtx0) + YOverClip * ZDeltaLeftByY;
+
+            XRight = IntToFx16(X0) + YOverClip * XDeltaRightByY;
+            ZRight = IntToFx16(ZVtx0) + YOverClip * ZDeltaRightByY;
+
+            for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+            {
+                Interpolators[InterpIndex]->ComputeYStartsAndDeltas(YDiffLeft, V0, V1, YDiffRight, V0, V2);
+                Interpolators[InterpIndex]->InterpolateYOverClip(YOverClip, YOverClip);
+            }
+
+            YStart = MinClip.Y;
+
+            /* NOTE(sean):
+                Test if we need swap to keep rendering left to right.
+                It can happen because we assume that
+                Y1 is on left hand side and Y2 on right.
+             */
+            // TODO(sean): Test if we can simplify it
+            if (XDeltaRightByY < XDeltaLeftByY)
+            {
+                SWAP(XDeltaLeftByY, XDeltaRightByY, TempInt);
+                SWAP(ZDeltaLeftByY, ZDeltaRightByY, TempInt);
+
+                SWAP(XLeft, XRight, TempInt);
+                SWAP(ZLeft, ZRight, TempInt);
+
+                SWAP(X1, X2, TempInt);
+                SWAP(Y1, Y2, TempInt);
+                SWAP(ZVtx1, ZVtx2, TempInt);
+
+                for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                {
+                    Interpolators[InterpIndex]->SwapLeftRight();
+                }
+
+                bRestartInterpolationAtLeftHand = false; // Restart at right hand side
+            }
+        }
+        else // No top Y clipping
+        {
+            i32 YDiffLeft = (Y1 - Y0);
+            XDeltaLeftByY = IntToFx16(X1 - X0) / YDiffLeft;
+            ZDeltaLeftByY = IntToFx16(ZVtx1 - ZVtx0) / YDiffLeft;
+
+            i32 YDiffRight = (Y2 - Y0);
+            XDeltaRightByY = IntToFx16(X2 - X0) / YDiffRight;
+            ZDeltaRightByY = IntToFx16(ZVtx2 - ZVtx0) / YDiffRight;
+
+            XRight = XLeft = IntToFx16(X0);
+            ZRight = ZLeft = IntToFx16(ZVtx0);
+
+            for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+            {
+                Interpolators[InterpIndex]->ComputeYStartsAndDeltas(YDiffLeft, V0, V1, YDiffRight, V0, V2);
+            }
+
+            YStart = Y0;
+
+            /* NOTE(sean):
+                Test if we need swap to keep rendering left to right.
+                It can happen because we assume that
+                Y1 is on left hand side and Y2 on right.
+             */
+            if (XDeltaRightByY < XDeltaLeftByY)
+            {
+                SWAP(XDeltaLeftByY, XDeltaRightByY, TempInt);
+                SWAP(ZDeltaLeftByY, ZDeltaRightByY, TempInt);
+
+                SWAP(XLeft, XRight, TempInt);
+                SWAP(ZLeft, ZRight, TempInt);
+
+                SWAP(X1, X2, TempInt);
+                SWAP(Y1, Y2, TempInt);
+                SWAP(ZVtx1, ZVtx2, TempInt);
+
+                for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                {
+                    Interpolators[InterpIndex]->SwapLeftRight();
+                }
+
+                bRestartInterpolationAtLeftHand = false; // Restart at right hand side
+            }
+        }
+
+        // Test for clipping X
+        if (X0 < MinClip.X || X1 < MinClip.X || X2 < MinClip.X ||
+            X0 > MaxClip.X || X1 > MaxClip.X || X2 > MaxClip.X)
+        {
+            // Align buffer pointer
+            Buffer += Pitch * YStart;
+            ZBufferArray = (fx16*)ZBuffer.Buffer + (ZBuffer.Pitch * YStart);
+
+            // Proccess each Y
+            for (i32f Y = YStart; Y <= YEnd; ++Y)
+            {
+                // Compute starting values
+                i32f XStart = Fx16ToIntRounded(XLeft);
+                i32f XEnd = Fx16ToIntRounded(XRight);
+
+                fx16 Z = ZLeft;
+                fx16 ZDeltaByX;
+
+                // Compute deltas for X interpolation
+                i32f XDiff = XEnd - XStart;
+
+                for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                {
+                    Interpolators[InterpIndex]->ComputeXStartsAndDeltas(XDiff);
+                }
+
+                if (XDiff > 0)
+                {
+                    ZDeltaByX = (ZRight - ZLeft) / XDiff;
+                }
+                else
+                {
+                    ZDeltaByX = (ZRight - ZLeft);
+                }
+
+                // X clipping
+                if (XStart < MinClip.X)
+                {
+                    i32 XDiff = MinClip.X - XStart;
+                    XStart = MinClip.X;
+
+                    Z += XDiff * ZDeltaByX;
+
+                    for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                    {
+                        Interpolators[InterpIndex]->InterpolateXOverClip(XDiff);
+                    }
+                }
+                if (XEnd > MaxClip.X)
+                {
+                    XEnd = MaxClip.X;
+                }
+
+                // Proccess each X
+                for (i32f X = XStart; X <= XEnd; ++X)
+                {
+                    if (Z < ZBufferArray[X])
+                    {
+                        VColorARGB FinalPixel = Interpolators[0]->ComputePixel();
+
+                        for (i32f InterpIndex = 1; InterpIndex < NumInterpolators; ++InterpIndex)
+                        {
+                            VColorARGB ComputedPixel = Interpolators[InterpIndex]->ComputePixel();
+
+                            FinalPixel.R = (FinalPixel.R * ComputedPixel.R) << 8;
+                            FinalPixel.G = (FinalPixel.G * ComputedPixel.G) << 8;
+                            FinalPixel.B = (FinalPixel.B * ComputedPixel.B) << 8;
+                        }
+
+                        Buffer[X] = FinalPixel;
+
+                        ZBufferArray[X] = Z;
+                    }
+
+                    // Interpolate by X
+                    Z += ZDeltaByX;
+
+                    for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                    {
+                        Interpolators[InterpIndex]->InterpolateX();
+                    }
+                }
+
+                // Interpolate by Y
+                XLeft += XDeltaLeftByY;
+                ZLeft += ZDeltaLeftByY;
+
+                XRight += XDeltaRightByY;
+                ZRight += ZDeltaRightByY;
+
+                for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                {
+                    Interpolators[InterpIndex]->InterpolateY();
+                }
+
+                Buffer += Pitch;
+                ZBufferArray += ZBuffer.Pitch;
+
+                // Test for changing interpolant
+                if (Y == YRestartInterpolation)
+                {
+                    if (bRestartInterpolationAtLeftHand)
+                    {
+                        // Compute new values to get from Y1 to Y2
+                        i32 YDiff = (Y2 - Y1);
+
+                        XDeltaLeftByY = IntToFx16(X2 - X1) / YDiff;
+                        ZDeltaLeftByY = IntToFx16(ZVtx2 - ZVtx1) / YDiff;
+
+                        XLeft = IntToFx16(X1);
+                        ZLeft = IntToFx16(ZVtx1);
+
+                        // Align down on 1 Y
+                        XLeft += XDeltaLeftByY;
+                        ZLeft += ZDeltaLeftByY;
+
+                        // Do both for interpolators
+                        for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                        {
+                            Interpolators[InterpIndex]->ComputeYStartsAndDeltasLeft(YDiff, V1, V2);
+                            Interpolators[InterpIndex]->InterpolateYLeft();
+                        }
+                    }
+                    else
+                    {
+                        // Compute new values to get from Y2 to Y1 because we swapped them
+                        i32 YDiff = (Y1 - Y2);
+
+                        XDeltaRightByY = IntToFx16(X1 - X2) / YDiff;
+                        ZDeltaRightByY = IntToFx16(ZVtx1 - ZVtx2) / YDiff;
+
+                        XRight = IntToFx16(X2);
+                        ZRight = IntToFx16(ZVtx2);
+
+                        // Align down on 1 Y
+                        XRight += XDeltaRightByY;
+                        ZRight += ZDeltaRightByY;
+
+                        // Do both for interpolators
+                        for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                        {
+                            Interpolators[InterpIndex]->ComputeYStartsAndDeltasRight(YDiff, V2, V1);
+                            Interpolators[InterpIndex]->InterpolateYRight();
+                        }
+                    }
+                }
+            }
+        }
+        else // No X clipping
+        {
+            // Align buffer pointer
+            Buffer += Pitch * YStart;
+            ZBufferArray = (fx16*)ZBuffer.Buffer + (ZBuffer.Pitch * YStart);
+
+            // Proccess each Y
+            for (i32f Y = YStart; Y <= YEnd; ++Y)
+            {
+                // Compute starting values
+                i32f XStart = Fx16ToIntRounded(XLeft);
+                i32f XEnd = Fx16ToIntRounded(XRight);
+
+                fx16 Z = ZLeft;
+                fx16 ZDeltaByX;
+
+                // Compute deltas for X interpolation
+                i32f XDiff = XEnd - XStart;
+
+                for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                {
+                    Interpolators[InterpIndex]->ComputeXStartsAndDeltas(XDiff);
+                }
+
+                if (XDiff > 0)
+                {
+                    ZDeltaByX = (ZRight - ZLeft) / XDiff;
+                }
+                else
+                {
+                    ZDeltaByX = (ZRight - ZLeft);
+                }
+
+                // X clipping
+                if (XStart < MinClip.X)
+                {
+                    i32 XDiff = MinClip.X - XStart;
+                    XStart = MinClip.X;
+
+                    Z += XDiff * ZDeltaByX;
+
+                    for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                    {
+                        Interpolators[InterpIndex]->InterpolateXOverClip(XDiff);
+                    }
+                }
+                if (XEnd > MaxClip.X)
+                {
+                    XEnd = MaxClip.X;
+                }
+
+                // Proccess each X
+                for (i32f X = XStart; X <= XEnd; ++X)
+                {
+                    if (Z < ZBufferArray[X])
+                    {
+                        VColorARGB FinalPixel = Interpolators[0]->ComputePixel();
+
+                        for (i32f InterpIndex = 1; InterpIndex < NumInterpolators; ++InterpIndex)
+                        {
+                            VColorARGB ComputedPixel = Interpolators[InterpIndex]->ComputePixel();
+
+                            FinalPixel.R = (FinalPixel.R * ComputedPixel.R) << 8;
+                            FinalPixel.G = (FinalPixel.G * ComputedPixel.G) << 8;
+                            FinalPixel.B = (FinalPixel.B * ComputedPixel.B) << 8;
+                        }
+
+                        Buffer[X] = FinalPixel;
+
+                        ZBufferArray[X] = Z;
+                    }
+
+                    // Interpolate by X
+                    Z += ZDeltaByX;
+
+                    for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                    {
+                        Interpolators[InterpIndex]->InterpolateX();
+                    }
+                }
+
+                // Interpolate by Y
+                XLeft += XDeltaLeftByY;
+                ZLeft += ZDeltaLeftByY;
+
+                XRight += XDeltaRightByY;
+                ZRight += ZDeltaRightByY;
+
+                for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                {
+                    Interpolators[InterpIndex]->InterpolateY();
+                }
+
+                Buffer += Pitch;
+                ZBufferArray += ZBuffer.Pitch;
+
+                // Test for changing interpolant
+                if (Y == YRestartInterpolation)
+                {
+                    if (bRestartInterpolationAtLeftHand)
+                    {
+                        // Compute new values to get from Y1 to Y2
+                        i32 YDiff = (Y2 - Y1);
+
+                        XDeltaLeftByY = IntToFx16(X2 - X1) / YDiff;
+                        ZDeltaLeftByY = IntToFx16(ZVtx2 - ZVtx1) / YDiff;
+
+                        XLeft = IntToFx16(X1);
+                        ZLeft = IntToFx16(ZVtx1);
+
+                        // Align down on 1 Y
+                        XLeft += XDeltaLeftByY;
+                        ZLeft += ZDeltaLeftByY;
+
+                        // Do both for interpolators
+                        for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                        {
+                            Interpolators[InterpIndex]->ComputeYStartsAndDeltasLeft(YDiff, V1, V2);
+                            Interpolators[InterpIndex]->InterpolateYLeft();
+                        }
+                    }
+                    else
+                    {
+                        // Compute new values to get from Y2 to Y1 because we swapped them
+                        i32 YDiff = (Y1 - Y2);
+
+                        XDeltaRightByY = IntToFx16(X1 - X2) / YDiff;
+                        ZDeltaRightByY = IntToFx16(ZVtx1 - ZVtx2) / YDiff;
+
+                        XRight = IntToFx16(X2);
+                        ZRight = IntToFx16(ZVtx2);
+
+                        // Align down on 1 Y
+                        XRight += XDeltaRightByY;
+                        ZRight += ZDeltaRightByY;
+
+                        // Do both for interpolators
+                        for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                        {
+                            Interpolators[InterpIndex]->ComputeYStartsAndDeltasRight(YDiff, V2, V1);
+                            Interpolators[InterpIndex]->InterpolateYRight();
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
