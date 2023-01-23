@@ -52,21 +52,6 @@ public:
         GDeltaRightByY = IntToFx16(GVtx[RightEndVtx] - GVtx[RightStartVtx]) / YDiffRight;
         BDeltaRightByY = IntToFx16(BVtx[RightEndVtx] - BVtx[RightStartVtx]) / YDiffRight;
     }
-    virtual void ComputeYStartsAndDeltas(i32 YDiffLeft, i32 LeftStartVtx, i32 LeftEndVtx, i32 YDiffRight, i32 RightStartVtx, i32 RightEndVtx) override
-    {
-        ComputeYStartsAndDeltasLeft(YDiffLeft, LeftStartVtx, LeftEndVtx);
-        ComputeYStartsAndDeltasRight(YDiffRight, RightStartVtx, RightEndVtx);
-    }
-    virtual void InterpolateYOverClip(i32 YOverClipLeft, i32 YOverClipRight) override
-    {
-        RLeft += YOverClipLeft * RDeltaLeftByY;
-        GLeft += YOverClipLeft * GDeltaLeftByY;
-        BLeft += YOverClipLeft * BDeltaLeftByY;
-
-        RRight += YOverClipRight * RDeltaRightByY;
-        GRight += YOverClipRight * GDeltaRightByY;
-        BRight += YOverClipRight * BDeltaRightByY;
-    }
 
     virtual void SwapLeftRight() override
     {
@@ -104,12 +89,6 @@ public:
             BDeltaByX = (BRight - BLeft);
         }
     }
-    virtual void InterpolateXOverClip(i32 XOverClip) override
-    {
-        R += XOverClip * RDeltaByX;
-        G += XOverClip * GDeltaByX;
-        B += XOverClip * BDeltaByX;
-    }
 
     virtual VColorARGB ComputePixel() override
     {
@@ -120,28 +99,23 @@ public:
         );
     }
 
-    // TODO(sean): Maybe we can use this method with YDiff?
-    virtual void InterpolateX() override
+    virtual void InterpolateX(i32 X) override
     {
-        R += RDeltaByX;
-        G += GDeltaByX;
-        B += BDeltaByX;
+        R += RDeltaByX * X;
+        G += GDeltaByX * X;
+        B += BDeltaByX * X;
     }
-    virtual void InterpolateYLeft() override
+
+    virtual void InterpolateYLeft(i32 YLeft) override
     {
-        RLeft += RDeltaLeftByY;
-        GLeft += GDeltaLeftByY;
-        BLeft += BDeltaLeftByY;
+        RLeft += RDeltaLeftByY * YLeft;
+        GLeft += GDeltaLeftByY * YLeft;
+        BLeft += BDeltaLeftByY * YLeft;
     }
-    virtual void InterpolateYRight() override
+    virtual void InterpolateYRight(i32 YRight) override
     {
-        RRight += RDeltaRightByY;
-        GRight += GDeltaRightByY;
-        BRight += BDeltaRightByY;
-    }
-    virtual void InterpolateY() override
-    {
-        InterpolateYLeft();
-        InterpolateYRight();
+        RRight += RDeltaRightByY * YRight;
+        GRight += GDeltaRightByY * YRight;
+        BRight += BDeltaRightByY * YRight;
     }
 };

@@ -3268,7 +3268,7 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
 
                 for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
                 {
-                    Interpolators[InterpIndex]->InterpolateYOverClip(YDiff, YDiff);
+                    Interpolators[InterpIndex]->InterpolateY(YDiff, YDiff);
                 }
             }
             else
@@ -3310,7 +3310,7 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
 
                 for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
                 {
-                    Interpolators[InterpIndex]->InterpolateYOverClip(YDiff, YDiff);
+                    Interpolators[InterpIndex]->InterpolateY(YDiff, YDiff);
                 }
             }
             else
@@ -3380,7 +3380,7 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
 
                     for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
                     {
-                        Interpolators[InterpIndex]->InterpolateXOverClip(XDiff);
+                        Interpolators[InterpIndex]->InterpolateX(XDiff);
                     }
                 }
                 if (XEnd > MaxClip.X)
@@ -3554,7 +3554,7 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
             for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
             {
                 Interpolators[InterpIndex]->ComputeYStartsAndDeltas(YDiffLeft, V1, V2, YDiffRight, V0, V2);
-                Interpolators[InterpIndex]->InterpolateYOverClip(YOverClipLeft, YOverClipRight);
+                Interpolators[InterpIndex]->InterpolateY(YOverClipLeft, YOverClipRight);
             }
 
             YStart = MinClip.Y;
@@ -3606,7 +3606,7 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
             for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
             {
                 Interpolators[InterpIndex]->ComputeYStartsAndDeltas(YDiffLeft, V0, V1, YDiffRight, V0, V2);
-                Interpolators[InterpIndex]->InterpolateYOverClip(YOverClip, YOverClip);
+                Interpolators[InterpIndex]->InterpolateY(YOverClip, YOverClip);
             }
 
             YStart = MinClip.Y;
@@ -3728,7 +3728,7 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
 
                     for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
                     {
-                        Interpolators[InterpIndex]->InterpolateXOverClip(XDiff);
+                        Interpolators[InterpIndex]->InterpolateX(XDiff);
                     }
                 }
                 if (XEnd > MaxClip.X)
@@ -3874,7 +3874,7 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
 
                     for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
                     {
-                        Interpolators[InterpIndex]->InterpolateXOverClip(XDiff);
+                        Interpolators[InterpIndex]->InterpolateX(XDiff);
                     }
                 }
                 if (XEnd > MaxClip.X)

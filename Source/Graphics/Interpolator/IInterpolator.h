@@ -16,20 +16,25 @@ public:
 
     virtual void ComputeYStartsAndDeltasLeft(i32 YDiffLeft, i32 LeftStartVtx, i32 LeftEndVtx) = 0;
     virtual void ComputeYStartsAndDeltasRight(i32 YDiffRight, i32 RightStartVtx, i32 RightEndVtx) = 0;
-    // TODO(sean): Implement here
-    virtual void ComputeYStartsAndDeltas(i32 YDiffLeft, i32 LeftStartVtx, i32 LeftEndVtx, i32 YDiffRight, i32 RightStartVtx, i32 RightEndVtx) = 0;
-    virtual void InterpolateYOverClip(i32 YOverClipLeft, i32 YOverClipRight) = 0;
+    FINLINE void ComputeYStartsAndDeltas(i32 YDiffLeft, i32 LeftStartVtx, i32 LeftEndVtx, i32 YDiffRight, i32 RightStartVtx, i32 RightEndVtx)
+    {
+        ComputeYStartsAndDeltasLeft(YDiffLeft, LeftStartVtx, LeftEndVtx);
+        ComputeYStartsAndDeltasRight(YDiffRight, RightStartVtx, RightEndVtx);
+    }
+
+    virtual void ComputeXStartsAndDeltas(i32 XDiff) = 0;
 
     virtual void SwapLeftRight() = 0;
 
-    virtual void ComputeXStartsAndDeltas(i32 XDiff) = 0;
-    virtual void InterpolateXOverClip(i32 XOverClip) = 0;
-
     virtual VColorARGB ComputePixel() = 0;
 
-    virtual void InterpolateX() = 0;
-    virtual void InterpolateYLeft() = 0;
-    virtual void InterpolateYRight() = 0;
-    // TODO(sean): Implement here
-    virtual void InterpolateY() = 0;
+    virtual void InterpolateX(i32 X = 1) = 0;
+
+    virtual void InterpolateYLeft(i32 YLeft = 1) = 0;
+    virtual void InterpolateYRight(i32 YRight = 1) = 0;
+    FINLINE void InterpolateY(i32 YLeft = 1, i32 YRight = 1)
+    {
+        InterpolateYLeft(YLeft);
+        InterpolateYRight(YRight);
+    }
 };
