@@ -37,4 +37,6 @@ public:
         InterpolateYLeft(YLeft);
         InterpolateYRight(YRight);
     }
+
+    virtual void End() {}
 };

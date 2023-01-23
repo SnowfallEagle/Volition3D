@@ -31,18 +31,18 @@ DEFINE_LOG_CHANNEL(hLogGame, "Game");
 void VGame::StartUp()
 {
     Objects[0].LoadCOB(
-        "s.cob",
-        { 0.0f, 0.0f, 250.0f },
-        { 100.0f, 100.0f, 100.0f },
-        { 0.0f, 0.0f, 0.0f },
-        ECOB::SwapYZ
-    );
-    Objects[1].LoadCOB(
         "jetski05.cob",
         { 0.0f, 0.0f, 250.0f },
         { 100.0f, 100.0f, 100.0f },
         { 0.0f, 0.0f, 0.0f },
         ECOB::SwapYZ | ECOB::InvertV
+    );
+    Objects[1].LoadCOB(
+        "s.cob",
+        { 0.0f, 0.0f, 250.0f },
+        { 100.0f, 100.0f, 100.0f },
+        { 0.0f, 0.0f, 0.0f },
+        ECOB::SwapYZ
     );
     Objects[2].LoadCOB(
         "tie04.cob",

@@ -20,6 +20,7 @@
 #include "Graphics/ZBuffer.h"
 #include "Graphics/Interpolator/IInterpolator.h"
 #include "Graphics/Interpolator/GouraudInterpolator.h"
+#include "Graphics/Interpolator/TextureInterpolator.h"
 
 class IRenderer
 {
@@ -28,7 +29,7 @@ public:
     static constexpr i32f BitsPerPixel = 32;
     static constexpr i32f MaxMaterials = 256;
     static constexpr i32f MaxLights = 8;
-    static constexpr i32f NumInterpolators = 1;
+    static constexpr i32f NumInterpolators = 2;
 
 public:
     VSurface BackSurface;
@@ -59,14 +60,17 @@ public:
 
         // TODO(sean): Put interpolators here
         Interpolators[0] = new VGouraudInterpolator();
+        Interpolators[1] = new VTextureInterpolator();
     }
     virtual ~IRenderer()
     {
         ResetMaterials();
         ResetLights();
 
-        // TODO(sean): Delete interpolators
-        delete Interpolators[0];
+        for (i32 I = 0; I < NumInterpolators; ++I)
+        {
+            delete Interpolators[I];
+        }
     }
 
     virtual void StartUp() = 0;
