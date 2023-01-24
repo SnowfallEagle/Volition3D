@@ -20,6 +20,7 @@
 #include "Graphics/ZBuffer.h"
 #include "Graphics/Interpolator/IInterpolator.h"
 #include "Graphics/Interpolator/GouraudInterpolator.h"
+#include "Graphics/Interpolator/FlatInterpolator.h"
 #include "Graphics/Interpolator/TextureInterpolator.h"
 
 class IRenderer
@@ -59,7 +60,7 @@ public:
         ResetLights();
 
         // TODO(sean): Put interpolators here
-        Interpolators[0] = new VGouraudInterpolator();
+        Interpolators[0] = new VFlatInterpolator();
         Interpolators[1] = new VTextureInterpolator();
     }
     virtual ~IRenderer()
