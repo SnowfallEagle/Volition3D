@@ -44,7 +44,7 @@ void VGame::StartUp()
         ECOB::SwapYZ
     );
     Objects[2].LoadCOB(
-        "tie04.cob",
+        "sphere_blue_alpha01.cob",
         { 0.0f, 0.0f, 250.0f },
         { 100.0f, 100.0f, 100.0f },
         { 0.0f, 0.0f, 0.0f },

@@ -524,10 +524,11 @@ b32 VObject::LoadCOB(const char* Path, const VVector4& InPosition, const VVector
                     Line = FindLineCOB("rgb", File, Buffer, BufferSize);
                     std::sscanf(Line, "rgb %f,%f,%f", &R, &G, &B);
 
-                    CurrentMaterial.Color = MAP_RGBX32(
+                    CurrentMaterial.Color = MAP_RGBA32(
                         (i32)(R * 255.0f + 0.5f),
                         (i32)(G * 255.0f + 0.5f),
-                        (i32)(B * 255.0f + 0.5f)
+                        (i32)(B * 255.0f + 0.5f),
+                        255 // Opaque by default, may be overriden by transparency shader
                     );
 
                     // Material parameters
@@ -535,7 +536,6 @@ b32 VObject::LoadCOB(const char* Path, const VVector4& InPosition, const VVector
                     std::sscanf(Line, "alpha %f ka %f ks %f exp %f",
                         &A, &CurrentMaterial.KAmbient, &CurrentMaterial.KSpecular, &CurrentMaterial.Power
                     );
-                    CurrentMaterial.Color.A = (u8)(A * 255.0f + 0.5f);
 
                     /* NOTE(sean):
                         We try to find diffuse factor below, but this is default
@@ -591,6 +591,29 @@ b32 VObject::LoadCOB(const char* Path, const VVector4& InPosition, const VVector
                         Attr |= EObjectAttr::HasTexture;
 
                         VL_LOG("\tMaterial has texture, file path: %s\n", TexturePath);
+                    }
+                }
+
+                // Read transparency shader
+                {
+                    Line = FindLineCOB("Shader class: transparency", File, Buffer, BufferSize);
+                    Line = FindLineCOB("Shader name", File, Buffer, BufferSize);
+
+                    std::snprintf(Format, FormatSize, "Shader name: \"%%%d[a-z ]\"", ShaderNameSize - 1);
+                    std::sscanf(Line, Format, ShaderName);
+
+                    VL_LOG("\tTransparency shader name: %s\n", ShaderName);
+                    if (0 == std::strncmp(ShaderName, "filter", ShaderNameSize))
+                    {
+                        i32 AlphaRed, AlphaGreen, AlphaBlue;
+
+                        Line = FindLineCOB("colour: color", File, Buffer, BufferSize);
+                        std::sscanf(Buffer, "colour: color (%d, %d, %d)", &AlphaRed, &AlphaGreen, &AlphaBlue);
+
+                        CurrentMaterial.Color.A = MAX(AlphaRed, MAX(AlphaGreen, AlphaBlue));
+                        CurrentMaterial.Attr |= EMaterialAttr::Transparent;
+
+                        VL_LOG("\tAlpha channel: %d\n", CurrentMaterial.Color.A);
                     }
                 }
 
@@ -717,6 +740,12 @@ b32 VObject::LoadCOB(const char* Path, const VVector4& InPosition, const VVector
                         LocalVtxList[Poly.VtxIndices[1]].Attr |= EVertexAttr::HasTextureCoords;
                     TransVtxList[Poly.VtxIndices[2]].Attr =
                         LocalVtxList[Poly.VtxIndices[2]].Attr |= EVertexAttr::HasTextureCoords;
+                }
+
+                // Set transparent flag
+                if (PolyMaterial.Attr & EMaterialAttr::Transparent)
+                {
+                    Poly.Attr |= EPolyAttr::Transparent;
                 }
 
                 // Set poly material

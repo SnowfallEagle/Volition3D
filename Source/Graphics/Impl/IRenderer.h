@@ -31,7 +31,7 @@ public:
     static constexpr i32f BitsPerPixel = 32;
     static constexpr i32f MaxMaterials = 256;
     static constexpr i32f MaxLights = 8;
-    static constexpr i32f NumInterpolators = 3;
+    static constexpr i32f NumInterpolators = 2;
 
 public:
     VSurface BackSurface;
@@ -62,8 +62,8 @@ public:
 
         // TODO(sean): Put interpolators here
         Interpolators[0] = new VGouraudInterpolator();
-        Interpolators[1] = new VTextureInterpolator();
-        Interpolators[2] = new VAlphaInterpolator();
+        //Interpolators[1] = new VTextureInterpolator();
+        Interpolators[1] = new VAlphaInterpolator();
     }
     virtual ~IRenderer()
     {
