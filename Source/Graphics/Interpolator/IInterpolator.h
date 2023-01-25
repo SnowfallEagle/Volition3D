@@ -1,7 +1,3 @@
-/* TODO:
-    If virtual methods'll be slow, we'll use function pointers
-*/
-
 #pragma once
 
 #include "Graphics/Polygon.h"

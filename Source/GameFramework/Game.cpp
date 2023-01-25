@@ -31,11 +31,10 @@ DEFINE_LOG_CHANNEL(hLogGame, "Game");
 void VGame::StartUp()
 {
     Objects[0].LoadCOB(
-        "jetski05.cob",
+        "rec_gouraud_textured_02.cob",
         { 0.0f, 0.0f, 250.0f },
         { 100.0f, 100.0f, 100.0f },
-        { 0.0f, 0.0f, 0.0f },
-        ECOB::SwapYZ | ECOB::InvertV
+        { 0.0f, 0.0f, 0.0f }
     );
     Objects[1].LoadCOB(
         "s.cob",

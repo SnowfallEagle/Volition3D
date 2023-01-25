@@ -35,8 +35,8 @@ public:
         for (i32f I = 0; I < 3; ++I)
         {
             VtxIndices[I] = InVtxIndices[I];
-            UVtx[I] = (i32)Poly.TransVtx[I].U; // TODO(sean): + 0.5f?
-            VVtx[I] = (i32)Poly.TransVtx[I].V;
+            UVtx[I] = (i32)(Poly.TransVtx[I].U + 0.5f); // FIXME(sean): Check if it works fine with rounding
+            VVtx[I] = (i32)(Poly.TransVtx[I].V + 0.5f);
         }
     }
 
@@ -73,10 +73,9 @@ public:
 
     virtual void ComputeXStartsAndDeltas(i32 XDiff) override
     {
-        U = ULeft;
-        V = VLeft;
+        U = ULeft + Fx16RoundUp;
+        V = VLeft + Fx16RoundUp;
 
-        // We can simplify this by passing 1 everytime when XDiff is 0 from DrawTriangle()
         if (XDiff > 0)
         {
             UDeltaByX = (URight - ULeft) / XDiff;
@@ -91,7 +90,7 @@ public:
 
     virtual VColorARGB ComputePixel() override
     {
-        return TextureBuffer[Fx16ToIntRounded(V) * TexturePitch + Fx16ToIntRounded(U)];
+        return TextureBuffer[Fx16ToInt(V) * TexturePitch + Fx16ToInt(U)];
     }
 
     virtual void InterpolateX(i32 X) override

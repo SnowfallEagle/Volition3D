@@ -72,9 +72,9 @@ public:
 
     virtual void ComputeXStartsAndDeltas(i32 XDiff) override
     {
-        R = RLeft;
-        G = GLeft;
-        B = BLeft;
+        R = RLeft + Fx16RoundUp;
+        G = GLeft + Fx16RoundUp;
+        B = BLeft + Fx16RoundUp;
 
         if (XDiff > 0)
         {
@@ -93,9 +93,9 @@ public:
     virtual VColorARGB ComputePixel() override
     {
         return MAP_XRGB32(
-            Fx16ToIntRounded(R),
-            Fx16ToIntRounded(G),
-            Fx16ToIntRounded(B)
+            Fx16ToInt(R),
+            Fx16ToInt(G),
+            Fx16ToInt(B)
         );
     }
 

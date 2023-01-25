@@ -60,7 +60,7 @@ public:
         ResetLights();
 
         // TODO(sean): Put interpolators here
-        Interpolators[0] = new VFlatInterpolator();
+        Interpolators[0] = new VGouraudInterpolator();
         Interpolators[1] = new VTextureInterpolator();
     }
     virtual ~IRenderer()
