@@ -3344,7 +3344,7 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
             ZBufferArray = (fx16*)ZBuffer.Buffer + (ZBuffer.Pitch * YStart);
 
             // Proccess each Y
-            for (i32f Y = YStart; Y <= YEnd; ++Y)
+            for (i32f Y = YStart; Y < YEnd; ++Y)
             {
                 // Compute starting values
                 i32f XStart = Fx16ToIntRounded(XLeft);
@@ -3389,7 +3389,7 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
                 }
 
                 // Proccess each X
-                for (i32f X = XStart; X <= XEnd; ++X)
+                for (i32f X = XStart; X < XEnd; ++X)
                 {
                     if (Z < ZBufferArray[X])
                     {
@@ -3437,7 +3437,7 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
             ZBufferArray = (fx16*)ZBuffer.Buffer + (ZBuffer.Pitch * YStart);
 
             // Proccess each Y
-            for (i32f Y = YStart; Y <= YEnd; ++Y)
+            for (i32f Y = YStart; Y < YEnd; ++Y)
             {
                 // Compute starting values
                 i32f XStart = Fx16ToIntRounded(XLeft);
@@ -3464,7 +3464,7 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
                 }
 
                 // Proccess each X
-                for (i32f X = XStart; X <= XEnd; ++X)
+                for (i32f X = XStart; X < XEnd; ++X)
                 {
                     if (Z < ZBufferArray[X])
                     {
@@ -3684,7 +3684,7 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
             ZBufferArray = (fx16*)ZBuffer.Buffer + (ZBuffer.Pitch * YStart);
 
             // Proccess each Y
-            for (i32f Y = YStart; Y <= YEnd; ++Y)
+            for (i32f Y = YStart; Y < YEnd; ++Y)
             {
                 // Compute starting values
                 i32f XStart = Fx16ToIntRounded(XLeft);
@@ -3729,7 +3729,7 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
                 }
 
                 // Proccess each X
-                for (i32f X = XStart; X <= XEnd; ++X)
+                for (i32f X = XStart; X < XEnd; ++X)
                 {
                     if (Z < ZBufferArray[X])
                     {
@@ -3826,7 +3826,7 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
             ZBufferArray = (fx16*)ZBuffer.Buffer + (ZBuffer.Pitch * YStart);
 
             // Proccess each Y
-            for (i32f Y = YStart; Y <= YEnd; ++Y)
+            for (i32f Y = YStart; Y < YEnd; ++Y)
             {
                 // Compute starting values
                 i32f XStart = Fx16ToIntRounded(XLeft);
@@ -3853,7 +3853,7 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
                 }
 
                 // Proccess each X
-                for (i32f X = XStart; X <= XEnd; ++X)
+                for (i32f X = XStart; X < XEnd; ++X)
                 {
                     if (Z < ZBufferArray[X])
                     {
