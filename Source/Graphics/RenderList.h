@@ -424,7 +424,7 @@ public:
                 if (BSum > 255) BSum = 255;
 
                 // Put final color
-                Poly->LitColor[0] = MAP_XRGB32(RSum, GSum, BSum);
+                Poly->LitColor[0] = MAP_ARGB32(Poly->OriginalColor.A, RSum, GSum, BSum);
             }
             else if (Poly->Attr & EPolyAttr::ShadeModeGouraud)
             {
@@ -715,9 +715,9 @@ public:
                 if (BSum2 > 255) BSum2 = 255;
 
                 // Put final color
-                Poly->LitColor[0] = MAP_XRGB32(RSum0, GSum0, BSum0);
-                Poly->LitColor[1] = MAP_XRGB32(RSum1, GSum1, BSum1);
-                Poly->LitColor[2] = MAP_XRGB32(RSum2, GSum2, BSum2);
+                Poly->LitColor[0] = MAP_ARGB32(Poly->OriginalColor.A, RSum0, GSum0, BSum0);
+                Poly->LitColor[1] = MAP_ARGB32(Poly->OriginalColor.A, RSum1, GSum1, BSum1);
+                Poly->LitColor[2] = MAP_ARGB32(Poly->OriginalColor.A, RSum2, GSum2, BSum2);
             }
         }
     }

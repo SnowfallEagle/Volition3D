@@ -7,7 +7,7 @@ class VAlphaInterpolator final : public IInterpolator
 private:
     const u32* Buffer;
     i32 Pitch;
-    VColorARGB AlphaColor;
+    i32 Alpha;
 
 public:
     virtual ~VAlphaInterpolator() = default;
@@ -16,14 +16,17 @@ public:
     {
         Buffer = InBuffer;
         Pitch = InPitch;
-
-        i32 AlphaComponent = (0xFF * Poly.LitColor[0].A) >> 8;
-        AlphaColor = MAP_XRGB32(AlphaComponent, AlphaComponent, AlphaComponent);
+        Alpha = Poly.LitColor[0].A;
     }
 
-    virtual VColorARGB ProccessPixel(VColorARGB Pixel) override
+    virtual VColorARGB ProccessPixel(VColorARGB Pixel, i32f X, i32f Y) override
     {
-        // TODO(sean): Implement
-        return Pixel;
+        VColorARGB ScreenColor = Buffer[Y * Pitch + X];
+
+        return MAP_XRGB32(
+            ( (Alpha * Pixel.R) + ((255 - Alpha) * ScreenColor.R) ) >> 8,
+            ( (Alpha * Pixel.G) + ((255 - Alpha) * ScreenColor.G) ) >> 8,
+            ( (Alpha * Pixel.B) + ((255 - Alpha) * ScreenColor.B) ) >> 8
+        );
     }
 };

@@ -37,20 +37,20 @@ void VGame::StartUp()
         { 0.0f, 0.0f, 0.0f }
     );
     Objects[1].LoadCOB(
-        "s.cob",
+        "s_alpha.cob",
         { 0.0f, 0.0f, 250.0f },
         { 100.0f, 100.0f, 100.0f },
         { 0.0f, 0.0f, 0.0f },
         ECOB::SwapYZ
     );
     Objects[2].LoadCOB(
-        "sphere_blue_alpha01.cob",
+        "sphere_red_alpha01.cob",
         { 0.0f, 0.0f, 250.0f },
         { 100.0f, 100.0f, 100.0f },
         { 0.0f, 0.0f, 0.0f },
         ECOB::SwapYZ
     );
-    Object = &Objects[0];
+    Object = &Objects[2];
 
     Camera.Init(ECameraAttr::Euler, { 0, 75.0f, 0 }, { 0, 0, 0 }, Object->Position, 90, 120, 12000, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
     {
@@ -59,7 +59,7 @@ void VGame::StartUp()
             ELightState::Active,
             ELightAttr::Ambient,
 
-            MAP_RGBX32(0x11, 0x11, 0x11), 0, 0,
+            MAP_RGBX32(0x33, 0x33, 0x33), 0, 0,
             { 0, 0, 0, 0 }, { 0, 0, 0, 0}, VVector4{0, 0, 0, 0}.GetNormalized(), { 0 , 0, 0, 0 },
 
             0, 0, 0,
@@ -252,10 +252,14 @@ void VGame::Render()
 
     // Draw background
     {
+        VRelRectI Dest = { 0, 0, Volition.WindowWidth, Volition.WindowHeight };
+        Renderer.BackSurface.FillRectHW(&Dest, MAP_XRGB32(0xFF, 0xFF, 0xFF));
+        /*
         VRelRectI Dest = { 0, 0, Volition.WindowWidth, Volition.WindowHeight/2 };
         Renderer.BackSurface.FillRectHW(&Dest, MAP_XRGB32(100, 20, 255));
         Dest = { 0, Dest.H, Dest.W, Volition.WindowHeight / 2 - 1 };
         Renderer.BackSurface.FillRectHW(&Dest, MAP_XRGB32(60, 10, 255));
+        */
     }
 
     // Render stuff
