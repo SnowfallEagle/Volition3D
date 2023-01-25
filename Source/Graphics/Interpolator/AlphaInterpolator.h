@@ -21,13 +21,9 @@ public:
         AlphaColor = MAP_XRGB32(AlphaComponent, AlphaComponent, AlphaComponent);
     }
 
-    /* TODO(sean):
-        void ProccessPixel(VColorARGB& Pixel)
-        or
-        VColorARGB ProccessPixel(VColorARGB Pixel)
-    */
-    virtual VColorARGB ComputePixel() override
+    virtual VColorARGB ProccessPixel(VColorARGB Pixel) override
     {
-        return MAP_XRGB32(0xFF, 0xFF, 0xFF);
+        // TODO(sean): Implement
+        return Pixel;
     }
 };

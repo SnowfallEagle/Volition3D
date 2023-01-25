@@ -3393,11 +3393,11 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
                 {
                     if (Z < ZBufferArray[X])
                     {
-                        VColorARGB FinalPixel = Interpolators[0]->ComputePixel();
+                        VColorARGB FinalPixel = 0xFFFFFFFF;
 
-                        for (i32f InterpIndex = 1; InterpIndex < NumInterpolators; ++InterpIndex)
+                        for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
                         {
-                            VColorARGB ComputedPixel = Interpolators[InterpIndex]->ComputePixel();
+                            VColorARGB ComputedPixel = Interpolators[InterpIndex]->ProccessPixel(FinalPixel);
 
                             FinalPixel.R = (FinalPixel.R * ComputedPixel.R) >> 8;
                             FinalPixel.G = (FinalPixel.G * ComputedPixel.G) >> 8;
@@ -3472,11 +3472,11 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
                 {
                     if (Z < ZBufferArray[X])
                     {
-                        VColorARGB FinalPixel = Interpolators[0]->ComputePixel();
+                        VColorARGB FinalPixel = 0xFFFFFFFF;
 
-                        for (i32f InterpIndex = 1; InterpIndex < NumInterpolators; ++InterpIndex)
+                        for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
                         {
-                            VColorARGB ComputedPixel = Interpolators[InterpIndex]->ComputePixel();
+                            VColorARGB ComputedPixel = Interpolators[InterpIndex]->ProccessPixel(FinalPixel);
 
                             FinalPixel.R = (FinalPixel.R * ComputedPixel.R) >> 8;
                             FinalPixel.G = (FinalPixel.G * ComputedPixel.G) >> 8;
@@ -3741,11 +3741,11 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
                 {
                     if (Z < ZBufferArray[X])
                     {
-                        VColorARGB FinalPixel = Interpolators[0]->ComputePixel();
+                        VColorARGB FinalPixel = 0xFFFFFFFF;
 
-                        for (i32f InterpIndex = 1; InterpIndex < NumInterpolators; ++InterpIndex)
+                        for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
                         {
-                            VColorARGB ComputedPixel = Interpolators[InterpIndex]->ComputePixel();
+                            VColorARGB ComputedPixel = Interpolators[InterpIndex]->ProccessPixel(FinalPixel);
 
                             FinalPixel.R = (FinalPixel.R * ComputedPixel.R) >> 8;
                             FinalPixel.G = (FinalPixel.G * ComputedPixel.G) >> 8;
@@ -3869,11 +3869,11 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
                 {
                     if (Z < ZBufferArray[X])
                     {
-                        VColorARGB FinalPixel = Interpolators[0]->ComputePixel();
+                        VColorARGB FinalPixel = 0xFFFFFFFF;
 
-                        for (i32f InterpIndex = 1; InterpIndex < NumInterpolators; ++InterpIndex)
+                        for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
                         {
-                            VColorARGB ComputedPixel = Interpolators[InterpIndex]->ComputePixel();
+                            VColorARGB ComputedPixel = Interpolators[InterpIndex]->ProccessPixel(FinalPixel);
 
                             FinalPixel.R = (FinalPixel.R * ComputedPixel.R) >> 8;
                             FinalPixel.G = (FinalPixel.G * ComputedPixel.G) >> 8;

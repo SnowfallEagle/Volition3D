@@ -90,12 +90,12 @@ public:
         }
     }
 
-    virtual VColorARGB ComputePixel() override
+    virtual VColorARGB ProccessPixel(VColorARGB Pixel) override
     {
         return MAP_XRGB32(
-            Fx16ToInt(R),
-            Fx16ToInt(G),
-            Fx16ToInt(B)
+            (Fx16ToInt(R) * Pixel.R) >> 8,
+            (Fx16ToInt(G) * Pixel.G) >> 8,
+            (Fx16ToInt(B) * Pixel.B) >> 8
         );
     }
 

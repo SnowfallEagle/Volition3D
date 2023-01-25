@@ -22,7 +22,7 @@ public:
 
     virtual void SwapLeftRight() {}
 
-    virtual VColorARGB ComputePixel() { return 0; }
+    virtual VColorARGB ProccessPixel(VColorARGB Pixel) { return Pixel; }
 
     virtual void InterpolateX(i32 X = 1) {}
 

@@ -20,8 +20,8 @@
 #include "Graphics/ZBuffer.h"
 #include "Graphics/Interpolator/IInterpolator.h"
 #include "Graphics/Interpolator/GouraudInterpolator.h"
-#include "Graphics/Interpolator/FlatInterpolator.h"
-#include "Graphics/Interpolator/TextureInterpolator.h"
+// #include "Graphics/Interpolator/FlatInterpolator.h"
+// #include "Graphics/Interpolator/TextureInterpolator.h"
 #include "Graphics/Interpolator/AlphaInterpolator.h"
 
 class IRenderer
