@@ -188,6 +188,7 @@
     <ClInclude Include="..\..\Source\Graphics\Impl\IRenderer.h" />
     <ClInclude Include="..\..\Source\Graphics\Impl\ISurface.h" />
     <ClInclude Include="..\..\Source\Graphics\Impl\Surface_SDL.h" />
+    <ClInclude Include="..\..\Source\Graphics\Interpolator\AlphaInterpolator.h" />
     <ClInclude Include="..\..\Source\Graphics\Interpolator\FlatInterpolator.h" />
     <ClInclude Include="..\..\Source\Graphics\Interpolator\GouraudInterpolator.h" />
     <ClInclude Include="..\..\Source\Graphics\Interpolator\IInterpolator.h" />

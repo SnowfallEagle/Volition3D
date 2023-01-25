@@ -8,10 +8,10 @@
 #include "Core/Types.h"
 
 #define MAP_ARGB32(A, R, G, B) ( (u32)( ((A) << 24) | ((R) << 16) | ((G) << 8) | (B)) )
-#define MAP_XRGB32(R, G, B) MAP_ARGB32(0, R, G, B)
+#define MAP_XRGB32(R, G, B) MAP_ARGB32(0xFF, R, G, B)
 
 #define MAP_RGBA32(R, G, B, A) ( (u32) ( ((R) << 24) | ((G) << 16) | ((B) << 8) | (A)) )
-#define MAP_RGBX32(R, G, B) MAP_RGBA32(R, G, B, 0)
+#define MAP_RGBX32(R, G, B) MAP_RGBA32(R, G, B, 0xFF)
 
 class VColorARGB
 {

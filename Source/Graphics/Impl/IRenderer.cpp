@@ -3214,7 +3214,7 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
     i32 VtxIndices[3] = { V0, V1, V2 };
     for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
     {
-        Interpolators[InterpIndex]->Start(Poly, VtxIndices);
+        Interpolators[InterpIndex]->Start(Buffer, Pitch, Poly, VtxIndices);
     }
 
     i32 ZVtx0 = (i32)(Poly.TransVtx[V0].Z + 0.5f);

@@ -8,7 +8,7 @@ class IInterpolator
 public:
     virtual ~IInterpolator() = default;
 
-    virtual void Start(const VPolyFace& Poly, const i32 VtxIndices[3]) {}
+    virtual void Start(const u32* Buffer, i32 Pitch, const VPolyFace& Poly, const i32 VtxIndices[3]) {}
 
     virtual void ComputeYStartsAndDeltasLeft(i32 YDiffLeft, i32 LeftStartVtx, i32 LeftEndVtx) {}
     virtual void ComputeYStartsAndDeltasRight(i32 YDiffRight, i32 RightStartVtx, i32 RightEndVtx) {}

@@ -21,7 +21,7 @@ private:
 public:
     virtual ~VGouraudInterpolator() = default;
 
-    virtual void Start(const VPolyFace& Poly, const i32 InVtxIndices[3]) override
+    virtual void Start(const u32* Buffer, i32 Pitch, const VPolyFace& Poly, const i32 InVtxIndices[3]) override
     {
         for (i32f I = 0; I < 3; ++I)
         {

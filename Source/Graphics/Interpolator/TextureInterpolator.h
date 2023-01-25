@@ -25,7 +25,7 @@ private:
 public:
     virtual ~VTextureInterpolator() = default;
 
-    virtual void Start(const VPolyFace& Poly, const i32 InVtxIndices[3]) override
+    virtual void Start(const u32* Buffer, i32 Pitch, const VPolyFace& Poly, const i32 InVtxIndices[3]) override
     {
         ASSERT(Poly.Texture);
 
