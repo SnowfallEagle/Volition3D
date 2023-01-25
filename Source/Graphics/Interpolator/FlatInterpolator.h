@@ -15,8 +15,12 @@ public:
         Color = Poly.LitColor[0];
     }
 
-    virtual VColorARGB ComputePixel() override
+    virtual VColorARGB ProcessPixel(VColorARGB Pixel, i32f X, i32f Y) override
     {
-        return Color;
+        return MAP_XRGB32(
+            (Color.R * Pixel.R) >> 8,
+            (Color.G * Pixel.G) >> 8,
+            (Color.B * Pixel.B) >> 8
+        );
     }
 };

@@ -88,9 +88,14 @@ public:
         }
     }
 
-    virtual VColorARGB ComputePixel() override
+    virtual VColorARGB ProcessPixel(VColorARGB Pixel, i32f X, i32f Y) override
     {
-        return TextureBuffer[Fx16ToInt(V) * TexturePitch + Fx16ToInt(U)];
+        VColorARGB TextureColor = TextureBuffer[Fx16ToInt(V) * TexturePitch + Fx16ToInt(U)];
+        return MAP_XRGB32(
+            (TextureColor.R * Pixel.R) >> 8,
+            (TextureColor.G * Pixel.G) >> 8,
+            (TextureColor.B * Pixel.B) >> 8
+        );
     }
 
     virtual void InterpolateX(i32 X) override

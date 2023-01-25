@@ -50,7 +50,7 @@ void VGame::StartUp()
         { 0.0f, 0.0f, 0.0f },
         ECOB::SwapYZ
     );
-    Object = &Objects[2];
+    Object = &Objects[0];
 
     Camera.Init(ECameraAttr::Euler, { 0, 75.0f, 0 }, { 0, 0, 0 }, Object->Position, 90, 120, 12000, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
     {
@@ -253,7 +253,7 @@ void VGame::Render()
     // Draw background
     {
         VRelRectI Dest = { 0, 0, Volition.WindowWidth, Volition.WindowHeight };
-        Renderer.BackSurface.FillRectHW(&Dest, MAP_XRGB32(0xFF, 0xFF, 0xFF));
+        Renderer.BackSurface.FillRectHW(&Dest, MAP_XRGB32(0xCC, 0xCC, 0xCC));
         /*
         VRelRectI Dest = { 0, 0, Volition.WindowWidth, Volition.WindowHeight/2 };
         Renderer.BackSurface.FillRectHW(&Dest, MAP_XRGB32(100, 20, 255));
