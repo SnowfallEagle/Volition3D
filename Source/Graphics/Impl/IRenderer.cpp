@@ -3397,7 +3397,7 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
 
                         for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
                         {
-                            FinalPixel = Interpolators[InterpIndex]->ProcessPixel(FinalPixel, X, Y);
+                            FinalPixel = Interpolators[InterpIndex]->ProcessPixel(FinalPixel, X, Y, Z);
                         }
 
                         Buffer[X] = FinalPixel;
@@ -3472,7 +3472,7 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
 
                         for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
                         {
-                            FinalPixel = Interpolators[InterpIndex]->ProcessPixel(FinalPixel, X, Y);
+                            FinalPixel = Interpolators[InterpIndex]->ProcessPixel(FinalPixel, X, Y, Z);
                         }
 
                         Buffer[X] = FinalPixel;
@@ -3737,7 +3737,7 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
 
                         for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
                         {
-                            FinalPixel = Interpolators[InterpIndex]->ProcessPixel(FinalPixel, X, Y);
+                            FinalPixel = Interpolators[InterpIndex]->ProcessPixel(FinalPixel, X, Y, Z);
                         }
 
                         Buffer[X] = FinalPixel;
@@ -3861,7 +3861,7 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
 
                         for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
                         {
-                            FinalPixel = Interpolators[InterpIndex]->ProcessPixel(FinalPixel, X, Y);
+                            FinalPixel = Interpolators[InterpIndex]->ProcessPixel(FinalPixel, X, Y, Z);
                         }
 
                         Buffer[X] = FinalPixel;

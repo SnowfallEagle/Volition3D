@@ -6,7 +6,7 @@ class VGouraudInterpolator final : public IInterpolator
 {
 private:
     i32 VtxIndices[3];
-    i32 RVtx[3], GVtx[3], BVtx[3];
+    fx16 RVtx[3], GVtx[3], BVtx[3];
 
     fx16 R, G, B;
 
@@ -26,31 +26,31 @@ public:
         for (i32f I = 0; I < 3; ++I)
         {
             VtxIndices[I] = InVtxIndices[I];
-            RVtx[I] = Poly.LitColor[I].R;
-            GVtx[I] = Poly.LitColor[I].G;
-            BVtx[I] = Poly.LitColor[I].B;
+            RVtx[I] = IntToFx16(Poly.LitColor[I].R);
+            GVtx[I] = IntToFx16(Poly.LitColor[I].G);
+            BVtx[I] = IntToFx16(Poly.LitColor[I].B);
         }
     }
 
     virtual void ComputeYStartsAndDeltasLeft(i32 YDiffLeft, i32 LeftStartVtx, i32 LeftEndVtx) override
     {
-        RLeft = IntToFx16(RVtx[LeftStartVtx]);
-        GLeft = IntToFx16(GVtx[LeftStartVtx]);
-        BLeft = IntToFx16(BVtx[LeftStartVtx]);
+        RLeft = (RVtx[LeftStartVtx]);
+        GLeft = (GVtx[LeftStartVtx]);
+        BLeft = (BVtx[LeftStartVtx]);
 
-        RDeltaLeftByY = IntToFx16(RVtx[LeftEndVtx] - RVtx[LeftStartVtx]) / YDiffLeft;
-        GDeltaLeftByY = IntToFx16(GVtx[LeftEndVtx] - GVtx[LeftStartVtx]) / YDiffLeft;
-        BDeltaLeftByY = IntToFx16(BVtx[LeftEndVtx] - BVtx[LeftStartVtx]) / YDiffLeft;
+        RDeltaLeftByY = (RVtx[LeftEndVtx] - RVtx[LeftStartVtx]) / YDiffLeft;
+        GDeltaLeftByY = (GVtx[LeftEndVtx] - GVtx[LeftStartVtx]) / YDiffLeft;
+        BDeltaLeftByY = (BVtx[LeftEndVtx] - BVtx[LeftStartVtx]) / YDiffLeft;
     }
     virtual void ComputeYStartsAndDeltasRight(i32 YDiffRight, i32 RightStartVtx, i32 RightEndVtx) override
     {
-        RRight = IntToFx16(RVtx[RightStartVtx]);
-        GRight = IntToFx16(GVtx[RightStartVtx]);
-        BRight = IntToFx16(BVtx[RightStartVtx]);
+        RRight = (RVtx[RightStartVtx]);
+        GRight = (GVtx[RightStartVtx]);
+        BRight = (BVtx[RightStartVtx]);
 
-        RDeltaRightByY = IntToFx16(RVtx[RightEndVtx] - RVtx[RightStartVtx]) / YDiffRight;
-        GDeltaRightByY = IntToFx16(GVtx[RightEndVtx] - GVtx[RightStartVtx]) / YDiffRight;
-        BDeltaRightByY = IntToFx16(BVtx[RightEndVtx] - BVtx[RightStartVtx]) / YDiffRight;
+        RDeltaRightByY = (RVtx[RightEndVtx] - RVtx[RightStartVtx]) / YDiffRight;
+        GDeltaRightByY = (GVtx[RightEndVtx] - GVtx[RightStartVtx]) / YDiffRight;
+        BDeltaRightByY = (BVtx[RightEndVtx] - BVtx[RightStartVtx]) / YDiffRight;
     }
 
     virtual void SwapLeftRight() override
@@ -90,7 +90,7 @@ public:
         }
     }
 
-    virtual VColorARGB ProcessPixel(VColorARGB Pixel, i32f X, i32f Y) override
+    virtual VColorARGB ProcessPixel(VColorARGB Pixel, i32f X, i32f Y, fx28 Z) override
     {
         return MAP_XRGB32(
             (Fx16ToInt(R) * Pixel.R) >> 8,

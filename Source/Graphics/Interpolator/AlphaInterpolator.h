@@ -19,7 +19,7 @@ public:
         Alpha = Poly.LitColor[0].A;
     }
 
-    virtual VColorARGB ProcessPixel(VColorARGB Pixel, i32f X, i32f Y) override
+    virtual VColorARGB ProcessPixel(VColorARGB Pixel, i32f X, i32f Y, fx28 Z) override
     {
         VColorARGB ScreenColor = Buffer[Y * Pitch + X];
 

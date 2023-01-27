@@ -1,23 +1,23 @@
 #pragma once
 
 #include "Graphics/Interpolator/IInterpolator.h"
-#include "Math/Fixed16.h"
+#include "Math/Fixed22.h"
 
 class VPerspectiveCorrectTextureInterpolator final : public IInterpolator
 {
 private:
     i32 VtxIndices[3];
-    fx16 UVtx[3], VVtx[3];
+    fx22 UVtx[3], VVtx[3];
 
-    fx16 U, V;
+    fx22 U, V;
 
-    fx16 ULeft, VLeft;
-    fx16 URight, VRight;
+    fx22 ULeft, VLeft;
+    fx22 URight, VRight;
 
-    fx16 UDeltaLeftByY, VDeltaLeftByY;
-    fx16 UDeltaRightByY, VDeltaRightByY;
+    fx22 UDeltaLeftByY, VDeltaLeftByY;
+    fx22 UDeltaRightByY, VDeltaRightByY;
 
-    fx16 UDeltaByX, VDeltaByX;
+    fx22 UDeltaByX, VDeltaByX;
 
     VSurface* Texture;
     u32* TextureBuffer;
@@ -36,8 +36,8 @@ public:
         for (i32f I = 0; I < 3; ++I)
         {
             VtxIndices[I] = InVtxIndices[I];
-            UVtx[I] = IntToFx16((i32)(Poly.TransVtx[I].U + 0.5f));
-            VVtx[I] = IntToFx16((i32)(Poly.TransVtx[I].V + 0.5f));
+            UVtx[I] = IntToFx22((i32)(Poly.TransVtx[I].U + 0.5f)) / (i32)(Poly.TransVtx[I].Z + 0.5f);
+            VVtx[I] = IntToFx22((i32)(Poly.TransVtx[I].V + 0.5f)) / (i32)(Poly.TransVtx[I].Z + 0.5f);
         }
     }
 
@@ -74,8 +74,8 @@ public:
 
     virtual void ComputeXStartsAndDeltas(i32 XDiff) override
     {
-        U = ULeft + Fx16RoundUp;
-        V = VLeft + Fx16RoundUp;
+        U = ULeft;
+        V = VLeft;
 
         if (XDiff > 0)
         {
@@ -89,9 +89,13 @@ public:
         }
     }
 
-    virtual VColorARGB ProcessPixel(VColorARGB Pixel, i32f X, i32f Y) override
+    virtual VColorARGB ProcessPixel(VColorARGB Pixel, i32f X, i32f Y, fx28 Z) override
     {
-        VColorARGB TextureColor = TextureBuffer[Fx16ToInt(V) * TexturePitch + Fx16ToInt(U)];
+        VColorARGB TextureColor = TextureBuffer[
+            ((V << (Fx28Shift - Fx22Shift)) / Z) * TexturePitch +
+            ((U << (Fx28Shift - Fx22Shift)) / Z)
+        ];
+
         return MAP_XRGB32(
             (TextureColor.R * Pixel.R) >> 8,
             (TextureColor.G * Pixel.G) >> 8,

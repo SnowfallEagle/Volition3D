@@ -74,8 +74,8 @@ public:
 
     virtual void ComputeXStartsAndDeltas(i32 XDiff) override
     {
-        U = ULeft + Fx16RoundUp;
-        V = VLeft + Fx16RoundUp;
+        U = ULeft;
+        V = VLeft;
 
         if (XDiff > 0)
         {
@@ -89,7 +89,7 @@ public:
         }
     }
 
-    virtual VColorARGB ProcessPixel(VColorARGB Pixel, i32f X, i32f Y) override
+    virtual VColorARGB ProcessPixel(VColorARGB Pixel, i32f X, i32f Y, fx28 Z) override
     {
         VColorARGB TextureColor = TextureBuffer[Fx16ToInt(V) * TexturePitch + Fx16ToInt(U)];
         return MAP_XRGB32(

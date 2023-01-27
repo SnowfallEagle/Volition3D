@@ -5,17 +5,14 @@
 
 typedef i32 fx22;
 
-namespace
-{
-    static constexpr i32f Shift = 22;
-};
+static constexpr i32f Fx22Shift = 22;
 
 FINLINE fx22 IntToFx22(i32 Int)
 {
-    return Int << Shift;
+    return Int << Fx22Shift;
 }
 
 FINLINE fx22 Fx22ToInt(fx22 Fixed)
 {
-    return Fixed >> Shift;
+    return Fixed >> Fx22Shift;
 }
