@@ -3,7 +3,7 @@
 #include "Graphics/Interpolator/IInterpolator.h"
 #include "Math/Fixed16.h"
 
-class VTextureInterpolator final : public IInterpolator
+class VPerspectiveCorrectTextureInterpolator final : public IInterpolator
 {
 private:
     i32 VtxIndices[3];
@@ -24,7 +24,7 @@ private:
     i32 TexturePitch;
 
 public:
-    virtual ~VTextureInterpolator() = default;
+    virtual ~VPerspectiveCorrectTextureInterpolator() = default;
 
     virtual void Start(const u32* Buffer, i32 Pitch, const VPolyFace& Poly, const i32 InVtxIndices[3]) override
     {
