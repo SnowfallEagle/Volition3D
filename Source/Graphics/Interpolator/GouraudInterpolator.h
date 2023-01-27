@@ -70,7 +70,7 @@ public:
         SWAP(BVtx[VtxIndices[1]], BVtx[VtxIndices[2]], TempInt);
     }
 
-    virtual void ComputeXStartsAndDeltas(i32 XDiff) override
+    virtual void ComputeXStartsAndDeltas(i32 XDiff, fx28 ZLeft, fx28 ZRight) override
     {
         R = RLeft + Fx16RoundUp;
         G = GLeft + Fx16RoundUp;

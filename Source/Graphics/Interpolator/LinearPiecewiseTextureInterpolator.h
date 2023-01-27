@@ -3,7 +3,7 @@
 #include "Graphics/Interpolator/IInterpolator.h"
 #include "Math/Fixed22.h"
 
-class VPerspectiveCorrectTextureInterpolator final : public IInterpolator
+class VLinearPiecewiseTextureInterpolator final : public IInterpolator
 {
 private:
     i32 VtxIndices[3];
@@ -24,7 +24,7 @@ private:
     i32 TexturePitch;
 
 public:
-    virtual ~VPerspectiveCorrectTextureInterpolator() = default;
+    virtual ~VLinearPiecewiseTextureInterpolator() = default;
 
     virtual void Start(const u32* Buffer, i32 Pitch, const VPolyFace& Poly, const i32 InVtxIndices[3]) override
     {
@@ -74,27 +74,30 @@ public:
 
     virtual void ComputeXStartsAndDeltas(i32 XDiff, fx28 ZLeft, fx28 ZRight) override
     {
-        U = ULeft;
-        V = VLeft;
+        fx22 ULeftDivZ  = ((ULeft  << (Fx28Shift - Fx22Shift)) / (ZLeft  >> 6)) << 16;
+        fx22 URightDivZ = ((URight << (Fx28Shift - Fx22Shift)) / (ZRight >> 6)) << 16;
+
+        fx22 VLeftDivZ  = ((VLeft  << (Fx28Shift - Fx22Shift)) / (ZLeft  >> 6)) << 16;
+        fx22 VRightDivZ = ((VRight << (Fx28Shift - Fx22Shift)) / (ZRight >> 6)) << 16;
+
+        U = ULeftDivZ;
+        V = VLeftDivZ;
 
         if (XDiff > 0)
         {
-            UDeltaByX = (URight - ULeft) / XDiff;
-            VDeltaByX = (VRight - VLeft) / XDiff;
+            UDeltaByX = (URightDivZ  - ULeftDivZ) / XDiff;
+            VDeltaByX = (VRightDivZ  - VLeftDivZ) / XDiff;
         }
         else
         {
-            UDeltaByX = (URight - ULeft);
-            VDeltaByX = (VRight - VLeft);
+            UDeltaByX = (URightDivZ - ULeftDivZ);
+            VDeltaByX = (VRightDivZ  - VLeftDivZ);
         }
     }
 
     virtual VColorARGB ProcessPixel(VColorARGB Pixel, i32f X, i32f Y, fx28 Z) override
     {
-        VColorARGB TextureColor = TextureBuffer[
-            ((V << (Fx28Shift - Fx22Shift)) / Z) * TexturePitch +
-            ((U << (Fx28Shift - Fx22Shift)) / Z)
-        ];
+        VColorARGB TextureColor = TextureBuffer[Fx22ToInt(V) * TexturePitch + Fx22ToInt(U)];
 
         return MAP_XRGB32(
             (TextureColor.R * Pixel.R) >> 8,

@@ -72,7 +72,7 @@ public:
         SWAP(VVtx[VtxIndices[1]], VVtx[VtxIndices[2]], TempInt);
     }
 
-    virtual void ComputeXStartsAndDeltas(i32 XDiff) override
+    virtual void ComputeXStartsAndDeltas(i32 XDiff, fx28 ZLeft, fx28 ZRight) override
     {
         U = ULeft;
         V = VLeft;

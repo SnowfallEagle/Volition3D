@@ -18,7 +18,7 @@ public:
         ComputeYStartsAndDeltasRight(YDiffRight, RightStartVtx, RightEndVtx);
     }
 
-    virtual void ComputeXStartsAndDeltas(i32 XDiff) {}
+    virtual void ComputeXStartsAndDeltas(i32 XDiff, fx28 ZLeft, fx28 ZRight) {}
 
     virtual void SwapLeftRight() {}
 
