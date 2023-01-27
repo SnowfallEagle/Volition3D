@@ -253,7 +253,7 @@ void VGame::Render()
     // Draw background
     {
         VRelRectI Dest = { 0, 0, Volition.WindowWidth, Volition.WindowHeight };
-        Renderer.BackSurface.FillRectHW(&Dest, MAP_XRGB32(0xCC, 0xCC, 0xCC));
+        Renderer.BackSurface.FillRectHW(&Dest, MAP_XRGB32(0x66, 0x00, 0x00));
         /*
         VRelRectI Dest = { 0, 0, Volition.WindowWidth, Volition.WindowHeight/2 };
         Renderer.BackSurface.FillRectHW(&Dest, MAP_XRGB32(100, 20, 255));

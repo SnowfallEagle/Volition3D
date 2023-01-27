@@ -21,7 +21,7 @@
 #include "Graphics/Interpolator/IInterpolator.h"
 #include "Graphics/Interpolator/GouraudInterpolator.h"
 #include "Graphics/Interpolator/FlatInterpolator.h"
-#include "Graphics/Interpolator/TextureInterpolator.h"
+// #include "Graphics/Interpolator/TextureInterpolator.h"
 #include "Graphics/Interpolator/AlphaInterpolator.h"
 
 class IRenderer
@@ -31,7 +31,7 @@ public:
     static constexpr i32f BitsPerPixel = 32;
     static constexpr i32f MaxMaterials = 256;
     static constexpr i32f MaxLights = 8;
-    static constexpr i32f NumInterpolators = 3;
+    static constexpr i32f NumInterpolators = 2;
 
 public:
     VSurface BackSurface;
@@ -62,8 +62,8 @@ public:
 
         // TODO(sean): Put interpolators here
         Interpolators[0] = new VGouraudInterpolator();
-        Interpolators[1] = new VTextureInterpolator();
-        Interpolators[2] = new VAlphaInterpolator();
+        //Interpolators[1] = new VTextureInterpolator();
+        Interpolators[1] = new VAlphaInterpolator();
     }
     virtual ~IRenderer()
     {
@@ -154,6 +154,10 @@ public:
             DrawLine(Buffer, Pitch, X1, Y1, X2, Y2, Color);
         }
     }
+
+    /*************************************************************************************
+    * Only DrawTriangle is supported because it uses inversed z-buffer and interpolators *
+    *************************************************************************************/
 
     // Naive implementation of triangle rasterization without using top-left convention
     void DrawTopTriangleInt(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, i32 X3, i32 Y3, u32 Color) const;

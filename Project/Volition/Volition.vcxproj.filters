@@ -444,6 +444,12 @@
     <ClInclude Include="..\..\Source\Graphics\Interpolator\AlphaInterpolator.h">
       <Filter>Source\Graphics\Interpolator</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Math\Fixed22.h">
+      <Filter>Source\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Math\Fixed28.h">
+      <Filter>Source\Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\main.cpp">

@@ -3217,23 +3217,23 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
         Interpolators[InterpIndex]->Start(Buffer, Pitch, Poly, VtxIndices);
     }
 
-    i32 ZVtx0 = (i32)(Poly.TransVtx[V0].Z + 0.5f);
-    i32 ZVtx1 = (i32)(Poly.TransVtx[V1].Z + 0.5f);
-    i32 ZVtx2 = (i32)(Poly.TransVtx[V2].Z + 0.5f);
+    fx28 ZVtx0 = IntToFx28(1) / (i32)(Poly.TransVtx[V0].Z + 0.5f);
+    fx28 ZVtx1 = IntToFx28(1) / (i32)(Poly.TransVtx[V1].Z + 0.5f);
+    fx28 ZVtx2 = IntToFx28(1) / (i32)(Poly.TransVtx[V2].Z + 0.5f);
 
     // Fixed coords, color channels for rasterization
     fx16 XLeft;
     fx16 XRight;
-    fx16 ZLeft, ZRight;
+    fx28 ZLeft, ZRight;
 
     // Coords, colors fixed deltas by Y
     fx16 XDeltaLeftByY;
-    fx16 ZDeltaLeftByY;
+    fx28 ZDeltaLeftByY;
 
     fx16 XDeltaRightByY;
-    fx16 ZDeltaRightByY;
+    fx28 ZDeltaRightByY;
 
-    fx16* ZBufferArray;
+    fx28* ZBufferArray;
 
     if (TriangleCase == ETriangleCase::Top ||
         TriangleCase == ETriangleCase::Bottom)
@@ -3244,10 +3244,10 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
         {
             // Compute deltas for coords, colors
             XDeltaLeftByY = IntToFx16(X2 - X0) / YDiff;
-            ZDeltaLeftByY = IntToFx16(ZVtx2 - ZVtx0) / YDiff;
+            ZDeltaLeftByY = (ZVtx2 - ZVtx0) / YDiff;
 
             XDeltaRightByY = IntToFx16(X2 - X1) / YDiff;
-            ZDeltaRightByY = IntToFx16(ZVtx2 - ZVtx1) / YDiff;
+            ZDeltaRightByY = (ZVtx2 - ZVtx1) / YDiff;
 
             for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
             {
@@ -3261,10 +3261,10 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
                 YStart = MinClip.Y;
 
                 XLeft = IntToFx16(X0) + YDiff * XDeltaLeftByY;
-                ZLeft = IntToFx16(ZVtx0) + YDiff * ZDeltaLeftByY;
+                ZLeft = (ZVtx0) + YDiff * ZDeltaLeftByY;
 
                 XRight = IntToFx16(X1) + YDiff * XDeltaRightByY;
-                ZRight = IntToFx16(ZVtx1) + YDiff * ZDeltaRightByY;
+                ZRight = (ZVtx1) + YDiff * ZDeltaRightByY;
 
                 for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
                 {
@@ -3276,20 +3276,20 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
                 YStart = Y0;
 
                 XLeft = IntToFx16(X0);
-                ZLeft = IntToFx16(ZVtx0);
+                ZLeft = (ZVtx0);
 
                 XRight = IntToFx16(X1);
-                ZRight = IntToFx16(ZVtx1);
+                ZRight = (ZVtx1);
             }
         }
         else // Bottom case
         {
             // Compute deltas for coords, colors
             XDeltaLeftByY = IntToFx16(X1 - X0) / YDiff;
-            ZDeltaLeftByY = IntToFx16(ZVtx1 - ZVtx0) / YDiff;
+            ZDeltaLeftByY = (ZVtx1 - ZVtx0) / YDiff;
 
             XDeltaRightByY = IntToFx16(X2 - X0) / YDiff;
-            ZDeltaRightByY = IntToFx16(ZVtx2 - ZVtx0) / YDiff;
+            ZDeltaRightByY = (ZVtx2 - ZVtx0) / YDiff;
 
             for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
             {
@@ -3303,10 +3303,10 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
                 YStart = MinClip.Y;
 
                 XLeft = IntToFx16(X0) + YDiff * XDeltaLeftByY;
-                ZLeft = IntToFx16(ZVtx0) + YDiff * ZDeltaLeftByY;
+                ZLeft = (ZVtx0) + YDiff * ZDeltaLeftByY;
 
                 XRight = IntToFx16(X0) + YDiff * XDeltaRightByY;
-                ZRight = IntToFx16(ZVtx0) + YDiff * ZDeltaRightByY;
+                ZRight = (ZVtx0) + YDiff * ZDeltaRightByY;
 
                 for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
                 {
@@ -3318,10 +3318,10 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
                 YStart = Y0;
 
                 XLeft = IntToFx16(X0);
-                ZLeft = IntToFx16(ZVtx0);
+                ZLeft = (ZVtx0);
 
                 XRight = IntToFx16(X0);
-                ZRight = IntToFx16(ZVtx0);
+                ZRight = (ZVtx0);
             }
         }
 
@@ -3341,7 +3341,7 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
         {
             // Align buffer pointer
             Buffer += Pitch * YStart;
-            ZBufferArray = (fx16*)ZBuffer.Buffer + (ZBuffer.Pitch * YStart);
+            ZBufferArray = (fx28*)ZBuffer.Buffer + (ZBuffer.Pitch * YStart);
 
             // Process each Y
             for (i32f Y = YStart; Y < YEnd; ++Y)
@@ -3391,7 +3391,7 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
                 // Process each X
                 for (i32f X = XStart; X < XEnd; ++X)
                 {
-                    if (Z < ZBufferArray[X])
+                    if (Z > ZBufferArray[X])
                     {
                         VColorARGB FinalPixel = 0xFFFFFFFF;
 
@@ -3434,7 +3434,7 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
         {
             // Align buffer pointer
             Buffer += Pitch * YStart;
-            ZBufferArray = (fx16*)ZBuffer.Buffer + (ZBuffer.Pitch * YStart);
+            ZBufferArray = (fx28*)ZBuffer.Buffer + (ZBuffer.Pitch * YStart);
 
             // Process each Y
             for (i32f Y = YStart; Y < YEnd; ++Y)
@@ -3466,7 +3466,7 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
                 // Process each X
                 for (i32f X = XStart; X < XEnd; ++X)
                 {
-                    if (Z < ZBufferArray[X])
+                    if (Z > ZBufferArray[X])
                     {
                         VColorARGB FinalPixel = 0xFFFFFFFF;
 
@@ -3527,20 +3527,20 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
             // Compute deltas
             i32 YDiffLeft = (Y2 - Y1);
             XDeltaLeftByY = IntToFx16(X2 - X1) / YDiffLeft;
-            ZDeltaLeftByY = IntToFx16(ZVtx2 - ZVtx1) / YDiffLeft;
+            ZDeltaLeftByY = (ZVtx2 - ZVtx1) / YDiffLeft;
 
             i32 YDiffRight = (Y2 - Y0);
             XDeltaRightByY = IntToFx16(X2 - X0) / YDiffRight;
-            ZDeltaRightByY = IntToFx16(ZVtx2 - ZVtx0) / YDiffRight;
+            ZDeltaRightByY = (ZVtx2 - ZVtx0) / YDiffRight;
 
             // Do clipping
             i32 YOverClipLeft = (MinClip.Y - Y1);
             XLeft = IntToFx16(X1) + YOverClipLeft * XDeltaLeftByY;
-            ZLeft = IntToFx16(ZVtx1) + YOverClipLeft * ZDeltaLeftByY;
+            ZLeft = (ZVtx1) + YOverClipLeft * ZDeltaLeftByY;
 
             i32 YOverClipRight = (MinClip.Y - Y0);
             XRight = IntToFx16(X0) + YOverClipRight * XDeltaRightByY;
-            ZRight = IntToFx16(ZVtx0) + YOverClipRight * ZDeltaRightByY;
+            ZRight = (ZVtx0) + YOverClipRight * ZDeltaRightByY;
 
             // Do both for interpolators
             for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
@@ -3581,19 +3581,19 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
             // Compute deltas
             i32 YDiffLeft = (Y1 - Y0);
             XDeltaLeftByY = IntToFx16(X1 - X0) / YDiffLeft;
-            ZDeltaLeftByY = IntToFx16(ZVtx1 - ZVtx0) / YDiffLeft;
+            ZDeltaLeftByY = (ZVtx1 - ZVtx0) / YDiffLeft;
 
             i32 YDiffRight = (Y2 - Y0);
             XDeltaRightByY = IntToFx16(X2 - X0) / YDiffRight;
-            ZDeltaRightByY = IntToFx16(ZVtx2 - ZVtx0) / YDiffRight;
+            ZDeltaRightByY = (ZVtx2 - ZVtx0) / YDiffRight;
 
             // Do clipping
             i32 YOverClip = (MinClip.Y - Y0);
             XLeft = IntToFx16(X0) + YOverClip * XDeltaLeftByY;
-            ZLeft = IntToFx16(ZVtx0) + YOverClip * ZDeltaLeftByY;
+            ZLeft = (ZVtx0) + YOverClip * ZDeltaLeftByY;
 
             XRight = IntToFx16(X0) + YOverClip * XDeltaRightByY;
-            ZRight = IntToFx16(ZVtx0) + YOverClip * ZDeltaRightByY;
+            ZRight = (ZVtx0) + YOverClip * ZDeltaRightByY;
 
             for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
             {
@@ -3633,14 +3633,14 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
         {
             i32 YDiffLeft = (Y1 - Y0);
             XDeltaLeftByY = IntToFx16(X1 - X0) / YDiffLeft;
-            ZDeltaLeftByY = IntToFx16(ZVtx1 - ZVtx0) / YDiffLeft;
+            ZDeltaLeftByY = (ZVtx1 - ZVtx0) / YDiffLeft;
 
             i32 YDiffRight = (Y2 - Y0);
             XDeltaRightByY = IntToFx16(X2 - X0) / YDiffRight;
-            ZDeltaRightByY = IntToFx16(ZVtx2 - ZVtx0) / YDiffRight;
+            ZDeltaRightByY = (ZVtx2 - ZVtx0) / YDiffRight;
 
             XRight = XLeft = IntToFx16(X0);
-            ZRight = ZLeft = IntToFx16(ZVtx0);
+            ZRight = ZLeft = (ZVtx0);
 
             for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
             {
@@ -3681,7 +3681,7 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
         {
             // Align buffer pointer
             Buffer += Pitch * YStart;
-            ZBufferArray = (fx16*)ZBuffer.Buffer + (ZBuffer.Pitch * YStart);
+            ZBufferArray = (fx28*)ZBuffer.Buffer + (ZBuffer.Pitch * YStart);
 
             // Process each Y
             for (i32f Y = YStart; Y < YEnd; ++Y)
@@ -3731,7 +3731,7 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
                 // Process each X
                 for (i32f X = XStart; X < XEnd; ++X)
                 {
-                    if (Z < ZBufferArray[X])
+                    if (Z > ZBufferArray[X])
                     {
                         VColorARGB FinalPixel = 0xFFFFFFFF;
 
@@ -3778,10 +3778,10 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
                         i32 YDiff = (Y2 - Y1);
 
                         XDeltaLeftByY = IntToFx16(X2 - X1) / YDiff;
-                        ZDeltaLeftByY = IntToFx16(ZVtx2 - ZVtx1) / YDiff;
+                        ZDeltaLeftByY = (ZVtx2 - ZVtx1) / YDiff;
 
                         XLeft = IntToFx16(X1);
-                        ZLeft = IntToFx16(ZVtx1);
+                        ZLeft = (ZVtx1);
 
                         // Align down on 1 Y
                         XLeft += XDeltaLeftByY;
@@ -3800,10 +3800,10 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
                         i32 YDiff = (Y1 - Y2);
 
                         XDeltaRightByY = IntToFx16(X1 - X2) / YDiff;
-                        ZDeltaRightByY = IntToFx16(ZVtx1 - ZVtx2) / YDiff;
+                        ZDeltaRightByY = (ZVtx1 - ZVtx2) / YDiff;
 
                         XRight = IntToFx16(X2);
-                        ZRight = IntToFx16(ZVtx2);
+                        ZRight = (ZVtx2);
 
                         // Align down on 1 Y
                         XRight += XDeltaRightByY;
@@ -3823,7 +3823,7 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
         {
             // Align buffer pointer
             Buffer += Pitch * YStart;
-            ZBufferArray = (fx16*)ZBuffer.Buffer + (ZBuffer.Pitch * YStart);
+            ZBufferArray = (fx28*)ZBuffer.Buffer + (ZBuffer.Pitch * YStart);
 
             // Process each Y
             for (i32f Y = YStart; Y < YEnd; ++Y)
@@ -3855,7 +3855,7 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
                 // Process each X
                 for (i32f X = XStart; X < XEnd; ++X)
                 {
-                    if (Z < ZBufferArray[X])
+                    if (Z > ZBufferArray[X])
                     {
                         VColorARGB FinalPixel = 0xFFFFFFFF;
 
@@ -3902,10 +3902,10 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
                         i32 YDiff = (Y2 - Y1);
 
                         XDeltaLeftByY = IntToFx16(X2 - X1) / YDiff;
-                        ZDeltaLeftByY = IntToFx16(ZVtx2 - ZVtx1) / YDiff;
+                        ZDeltaLeftByY = (ZVtx2 - ZVtx1) / YDiff;
 
                         XLeft = IntToFx16(X1);
-                        ZLeft = IntToFx16(ZVtx1);
+                        ZLeft = (ZVtx1);
 
                         // Align down on 1 Y
                         XLeft += XDeltaLeftByY;
@@ -3924,10 +3924,10 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
                         i32 YDiff = (Y1 - Y2);
 
                         XDeltaRightByY = IntToFx16(X1 - X2) / YDiff;
-                        ZDeltaRightByY = IntToFx16(ZVtx1 - ZVtx2) / YDiff;
+                        ZDeltaRightByY = (ZVtx1 - ZVtx2) / YDiff;
 
                         XRight = IntToFx16(X2);
-                        ZRight = IntToFx16(ZVtx2);
+                        ZRight = (ZVtx2);
 
                         // Align down on 1 Y
                         XRight += XDeltaRightByY;

@@ -35,7 +35,8 @@ public:
         for (i32f I = 0; I < 3; ++I)
         {
             VtxIndices[I] = InVtxIndices[I];
-            UVtx[I] = (i32)(Poly.TransVtx[I].U + 0.5f); // FIXME(sean): Check if it works fine with rounding
+            // TODO(sean): Possible optmization: We can convert UVtxs and VVtxs to fx16 right here
+            UVtx[I] = (i32)(Poly.TransVtx[I].U + 0.5f);
             VVtx[I] = (i32)(Poly.TransVtx[I].V + 0.5f);
         }
     }

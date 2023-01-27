@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Memory.h"
-#include "Math/Fixed16.h"
+#include "Math/Fixed28.h"
 #include "Graphics/Surface.h"
 
 class VZBuffer
@@ -31,7 +31,6 @@ public:
 
     FINLINE void Clear()
     {
-        static constexpr i32 ZBufferClearValue = 16000;
-        Memory.MemSetQuad(Buffer, IntToFx16(ZBufferClearValue), Pitch * Height);
+        Memory.MemSetQuad(Buffer, 0, Pitch * Height);
     }
 };
