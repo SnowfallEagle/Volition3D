@@ -3358,7 +3358,7 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
 
                 for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
                 {
-                    Interpolators[InterpIndex]->ComputeXStartsAndDeltas(XDiff);
+                    Interpolators[InterpIndex]->ComputeXStartsAndDeltas(XDiff, ZLeft, ZRight);
                 }
 
                 if (XDiff > 0)
@@ -3451,7 +3451,7 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
 
                 for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
                 {
-                    Interpolators[InterpIndex]->ComputeXStartsAndDeltas(XDiff);
+                    Interpolators[InterpIndex]->ComputeXStartsAndDeltas(XDiff, ZLeft, ZRight);
                 }
 
                 if (XDiff > 0)
@@ -3698,7 +3698,7 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
 
                 for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
                 {
-                    Interpolators[InterpIndex]->ComputeXStartsAndDeltas(XDiff);
+                    Interpolators[InterpIndex]->ComputeXStartsAndDeltas(XDiff, ZLeft, ZRight);
                 }
 
                 if (XDiff > 0)
@@ -3840,7 +3840,7 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
 
                 for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
                 {
-                    Interpolators[InterpIndex]->ComputeXStartsAndDeltas(XDiff);
+                    Interpolators[InterpIndex]->ComputeXStartsAndDeltas(XDiff, ZLeft, ZRight);
                 }
 
                 if (XDiff > 0)

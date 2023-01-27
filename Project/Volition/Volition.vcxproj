@@ -192,6 +192,7 @@
     <ClInclude Include="..\..\Source\Graphics\Interpolator\FlatInterpolator.h" />
     <ClInclude Include="..\..\Source\Graphics\Interpolator\GouraudInterpolator.h" />
     <ClInclude Include="..\..\Source\Graphics\Interpolator\IInterpolator.h" />
+    <ClInclude Include="..\..\Source\Graphics\Interpolator\LinearPiecewiseTextureInterpolator.h" />
     <ClInclude Include="..\..\Source\Graphics\Interpolator\PerspectiveCorrectTextureInterpolator.h" />
     <ClInclude Include="..\..\Source\Graphics\Interpolator\TextureInterpolator.h" />
     <ClInclude Include="..\..\Source\Graphics\Light.h" />

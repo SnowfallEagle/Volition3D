@@ -23,6 +23,7 @@
 #include "Graphics/Interpolator/FlatInterpolator.h"
 #include "Graphics/Interpolator/TextureInterpolator.h"
 #include "Graphics/Interpolator/PerspectiveCorrectTextureInterpolator.h"
+#include "Graphics/Interpolator/LinearPiecewiseTextureInterpolator.h"
 #include "Graphics/Interpolator/AlphaInterpolator.h"
 
 class IRenderer
@@ -63,7 +64,8 @@ public:
 
         // TODO(sean): Put interpolators here
         Interpolators[0] = new VGouraudInterpolator();
-        Interpolators[1] = new VPerspectiveCorrectTextureInterpolator();
+        Interpolators[1] = new VLinearPiecewiseTextureInterpolator();
+        //Interpolators[1] = new VPerspectiveCorrectTextureInterpolator();
         //Interpolators[1] = new VTextureInterpolator();
         Interpolators[2] = new VAlphaInterpolator();
     }
