@@ -2,6 +2,9 @@
 
 #include "Graphics/Polygon.h"
 #include "Graphics/Color.h"
+#include "Math/Fixed16.h"
+#include "Math/Fixed22.h"
+#include "Math/Fixed28.h"
 
 class IInterpolator
 {

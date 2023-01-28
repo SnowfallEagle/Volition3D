@@ -2,7 +2,7 @@
 
 #include "Graphics/Interpolator/IInterpolator.h"
 
-class VPerspectiveCorrectTextureInterpolator final : public IInterpolator
+class VBillinearPerspectiveTextureInterpolator final : public IInterpolator
 {
 private:
     i32 VtxIndices[3];
@@ -23,7 +23,7 @@ private:
     i32 TexturePitch;
 
 public:
-    virtual ~VPerspectiveCorrectTextureInterpolator() = default;
+    virtual ~VBillinearPerspectiveTextureInterpolator() = default;
 
     virtual void Start(const u32* Buffer, i32 Pitch, const VPolyFace& Poly, const i32 InVtxIndices[3]) override
     {
@@ -90,15 +90,69 @@ public:
 
     virtual VColorARGB ProcessPixel(VColorARGB Pixel, i32f X, i32f Y, fx28 Z) override
     {
-        VColorARGB TextureColor = TextureBuffer[
-            ((V << (Fx28Shift - Fx22Shift)) / Z) * TexturePitch +
-            ((U << (Fx28Shift - Fx22Shift)) / Z)
-        ];
+        i32f X0 = ((U << (Fx28Shift - Fx22Shift)) / Z);
+        i32f Y0 = ((V << (Fx28Shift - Fx22Shift)) / Z) * TexturePitch;
+
+        i32f X1 = X0 + 1;
+        if (X1 >= Texture->GetWidth())
+        {
+            X1 = X0;
+        }
+
+        i32f Y1 = Y0 + TexturePitch;
+        if (Y1 >= (Texture->GetHeight() * TexturePitch))
+        {
+            Y1 = Y0;
+        }
+
+        VColorARGB TextureColors[4] = {
+            TextureBuffer[Y0 + X0],
+            TextureBuffer[Y0 + X1],
+            TextureBuffer[Y1 + X0],
+            TextureBuffer[Y1 + X1],
+        };
+
+        // (fx22 -> fx8) & 0xFF
+        i32 FracU = (U >> 14) & 0xFF;
+        i32 FracV = (V >> 14) & 0xFF;
+
+        // fx8<1> - fx8<Frac>
+        i32 OneMinusFracU = (1 << 8) - FracU;
+        i32 OneMinusFracV = (1 << 8) - FracV;
+
+        // fx8 * fx8 = fx16
+        i32 OneMinusFracUMulOneMinusFracV = OneMinusFracU * OneMinusFracV;
+        i32 FracUMulOneMinusFracV         = FracU         * OneMinusFracV;
+        i32 OneMinusFracUMulFracV         = OneMinusFracU * FracV;
+        i32 FracUMulFracV                 = FracU         * FracV;
+
+        // fx16 -> int
+        VColorARGB FilteredColor;
+        FilteredColor.R = (
+            OneMinusFracUMulOneMinusFracV * TextureColors[0].R +
+            FracUMulOneMinusFracV         * TextureColors[1].R +
+            OneMinusFracUMulFracV         * TextureColors[2].R +
+            FracUMulFracV                 * TextureColors[3].R
+        ) >> 16;
+
+        FilteredColor.G = (
+            OneMinusFracUMulOneMinusFracV * TextureColors[0].G +
+            FracUMulOneMinusFracV         * TextureColors[1].G +
+            OneMinusFracUMulFracV         * TextureColors[2].G +
+            FracUMulFracV                 * TextureColors[3].G
+        ) >> 16;
+
+        FilteredColor.B = (
+            OneMinusFracUMulOneMinusFracV * TextureColors[0].B +
+            FracUMulOneMinusFracV         * TextureColors[1].B +
+            OneMinusFracUMulFracV         * TextureColors[2].B +
+            FracUMulFracV                 * TextureColors[3].B
+        ) >> 16;
 
         return MAP_XRGB32(
-            (TextureColor.R * Pixel.R) >> 8,
-            (TextureColor.G * Pixel.G) >> 8,
-            (TextureColor.B * Pixel.B) >> 8
+            (FilteredColor.R * Pixel.R) >> 8,
+            (FilteredColor.G * Pixel.G) >> 8,
+            (FilteredColor.B * Pixel.B) >> 8
         );
     }
 

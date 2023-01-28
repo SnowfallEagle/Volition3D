@@ -456,6 +456,9 @@
     <ClInclude Include="..\..\Source\Graphics\Interpolator\LinearPiecewiseTextureInterpolator.h">
       <Filter>Source\Graphics\Interpolator</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Graphics\Interpolator\BillinearPerspectiveTextureInterpolator.h">
+      <Filter>Source\Graphics\Interpolator</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\main.cpp">

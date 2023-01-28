@@ -44,11 +44,11 @@ void VGame::StartUp()
         ECOB::SwapYZ
     );
     Objects[2].LoadCOB(
-        "sphere_red_alpha01.cob",
+        "jetski05.cob",
         { 0.0f, 0.0f, 250.0f },
         { 100.0f, 100.0f, 100.0f },
         { 0.0f, 0.0f, 0.0f },
-        ECOB::SwapYZ
+        ECOB::SwapYZ | ECOB::InvertV
     );
     Object = &Objects[0];
 
