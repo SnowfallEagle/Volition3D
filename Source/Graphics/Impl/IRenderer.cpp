@@ -3328,7 +3328,7 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
         // Clip bottom Y
         if (Y2 > MaxClip.Y)
         {
-            YEnd = MaxClip.Y;
+            YEnd = MaxClip.Y + 1; // + 1 because of top-left fill convention
         }
         else
         {
@@ -3385,7 +3385,7 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
                 }
                 if (XEnd > MaxClip.X)
                 {
-                    XEnd = MaxClip.X;
+                    XEnd = MaxClip.X + 1;
                 }
 
                 // Process each X
@@ -3514,7 +3514,7 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
         // Clip bottom Y
         if (Y2 > MaxClip.Y)
         {
-            YEnd = MaxClip.Y;
+            YEnd = MaxClip.Y + 1;
         }
         else
         {
@@ -3725,7 +3725,7 @@ void IRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
                 }
                 if (XEnd > MaxClip.X)
                 {
-                    XEnd = MaxClip.X;
+                    XEnd = MaxClip.X + 1;
                 }
 
                 // Process each X

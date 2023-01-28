@@ -64,8 +64,8 @@ public:
 
         // TODO(sean): Put interpolators here
         Interpolators[0] = new VGouraudInterpolator();
-        Interpolators[1] = new VLinearPiecewiseTextureInterpolator();
-        //Interpolators[1] = new VPerspectiveCorrectTextureInterpolator();
+        //Interpolators[1] = new VLinearPiecewiseTextureInterpolator();
+        Interpolators[1] = new VPerspectiveCorrectTextureInterpolator();
         //Interpolators[1] = new VTextureInterpolator();
         Interpolators[2] = new VAlphaInterpolator();
     }
