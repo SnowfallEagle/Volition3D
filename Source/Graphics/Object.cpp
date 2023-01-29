@@ -759,7 +759,7 @@ b32 VObject::LoadCOB(const char* Path, const VVector4& InPosition, const VVector
 
         // Fix texture coords
         {
-            if (Texture)
+            if (Attr & EObjectAttr::HasTexture)
             {
                 for (i32f I = 0; I < NumTextureVtx; ++I)
                 {

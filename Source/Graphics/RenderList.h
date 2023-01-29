@@ -1324,22 +1324,7 @@ public:
                 continue;
             }
 
-#if 0
-            if (Poly->Attr & EPolyAttr::ShadeModeTexture)
-            {
-                Renderer.DrawTexturedTriangle(Buffer, Pitch, *Poly);
-            }
-            else if (Poly->Attr & EPolyAttr::ShadeModeGouraud)
-            {
-                Renderer.DrawGouraudTriangle(Buffer, Pitch, *Poly);
-            }
-            else
-            {
-                Renderer.DrawFlatTriangle(Buffer, Pitch, *Poly);
-            }
-#else
             Renderer.DrawTriangle(Buffer, Pitch, *Poly);
-#endif
         }
     }
 };
