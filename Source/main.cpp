@@ -9,10 +9,10 @@ int main(int Argc, char** Argv)
 {
     VWindowSpecification WindowSpec;
     VRenderSpecification RenderSpec;
+    RenderSpec.bLimitFPS = true;
 
     Volition.StartUp(WindowSpec, RenderSpec);
     Volition.Run();
-    Volition.ShutDown();
 
     return 0;
 }

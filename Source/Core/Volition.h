@@ -8,37 +8,33 @@
 #include "Math/Math.h"
 #include "Graphics/Renderer.h"
 #include "Input/Input.h"
+#include "Core/Time.h"
 #include "GameFramework/Game.h"
 
 class VVolition
 {
-    u32 MsFrameLimit;
-    u32 LastTick;
-    f32 Delta;
-
     b32 bRunning;
 
 public:
     void StartUp(const VWindowSpecification& WindowSpec, const VRenderSpecification& RenderSpec)
     {
-        MsFrameLimit = 1000u / RenderSpec.TargetFPS;
-        Delta = 0.0f;
-
         DebugLog.StartUp();
         Window.Create(WindowSpec);
         Math.StartUp();
         Renderer.StartUp();
         Input.StartUp();
+        Time.StartUp(RenderSpec);
         Game.StartUp();
 
-        LastTick = GetTicks();
         bRunning = true;
     }
+
     void ShutDown()
     {
         bRunning = false;
 
         Game.ShutDown();
+        Time.ShutDown();
         Input.ShutDown();
         Renderer.ShutDown();
         Math.ShutDown();
@@ -48,33 +44,29 @@ public:
 
     void Run()
     {
+        // Initial tick
+        Time.TickFrame();
+
         while (bRunning)
         {
-            // TODO(sean): Time.TickFrame()
-            TickFrame();
+            Time.TickFrame();
 
             HandleEvents();
-            Game.Update(Delta);
+            Game.Update(Time.GetDeltaTime());
 
             Renderer.PrepareToRender();
             Game.Render();
             Renderer.RenderAndFlip();
 
-            // TODO(sean): Time.SyncFrame()
+            Time.SyncFrame();
         }
+
+        ShutDown();
     }
+
     FINLINE void Stop()
     {
         bRunning = false;
-    }
-
-    FINLINE u32 GetTicks()
-    {
-        return SDL_GetTicks();
-    }
-    FINLINE f32 GetDelta()
-    {
-        return Delta;
     }
 
 private:
@@ -82,18 +74,6 @@ private:
     {
         Window.HandleEvents();
         Input.HandleEvents();
-    }
-
-    void TickFrame()
-    {
-        u32 CurrentTick = GetTicks();
-        Delta = (f32)(CurrentTick - LastTick);
-        LastTick = CurrentTick;
-    }
-    void SyncFrame()
-    {
-        while (GetTicks() - LastTick < MsFrameLimit)
-           {}
     }
 };
 

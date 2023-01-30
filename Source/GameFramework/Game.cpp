@@ -130,7 +130,7 @@ void VGame::ShutDown()
     Objects[2].Destroy();
 }
 
-void VGame::Update(f32 Delta)
+void VGame::Update(f32 DeltaTime)
 {
     if (Input.IsKeyDown(EKeycode::Escape))
     {
@@ -141,7 +141,7 @@ void VGame::Update(f32 Delta)
     if (Input.IsKeyDown(EKeycode::N2)) Object = &Objects[1];
     if (Input.IsKeyDown(EKeycode::N3)) Object = &Objects[2];
 
-    f32 SpeedTri = 0.2f * Delta;
+    f32 SpeedTri = 0.2f * DeltaTime;
     if (Input.IsKeyDown(EKeycode::Up))
     {
         PositionVtx0.Y -= SpeedTri;
@@ -167,18 +167,18 @@ void VGame::Update(f32 Delta)
         PositionVtx2.Y += SpeedTri;
     }
 
-    if (Input.IsKeyDown(EKeycode::R) && Volition.GetTicks() - RenderKeyTicks > 100)
+    if (Input.IsKeyDown(EKeycode::R) && Time.GetTicks() - RenderKeyTicks > 100)
     {
         bRenderSolid = !bRenderSolid;
-        RenderKeyTicks = Volition.GetTicks();
+        RenderKeyTicks = Time.GetTicks();
     }
-    if (Input.IsKeyDown(EKeycode::B) && Volition.GetTicks() - BackFaceKeyTicks > 100)
+    if (Input.IsKeyDown(EKeycode::B) && Time.GetTicks() - BackFaceKeyTicks > 100)
     {
         bBackFaceRemoval = !bBackFaceRemoval;
-        BackFaceKeyTicks = Volition.GetTicks();
+        BackFaceKeyTicks = Time.GetTicks();
     }
 
-    f32 CamPosSpeed = 0.1f * Delta;
+    f32 CamPosSpeed = 0.1f * DeltaTime;
     if (Input.IsKeyDown(EKeycode::W))
     {
         Camera.Pos.X += Math.FastSin(Camera.Dir.Y) * CamPosSpeed;
@@ -190,7 +190,7 @@ void VGame::Update(f32 Delta)
         Camera.Pos.Z -= Math.FastCos(Camera.Dir.Y) * CamPosSpeed;
     }
 
-    f32 CamDirSpeed = 0.2f * Delta;
+    f32 CamDirSpeed = 0.2f * DeltaTime;
     if (Input.IsKeyDown(EKeycode::Left))
     {
         Camera.Dir.Y -= CamDirSpeed;
@@ -209,7 +209,7 @@ void VGame::Update(f32 Delta)
     }
 
     VMatrix44 Rot = VMatrix44::Identity;
-    f32 Speed = 0.1f * Delta;
+    f32 Speed = 0.1f * DeltaTime;
     if (Input.IsKeyDown(EKeycode::Q)) Rot.BuildRotationXYZ(0, Speed, 0);
     if (Input.IsKeyDown(EKeycode::E)) Rot.BuildRotationXYZ(0, -Speed, 0);
     if (Input.IsKeyDown(EKeycode::F)) Rot.BuildRotationXYZ(0, 0, Speed);
@@ -276,7 +276,7 @@ void VGame::Render()
 
     // Some debug info
     {
-        Renderer.DrawText(0, 5, MAP_XRGB32(0xFF, 0xFF, 0xFF), "FPS: %.3f", 1000.0f / Volition.GetDelta());
+        Renderer.DrawText(0, 5, MAP_XRGB32(0xFF, 0xFF, 0xFF), "FPS: %.3f", 1000.0f / Time.GetDeltaTime());
         Renderer.DrawText(0, 35, MAP_XRGB32(0xFF, 0xFF, 0xFF), bBackFaceRemoval ? "Backface culling: true" : "Backface culling: false");
         Renderer.DrawText(0, 65, MAP_XRGB32(0xFF, 0xFF, 0xFF), bRenderSolid ? "Render mode: Solid" : "Render mode: Wire");
     }
