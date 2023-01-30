@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Platform.h"
+#include "Core/WindowSpecification.h"
 
 #if VL_IMPL_SDL
 # include "Core/Impl/Window_SDL.h"

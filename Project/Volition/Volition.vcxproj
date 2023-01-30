@@ -172,6 +172,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\Core\Assert.h" />
+    <ClInclude Include="..\..\Source\Core\Containers\SparseArray.h" />
+    <ClInclude Include="..\..\Source\Core\Containers\String.h" />
     <ClInclude Include="..\..\Source\Core\DebugLog.h" />
     <ClInclude Include="..\..\Source\Core\Impl\Platform_Win.h" />
     <ClInclude Include="..\..\Source\Core\Impl\Window_SDL.h" />
@@ -181,6 +183,7 @@
     <ClInclude Include="..\..\Source\Core\Types.h" />
     <ClInclude Include="..\..\Source\Core\Volition.h" />
     <ClInclude Include="..\..\Source\Core\Window.h" />
+    <ClInclude Include="..\..\Source\Core\WindowSpecification.h" />
     <ClInclude Include="..\..\Source\GameFramework\Game.h" />
     <ClInclude Include="..\..\Source\Graphics\Camera.h" />
     <ClInclude Include="..\..\Source\Graphics\Color.h" />
@@ -200,8 +203,10 @@
     <ClInclude Include="..\..\Source\Graphics\Material.h" />
     <ClInclude Include="..\..\Source\Graphics\Object.h" />
     <ClInclude Include="..\..\Source\Graphics\Polygon.h" />
+    <ClInclude Include="..\..\Source\Graphics\RenderContext.h" />
     <ClInclude Include="..\..\Source\Graphics\Renderer.h" />
     <ClInclude Include="..\..\Source\Graphics\RenderList.h" />
+    <ClInclude Include="..\..\Source\Graphics\RenderSpecification.h" />
     <ClInclude Include="..\..\Source\Graphics\Surface.h" />
     <ClInclude Include="..\..\Source\Graphics\TransformType.h" />
     <ClInclude Include="..\..\Source\Graphics\Vertex.h" />
@@ -325,6 +330,7 @@
     <ClCompile Include="..\..\Source\Graphics\Interpolator\IInterpolator.cpp" />
     <ClCompile Include="..\..\Source\Graphics\Object.cpp" />
     <ClCompile Include="..\..\Source\Graphics\Polygon.cpp" />
+    <ClCompile Include="..\..\Source\Graphics\RenderContext.cpp" />
     <ClCompile Include="..\..\Source\Graphics\Renderer.cpp" />
     <ClCompile Include="..\..\Source\Graphics\RenderList.cpp" />
     <ClCompile Include="..\..\Source\Graphics\Vertex.cpp" />

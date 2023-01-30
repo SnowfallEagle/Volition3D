@@ -7,7 +7,10 @@
 
 int main(int Argc, char** Argv)
 {
-    Volition.StartUp();
+    VWindowSpecification WindowSpec;
+    VRenderSpecification RenderSpec;
+
+    Volition.StartUp(WindowSpec, RenderSpec);
     Volition.Run();
     Volition.ShutDown();
 

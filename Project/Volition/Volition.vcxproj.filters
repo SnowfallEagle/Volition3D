@@ -43,6 +43,9 @@
     <Filter Include="Source\Graphics\Interpolator">
       <UniqueIdentifier>{12429605-81cc-4aeb-a284-06b96140ea54}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Core\Containers">
+      <UniqueIdentifier>{6948318e-9643-4ac9-a8e8-a663451743a3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\Input\Input.h">
@@ -459,6 +462,21 @@
     <ClInclude Include="..\..\Source\Graphics\Interpolator\BillinearPerspectiveTextureInterpolator.h">
       <Filter>Source\Graphics\Interpolator</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Graphics\RenderContext.h">
+      <Filter>Source\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Core\Containers\SparseArray.h">
+      <Filter>Source\Core\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Core\Containers\String.h">
+      <Filter>Source\Core\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Core\WindowSpecification.h">
+      <Filter>Source\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Graphics\RenderSpecification.h">
+      <Filter>Source\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\main.cpp">
@@ -535,6 +553,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Graphics\Interpolator\IInterpolator.cpp">
       <Filter>Source\Graphics\Interpolator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Graphics\RenderContext.cpp">
+      <Filter>Source\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

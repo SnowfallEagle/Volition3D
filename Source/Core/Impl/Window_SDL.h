@@ -8,7 +8,7 @@ class VSDLWindow
     SDL_Window* SDLWindow;
 
 public:
-    void Create(const char* Title, i32 Width, i32 Height);
+    void Create(const VWindowSpecification& WindowSpec);
     void Destroy();
     void HandleEvents();
 

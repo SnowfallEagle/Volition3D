@@ -12,13 +12,6 @@
 
 class VVolition
 {
-public:
-    static constexpr char WindowTitle[] = "Volition";
-    static constexpr i32 WindowWidth = 1280;
-    static constexpr i32 WindowHeight = 720;
-    static constexpr u32 DefaultFPS = 60;
-
-private:
     u32 MsFrameLimit;
     u32 LastTick;
     f32 Delta;
@@ -26,13 +19,13 @@ private:
     b32 bRunning;
 
 public:
-    void StartUp()
+    void StartUp(const VWindowSpecification& WindowSpec, const VRenderSpecification& RenderSpec)
     {
-        MsFrameLimit = 1000u / DefaultFPS;
+        MsFrameLimit = 1000u / RenderSpec.TargetFPS;
         Delta = 0.0f;
 
         DebugLog.StartUp();
-        Window.Create(WindowTitle, WindowWidth, WindowHeight);
+        Window.Create(WindowSpec);
         Math.StartUp();
         Renderer.StartUp();
         Input.StartUp();
@@ -57,6 +50,7 @@ public:
     {
         while (bRunning)
         {
+            // TODO(sean): Time.TickFrame()
             TickFrame();
 
             HandleEvents();
@@ -66,7 +60,7 @@ public:
             Game.Render();
             Renderer.RenderAndFlip();
 
-            // DEBUG(sean) SyncFrame();
+            // TODO(sean): Time.SyncFrame()
         }
     }
     FINLINE void Stop()

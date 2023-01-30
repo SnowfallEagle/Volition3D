@@ -6,18 +6,43 @@
 #include "Core/Assert.h"
 #include "Core/Impl/Window_SDL.h"
 
-void VSDLWindow::Create(const char* Title, i32 Width, i32 Height)
+void VSDLWindow::Create(const VWindowSpecification& WindowSpec)
 {
     // Init SDL
-    i32 Res = SDL_Init(SDL_INIT_VIDEO);
-    ASSERT(Res == 0);
+    {
+        i32 Res = SDL_Init(SDL_INIT_VIDEO);
+        ASSERT(Res == 0);
+    }
+
+    // Set flags
+    u32 Flags = SDL_WINDOW_SHOWN;
+    {
+        if (WindowSpec.Flags & EWindowSpecificationFlags::Fullscreen)
+        {
+            Flags |= SDL_WINDOW_FULLSCREEN;
+        }
+        else if (WindowSpec.Flags & EWindowSpecificationFlags::FullscreenDesktop)
+        {
+            Flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
+        }
+
+        if (WindowSpec.Flags & EWindowSpecificationFlags::Resizable)
+        {
+            // TODO(sean): Add support for resizing window
+            Flags |= SDL_WINDOW_RESIZABLE;
+        }
+    }
 
     // Create window
-    SDLWindow = SDL_CreateWindow(
-        Title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-        Width, Height, SDL_WINDOW_SHOWN
-    );
-    ASSERT(SDLWindow);
+    {
+        SDLWindow = SDL_CreateWindow(
+            WindowSpec.Name,
+            SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+            WindowSpec.Size.X, WindowSpec.Size.Y,
+            Flags
+        );
+        ASSERT(SDLWindow);
+    }
 }
 
 void VSDLWindow::Destroy()

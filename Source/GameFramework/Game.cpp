@@ -1,13 +1,9 @@
-/* TODO:
- */
-
 #include "Core/Volition.h"
 #include "Input/Input.h"
 #include "Math/Minimal.h"
-#include "Graphics/Renderer.h"
+#include "Graphics/RenderContext.h"
 #include "Graphics/Object.h"
-#include "Graphics/RenderList.h"
-#include "GameFramework/Game.h"
+#include "GameFramework/Game.h" // TODO(sean): It's stupid that game is in the GameFramework folder...
 
 VGame Game;
 
@@ -252,7 +248,7 @@ void VGame::Render()
 
     // Draw background
     {
-        VRelRectI Dest = { 0, 0, Volition.WindowWidth, Volition.WindowHeight };
+        VRelRectI Dest = { 0, 0, Renderer.GetScreenWidth(), Renderer.GetScreenHeight()};
         Renderer.BackSurface.FillRectHW(&Dest, MAP_XRGB32(0x66, 0x00, 0x00));
         /*
         VRelRectI Dest = { 0, 0, Volition.WindowWidth, Volition.WindowHeight/2 };
