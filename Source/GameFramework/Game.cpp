@@ -22,7 +22,7 @@ static VVector4 PositionVtx0 = { 600, 20, 1.0f };
 static VVector4 PositionVtx1 = { 100, 20, 1.0f };
 static VVector4 PositionVtx2 = { 1100, 650, 1.0f };
 
-DEFINE_LOG_CHANNEL(hLogGame, "Game");
+VL_DEFINE_LOG_CHANNEL(hLogGame, "Game");
 
 void VGame::StartUp()
 {

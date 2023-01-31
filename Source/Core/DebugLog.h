@@ -14,7 +14,7 @@
 #define VL_ERROR(CHANNEL, FORMAT, ...) DebugLog.Output(CHANNEL, "Error", FORMAT, __VA_ARGS__)
 #define VL_LOG(FORMAT, ...) DebugLog.Output("", "", FORMAT, __VA_ARGS__)
 
-#define DEFINE_LOG_CHANNEL(VAR, NAME) static constexpr const char VAR[] = NAME
+#define VL_DEFINE_LOG_CHANNEL(VAR, NAME) static constexpr const char VAR[] = NAME
 
 class VDebugLog
 {

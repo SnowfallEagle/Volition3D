@@ -6,12 +6,12 @@
 #define VL_PLATFORM_WIN 1
 #define VL_COMPILER_MSVC 1
 
-#define DEBUG_BREAK() __debugbreak()
-#define PAUSE() _mm_pause()
+#define VL_DEBUG_BREAK() __debugbreak()
+#define VL_PAUSE() _mm_pause()
 
 // Defines
-#define INLINE inline // Compiler decides if it should be inlined
-#define FINLINE __forceinline
+#define VL_INLINE inline // Compiler decides if it should be inlined
+#define VL_FINLINE __forceinline
 
 #define VL_LITTLE_ENDIAN 1
 #define VL_BIG_ENDIAN 0
@@ -19,13 +19,13 @@
 #define VL_ENDIANNESS VL_LITTLE_ENDIAN
 
 // Macroses
-#define MIN(A, B) ((A) < (B) ? (A) : (B))
-#define MAX(A, B) ((A) > (B) ? (A) : (B))
-#define SWAP(A, B, T) { T = A; A = B; B = T; }
+#define VL_MIN(A, B) ((A) < (B) ? (A) : (B))
+#define VL_MAX(A, B) ((A) > (B) ? (A) : (B))
+#define VL_SWAP(A, B, T) { T = A; A = B; B = T; }
 
-#define BIT(N) ( 1 << ((N)-1) )
+#define VL_BIT(N) ( 1 << ((N)-1) )
 
-#define SAFE_DELETE(X) \
+#define VL_SAFE_DELETE(X) \
     { \
         if ((X)) \
         { \
@@ -34,7 +34,7 @@
         } \
     }
 
-#define SAFE_DELETE_ARRAY(X) \
+#define VL_SAFE_DELETE_ARRAY(X) \
     { \
         if ((X)) \
         { \

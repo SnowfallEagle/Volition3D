@@ -15,9 +15,9 @@ namespace EClipFlags
 {
     enum Type
     {
-        X = BIT(1),
-        Y = BIT(2),
-        Z = BIT(3),
+        X = VL_BIT(1),
+        Y = VL_BIT(2),
+        Z = VL_BIT(3),
 
         Full = X | Y | Z
     };
@@ -30,7 +30,7 @@ enum class ESortPolygonsMethod
     Far
 };
 
-DEFINE_LOG_CHANNEL(hLogRenderList, "RenderList");
+VL_DEFINE_LOG_CHANNEL(hLogRenderList, "RenderList");
 
 class VRenderList
 {
@@ -748,15 +748,15 @@ public:
     {
         enum EClipCode
         {
-            XGreater = BIT(1),
-            XLess    = BIT(2),
+            XGreater = VL_BIT(1),
+            XLess    = VL_BIT(2),
 
-            YGreater = BIT(3),
-            YLess    = BIT(4),
+            YGreater = VL_BIT(3),
+            YLess    = VL_BIT(4),
 
-            ZGreater = BIT(5),
-            ZLess    = BIT(6),
-            ZIn      = BIT(7),
+            ZGreater = VL_BIT(5),
+            ZLess    = VL_BIT(6),
+            ZIn      = VL_BIT(7),
         };
 
         i32f SavedNumPoly = NumPoly;
@@ -1130,8 +1130,8 @@ public:
         const VPolyFace* Poly1 = *(const VPolyFace**)Arg1;
         const VPolyFace* Poly2 = *(const VPolyFace**)Arg2;
 
-        f32 ZMin1 = MIN(MIN(Poly1->TransVtx[0].Z, Poly1->TransVtx[1].Z), Poly1->TransVtx[2].Z);
-        f32 ZMin2 = MIN(MIN(Poly2->TransVtx[0].Z, Poly2->TransVtx[1].Z), Poly2->TransVtx[2].Z);
+        f32 ZMin1 = VL_MIN(VL_MIN(Poly1->TransVtx[0].Z, Poly1->TransVtx[1].Z), Poly1->TransVtx[2].Z);
+        f32 ZMin2 = VL_MIN(VL_MIN(Poly2->TransVtx[0].Z, Poly2->TransVtx[1].Z), Poly2->TransVtx[2].Z);
 
         if (ZMin1 < ZMin2)
         {
@@ -1154,8 +1154,8 @@ public:
         const VPolyFace* Poly1 = *(const VPolyFace**)Arg1;
         const VPolyFace* Poly2 = *(const VPolyFace**)Arg2;
 
-        f32 ZMax1 = MAX(MAX(Poly1->TransVtx[0].Z, Poly1->TransVtx[1].Z), Poly1->TransVtx[2].Z);
-        f32 ZMax2 = MAX(MAX(Poly2->TransVtx[0].Z, Poly2->TransVtx[1].Z), Poly2->TransVtx[2].Z);
+        f32 ZMax1 = VL_MAX(VL_MAX(Poly1->TransVtx[0].Z, Poly1->TransVtx[1].Z), Poly1->TransVtx[2].Z);
+        f32 ZMax2 = VL_MAX(VL_MAX(Poly2->TransVtx[0].Z, Poly2->TransVtx[1].Z), Poly2->TransVtx[2].Z);
 
         if (ZMax1 < ZMax2)
         {

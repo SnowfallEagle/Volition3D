@@ -13,9 +13,9 @@ namespace EObjectState
 {
     enum
     {
-        Active  = BIT(1),
-        Visible = BIT(2),
-        Culled  = BIT(3)
+        Active  = VL_BIT(1),
+        Visible = VL_BIT(2),
+        Culled  = VL_BIT(3)
     };
 }
 
@@ -23,8 +23,8 @@ namespace EObjectAttr
 {
     enum
     {
-        MultiFrame = BIT(1),
-        HasTexture = BIT(2),
+        MultiFrame = VL_BIT(1),
+        HasTexture = VL_BIT(2),
     };
 }
 
@@ -32,9 +32,9 @@ namespace ECullType
 {
     enum
     {
-        X = BIT(1),
-        Y = BIT(2),
-        Z = BIT(3),
+        X = VL_BIT(1),
+        Y = VL_BIT(2),
+        Z = VL_BIT(3),
         XYZ = X | Y | Z,
     };
 }
@@ -43,14 +43,14 @@ namespace ECOB
 {
     enum
     {
-        SwapYZ  = BIT(1),
-        SwapUV  = BIT(2),
-        InvertU = BIT(3),
-        InvertV = BIT(4),
+        SwapYZ  = VL_BIT(1),
+        SwapUV  = VL_BIT(2),
+        InvertU = VL_BIT(3),
+        InvertV = VL_BIT(4),
     };
 }
 
-DEFINE_LOG_CHANNEL(hLogObject, "Object");
+VL_DEFINE_LOG_CHANNEL(hLogObject, "Object");
 
 class VObject
 {
@@ -118,12 +118,12 @@ public:
 
     void Destroy()
     {
-        SAFE_DELETE_ARRAY(HeadLocalVtxList);
-        SAFE_DELETE_ARRAY(HeadTransVtxList);
-        SAFE_DELETE_ARRAY(PolyList);
-        SAFE_DELETE_ARRAY(AverageRadiusList);
-        SAFE_DELETE_ARRAY(MaxRadiusList);
-        SAFE_DELETE_ARRAY(TextureCoordsList);
+        VL_SAFE_DELETE_ARRAY(HeadLocalVtxList);
+        VL_SAFE_DELETE_ARRAY(HeadTransVtxList);
+        VL_SAFE_DELETE_ARRAY(PolyList);
+        VL_SAFE_DELETE_ARRAY(AverageRadiusList);
+        VL_SAFE_DELETE_ARRAY(MaxRadiusList);
+        VL_SAFE_DELETE_ARRAY(TextureCoordsList);
     }
 
     void SetFrame(i32 Frame)
@@ -210,11 +210,11 @@ public:
         }
     }
 
-    FINLINE f32 GetAverageRadius()
+    VL_FINLINE f32 GetAverageRadius()
     {
         return AverageRadiusList[CurrentFrame];
     }
-    FINLINE f32 GetMaxRadius()
+    VL_FINLINE f32 GetMaxRadius()
     {
         return MaxRadiusList[CurrentFrame];
     }

@@ -4,13 +4,13 @@
 
 VRenderer Renderer;
 
-DEFINE_LOG_CHANNEL(hLogRenderer, "Renderer");
+VL_DEFINE_LOG_CHANNEL(hLogRenderer, "Renderer");
 
 void VRenderer::StartUp()
 {
     // Get window surface
     SDL_Surface* SDLSurface = SDL_GetWindowSurface(Window.SDLWindow);
-    ASSERT(SDLSurface);
+    VL_ASSERT(SDLSurface);
 
     // Init pixel format
     SDLPixelFormat = SDLSurface->format;
@@ -33,7 +33,7 @@ void VRenderer::StartUp()
 
     // Initialize TTF
     i32 Res = TTF_Init();
-    ASSERT(Res == 0);
+    VL_ASSERT(Res == 0);
 
     static constexpr i32f CharsPerLine = 80;
     static constexpr f32 PointDivPixel = 0.75f;
@@ -42,7 +42,7 @@ void VRenderer::StartUp()
     FontCharHeight = (i32)(FontCharWidth * 1.25f);
 
     Font = TTF_OpenFont("Default.ttf", (i32f)( (f32)FontCharWidth * PointDivPixel * QualityMultiplier ));
-    ASSERT(Font);
+    VL_ASSERT(Font);
 
     // Log
     VL_NOTE(hLogRenderer, "Initialized with %s pixel format\n", SDL_GetPixelFormatName(SDLPixelFormatEnum));
@@ -143,8 +143,8 @@ void VRenderer::DrawLineSlow(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32
         i32 T;
         if (X1 > X2)
         {
-            SWAP(X1, X2, T);
-            SWAP(Y1, Y2, T);
+            VL_SWAP(X1, X2, T);
+            VL_SWAP(Y1, Y2, T);
         }
 
         const f32 M = (f32)(Y2 - Y1) / (f32)(X2 - X1);
@@ -161,8 +161,8 @@ void VRenderer::DrawLineSlow(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32
         i32 T;
         if (Y1 > Y2)
         {
-            SWAP(X1, X2, T);
-            SWAP(Y1, Y2, T);
+            VL_SWAP(X1, X2, T);
+            VL_SWAP(Y1, Y2, T);
         }
 
         const f32 M = (f32)(X2 - X1) / (f32)(Y2 - Y1);
@@ -185,10 +185,10 @@ b32 VRenderer::ClipLine(i32& X1, i32& Y1, i32& X2, i32& Y2) const
 
     enum EClipCode
     {
-        CC_N = BIT(1),
-        CC_W = BIT(2),
-        CC_S = BIT(3),
-        CC_E = BIT(4),
+        CC_N = VL_BIT(1),
+        CC_W = VL_BIT(2),
+        CC_S = VL_BIT(3),
+        CC_E = VL_BIT(4),
 
         CC_NW = CC_N | CC_W,
         CC_NE = CC_N | CC_E,
@@ -452,7 +452,7 @@ void VRenderer::DrawTopTriangleInt(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X
     if (X1 > X2)
     {
         i32 Temp;
-        SWAP(X1, X2, Temp);
+        VL_SWAP(X1, X2, Temp);
     }
 
     f32 XStart = (f32)X1;
@@ -530,7 +530,7 @@ void VRenderer::DrawBottomTriangleInt(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i3
     if (X2 > X3)
     {
         i32 Temp;
-        SWAP(X2, X3, Temp);
+        VL_SWAP(X2, X3, Temp);
     }
 
     f32 XStart = (f32)X1;
@@ -614,18 +614,18 @@ void VRenderer::DrawTriangleInt(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, 
     i32 Temp;
     if (Y1 > Y2)
     {
-        SWAP(Y1, Y2, Temp);
-        SWAP(X1, X2, Temp);
+        VL_SWAP(Y1, Y2, Temp);
+        VL_SWAP(X1, X2, Temp);
     }
     if (Y1 > Y3)
     {
-        SWAP(Y1, Y3, Temp);
-        SWAP(X1, X3, Temp);
+        VL_SWAP(Y1, Y3, Temp);
+        VL_SWAP(X1, X3, Temp);
     }
     if (Y2 > Y3)
     {
-        SWAP(Y2, Y3, Temp);
-        SWAP(X2, X3, Temp);
+        VL_SWAP(Y2, Y3, Temp);
+        VL_SWAP(X2, X3, Temp);
     }
 
     // Whole clipping test
@@ -660,7 +660,7 @@ void VRenderer::DrawTopTriangleFloat(u32* Buffer, i32 Pitch, f32 X1, f32 Y1, f32
     if (X2 < X1)
     {
         f32 Temp;
-        SWAP(X1, X2, Temp);
+        VL_SWAP(X1, X2, Temp);
     }
 
     // Set Start End vectors
@@ -750,7 +750,7 @@ void VRenderer::DrawBottomTriangleFloat(u32* Buffer, i32 Pitch, f32 X1, f32 Y1, 
     if (X3 < X2)
     {
         f32 Temp;
-        SWAP(X2, X3, Temp);
+        VL_SWAP(X2, X3, Temp);
     }
 
     // Set Start End vectors
@@ -847,20 +847,20 @@ void VRenderer::DrawTriangleFloat(u32* Buffer, i32 Pitch, f32 X1, f32 Y1, f32 X2
     if (Y2 < Y1)
     {
         f32 Temp;
-        SWAP(X1, X2, Temp);
-        SWAP(Y1, Y2, Temp);
+        VL_SWAP(X1, X2, Temp);
+        VL_SWAP(Y1, Y2, Temp);
     }
     if (Y3 < Y1)
     {
         f32 Temp;
-        SWAP(X1, X3, Temp);
-        SWAP(Y1, Y3, Temp);
+        VL_SWAP(X1, X3, Temp);
+        VL_SWAP(Y1, Y3, Temp);
     }
     if (Y3 < Y2)
     {
         f32 Temp;
-        SWAP(X2, X3, Temp);
-        SWAP(Y2, Y3, Temp);
+        VL_SWAP(X2, X3, Temp);
+        VL_SWAP(Y2, Y3, Temp);
     }
 
     // Screen space clipping
@@ -902,15 +902,15 @@ void VRenderer::DrawFlatTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) 
     i32 TempInt;
     if (Poly.TransVtx[V1].Y < Poly.TransVtx[V0].Y)
     {
-        SWAP(V0, V1, TempInt);
+        VL_SWAP(V0, V1, TempInt);
     }
     if (Poly.TransVtx[V2].Y < Poly.TransVtx[V0].Y)
     {
-        SWAP(V0, V2, TempInt);
+        VL_SWAP(V0, V2, TempInt);
     }
     if (Poly.TransVtx[V2].Y < Poly.TransVtx[V1].Y)
     {
-        SWAP(V1, V2, TempInt);
+        VL_SWAP(V1, V2, TempInt);
     }
 
     // Test if we can't see it
@@ -933,8 +933,8 @@ void VRenderer::DrawFlatTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) 
     {
         if (Poly.TransVtx[V1].X < Poly.TransVtx[V0].X)
         {
-            SWAP(V0, V1, TempInt);
-            SWAP(Y0, Y1, TempInt);
+            VL_SWAP(V0, V1, TempInt);
+            VL_SWAP(Y0, Y1, TempInt);
         }
         TriangleCase = ETriangleCase::Top;
     }
@@ -942,8 +942,8 @@ void VRenderer::DrawFlatTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) 
     {
         if (Poly.TransVtx[V2].X < Poly.TransVtx[V1].X)
         {
-            SWAP(V1, V2, TempInt);
-            SWAP(Y1, Y2, TempInt);
+            VL_SWAP(V1, V2, TempInt);
+            VL_SWAP(Y1, Y2, TempInt);
         }
         TriangleCase = ETriangleCase::Bottom;
     }
@@ -1232,15 +1232,15 @@ void VRenderer::DrawFlatTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) 
              */
             if (XDeltaRightByY > XDeltaLeftByY)
             {
-                SWAP(XDeltaLeftByY, XDeltaRightByY, TempInt);
-                SWAP(ZDeltaLeftByY, ZDeltaRightByY, TempInt);
+                VL_SWAP(XDeltaLeftByY, XDeltaRightByY, TempInt);
+                VL_SWAP(ZDeltaLeftByY, ZDeltaRightByY, TempInt);
 
-                SWAP(XLeft, XRight, TempInt);
-                SWAP(ZLeft, ZRight, TempInt);
+                VL_SWAP(XLeft, XRight, TempInt);
+                VL_SWAP(ZLeft, ZRight, TempInt);
 
-                SWAP(X1, X2, TempInt);
-                SWAP(Y1, Y2, TempInt);
-                SWAP(ZVtx1, ZVtx2, TempInt);
+                VL_SWAP(X1, X2, TempInt);
+                VL_SWAP(Y1, Y2, TempInt);
+                VL_SWAP(ZVtx1, ZVtx2, TempInt);
 
                 bRestartInterpolationAtLeftHand = false; // Restart at right hand side
             }
@@ -1271,15 +1271,15 @@ void VRenderer::DrawFlatTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) 
              */
             if (XDeltaRightByY < XDeltaLeftByY)
             {
-                SWAP(XDeltaLeftByY, XDeltaRightByY, TempInt);
-                SWAP(ZDeltaLeftByY, ZDeltaRightByY, TempInt);
+                VL_SWAP(XDeltaLeftByY, XDeltaRightByY, TempInt);
+                VL_SWAP(ZDeltaLeftByY, ZDeltaRightByY, TempInt);
 
-                SWAP(XLeft, XRight, TempInt);
-                SWAP(ZLeft, ZRight, TempInt);
+                VL_SWAP(XLeft, XRight, TempInt);
+                VL_SWAP(ZLeft, ZRight, TempInt);
 
-                SWAP(X1, X2, TempInt);
-                SWAP(Y1, Y2, TempInt);
-                SWAP(ZVtx1, ZVtx2, TempInt);
+                VL_SWAP(X1, X2, TempInt);
+                VL_SWAP(Y1, Y2, TempInt);
+                VL_SWAP(ZVtx1, ZVtx2, TempInt);
 
                 bRestartInterpolationAtLeftHand = false; // Restart at right hand side
             }
@@ -1307,15 +1307,15 @@ void VRenderer::DrawFlatTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) 
             // TODO(sean): Test if we can simplify it
             if (XDeltaRightByY < XDeltaLeftByY)
             {
-                SWAP(XDeltaLeftByY, XDeltaRightByY, TempInt);
-                SWAP(ZDeltaLeftByY, ZDeltaRightByY, TempInt);
+                VL_SWAP(XDeltaLeftByY, XDeltaRightByY, TempInt);
+                VL_SWAP(ZDeltaLeftByY, ZDeltaRightByY, TempInt);
 
-                SWAP(XLeft, XRight, TempInt);
-                SWAP(ZLeft, ZRight, TempInt);
+                VL_SWAP(XLeft, XRight, TempInt);
+                VL_SWAP(ZLeft, ZRight, TempInt);
 
-                SWAP(X1, X2, TempInt);
-                SWAP(Y1, Y2, TempInt);
-                SWAP(ZVtx1, ZVtx2, TempInt);
+                VL_SWAP(X1, X2, TempInt);
+                VL_SWAP(Y1, Y2, TempInt);
+                VL_SWAP(ZVtx1, ZVtx2, TempInt);
 
                 bRestartInterpolationAtLeftHand = false; // Restart at right hand side
             }
@@ -1528,15 +1528,15 @@ void VRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
     i32 TempInt;
     if (Poly.TransVtx[V1].Y < Poly.TransVtx[V0].Y)
     {
-        SWAP(V0, V1, TempInt);
+        VL_SWAP(V0, V1, TempInt);
     }
     if (Poly.TransVtx[V2].Y < Poly.TransVtx[V0].Y)
     {
-        SWAP(V0, V2, TempInt);
+        VL_SWAP(V0, V2, TempInt);
     }
     if (Poly.TransVtx[V2].Y < Poly.TransVtx[V1].Y)
     {
-        SWAP(V1, V2, TempInt);
+        VL_SWAP(V1, V2, TempInt);
     }
 
     // Test if we can't see it
@@ -1559,8 +1559,8 @@ void VRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
     {
         if (Poly.TransVtx[V1].X < Poly.TransVtx[V0].X)
         {
-            SWAP(V0, V1, TempInt);
-            SWAP(Y0, Y1, TempInt);
+            VL_SWAP(V0, V1, TempInt);
+            VL_SWAP(Y0, Y1, TempInt);
         }
         TriangleCase = ETriangleCase::Top;
     }
@@ -1568,8 +1568,8 @@ void VRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
     {
         if (Poly.TransVtx[V2].X < Poly.TransVtx[V1].X)
         {
-            SWAP(V1, V2, TempInt);
-            SWAP(Y1, Y2, TempInt);
+            VL_SWAP(V1, V2, TempInt);
+            VL_SWAP(Y1, Y2, TempInt);
         }
         TriangleCase = ETriangleCase::Bottom;
     }
@@ -1965,24 +1965,24 @@ void VRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
              */
             if (XDeltaRightByY > XDeltaLeftByY)
             {
-                SWAP(XDeltaLeftByY, XDeltaRightByY, TempInt);
-                SWAP(RDeltaLeftByY, RDeltaRightByY, TempInt);
-                SWAP(GDeltaLeftByY, GDeltaRightByY, TempInt);
-                SWAP(BDeltaLeftByY, BDeltaRightByY, TempInt);
-                SWAP(ZDeltaLeftByY, ZDeltaRightByY, TempInt);
+                VL_SWAP(XDeltaLeftByY, XDeltaRightByY, TempInt);
+                VL_SWAP(RDeltaLeftByY, RDeltaRightByY, TempInt);
+                VL_SWAP(GDeltaLeftByY, GDeltaRightByY, TempInt);
+                VL_SWAP(BDeltaLeftByY, BDeltaRightByY, TempInt);
+                VL_SWAP(ZDeltaLeftByY, ZDeltaRightByY, TempInt);
 
-                SWAP(XLeft, XRight, TempInt);
-                SWAP(RLeft, RRight, TempInt);
-                SWAP(GLeft, GRight, TempInt);
-                SWAP(BLeft, BRight, TempInt);
-                SWAP(ZLeft, ZRight, TempInt);
+                VL_SWAP(XLeft, XRight, TempInt);
+                VL_SWAP(RLeft, RRight, TempInt);
+                VL_SWAP(GLeft, GRight, TempInt);
+                VL_SWAP(BLeft, BRight, TempInt);
+                VL_SWAP(ZLeft, ZRight, TempInt);
 
-                SWAP(X1, X2, TempInt);
-                SWAP(Y1, Y2, TempInt);
-                SWAP(RVtx1, RVtx2, TempInt);
-                SWAP(GVtx1, GVtx2, TempInt);
-                SWAP(BVtx1, BVtx2, TempInt);
-                SWAP(ZVtx1, ZVtx2, TempInt);
+                VL_SWAP(X1, X2, TempInt);
+                VL_SWAP(Y1, Y2, TempInt);
+                VL_SWAP(RVtx1, RVtx2, TempInt);
+                VL_SWAP(GVtx1, GVtx2, TempInt);
+                VL_SWAP(BVtx1, BVtx2, TempInt);
+                VL_SWAP(ZVtx1, ZVtx2, TempInt);
 
                 bRestartInterpolationAtLeftHand = false; // Restart at right hand side
             }
@@ -2026,24 +2026,24 @@ void VRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
             // TODO(sean): Test if we can simplify it
             if (XDeltaRightByY < XDeltaLeftByY)
             {
-                SWAP(XDeltaLeftByY, XDeltaRightByY, TempInt);
-                SWAP(RDeltaLeftByY, RDeltaRightByY, TempInt);
-                SWAP(GDeltaLeftByY, GDeltaRightByY, TempInt);
-                SWAP(BDeltaLeftByY, BDeltaRightByY, TempInt);
-                SWAP(ZDeltaLeftByY, ZDeltaRightByY, TempInt);
+                VL_SWAP(XDeltaLeftByY, XDeltaRightByY, TempInt);
+                VL_SWAP(RDeltaLeftByY, RDeltaRightByY, TempInt);
+                VL_SWAP(GDeltaLeftByY, GDeltaRightByY, TempInt);
+                VL_SWAP(BDeltaLeftByY, BDeltaRightByY, TempInt);
+                VL_SWAP(ZDeltaLeftByY, ZDeltaRightByY, TempInt);
 
-                SWAP(XLeft, XRight, TempInt);
-                SWAP(RLeft, RRight, TempInt);
-                SWAP(GLeft, GRight, TempInt);
-                SWAP(BLeft, BRight, TempInt);
-                SWAP(ZLeft, ZRight, TempInt);
+                VL_SWAP(XLeft, XRight, TempInt);
+                VL_SWAP(RLeft, RRight, TempInt);
+                VL_SWAP(GLeft, GRight, TempInt);
+                VL_SWAP(BLeft, BRight, TempInt);
+                VL_SWAP(ZLeft, ZRight, TempInt);
 
-                SWAP(X1, X2, TempInt);
-                SWAP(Y1, Y2, TempInt);
-                SWAP(RVtx1, RVtx2, TempInt);
-                SWAP(GVtx1, GVtx2, TempInt);
-                SWAP(BVtx1, BVtx2, TempInt);
-                SWAP(ZVtx1, ZVtx2, TempInt);
+                VL_SWAP(X1, X2, TempInt);
+                VL_SWAP(Y1, Y2, TempInt);
+                VL_SWAP(RVtx1, RVtx2, TempInt);
+                VL_SWAP(GVtx1, GVtx2, TempInt);
+                VL_SWAP(BVtx1, BVtx2, TempInt);
+                VL_SWAP(ZVtx1, ZVtx2, TempInt);
 
                 bRestartInterpolationAtLeftHand = false; // Restart at right hand side
             }
@@ -2080,24 +2080,24 @@ void VRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
             // TODO(sean): Test if we can simplify it
             if (XDeltaRightByY < XDeltaLeftByY)
             {
-                SWAP(XDeltaLeftByY, XDeltaRightByY, TempInt);
-                SWAP(RDeltaLeftByY, RDeltaRightByY, TempInt);
-                SWAP(GDeltaLeftByY, GDeltaRightByY, TempInt);
-                SWAP(BDeltaLeftByY, BDeltaRightByY, TempInt);
-                SWAP(ZDeltaLeftByY, ZDeltaRightByY, TempInt);
+                VL_SWAP(XDeltaLeftByY, XDeltaRightByY, TempInt);
+                VL_SWAP(RDeltaLeftByY, RDeltaRightByY, TempInt);
+                VL_SWAP(GDeltaLeftByY, GDeltaRightByY, TempInt);
+                VL_SWAP(BDeltaLeftByY, BDeltaRightByY, TempInt);
+                VL_SWAP(ZDeltaLeftByY, ZDeltaRightByY, TempInt);
 
-                SWAP(XLeft, XRight, TempInt);
-                SWAP(RLeft, RRight, TempInt);
-                SWAP(GLeft, GRight, TempInt);
-                SWAP(BLeft, BRight, TempInt);
-                SWAP(ZLeft, ZRight, TempInt);
+                VL_SWAP(XLeft, XRight, TempInt);
+                VL_SWAP(RLeft, RRight, TempInt);
+                VL_SWAP(GLeft, GRight, TempInt);
+                VL_SWAP(BLeft, BRight, TempInt);
+                VL_SWAP(ZLeft, ZRight, TempInt);
 
-                SWAP(X1, X2, TempInt);
-                SWAP(Y1, Y2, TempInt);
-                SWAP(RVtx1, RVtx2, TempInt);
-                SWAP(GVtx1, GVtx2, TempInt);
-                SWAP(BVtx1, BVtx2, TempInt);
-                SWAP(ZVtx1, ZVtx2, TempInt);
+                VL_SWAP(X1, X2, TempInt);
+                VL_SWAP(Y1, Y2, TempInt);
+                VL_SWAP(RVtx1, RVtx2, TempInt);
+                VL_SWAP(GVtx1, GVtx2, TempInt);
+                VL_SWAP(BVtx1, BVtx2, TempInt);
+                VL_SWAP(ZVtx1, ZVtx2, TempInt);
 
                 bRestartInterpolationAtLeftHand = false; // Restart at right hand side
             }
@@ -2399,15 +2399,15 @@ void VRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
     i32 TempInt;
     if (Poly.TransVtx[V1].Y < Poly.TransVtx[V0].Y)
     {
-        SWAP(V0, V1, TempInt);
+        VL_SWAP(V0, V1, TempInt);
     }
     if (Poly.TransVtx[V2].Y < Poly.TransVtx[V0].Y)
     {
-        SWAP(V0, V2, TempInt);
+        VL_SWAP(V0, V2, TempInt);
     }
     if (Poly.TransVtx[V2].Y < Poly.TransVtx[V1].Y)
     {
-        SWAP(V1, V2, TempInt);
+        VL_SWAP(V1, V2, TempInt);
     }
 
     // Test if we can't see it
@@ -2430,8 +2430,8 @@ void VRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
     {
         if (Poly.TransVtx[V1].X < Poly.TransVtx[V0].X)
         {
-            SWAP(V0, V1, TempInt);
-            SWAP(Y0, Y1, TempInt);
+            VL_SWAP(V0, V1, TempInt);
+            VL_SWAP(Y0, Y1, TempInt);
         }
         TriangleCase = ETriangleCase::Top;
     }
@@ -2439,8 +2439,8 @@ void VRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
     {
         if (Poly.TransVtx[V2].X < Poly.TransVtx[V1].X)
         {
-            SWAP(V1, V2, TempInt);
-            SWAP(Y1, Y2, TempInt);
+            VL_SWAP(V1, V2, TempInt);
+            VL_SWAP(Y1, Y2, TempInt);
         }
         TriangleCase = ETriangleCase::Bottom;
     }
@@ -2815,21 +2815,21 @@ void VRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
              */
             if (XDeltaRightByY > XDeltaLeftByY)
             {
-                SWAP(XDeltaLeftByY, XDeltaRightByY, TempInt);
-                SWAP(UDeltaLeftByY, UDeltaRightByY, TempInt);
-                SWAP(VDeltaLeftByY, VDeltaRightByY, TempInt);
-                SWAP(ZDeltaLeftByY, ZDeltaRightByY, TempInt);
+                VL_SWAP(XDeltaLeftByY, XDeltaRightByY, TempInt);
+                VL_SWAP(UDeltaLeftByY, UDeltaRightByY, TempInt);
+                VL_SWAP(VDeltaLeftByY, VDeltaRightByY, TempInt);
+                VL_SWAP(ZDeltaLeftByY, ZDeltaRightByY, TempInt);
 
-                SWAP(XLeft, XRight, TempInt);
-                SWAP(ULeft, URight, TempInt);
-                SWAP(VLeft, VRight, TempInt);
-                SWAP(ZLeft, ZRight, TempInt);
+                VL_SWAP(XLeft, XRight, TempInt);
+                VL_SWAP(ULeft, URight, TempInt);
+                VL_SWAP(VLeft, VRight, TempInt);
+                VL_SWAP(ZLeft, ZRight, TempInt);
 
-                SWAP(X1, X2, TempInt);
-                SWAP(Y1, Y2, TempInt);
-                SWAP(UVtx1, UVtx2, TempInt);
-                SWAP(VVtx1, VVtx2, TempInt);
-                SWAP(ZVtx1, ZVtx2, TempInt);
+                VL_SWAP(X1, X2, TempInt);
+                VL_SWAP(Y1, Y2, TempInt);
+                VL_SWAP(UVtx1, UVtx2, TempInt);
+                VL_SWAP(VVtx1, VVtx2, TempInt);
+                VL_SWAP(ZVtx1, ZVtx2, TempInt);
 
                 bRestartInterpolationAtLeftHand = false; // Restart at right hand side
             }
@@ -2869,21 +2869,21 @@ void VRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
             // TODO(sean): Test if we can simplify it
             if (XDeltaRightByY < XDeltaLeftByY)
             {
-                SWAP(XDeltaLeftByY, XDeltaRightByY, TempInt);
-                SWAP(UDeltaLeftByY, UDeltaRightByY, TempInt);
-                SWAP(VDeltaLeftByY, VDeltaRightByY, TempInt);
-                SWAP(ZDeltaLeftByY, ZDeltaRightByY, TempInt);
+                VL_SWAP(XDeltaLeftByY, XDeltaRightByY, TempInt);
+                VL_SWAP(UDeltaLeftByY, UDeltaRightByY, TempInt);
+                VL_SWAP(VDeltaLeftByY, VDeltaRightByY, TempInt);
+                VL_SWAP(ZDeltaLeftByY, ZDeltaRightByY, TempInt);
 
-                SWAP(XLeft, XRight, TempInt);
-                SWAP(ULeft, URight, TempInt);
-                SWAP(VLeft, VRight, TempInt);
-                SWAP(ZLeft, ZRight, TempInt);
+                VL_SWAP(XLeft, XRight, TempInt);
+                VL_SWAP(ULeft, URight, TempInt);
+                VL_SWAP(VLeft, VRight, TempInt);
+                VL_SWAP(ZLeft, ZRight, TempInt);
 
-                SWAP(X1, X2, TempInt);
-                SWAP(Y1, Y2, TempInt);
-                SWAP(UVtx1, UVtx2, TempInt);
-                SWAP(VVtx1, VVtx2, TempInt);
-                SWAP(ZVtx1, ZVtx2, TempInt);
+                VL_SWAP(X1, X2, TempInt);
+                VL_SWAP(Y1, Y2, TempInt);
+                VL_SWAP(UVtx1, UVtx2, TempInt);
+                VL_SWAP(VVtx1, VVtx2, TempInt);
+                VL_SWAP(ZVtx1, ZVtx2, TempInt);
 
                 bRestartInterpolationAtLeftHand = false; // Restart at right hand side
             }
@@ -2917,21 +2917,21 @@ void VRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
             // TODO(sean): Test if we can simplify it
             if (XDeltaRightByY < XDeltaLeftByY)
             {
-                SWAP(XDeltaLeftByY, XDeltaRightByY, TempInt);
-                SWAP(UDeltaLeftByY, UDeltaRightByY, TempInt);
-                SWAP(VDeltaLeftByY, VDeltaRightByY, TempInt);
-                SWAP(ZDeltaLeftByY, ZDeltaRightByY, TempInt);
+                VL_SWAP(XDeltaLeftByY, XDeltaRightByY, TempInt);
+                VL_SWAP(UDeltaLeftByY, UDeltaRightByY, TempInt);
+                VL_SWAP(VDeltaLeftByY, VDeltaRightByY, TempInt);
+                VL_SWAP(ZDeltaLeftByY, ZDeltaRightByY, TempInt);
 
-                SWAP(XLeft, XRight, TempInt);
-                SWAP(ULeft, URight, TempInt);
-                SWAP(VLeft, VRight, TempInt);
-                SWAP(ZLeft, ZRight, TempInt);
+                VL_SWAP(XLeft, XRight, TempInt);
+                VL_SWAP(ULeft, URight, TempInt);
+                VL_SWAP(VLeft, VRight, TempInt);
+                VL_SWAP(ZLeft, ZRight, TempInt);
 
-                SWAP(X1, X2, TempInt);
-                SWAP(Y1, Y2, TempInt);
-                SWAP(UVtx1, UVtx2, TempInt);
-                SWAP(VVtx1, VVtx2, TempInt);
-                SWAP(ZVtx1, ZVtx2, TempInt);
+                VL_SWAP(X1, X2, TempInt);
+                VL_SWAP(Y1, Y2, TempInt);
+                VL_SWAP(UVtx1, UVtx2, TempInt);
+                VL_SWAP(VVtx1, VVtx2, TempInt);
+                VL_SWAP(ZVtx1, ZVtx2, TempInt);
 
                 bRestartInterpolationAtLeftHand = false; // Restart at right hand side
             }
@@ -3208,15 +3208,15 @@ void VRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
     i32 TempInt;
     if (Poly.TransVtx[V1].Y < Poly.TransVtx[V0].Y)
     {
-        SWAP(V0, V1, TempInt);
+        VL_SWAP(V0, V1, TempInt);
     }
     if (Poly.TransVtx[V2].Y < Poly.TransVtx[V0].Y)
     {
-        SWAP(V0, V2, TempInt);
+        VL_SWAP(V0, V2, TempInt);
     }
     if (Poly.TransVtx[V2].Y < Poly.TransVtx[V1].Y)
     {
-        SWAP(V1, V2, TempInt);
+        VL_SWAP(V1, V2, TempInt);
     }
 
     // Test if we can't see it
@@ -3239,8 +3239,8 @@ void VRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
     {
         if (Poly.TransVtx[V1].X < Poly.TransVtx[V0].X)
         {
-            SWAP(V0, V1, TempInt);
-            SWAP(Y0, Y1, TempInt);
+            VL_SWAP(V0, V1, TempInt);
+            VL_SWAP(Y0, Y1, TempInt);
         }
         TriangleCase = ETriangleCase::Top;
     }
@@ -3248,8 +3248,8 @@ void VRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
     {
         if (Poly.TransVtx[V2].X < Poly.TransVtx[V1].X)
         {
-            SWAP(V1, V2, TempInt);
-            SWAP(Y1, Y2, TempInt);
+            VL_SWAP(V1, V2, TempInt);
+            VL_SWAP(Y1, Y2, TempInt);
         }
         TriangleCase = ETriangleCase::Bottom;
     }
@@ -3620,15 +3620,15 @@ void VRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
              */
             if (XDeltaRightByY > XDeltaLeftByY)
             {
-                SWAP(XDeltaLeftByY, XDeltaRightByY, TempInt);
-                SWAP(ZDeltaLeftByY, ZDeltaRightByY, TempInt);
+                VL_SWAP(XDeltaLeftByY, XDeltaRightByY, TempInt);
+                VL_SWAP(ZDeltaLeftByY, ZDeltaRightByY, TempInt);
 
-                SWAP(XLeft, XRight, TempInt);
-                SWAP(ZLeft, ZRight, TempInt);
+                VL_SWAP(XLeft, XRight, TempInt);
+                VL_SWAP(ZLeft, ZRight, TempInt);
 
-                SWAP(X1, X2, TempInt);
-                SWAP(Y1, Y2, TempInt);
-                SWAP(ZVtx1, ZVtx2, TempInt);
+                VL_SWAP(X1, X2, TempInt);
+                VL_SWAP(Y1, Y2, TempInt);
+                VL_SWAP(ZVtx1, ZVtx2, TempInt);
 
                 for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
                 {
@@ -3673,15 +3673,15 @@ void VRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
             // TODO(sean): Test if we can simplify it
             if (XDeltaRightByY < XDeltaLeftByY)
             {
-                SWAP(XDeltaLeftByY, XDeltaRightByY, TempInt);
-                SWAP(ZDeltaLeftByY, ZDeltaRightByY, TempInt);
+                VL_SWAP(XDeltaLeftByY, XDeltaRightByY, TempInt);
+                VL_SWAP(ZDeltaLeftByY, ZDeltaRightByY, TempInt);
 
-                SWAP(XLeft, XRight, TempInt);
-                SWAP(ZLeft, ZRight, TempInt);
+                VL_SWAP(XLeft, XRight, TempInt);
+                VL_SWAP(ZLeft, ZRight, TempInt);
 
-                SWAP(X1, X2, TempInt);
-                SWAP(Y1, Y2, TempInt);
-                SWAP(ZVtx1, ZVtx2, TempInt);
+                VL_SWAP(X1, X2, TempInt);
+                VL_SWAP(Y1, Y2, TempInt);
+                VL_SWAP(ZVtx1, ZVtx2, TempInt);
 
                 for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
                 {
@@ -3718,15 +3718,15 @@ void VRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
              */
             if (XDeltaRightByY < XDeltaLeftByY)
             {
-                SWAP(XDeltaLeftByY, XDeltaRightByY, TempInt);
-                SWAP(ZDeltaLeftByY, ZDeltaRightByY, TempInt);
+                VL_SWAP(XDeltaLeftByY, XDeltaRightByY, TempInt);
+                VL_SWAP(ZDeltaLeftByY, ZDeltaRightByY, TempInt);
 
-                SWAP(XLeft, XRight, TempInt);
-                SWAP(ZLeft, ZRight, TempInt);
+                VL_SWAP(XLeft, XRight, TempInt);
+                VL_SWAP(ZLeft, ZRight, TempInt);
 
-                SWAP(X1, X2, TempInt);
-                SWAP(Y1, Y2, TempInt);
-                SWAP(ZVtx1, ZVtx2, TempInt);
+                VL_SWAP(X1, X2, TempInt);
+                VL_SWAP(Y1, Y2, TempInt);
+                VL_SWAP(ZVtx1, ZVtx2, TempInt);
 
                 for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
                 {
@@ -4033,12 +4033,12 @@ void VRenderer::DrawText(i32 X, i32 Y, VColorARGB Color, const char* Format, ...
 
     // Render text
     SDL_Surface* SDLSurface = TTF_RenderText_Solid(Font, Text, SDLColor);
-    ASSERT(SDLSurface);
+    VL_ASSERT(SDLSurface);
     SDL_SetColorKey(SDLSurface, SDL_TRUE, static_cast<u32*>(SDLSurface->pixels)[0]);
 
     // Convert surface
     SDL_Surface* SDLConverted = SDL_ConvertSurface(SDLSurface, SDLPixelFormat, 0);
-    ASSERT(SDLConverted);
+    VL_ASSERT(SDLConverted);
 
     // Blit
     SDL_Rect Dest = { X, Y, (i32f)strlen(Text) * FontCharWidth, FontCharHeight };

@@ -26,11 +26,11 @@ public:
     };
 
 public:
-    FINLINE void operator=(const VMatrix44& Mat)
+    VL_FINLINE void operator=(const VMatrix44& Mat)
     {
         Memory.MemCopy(this, &Mat, sizeof(*this));
     }
-    FINLINE void Zero()
+    VL_FINLINE void Zero()
     {
         Memory.MemSetByte(this, 0, sizeof(*this));
     }
@@ -75,12 +75,12 @@ public:
     };
 
 public:
-    FINLINE void operator=(const VMatrix43& Mat)
+    VL_FINLINE void operator=(const VMatrix43& Mat)
     {
         Memory.MemCopy(this, &Mat, sizeof(*this));
     }
 
-    FINLINE void Zero()
+    VL_FINLINE void Zero()
     {
         Memory.MemSetByte(this, 0, sizeof(*this));
     }
@@ -102,12 +102,12 @@ public:
     };
 
 public:
-    FINLINE void operator=(const VMatrix14& Mat)
+    VL_FINLINE void operator=(const VMatrix14& Mat)
     {
         Memory.MemCopy(this, &Mat, sizeof(*this));
     }
 
-    FINLINE void Zero()
+    VL_FINLINE void Zero()
     {
         Memory.MemSetByte(this, 0, sizeof(*this));
     }
@@ -132,12 +132,12 @@ public:
     };
 
 public:
-    FINLINE void operator=(const VMatrix33& Mat)
+    VL_FINLINE void operator=(const VMatrix33& Mat)
     {
         Memory.MemCopy(this, &Mat, sizeof(*this));
     }
 
-    FINLINE void Zero()
+    VL_FINLINE void Zero()
     {
         Memory.MemSetByte(this, 0, sizeof(*this));
     }
@@ -161,12 +161,12 @@ public:
     };
 
 public:
-    FINLINE void operator=(const VMatrix32& Mat)
+    VL_FINLINE void operator=(const VMatrix32& Mat)
     {
         Memory.MemCopy(this, &Mat, sizeof(*this));
     }
 
-    FINLINE void Zero()
+    VL_FINLINE void Zero()
     {
         Memory.MemSetByte(this, 0, sizeof(*this));
     }
@@ -188,12 +188,12 @@ public:
     };
 
 public:
-    FINLINE void operator=(const VMatrix13& Mat)
+    VL_FINLINE void operator=(const VMatrix13& Mat)
     {
         Memory.MemCopy(this, &Mat, sizeof(*this));
     }
 
-    FINLINE void Zero()
+    VL_FINLINE void Zero()
     {
         Memory.MemSetByte(this, 0, sizeof(*this));
     }
@@ -216,12 +216,12 @@ public:
     };
 
 public:
-    FINLINE void operator=(const VMatrix22& Mat)
+    VL_FINLINE void operator=(const VMatrix22& Mat)
     {
         Memory.MemCopy(this, &Mat, sizeof(*this));
     }
 
-    FINLINE void Zero()
+    VL_FINLINE void Zero()
     {
         Memory.MemSetByte(this, 0, sizeof(*this));
     }
@@ -243,12 +243,12 @@ public:
     };
 
 public:
-    FINLINE void operator=(const VMatrix12& Mat)
+    VL_FINLINE void operator=(const VMatrix12& Mat)
     {
         Memory.MemCopy(this, &Mat, sizeof(*this));
     }
 
-    FINLINE void Zero()
+    VL_FINLINE void Zero()
     {
         Memory.MemSetByte(this, 0, sizeof(*this));
     }

@@ -18,32 +18,32 @@ namespace
 
 static constexpr i32 Fx16RoundUp = 0x00008000;
 
-FINLINE fx16 IntToFx16(i32 I)
+VL_FINLINE fx16 IntToFx16(i32 I)
 {
     return I << Shift;
 }
 
-FINLINE fx16 FloatToFx16(f32 F)
+VL_FINLINE fx16 FloatToFx16(f32 F)
 {
     return (fx16)(F * Magnitude + 0.5f);
 }
 
-FINLINE i32 Fx16ToInt(fx16 Fx)
+VL_FINLINE i32 Fx16ToInt(fx16 Fx)
 {
     return Fx >> Shift;
 }
 
-FINLINE i32 Fx16ToIntRounded(fx16 Fx)
+VL_FINLINE i32 Fx16ToIntRounded(fx16 Fx)
 {
     return (Fx + Fx16RoundUp) >> Shift;
 }
 
-FINLINE f32 Fx16ToFloat(fx16 Fx)
+VL_FINLINE f32 Fx16ToFloat(fx16 Fx)
 {
     return (f32)Fx / Magnitude;
 }
 
-FINLINE fx16 MulFx16(fx16 Fx1, fx16 Fx2)
+VL_FINLINE fx16 MulFx16(fx16 Fx1, fx16 Fx2)
 {
 #if VL_COMPILER_MSVC
     /* NOTE(sean):
@@ -75,7 +75,7 @@ FINLINE fx16 MulFx16(fx16 Fx1, fx16 Fx2)
 #endif // VL_COMPILER_MSVC
 }
 
-FINLINE fx16 DivFx16(fx16 Fx1, fx16 Fx2)
+VL_FINLINE fx16 DivFx16(fx16 Fx1, fx16 Fx2)
 {
 #if VL_COMPILER_MSVC
     /* NOTE(sean):
@@ -110,17 +110,17 @@ FINLINE fx16 DivFx16(fx16 Fx1, fx16 Fx2)
 #endif // VL_COMPILER_MSVC
 }
 
-FINLINE i32 GetFx16WholePart(fx16 Fx)
+VL_FINLINE i32 GetFx16WholePart(fx16 Fx)
 {
     return Fx >> Shift;
 }
 
-FINLINE i32 GetFx16DecimalPart(fx16 Fx)
+VL_FINLINE i32 GetFx16DecimalPart(fx16 Fx)
 {
     return Fx & DecimalPartMask;
 }
 
-FINLINE void PrintFx16(fx16 Fx, char EndChar = 0)
+VL_FINLINE void PrintFx16(fx16 Fx, char EndChar = 0)
 {
     VL_LOG("%f%c", Fx16ToFloat(Fx), EndChar);
 }

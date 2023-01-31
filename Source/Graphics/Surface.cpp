@@ -3,7 +3,7 @@
 
 void VSurface::Create(SDL_Surface* InSDLSurface)
 {
-    ASSERT(InSDLSurface);
+    VL_ASSERT(InSDLSurface);
     Destroy();
 
     SDLSurface = InSDLSurface;
@@ -19,7 +19,7 @@ void VSurface::Create(i32 InWidth, i32 InHeight)
         0, InWidth, InHeight, Renderer.BitsPerPixel,
         Renderer.SDLPixelFormatEnum
     );
-    ASSERT(PlatformSurface);
+    VL_ASSERT(PlatformSurface);
 
     SDLSurface = PlatformSurface;
     Width = SDLSurface->w;
@@ -31,12 +31,12 @@ void VSurface::Load(const char* Path)
     Destroy();
 
     SDL_Surface* Temp = SDL_LoadBMP(Path);
-    ASSERT(Temp);
+    VL_ASSERT(Temp);
 
     SDL_Surface* Converted = SDL_ConvertSurface(
         Temp, Renderer.SDLPixelFormat, 0
     );
-    ASSERT(Converted);
+    VL_ASSERT(Converted);
     SDL_FreeSurface(Temp);
 
     Create(Converted);
@@ -59,7 +59,7 @@ void VSurface::Destroy()
 
 void VSurface::Lock(u32*& OutBuffer, i32& OutPitch)
 {
-    ASSERT(!bLocked);
+    VL_ASSERT(!bLocked);
 
     /* NOTE(sean):
         We don't have to lock SDL surface
@@ -74,7 +74,7 @@ void VSurface::Lock(u32*& OutBuffer, i32& OutPitch)
 
 void VSurface::Unlock()
 {
-    ASSERT(bLocked);
+    VL_ASSERT(bLocked);
 
     bLocked = false;
 }

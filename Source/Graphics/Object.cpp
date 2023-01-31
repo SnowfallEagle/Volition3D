@@ -13,21 +13,21 @@ namespace EPLX
 {
     enum
     {
-        RGBFlag = BIT(16),
-        TwoSidedFlag = BIT(13),
+        RGBFlag = VL_BIT(16),
+        TwoSidedFlag = VL_BIT(13),
 
-        ShadeModeMask        = BIT(15) | BIT(14),
+        ShadeModeMask        = VL_BIT(15) | VL_BIT(14),
         ShadeModePureFlag    = 0,
-        ShadeModeFlatFlag    = BIT(14),
-        ShadeModeGouraudFlag = BIT(15),
-        ShadeModePhongFlag   = BIT(14) | BIT(15),
+        ShadeModeFlatFlag    = VL_BIT(14),
+        ShadeModeGouraudFlag = VL_BIT(15),
+        ShadeModePhongFlag   = VL_BIT(14) | VL_BIT(15),
 
         RGB16Mask = 0x0FFF,
         RGB8Mask  = 0x00FF,
     };
 }
 
-DEFINE_LOG_CHANNEL(hLogPLX, "PLX Loader"); // TODO(sean)
+VL_DEFINE_LOG_CHANNEL(hLogPLX, "PLX Loader"); // TODO(sean)
 
 char* GetLinePLG(std::FILE* File, char* Buffer, i32 Size)
 {
@@ -258,7 +258,7 @@ b32 VObject::LoadPLG(
                     COB Loader
    ============================================== */
 
-DEFINE_LOG_CHANNEL(hLogCOB, "COB Loader");
+VL_DEFINE_LOG_CHANNEL(hLogCOB, "COB Loader");
 
 char* GetLineCOB(std::FILE* File, char* Buffer, i32 Size)
 {
@@ -419,7 +419,7 @@ b32 VObject::LoadCOB(const char* Path, const VVector4& InPosition, const VVector
                 if (Flags & ECOB::SwapYZ)
                 {
                     f32 TempFloat;
-                    SWAP(LocalVtxList[I].Y, LocalVtxList[I].Z, TempFloat);
+                    VL_SWAP(LocalVtxList[I].Y, LocalVtxList[I].Z, TempFloat);
                     LocalVtxList[I].Z = -LocalVtxList[I].Z;
                 }
 
@@ -610,7 +610,7 @@ b32 VObject::LoadCOB(const char* Path, const VVector4& InPosition, const VVector
                         Line = FindLineCOB("colour: color", File, Buffer, BufferSize);
                         std::sscanf(Buffer, "colour: color (%d, %d, %d)", &AlphaRed, &AlphaGreen, &AlphaBlue);
 
-                        CurrentMaterial.Color.A = MAX(AlphaRed, MAX(AlphaGreen, AlphaBlue));
+                        CurrentMaterial.Color.A = VL_MAX(AlphaRed, VL_MAX(AlphaGreen, AlphaBlue));
                         CurrentMaterial.Attr |= EMaterialAttr::Transparent;
 
                         VL_LOG("\tAlpha channel: %d\n", CurrentMaterial.Color.A);
@@ -779,7 +779,7 @@ b32 VObject::LoadCOB(const char* Path, const VVector4& InPosition, const VVector
                     if (Flags & ECOB::SwapUV)
                     {
                         f32 TempFloat;
-                        SWAP(TextureCoordsList[I].X, TextureCoordsList[I].Y, TempFloat);
+                        VL_SWAP(TextureCoordsList[I].X, TextureCoordsList[I].Y, TempFloat);
                     }
                 }
             }

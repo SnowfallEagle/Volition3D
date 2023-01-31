@@ -65,7 +65,7 @@ public:
         ShutDown();
     }
 
-    FINLINE void Stop()
+    VL_FINLINE void Stop()
     {
         bRunning = false;
     }

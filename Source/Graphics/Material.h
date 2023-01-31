@@ -9,7 +9,7 @@ namespace EMaterialState
 {
     enum
     {
-        Active = BIT(1)
+        Active = VL_BIT(1)
     };
 }
 
@@ -17,15 +17,15 @@ namespace EMaterialAttr
 {
     enum
     {
-        RGB32       = BIT(1),
-        TwoSided    = BIT(2),
-        Transparent = BIT(3),
+        RGB32       = VL_BIT(1),
+        TwoSided    = VL_BIT(2),
+        Transparent = VL_BIT(3),
 
-        ShadeModeEmissive = BIT(4),
-        ShadeModeFlat     = BIT(5),
-        ShadeModeGouraud  = BIT(6),
-        ShadeModePhong    = BIT(7),
-        ShadeModeTexture  = BIT(8),
+        ShadeModeEmissive = VL_BIT(4),
+        ShadeModeFlat     = VL_BIT(5),
+        ShadeModeGouraud  = VL_BIT(6),
+        ShadeModePhong    = VL_BIT(7),
+        ShadeModeTexture  = VL_BIT(8),
     };
 }
 

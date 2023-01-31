@@ -28,26 +28,26 @@ public:
     void Lock(u32*& OutBuffer, i32& OutPitch);
     void Unlock();
 
-    FINLINE u32* GetBuffer()
+    VL_FINLINE u32* GetBuffer()
     {
-        ASSERT(bLocked);
+        VL_ASSERT(bLocked);
         return Buffer;
     }
-    FINLINE i32 GetPitch() const
+    VL_FINLINE i32 GetPitch() const
     {
-        ASSERT(bLocked);
+        VL_ASSERT(bLocked);
         return Pitch;
     }
-    FINLINE b32 IsLocked() const
+    VL_FINLINE b32 IsLocked() const
     {
         return bLocked;
     }
 
-    FINLINE i32 GetWidth() const 
+    VL_FINLINE i32 GetWidth() const 
     {
         return Width;
     }
-    FINLINE i32 GetHeight() const
+    VL_FINLINE i32 GetHeight() const
     {
         return Height;
     }

@@ -57,17 +57,17 @@ public:
     {
         i32 TempInt;
 
-        SWAP(RDeltaLeftByY, RDeltaRightByY, TempInt);
-        SWAP(GDeltaLeftByY, GDeltaRightByY, TempInt);
-        SWAP(BDeltaLeftByY, BDeltaRightByY, TempInt);
+        VL_SWAP(RDeltaLeftByY, RDeltaRightByY, TempInt);
+        VL_SWAP(GDeltaLeftByY, GDeltaRightByY, TempInt);
+        VL_SWAP(BDeltaLeftByY, BDeltaRightByY, TempInt);
 
-        SWAP(RLeft, RRight, TempInt);
-        SWAP(GLeft, GRight, TempInt);
-        SWAP(BLeft, BRight, TempInt);
+        VL_SWAP(RLeft, RRight, TempInt);
+        VL_SWAP(GLeft, GRight, TempInt);
+        VL_SWAP(BLeft, BRight, TempInt);
 
-        SWAP(RVtx[VtxIndices[1]], RVtx[VtxIndices[2]], TempInt);
-        SWAP(GVtx[VtxIndices[1]], GVtx[VtxIndices[2]], TempInt);
-        SWAP(BVtx[VtxIndices[1]], BVtx[VtxIndices[2]], TempInt);
+        VL_SWAP(RVtx[VtxIndices[1]], RVtx[VtxIndices[2]], TempInt);
+        VL_SWAP(GVtx[VtxIndices[1]], GVtx[VtxIndices[2]], TempInt);
+        VL_SWAP(BVtx[VtxIndices[1]], BVtx[VtxIndices[2]], TempInt);
     }
 
     virtual void ComputeXStartsAndDeltas(i32 XDiff, fx28 ZLeft, fx28 ZRight) override

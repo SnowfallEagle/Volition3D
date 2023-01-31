@@ -13,7 +13,7 @@ class VMemory
 {
 public:
 #ifdef VL_COMPILER_MSVC
-    FINLINE
+    VL_FINLINE
 #endif
     static void MemSetQuad(void* Dest, i32 Value, VSizeType Count)
     {
@@ -34,12 +34,12 @@ public:
 #endif
     }
 
-    FINLINE static void MemSetByte(void* Dest, i32 Value, VSizeType Count)
+    VL_FINLINE static void MemSetByte(void* Dest, i32 Value, VSizeType Count)
     {
         std::memset(Dest, Value, Count);
     }
 
-	FINLINE static void MemCopy(void* Dest, const void* Source, VSizeType Size)
+	VL_FINLINE static void MemCopy(void* Dest, const void* Source, VSizeType Size)
 	{
 		std::memcpy(Dest, Source, Size);
 	}

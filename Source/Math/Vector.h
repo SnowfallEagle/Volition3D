@@ -25,7 +25,7 @@ public:
     };
 
 public:
-    FINLINE TVector2<T> operator-(const TVector2<T>& Point)
+    VL_FINLINE TVector2<T> operator-(const TVector2<T>& Point)
     {
         return {
             X - Point.X,
@@ -33,25 +33,25 @@ public:
         };
     }
 
-    FINLINE void Zero()
+    VL_FINLINE void Zero()
     {
         X = Y = 0;
     }
 
-    FINLINE void Print()
+    VL_FINLINE void Print()
     {
         VL_LOG("<Unknown type>");
     }
 };
 
 template<>
-FINLINE void TVector2<f32>::Print()
+VL_FINLINE void TVector2<f32>::Print()
 {
     VL_LOG("<%f, %f>", X, Y);
 }
 
 template<>
-FINLINE void TVector2<i32>::Print()
+VL_FINLINE void TVector2<i32>::Print()
 {
     VL_LOG("<%d, %d>", X, Y);
 }
@@ -72,16 +72,16 @@ public:
     };
 
 public:
-    FINLINE void Zero()
+    VL_FINLINE void Zero()
     {
         X = Y = Z = 0;
     }
 
-    FINLINE f32 GetLength()
+    VL_FINLINE f32 GetLength()
     {
         return Math.Sqrt(X*X + Y*Y + Z*Z);
     }
-    FINLINE f32 GetLengthFast()
+    VL_FINLINE f32 GetLengthFast()
     {
         return Math.FastDist3D(X, Y, Z);
     }
@@ -110,7 +110,7 @@ public:
         return { X * Inv, Y * Inv, Z * Inv };
     }
 
-    FINLINE static VVector3 GetCross(const VVector3& A, const VVector3& B)
+    VL_FINLINE static VVector3 GetCross(const VVector3& A, const VVector3& B)
     {
         return {
             (A.Y * B.Z)   - (A.Z * B.Y),
@@ -118,7 +118,7 @@ public:
             (A.X * B.Y)   - (A.Y * B.X)
         };
     }
-    FINLINE static void Cross(const VVector3& A, const VVector3& B, VVector3& R)
+    VL_FINLINE static void Cross(const VVector3& A, const VVector3& B, VVector3& R)
     {
         R = {
             (A.Y * B.Z)   - (A.Z * B.Y),
@@ -127,7 +127,7 @@ public:
         };
     }
 
-    FINLINE void Print()
+    VL_FINLINE void Print()
     {
         VL_LOG("<%f, %f, %f>", X, Y, Z);
     }
@@ -154,13 +154,13 @@ public:
     {
     }
 
-    FINLINE VVector4 operator+(const VVector4& V) const
+    VL_FINLINE VVector4 operator+(const VVector4& V) const
     {
         return {
             X + V.X, Y + V.Y, Z + V.Z, 1.0f
         };
     }
-    FINLINE VVector4& operator+=(const VVector4& V)
+    VL_FINLINE VVector4& operator+=(const VVector4& V)
     {
         X += V.X;
         Y += V.Y;
@@ -169,13 +169,13 @@ public:
         return *this;
     }
 
-    FINLINE VVector4 operator-(const VVector4& V) const
+    VL_FINLINE VVector4 operator-(const VVector4& V) const
     {
         return {
             X - V.X, Y - V.Y, Z - V.Z, 1.0f
         };
     }
-    FINLINE VVector4& operator-=(const VVector4& V)
+    VL_FINLINE VVector4& operator-=(const VVector4& V)
     {
         X -= V.X;
         Y -= V.Y;
@@ -184,7 +184,7 @@ public:
         return *this;
     }
 
-    FINLINE VVector4 operator*(f32 Scalar) const
+    VL_FINLINE VVector4 operator*(f32 Scalar) const
     {
         return {
             X * Scalar,
@@ -194,7 +194,7 @@ public:
         };
     }
 
-    FINLINE VVector4 operator/(f32 Scalar) const
+    VL_FINLINE VVector4 operator/(f32 Scalar) const
     {
         f32 InvDiv = 1.0f / Scalar;
         return {
@@ -204,7 +204,7 @@ public:
             1.0f
         };
     }
-    FINLINE VVector4& operator/=(f32 Scalar)
+    VL_FINLINE VVector4& operator/=(f32 Scalar)
     {
         f32 InvDiv = 1.0f / Scalar;
         X *= InvDiv;
@@ -213,29 +213,29 @@ public:
         return *this;
     }
 
-    FINLINE void Zero()
+    VL_FINLINE void Zero()
     {
         X = Y = Z = 0.0f;
         W = 1.0f;
     }
 
-    FINLINE void Print()
+    VL_FINLINE void Print()
     {
         VL_LOG("<%+f, %+f, %+f, %+f>", X, Y, Z, W);
     }
 
-    FINLINE void DivByW()
+    VL_FINLINE void DivByW()
     {
         X /= W;
         Y /= W;
         Z /= W;
     }
 
-    FINLINE f32 GetLength() const
+    VL_FINLINE f32 GetLength() const
     {
         return Math.Sqrt(X*X + Y*Y + Z*Z);
     }
-    FINLINE f32 GetLengthFast() const
+    VL_FINLINE f32 GetLengthFast() const
     {
         return Math.FastDist3D(X, Y, Z);
     }
@@ -269,12 +269,12 @@ public:
         return { X * Inv, Y * Inv, Z * Inv, 1.0f };
     }
 
-    FINLINE static f32 Dot(const VVector4& A, const VVector4& B)
+    VL_FINLINE static f32 Dot(const VVector4& A, const VVector4& B)
     {
         return A.X*B.X + A.Y*B.Y + A.Z*B.Z;
     }
 
-    FINLINE static VVector4 GetCross(const VVector4& A, const VVector4& B)
+    VL_FINLINE static VVector4 GetCross(const VVector4& A, const VVector4& B)
     {
         return {
             A.Y * B.Z - A.Z * B.Y,
@@ -283,7 +283,7 @@ public:
             1.0f
         };
     }
-    FINLINE static void Cross(const VVector4& A, const VVector4& B, VVector4& R)
+    VL_FINLINE static void Cross(const VVector4& A, const VVector4& B, VVector4& R)
     {
         R = {
             A.Y * B.Z - A.Z * B.Y,

@@ -52,25 +52,25 @@ public:
     {
     }
 
-    FINLINE static f32 Abs(f32 X)
+    VL_FINLINE static f32 Abs(f32 X)
     {
         return std::fabsf(X);
     }
-    FINLINE static i32 Abs(i32 X)
+    VL_FINLINE static i32 Abs(i32 X)
     {
         return std::abs(X);
     }
 
-    FINLINE static f32 Floor(f32 X)
+    VL_FINLINE static f32 Floor(f32 X)
     {
         return std::floorf(X);
     }
-    FINLINE static f32 Ceil(f32 X)
+    VL_FINLINE static f32 Ceil(f32 X)
     {
         return std::ceilf(X);
     }
 
-    FINLINE static b32 IsEqualFloat(f32 A, f32 B)
+    VL_FINLINE static b32 IsEqualFloat(f32 A, f32 B)
     {
         return Abs(A - B) < Epsilon3;
     }
@@ -81,7 +81,7 @@ public:
         i32 IX = (i32)Abs(X);
         i32 IY = (i32)Abs(Y);
 
-        i32 Min = MIN(IX, IY);
+        i32 Min = VL_MIN(IX, IY);
 
         return (f32)(IX + IY - (Min >> 1) - (Min >> 2) + (Min >> 4));
     }
@@ -94,9 +94,9 @@ public:
         i32 T; // Temp
 
         // Sort
-        if (IX > IY) SWAP(IX, IY, T);
-        if (IY > IZ) SWAP(IY, IZ, T);
-        if (IX > IY) SWAP(IX, IY, T);
+        if (IX > IY) VL_SWAP(IX, IY, T);
+        if (IY > IZ) VL_SWAP(IY, IZ, T);
+        if (IX > IY) VL_SWAP(IX, IY, T);
 
         return (f32)(
             (IZ + 11*(IY >> 5) + (IX >> 2)) >> 10
@@ -128,37 +128,37 @@ public:
         return CosLook[I] + Remainder * (CosLook[I+1] - CosLook[I]);
     }
 
-    FINLINE static f32 Sqrt(f32 X)
+    VL_FINLINE static f32 Sqrt(f32 X)
     {
         return std::sqrtf(X);
     }
-    FINLINE static f32 Sin(f32 Deg)
+    VL_FINLINE static f32 Sin(f32 Deg)
     {
         return std::sinf(Deg * DegToRadConversion);
     }
-    FINLINE static f32 Cos(f32 Deg)
+    VL_FINLINE static f32 Cos(f32 Deg)
     {
         return std::cosf(Deg * DegToRadConversion);
     }
-    FINLINE static f32 Tan(f32 Deg)
+    VL_FINLINE static f32 Tan(f32 Deg)
     {
         return std::tanf(Deg * DegToRadConversion);
     }
 
-    FINLINE static f32 DegToRad(f32 Deg)
+    VL_FINLINE static f32 DegToRad(f32 Deg)
     {
         return Deg * DegToRadConversion;
     }
-    FINLINE static f32 RadToDeg(f32 Rad)
+    VL_FINLINE static f32 RadToDeg(f32 Rad)
     {
         return Rad * RadToDegConversion;
     }
 
-    FINLINE static i32 Random(i32 Range) // From 0 to "Range"-1
+    VL_FINLINE static i32 Random(i32 Range) // From 0 to "Range"-1
     {
         return std::rand() % Range;
     }
-    FINLINE static i32 Random(i32 From, i32 To) // From "From" to "To"
+    VL_FINLINE static i32 Random(i32 From, i32 To) // From "From" to "To"
     {
         return From + (std::rand() % (To - From + 1));
     }

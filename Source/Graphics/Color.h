@@ -31,15 +31,15 @@ public:
     };
 
 public:
-    FINLINE VColorARGB() = default;
-    FINLINE VColorARGB(u8 A, u8 R, u8 G, u8 B) :
+    VL_FINLINE VColorARGB() = default;
+    VL_FINLINE VColorARGB(u8 A, u8 R, u8 G, u8 B) :
         ARGB(MAP_ARGB32(A, R, G, B))
     {}
-    FINLINE VColorARGB(u32 InARGB) :
+    VL_FINLINE VColorARGB(u32 InARGB) :
         ARGB(InARGB)
     {}
 
-    FINLINE operator u32() const
+    VL_FINLINE operator u32() const
     {
         return ARGB;
     }
@@ -64,15 +64,15 @@ public:
     };
 
 public:
-    FINLINE VColorRGBA() = default;
-    FINLINE VColorRGBA(u8 R, u8 G, u8 B, u8 A) :
+    VL_FINLINE VColorRGBA() = default;
+    VL_FINLINE VColorRGBA(u8 R, u8 G, u8 B, u8 A) :
         RGBA(MAP_RGBA32(R, G, B, A))
     {}
-    FINLINE VColorRGBA(u32 InRGBA) :
+    VL_FINLINE VColorRGBA(u32 InRGBA) :
         RGBA(InRGBA)
     {}
 
-    FINLINE operator u32() const
+    VL_FINLINE operator u32() const
     {
         return RGBA;
     }

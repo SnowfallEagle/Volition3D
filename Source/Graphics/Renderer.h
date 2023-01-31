@@ -142,10 +142,10 @@ public:
     // Very slow put pixel function to debug draw functions
     void PutPixel(u32* Buffer, i32 Pitch, i32 X, i32 Y, u32 Color) const
     {
-        ASSERT(X >= 0);
-        ASSERT(X < ScreenWidth);
-        ASSERT(Y >= 0);
-        ASSERT(Y < ScreenHeight);
+        VL_ASSERT(X >= 0);
+        VL_ASSERT(X < ScreenWidth);
+        VL_ASSERT(Y >= 0);
+        VL_ASSERT(Y < ScreenHeight);
 
         Buffer[Y*Pitch + X] = Color;
     }
@@ -192,11 +192,11 @@ public:
 
     void DrawText(i32 X, i32 Y, VColorARGB Color, const char* Format, ...);
 
-    FINLINE i32 GetScreenWidth() const
+    VL_FINLINE i32 GetScreenWidth() const
     {
         return ScreenWidth;
     }
-    FINLINE i32 GetScreenHeight() const
+    VL_FINLINE i32 GetScreenHeight() const
     {
         return ScreenHeight;
     }

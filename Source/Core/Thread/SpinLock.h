@@ -26,7 +26,7 @@ public:
     void Acquire()
     {
         while (!TryAcquire())
-            PAUSE();
+            VL_PAUSE();
     }
 
     void Release()
@@ -109,7 +109,7 @@ public:
             ))
             {
                 UnlockValue = 0;
-                PAUSE();
+                VL_PAUSE();
             }
         }
 
@@ -125,7 +125,7 @@ public:
         std::hash<std::thread::id> Hasher;
         std::size_t ThreadID = Hasher(std::this_thread::get_id());
         std::size_t ActualID = Owner.load(std::memory_order_relaxed);
-        ASSERT(ThreadID == ActualID);
+        VL_ASSERT(ThreadID == ActualID);
 
         --RefCount;
         if (RefCount == 0)
@@ -152,7 +152,7 @@ public:
             std::memory_order_relaxed
         ))
         {
-            PAUSE();
+            VL_PAUSE();
             std::size_t CurrentRefCount = RefCount.load(std::memory_order_relaxed);
         }
     }
@@ -167,11 +167,11 @@ public:
             std::memory_order_relaxed
         ))
         {
-            PAUSE();
+            VL_PAUSE();
             std::size_t CurrentRefCount = RefCount.load(std::memory_order_relaxed);
         }
 
-        ASSERT(CurrentRefCount > 0);
+        VL_ASSERT(CurrentRefCount > 0);
     }
 
     void AcquireWrite()
@@ -184,14 +184,14 @@ public:
             std::memory_order_relaxed
         ))
         {
-            PAUSE();
+            VL_PAUSE();
             UnlockValue = 0;
         }
     }
 
     void ReleaseWrite()
     {
-        ASSERT(0xFFFFFFFF == RefCount.load(std::memory_order_relaxed))
+        VL_ASSERT(0xFFFFFFFF == RefCount.load(std::memory_order_relaxed))
         RefCount.store(0, std::memory_order_release);
     }
 };

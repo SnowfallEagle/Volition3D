@@ -28,7 +28,7 @@ public:
 
     virtual void Start(const u32* Buffer, i32 Pitch, const VPolyFace& Poly, const i32 InVtxIndices[3]) override
     {
-        ASSERT(Poly.Texture);
+        VL_ASSERT(Poly.Texture);
 
         Texture = Poly.Texture;
         Texture->Lock(TextureBuffer, TexturePitch);
@@ -62,14 +62,14 @@ public:
     {
         i32 TempInt;
 
-        SWAP(UDeltaLeftByY, UDeltaRightByY, TempInt);
-        SWAP(VDeltaLeftByY, VDeltaRightByY, TempInt);
+        VL_SWAP(UDeltaLeftByY, UDeltaRightByY, TempInt);
+        VL_SWAP(VDeltaLeftByY, VDeltaRightByY, TempInt);
 
-        SWAP(ULeft, URight, TempInt);
-        SWAP(VLeft, VRight, TempInt);
+        VL_SWAP(ULeft, URight, TempInt);
+        VL_SWAP(VLeft, VRight, TempInt);
 
-        SWAP(UVtx[VtxIndices[1]], UVtx[VtxIndices[2]], TempInt);
-        SWAP(VVtx[VtxIndices[1]], VVtx[VtxIndices[2]], TempInt);
+        VL_SWAP(UVtx[VtxIndices[1]], UVtx[VtxIndices[2]], TempInt);
+        VL_SWAP(VVtx[VtxIndices[1]], VVtx[VtxIndices[2]], TempInt);
     }
 
     virtual void ComputeXStartsAndDeltas(i32 XDiff, fx28 ZLeft, fx28 ZRight) override
