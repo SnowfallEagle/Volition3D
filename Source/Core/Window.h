@@ -1,12 +1,21 @@
 #pragma once
 
+#include "Core/Types.h"
 #include "Core/Platform.h"
 #include "Core/WindowSpecification.h"
 
-#if VL_IMPL_SDL
-# include "Core/Impl/Window_SDL.h"
-#elif VL_IMPL_DDRAW
-# include "Core/Impl/Window_DDraw.h"
-#endif
+struct SDL_Window;
+
+class VWindow
+{
+    SDL_Window* SDLWindow;
+
+public:
+    void Create(const VWindowSpecification& WindowSpec);
+    void Destroy();
+    void HandleEvents();
+
+    friend class VRenderer;
+};
 
 extern VWindow Window;

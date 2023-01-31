@@ -16,15 +16,6 @@
     <Filter Include="Source\Math">
       <UniqueIdentifier>{443909e1-086d-4c26-b9e3-8e63d2a53793}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Core\Impl">
-      <UniqueIdentifier>{8031a4fc-0999-46d7-b2b6-ddf9c5cbd2bd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Graphics\Impl">
-      <UniqueIdentifier>{1b492eed-b98f-4fd5-8ed7-2149904de9e8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Input\Impl">
-      <UniqueIdentifier>{60e1ac73-56b7-4191-8889-c9a7ef218a24}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ThirdParty">
       <UniqueIdentifier>{f3082ade-0d02-4101-a17b-a7ecb30494cd}</UniqueIdentifier>
     </Filter>
@@ -68,24 +59,6 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\Math\Rect.h">
       <Filter>Source\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Core\Impl\Window_SDL.h">
-      <Filter>Source\Core\Impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Graphics\Impl\Renderer_SDL.h">
-      <Filter>Source\Graphics\Impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Graphics\Impl\Surface_SDL.h">
-      <Filter>Source\Graphics\Impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Input\Impl\Input_SDL.h">
-      <Filter>Source\Input\Impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Input\Impl\Keycode_SDL.h">
-      <Filter>Source\Input\Impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Input\Impl\MouseButton_SDL.h">
-      <Filter>Source\Input\Impl</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ThirdParty\SDL\Include\begin_code.h">
       <Filter>ThirdParty\SDL</Filter>
@@ -354,12 +327,6 @@
     <ClInclude Include="..\..\ThirdParty\SDL\Include\SDL_vulkan.h">
       <Filter>ThirdParty\SDL</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Graphics\Impl\IRenderer.h">
-      <Filter>Source\Graphics\Impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Graphics\Impl\ISurface.h">
-      <Filter>Source\Graphics\Impl</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Graphics\Surface.h">
       <Filter>Source\Graphics</Filter>
     </ClInclude>
@@ -377,9 +344,6 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\Core\Thread\SpinLock.h">
       <Filter>Source\Core\Thread</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Core\Impl\Platform_Win.h">
-      <Filter>Source\Core\Impl</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Core\Platform.h">
       <Filter>Source\Core</Filter>
@@ -497,27 +461,6 @@
     <ClCompile Include="..\..\Source\Core\DebugLog.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Core\Impl\Window_SDL.cpp">
-      <Filter>Source\Core\Impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Graphics\Impl\Renderer_SDL.cpp">
-      <Filter>Source\Graphics\Impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Graphics\Impl\Surface_SDL.cpp">
-      <Filter>Source\Graphics\Impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Input\Impl\Input_SDL.cpp">
-      <Filter>Source\Input\Impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Graphics\Impl\IRenderer.cpp">
-      <Filter>Source\Graphics\Impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Graphics\Impl\ISurface.cpp">
-      <Filter>Source\Graphics\Impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\WinMain.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\ThirdParty\ltm\tlm.cpp">
       <Filter>ThirdParty\tlm</Filter>
     </ClCompile>
@@ -562,6 +505,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Core\Time.cpp">
       <Filter>Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Graphics\Surface.cpp">
+      <Filter>Source\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

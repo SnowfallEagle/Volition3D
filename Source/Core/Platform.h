@@ -1,22 +1,22 @@
 #pragma once
 
-#define VL_IMPL_SDL 1
+#include <intrin.h>
 
 // MSVC
-#ifdef _MSC_VER
-# define VL_PLATFORM_WIN 1
-# define VL_COMPILER_MSVC 1
-# include "Core/Impl/Platform_Win.h"
-#endif
+#define VL_PLATFORM_WIN 1
+#define VL_COMPILER_MSVC 1
 
-// Endianness
+#define DEBUG_BREAK() __debugbreak()
+#define PAUSE() _mm_pause()
+
+// Defines
+#define INLINE inline // Compiler decides if it should be inlined
+#define FINLINE __forceinline
+
 #define VL_LITTLE_ENDIAN 1
 #define VL_BIG_ENDIAN 0
 
 #define VL_ENDIANNESS VL_LITTLE_ENDIAN
-
-// Defines
-#define INLINE inline // Compiler decide if it should be inlined
 
 // Macroses
 #define MIN(A, B) ((A) < (B) ? (A) : (B))

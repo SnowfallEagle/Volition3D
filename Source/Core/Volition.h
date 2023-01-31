@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdlib>
+#include "SDL.h"
 #include "Core/Types.h"
 #include "Core/Platform.h"
 #include "Core/DebugLog.h"
