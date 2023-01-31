@@ -63,6 +63,7 @@ public:
     IInterpolator* Interpolators[NumInterpolators];
 
 public:
+    // TODO(sean): Remove Constructor/Destructor, move code in StartUp/ShutDown
     VRenderer()
     {
         ResetMaterials();
@@ -72,7 +73,7 @@ public:
         Interpolators[1] = new VBillinearPerspectiveTextureInterpolator();
         Interpolators[2] = new VAlphaInterpolator();
     }
-    virtual ~VRenderer()
+    ~VRenderer()
     {
         ResetMaterials();
         ResetLights();
@@ -129,12 +130,12 @@ public:
         }
     }
 
-    virtual void PrepareToRender()
+    void PrepareToRender()
     {
         BackSurface.FillRectHW(nullptr, MAP_XRGB32(0x00, 0x00, 0x00));
         ZBuffer.Clear();
     }
-    virtual void RenderAndFlip()
+    void RenderAndFlip()
     {
         Flip();
     }
@@ -162,9 +163,9 @@ public:
         }
     }
 
-    /*************************************************************************************
-    * Only DrawTriangle is supported because it uses inversed z-buffer and interpolators *
-    *************************************************************************************/
+    /*****************************************************************************************
+    *   Only DrawTriangle is supported because it uses inversed z-buffer and interpolators   *
+    *****************************************************************************************/
 
     // General case
     void DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) const;

@@ -10,6 +10,7 @@
 #include "Engine/Graphics/Renderer.h"
 #include "Engine/Input/Input.h"
 #include "Engine/Core/Time.h"
+#include "Engine/Core/World.h"
 #include "Engine/GameFramework/Game.h"
 
 class VVolition
@@ -22,9 +23,10 @@ public:
         DebugLog.StartUp();
         Window.Create(WindowSpec);
         Math.StartUp();
-        Renderer.StartUp();
+        Renderer.StartUp(); // TODO(sean): RenderSpec
         Input.StartUp();
         Time.StartUp(RenderSpec);
+        World.StartUp();
         Game.StartUp();
 
         bRunning = true;
@@ -35,6 +37,7 @@ public:
         bRunning = false;
 
         Game.ShutDown();
+        World.ShutDown();
         Time.ShutDown();
         Input.ShutDown();
         Renderer.ShutDown();
@@ -54,10 +57,15 @@ public:
 
             HandleEvents();
             Game.Update(Time.GetDeltaTime());
+            // TODO(sean): World.Update(Time.GetDeltaTime());
 
             Renderer.PrepareToRender();
             Game.Render();
             Renderer.RenderAndFlip();
+            // TOOD(sean): Renderer.ScanWorld();
+            // TODO(sean): Renderer.RenderWorld();
+            // TODO(sean): Renderer.RenderUI();
+            // TODO(sean): Renderer.Flip();
 
             Time.SyncFrame();
         }

@@ -183,6 +183,7 @@
     <ClInclude Include="..\..\Source\Engine\Core\Volition.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Window.h" />
     <ClInclude Include="..\..\Source\Engine\Core\WindowSpecification.h" />
+    <ClInclude Include="..\..\Source\Engine\Core\World.h" />
     <ClInclude Include="..\..\Source\Engine\GameFramework\Game.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\Camera.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\Color.h" />
@@ -313,6 +314,7 @@
     <ClCompile Include="..\..\Source\Engine\Core\Time.cpp" />
     <ClCompile Include="..\..\Source\Engine\Core\Volition.cpp" />
     <ClCompile Include="..\..\Source\Engine\Core\Window.cpp" />
+    <ClCompile Include="..\..\Source\Engine\Core\World.cpp" />
     <ClCompile Include="..\..\Source\Engine\GameFramework\Game.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Camera.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\IInterpolator.cpp" />

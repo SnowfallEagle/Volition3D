@@ -3,21 +3,21 @@
 #include <vector>
 
 template <typename T>
-class VSparseArray
+class TSparseArray
 {
 public:
     std::vector<T> SparseArray;
 
 public:
-    VSparseArray() :
+    TSparseArray() :
         SparseArray()
     {}
 
-    VSparseArray(VSizeType Size) :
+    TSparseArray(VSizeType Size) :
         SparseArray(Size)
     {}
 
-    VSparseArray(VSizeType Size, const T& Instance) :
+    TSparseArray(VSizeType Size, const T& Instance) :
         SparseArray(Size, Instance)
     {}
 };
