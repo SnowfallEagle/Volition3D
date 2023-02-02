@@ -29,13 +29,13 @@ void VRenderContext::RenderWorld(u32* Buffer, i32 Pitch)
 
     // Proccess and insert objects
     {
-        for (auto Object : World.Objects)
+        for (auto Mesh : World.Meshes)
         {
-            Object->Reset();
-            Object->TransformModelToWorld();
-            Object->Cull(Camera);
+            Mesh->Reset();
+            Mesh->TransformModelToWorld();
+            Mesh->Cull(Camera);
 
-            RenderList->InsertObject(*Object, false);
+            RenderList->InsertMesh(*Mesh, false);
         }
     }
 

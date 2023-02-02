@@ -190,6 +190,7 @@
     <ClInclude Include="..\..\Source\Engine\Core\Window.h" />
     <ClInclude Include="..\..\Source\Engine\Core\WindowSpecification.h" />
     <ClInclude Include="..\..\Source\Engine\Core\World.h" />
+    <ClInclude Include="..\..\Source\Engine\GameFramework\Entity.h" />
     <ClInclude Include="..\..\Source\Engine\GameFramework\GameFlow.h" />
     <ClInclude Include="..\..\Source\Engine\GameFramework\GameState.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\Camera.h" />
@@ -204,7 +205,7 @@
     <ClInclude Include="..\..\Source\Engine\Graphics\Interpolators\TextureInterpolator.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\Light.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\Material.h" />
-    <ClInclude Include="..\..\Source\Engine\Graphics\Object.h" />
+    <ClInclude Include="..\..\Source\Engine\Graphics\Mesh.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\Polygon.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\RenderContext.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\Renderer.h" />
@@ -231,11 +232,12 @@
     <ClCompile Include="..\..\Source\Engine\Core\Volition.cpp" />
     <ClCompile Include="..\..\Source\Engine\Core\Window.cpp" />
     <ClCompile Include="..\..\Source\Engine\Core\World.cpp" />
+    <ClCompile Include="..\..\Source\Engine\GameFramework\Entity.cpp" />
     <ClCompile Include="..\..\Source\Engine\GameFramework\GameFlow.cpp" />
     <ClCompile Include="..\..\Source\Engine\GameFramework\GameState.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Camera.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\IInterpolator.cpp" />
-    <ClCompile Include="..\..\Source\Engine\Graphics\Object.cpp" />
+    <ClCompile Include="..\..\Source\Engine\Graphics\Mesh.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Polygon.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\RenderContext.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Renderer.cpp" />

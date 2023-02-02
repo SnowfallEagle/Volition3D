@@ -105,7 +105,7 @@
     <ClInclude Include="..\..\Source\Engine\Graphics\Material.h">
       <Filter>Engine\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Graphics\Object.h">
+    <ClInclude Include="..\..\Source\Engine\Graphics\Mesh.h">
       <Filter>Engine\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Graphics\Polygon.h">
@@ -168,6 +168,9 @@
     <ClInclude Include="..\..\Source\Engine\GameFramework\GameState.h">
       <Filter>Engine\GameFramework</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\GameFramework\Entity.h">
+      <Filter>Engine\GameFramework</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Engine\Core\DebugLog.cpp">
@@ -200,7 +203,7 @@
     <ClCompile Include="..\..\Source\Engine\Graphics\Camera.cpp">
       <Filter>Engine\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Engine\Graphics\Object.cpp">
+    <ClCompile Include="..\..\Source\Engine\Graphics\Mesh.cpp">
       <Filter>Engine\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Graphics\Polygon.cpp">
@@ -231,6 +234,9 @@
       <Filter>Engine\GameFramework</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\GameFramework\GameState.cpp">
+      <Filter>Engine\GameFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\GameFramework\Entity.cpp">
       <Filter>Engine\GameFramework</Filter>
     </ClCompile>
   </ItemGroup>

@@ -9,7 +9,7 @@
 #include "Engine/Graphics/Camera.h"
 #include "Engine/Graphics/TransformType.h"
 #include "Engine/Graphics/Renderer.h"
-#include "Engine/Graphics/Object.h"
+#include "Engine/Graphics/Mesh.h"
 
 namespace EClipFlags
 {
@@ -88,18 +88,18 @@ public:
         return true;
     }
 
-    void InsertObject(VObject& Object, b32 bInsertLocal)
+    void InsertMesh(VMesh& Mesh, b32 bInsertLocal)
     {
-        if (~Object.State & EObjectState::Active  ||
-            ~Object.State & EObjectState::Visible ||
-            Object.State & EObjectState::Culled)
+        if (~Mesh.State & EMeshState::Active  ||
+            ~Mesh.State & EMeshState::Visible ||
+            Mesh.State & EMeshState::Culled)
         {
             return;
         }
 
-        for (i32f I = 0; I < Object.NumPoly; ++I)
+        for (i32f I = 0; I < Mesh.NumPoly; ++I)
         {
-            VPoly& Poly = Object.PolyList[I];
+            VPoly& Poly = Mesh.PolyList[I];
 
             if (~Poly.State & EPolyState::Active ||
                 Poly.State & EPolyState::Clipped ||
@@ -108,7 +108,7 @@ public:
                 continue;
             }
 
-            if (!InsertPoly(Poly, bInsertLocal ? Object.LocalVtxList : Object.TransVtxList))
+            if (!InsertPoly(Poly, bInsertLocal ? Mesh.LocalVtxList : Mesh.TransVtxList))
             {
                 return;
             }

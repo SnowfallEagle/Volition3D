@@ -3,7 +3,7 @@
 
 class GMyGameFlow : public VGameFlow
 {
-    VObject* Object;
+    VMesh* Mesh;
     VCamera* Camera;
 
 public:
@@ -11,8 +11,8 @@ public:
     {
         for (i32f I = 0; I < 4; ++I)
         {
-            VObject* TempObject = World.SpawnObject<VObject>();
-            TempObject->LoadCOB(
+            VMesh* TempMesh = World.SpawnMesh<VMesh>();
+            TempMesh->LoadCOB(
                 "rec_gouraud_textured_02.cob",
                 { 500.0f * I, 100.0f * Math.Sin(I * 20.0f), 250.0f},
                 { 100.0f, 100.0f, 100.0f },
@@ -20,8 +20,8 @@ public:
             );
         }
 
-        Object = World.SpawnObject<VObject>();
-        Object->LoadCOB(
+        Mesh = World.SpawnMesh<VMesh>();
+        Mesh->LoadCOB(
             "rec_gouraud_textured_02.cob",
             { 0.0f, 0.0f, 250.0f },
             { 100.0f, 100.0f, 100.0f },
@@ -30,7 +30,7 @@ public:
 
         // TODO(sean): Later we should spawn camera as entity and attach it to world
         Camera = World.GetCamera();
-        Camera->Init(ECameraAttr::Euler, { 0, 75.0f, 0 }, { 0, 0, 0 }, Object->Position, 90, 50, 12000, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
+        Camera->Init(ECameraAttr::Euler, { 0, 75.0f, 0 }, { 0, 0, 0 }, Mesh->Position, 90, 50, 12000, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
 
         {
             VLight AmbientLight = {
@@ -151,7 +151,7 @@ public:
         if (Input.IsKeyDown(EKeycode::G)) Rot.BuildRotationXYZ(0, 0, -Speed);
         if (Input.IsKeyDown(EKeycode::Z)) Rot.BuildRotationXYZ(Speed, 0, 0);
         if (Input.IsKeyDown(EKeycode::X)) Rot.BuildRotationXYZ(-Speed, 0, 0);
-        Object->Transform(Rot, ETransformType::LocalOnly, true);
+        Mesh->Transform(Rot, ETransformType::LocalOnly, true);
     }
 };
 

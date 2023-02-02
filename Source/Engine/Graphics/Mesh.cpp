@@ -4,7 +4,7 @@
 #include "Engine/Core/Memory.h"
 #include "Engine/Math/Vector.h"
 #include "Engine/Graphics/Renderer.h"
-#include "Engine/Graphics/Object.h"
+#include "Engine/Graphics/Mesh.h"
 
 /* ==============================================
                     PLG/X Loader
@@ -51,7 +51,7 @@ char* GetLinePLG(std::FILE* File, char* Buffer, i32 Size)
     }
 }
 
-b32 VObject::LoadPLG(
+b32 VMesh::LoadPLG(
     const char* Path,
     const VVector4& InPosition,
     const VVector4& Scale,
@@ -312,7 +312,7 @@ char* FindLineCOB(const char* Pattern, std::FILE* File, char* Buffer, i32 Size)
     }
 }
 
-b32 VObject::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4& Scale, const VVector4& Rot, u32 Flags)
+b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4& Scale, const VVector4& Rot, u32 Flags)
 {
     static constexpr i32f BufferSize = 4096;
 
@@ -588,7 +588,7 @@ b32 VObject::LoadCOB(const char* Path, const VVector4& InPosition, const VVector
 
                         // Texture in object
                         Texture = &CurrentMaterial.Texture;
-                        Attr |= EObjectAttr::HasTexture;
+                        Attr |= EMeshAttr::HasTexture;
 
                         VL_LOG("\tMaterial has texture, file path: %s\n", TexturePath);
                     }
@@ -759,7 +759,7 @@ b32 VObject::LoadCOB(const char* Path, const VVector4& InPosition, const VVector
 
         // Fix texture coords
         {
-            if (Attr & EObjectAttr::HasTexture)
+            if (Attr & EMeshAttr::HasTexture)
             {
                 for (i32f I = 0; I < NumTextureVtx; ++I)
                 {

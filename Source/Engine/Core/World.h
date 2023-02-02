@@ -1,17 +1,12 @@
 #pragma once
 
 #include "Engine/Core/Containers/SparseArray.h"
-#include "Engine/Graphics/Object.h" // TODO(sean): Entity
+#include "Engine/GameFramework/Entity.h"
 #include "Engine/GameFramework/GameFlow.h"
-
-class VEntity
-{
-    // TODO(sean)
-};
 
 class VWorld
 {
-    TSparseArray<VObject*> Objects;
+    TSparseArray<VMesh*> Meshes;
     VCamera* Camera;
 
     VGameFlow* GameFlow;
@@ -32,10 +27,10 @@ public:
         delete GameFlow;
 
         // TODO(sean): Delete entities
-        for (auto Object : Objects)
+        for (auto Mesh : Meshes)
         {
-            Object->Destroy();
-            delete Object;
+            Mesh->Destroy();
+            delete Mesh;
         }
 
         delete Camera;
@@ -54,12 +49,12 @@ public:
     }
 
     template <typename T>
-    T* SpawnObject()
+    T* SpawnMesh()
     {
-        VObject* Object = new T();
+        VMesh* Mesh = new T();
         // TODO(sean): Init
-        Objects.EmplaceBack(Object);
-        return Object;
+        Meshes.EmplaceBack(Mesh);
+        return Mesh;
     }
 
     friend class VRenderer;

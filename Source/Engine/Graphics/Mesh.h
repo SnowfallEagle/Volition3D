@@ -9,7 +9,7 @@
 #include "Engine/Graphics/TransformType.h"
 #include "Engine/Graphics/Vertex.h"
 
-namespace EObjectState
+namespace EMeshState
 {
     enum
     {
@@ -19,7 +19,7 @@ namespace EObjectState
     };
 }
 
-namespace EObjectAttr
+namespace EMeshAttr
 {
     enum
     {
@@ -52,7 +52,7 @@ namespace ECOB
 
 VL_DEFINE_LOG_CHANNEL(hLogObject, "Object");
 
-class VObject
+class VMesh
 {
 public:
     static constexpr i32f NameSize = 64;
@@ -128,7 +128,7 @@ public:
 
     void SetFrame(i32 Frame)
     {
-        if (~Attr & EObjectAttr::MultiFrame)
+        if (~Attr & EMeshAttr::MultiFrame)
         {
             return;
         }
@@ -152,7 +152,7 @@ public:
     void Reset()
     {
         // Reset object's state
-        State &= ~EObjectState::Culled;
+        State &= ~EMeshState::Culled;
 
         // Restore polygons
         for (i32f I = 0; I < NumPoly; ++I)
@@ -172,7 +172,7 @@ public:
     {
         Memory.MemSetByte(this, 0, sizeof(*this));
 
-        State = EObjectState::Active | EObjectState::Visible;
+        State = EMeshState::Active | EMeshState::Visible;
 
         UX = { 1.0f, 0.0f, 0.0f };
         UY = { 0.0f, 1.0f, 0.0f };
@@ -385,7 +385,7 @@ public:
             if (SpherePos.X - MaxRadius > ZTest ||  // Check Sphere's Left with Right side
                 SpherePos.X + MaxRadius < -ZTest)   // Check Sphere's Right with Left side
             {
-                State |= EObjectState::Culled;
+                State |= EMeshState::Culled;
                 return true;
             }
         }
@@ -397,7 +397,7 @@ public:
             if (SpherePos.Y - MaxRadius > ZTest ||  // Check Sphere's Bottom with Top side
                 SpherePos.Y + MaxRadius < -ZTest)   // Check Sphere's Top with Bottom side
             {
-                State |= EObjectState::Culled;
+                State |= EMeshState::Culled;
                 return true;
             }
         }
@@ -407,7 +407,7 @@ public:
             if (SpherePos.Z - MaxRadius > Cam.ZFarClip ||
                 SpherePos.Z + MaxRadius < Cam.ZNearClip)
             {
-                State |= EObjectState::Culled;
+                State |= EMeshState::Culled;
                 return true;
             }
         }
@@ -418,9 +418,9 @@ public:
 #if 0 // Now we are doing this kind of stuff in RenderList only
     void Light(const VCamera& Cam, const VLight* Lights, i32 NumLights)
     {
-        if (~State & EObjectState::Active ||
-            State & EObjectState::Culled  ||
-            ~State & EObjectState::Visible)
+        if (~State & EMeshState::Active ||
+            State & EMeshState::Culled  ||
+            ~State & EMeshState::Visible)
         {
             return;
         }
@@ -585,7 +585,7 @@ public:
 
     void RemoveBackFaces(VCamera Cam)
     {
-        if (State & EObjectState::Culled)
+        if (State & EMeshState::Culled)
         {
             return;
         }
