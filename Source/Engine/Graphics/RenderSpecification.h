@@ -19,16 +19,16 @@ public: // Set by user
     i32 MaxMipMappingLevel = 4;
 
 private: // Set by rendering engine
-    SDL_PixelFormat* SDLPixelFormat;
-    u32 SDLPixelFormatEnum;
+    SDL_PixelFormat* SDLPixelFormat = nullptr;
+    u32 SDLPixelFormatEnum = 0;
 
-    VVector2I TargetSize;
+    VVector2I TargetSize = { 0, 0 };
 
-    VVector2I MinClip;
-    VVector2I MaxClip;
+    VVector2I MinClip = { 0, 0 };
+    VVector2I MaxClip = { 0, 0 };
 
-    VVector2 MinClipFloat;
-    VVector2 MaxClipFloat;
+    VVector2 MinClipFloat = { 0.0f, 0.0f };
+    VVector2 MaxClipFloat = { 0.0f, 0.0f };
 
     friend class VRenderer;
     friend class VRenderContext;

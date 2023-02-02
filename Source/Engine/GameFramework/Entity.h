@@ -8,7 +8,7 @@ class VEntity
 public:
     VString Name = "Entity";
 
-    VMesh* Mesh = nullptr;
+    VMesh* Mesh = new VMesh();
     VMatrix44 MatTransform = VMatrix44::Identity; // TODO(sean): Implement
 
 public:

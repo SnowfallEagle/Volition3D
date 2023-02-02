@@ -76,6 +76,7 @@ void VRenderer::ShutDown()
 
     // Free renderer stuff
     {
+        RenderContext.Destroy();
         BackSurface.Destroy();
     }
 }

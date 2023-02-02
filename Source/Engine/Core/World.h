@@ -23,8 +23,11 @@ public:
 
     void ShutDown()
     {
-        GameFlow->ShutDown();
-        delete GameFlow;
+        if (GameFlow)
+        {
+            GameFlow->ShutDown();
+            delete GameFlow;
+        }
 
         for (auto& Entity : Entities)
         {
@@ -36,13 +39,19 @@ public:
             }
         }
 
-        delete Camera;
-        Camera = nullptr;
+        if (Camera)
+        {
+            delete Camera;
+            Camera = nullptr;
+        }
     }
 
     void Update(f32 DeltaTime)
     {
-        GameFlow->Update(DeltaTime);
+        if (GameFlow)
+        {
+            GameFlow->Update(DeltaTime);
+        }
 
         for (auto Entity : Entities)
         {
