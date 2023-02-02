@@ -16,8 +16,6 @@ class VTime
 public:
     void StartUp(const VRenderSpecification& RenderSpec)
     {
-        // TODO(sean): In case where we want to update render specification, we need get info from render context
-
         MsFrameLimit = 1000 / RenderSpec.TargetFPS;
         bLimitFPS = RenderSpec.bLimitFPS;
 

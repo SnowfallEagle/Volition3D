@@ -22,7 +22,7 @@ public:
         DebugLog.StartUp();
         Window.Create(WindowSpec);
         Math.StartUp();
-        Renderer.StartUp(); // TODO(sean): RenderSpec
+        Renderer.StartUp(RenderSpec);
         Input.StartUp();
         Time.StartUp(RenderSpec);
         World.StartUp<GAME_WORLD_TYPE>();

@@ -8,45 +8,60 @@ VRenderer Renderer;
 
 VL_DEFINE_LOG_CHANNEL(hLogRenderer, "Renderer");
 
-void VRenderer::StartUp()
+void VRenderer::StartUp(const VRenderSpecification& InRenderSpec)
 {
-    // Get window surface
-    SDL_Surface* SDLSurface = SDL_GetWindowSurface(Window.SDLWindow);
-    VL_ASSERT(SDLSurface);
+    // TODO(sean): Maybe we should put stuff like ScreenWidth/MaxClip in RenderSpec?
+    // Copy render specification
+    {
+        RenderSpec = InRenderSpec;
+    }
 
-    // Init pixel format
-    SDLPixelFormat = SDLSurface->format;
-    SDLPixelFormatEnum = SDLPixelFormat->format;
+    // Get window surface and init pixel format
+    SDL_Surface* SDLSurface;
+    {
+        SDLSurface = SDL_GetWindowSurface(Window.SDLWindow);
+        VL_ASSERT(SDLSurface);
+
+        SDLPixelFormat = SDLSurface->format;
+        SDLPixelFormatEnum = SDLPixelFormat->format;
+    }
 
     // Create video and back surfaces
-    VideoSurface.Create(SDLSurface);
+    {
+        VideoSurface.Create(SDLSurface);
 
-    ScreenWidth = VideoSurface.Width;
-    ScreenHeight = VideoSurface.Height;
+        ScreenWidth = VideoSurface.Width;
+        ScreenHeight = VideoSurface.Height;
 
-    MinClip = { 0, 0 };
-    MaxClip = { ScreenWidth - 1, ScreenHeight - 1 };
-    MinClipFloat = { (f32)MinClip.X, (f32)MinClip.Y };
-    MaxClipFloat = { (f32)MaxClip.X, (f32)MaxClip.Y };
+        MinClip = { 0, 0 };
+        MaxClip = { ScreenWidth - 1, ScreenHeight - 1 };
+        MinClipFloat = { (f32)MinClip.X, (f32)MinClip.Y };
+        MaxClipFloat = { (f32)MaxClip.X, (f32)MaxClip.Y };
 
-    BackSurface.Create(ScreenWidth, ScreenHeight);
+        BackSurface.Create(ScreenWidth, ScreenHeight);
+    }
 
-    ZBuffer.Create(ScreenWidth, ScreenHeight);
-
-    RenderList = new VRenderList();
+    // Init render context
+    // TODO(sean): Maybe'll be better to give it RenderSpec?
+    {
+        RenderContext.Init(ScreenWidth, ScreenHeight);
+    }
 
     // Initialize TTF
-    i32 Res = TTF_Init();
-    VL_ASSERT(Res == 0);
+    {
+        static constexpr i32f CharsPerLine = 80;
+        static constexpr f32 PointDivPixel = 0.75f;
+        static constexpr f32 QualityMultiplier = 2.0f;
 
-    static constexpr i32f CharsPerLine = 80;
-    static constexpr f32 PointDivPixel = 0.75f;
-    static constexpr f32 QualityMultiplier = 2.0f;
-    FontCharWidth = ScreenWidth / CharsPerLine;
-    FontCharHeight = (i32)(FontCharWidth * 1.25f);
+        i32 Res = TTF_Init();
+        VL_ASSERT(Res == 0);
 
-    Font = TTF_OpenFont("Default.ttf", (i32f)( (f32)FontCharWidth * PointDivPixel * QualityMultiplier ));
-    VL_ASSERT(Font);
+        FontCharWidth = ScreenWidth / CharsPerLine;
+        FontCharHeight = (i32)(FontCharWidth * 1.25f);
+
+        Font = TTF_OpenFont("Default.ttf", (i32)( (f32)FontCharWidth * PointDivPixel * QualityMultiplier ));
+        VL_ASSERT(Font);
+    }
 
     // Log
     VL_NOTE(hLogRenderer, "Initialized with %s pixel format\n", SDL_GetPixelFormatName(SDLPixelFormatEnum));
@@ -62,66 +77,8 @@ void VRenderer::ShutDown()
 
     // Free renderer stuff
     {
-        delete RenderList;
-        ZBuffer.Destroy();
         BackSurface.Destroy();
     }
-}
-
-void VRenderer::RenderWorld()
-{
-    VCamera& Camera = *World.Camera;
-
-    // Set up
-    {
-        Camera.BuildWorldToCameraEulerMat44();
-        RenderList->Reset();
-    }
-
-    // Proccess and insert objects
-    {
-        for (auto Object : World.Objects)
-        {
-            Object->Reset();
-            Object->TransformModelToWorld();
-            Object->Cull(Camera);
-
-            RenderList->InsertObject(*Object, false);
-        }
-    }
-
-    // Proccess render list
-    {
-        RenderList->RemoveBackFaces(Camera);
-        RenderList->TransformWorldToCamera(Camera);
-        RenderList->Clip(Camera);
-        TransformLights(Camera);
-        RenderList->Light(Camera, Lights, MaxLights);
-        RenderList->SortPolygons(ESortPolygonsMethod::Average);
-        RenderList->TransformCameraToScreen(Camera);
-    }
-
-    // Draw background
-    {
-        VRelRectI Dest = { 0, 0, GetScreenWidth(), GetScreenHeight()};
-        BackSurface.FillRectHW(&Dest, MAP_XRGB32(0x66, 0x00, 0x00));
-
-        /*
-        VRelRectI Dest = { 0, 0, Volition.WindowWidth, Volition.WindowHeight/2 };
-        BackSurface.FillRectHW(&Dest, MAP_XRGB32(100, 20, 255));
-        Dest = { 0, Dest.H, Dest.W, Volition.WindowHeight / 2 - 1 };
-        BackSurface.FillRectHW(&Dest, MAP_XRGB32(60, 10, 255));
-        */
-    }
-
-    // Render stuff
-    u32* Buffer;
-    i32 Pitch;
-    BackSurface.Lock(Buffer, Pitch);
-    {
-        RenderList->RenderSolid(Buffer, Pitch);
-    }
-    BackSurface.Unlock();
 }
 
 void VRenderer::Flip()
@@ -513,6 +470,7 @@ b32 VRenderer::ClipLine(i32& X1, i32& Y1, i32& X2, i32& Y2) const
     return true;
 }
 
+#if 0 // Deprecated
 void VRenderer::DrawTopTriangleInt(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, i32 X3, i32 Y3, u32 Color) const
 {
     // Sort
@@ -3260,6 +3218,8 @@ void VRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
     Poly.Texture->Unlock();
 }
 
+#endif // Deprecated
+
 void VRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) const
 {
     enum class ETriangleCase
@@ -3470,7 +3430,7 @@ void VRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
         {
             // Align buffer pointer
             Buffer += Pitch * YStart;
-            ZBufferArray = (fx28*)ZBuffer.Buffer + (ZBuffer.Pitch * YStart);
+            ZBufferArray = (fx28*)RenderContext.ZBuffer.Buffer + (RenderContext.ZBuffer.Pitch * YStart);
 
             // Process each Y
             for (i32f Y = YStart; Y < YEnd; ++Y)
@@ -3556,14 +3516,14 @@ void VRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
                 }
 
                 Buffer += Pitch;
-                ZBufferArray += ZBuffer.Pitch;
+                ZBufferArray += RenderContext.ZBuffer.Pitch;
             }
         }
         else // Non-clipped version
         {
             // Align buffer pointer
             Buffer += Pitch * YStart;
-            ZBufferArray = (fx28*)ZBuffer.Buffer + (ZBuffer.Pitch * YStart);
+            ZBufferArray = (fx28*)RenderContext.ZBuffer.Buffer + (RenderContext.ZBuffer.Pitch * YStart);
 
             // Process each Y
             for (i32f Y = YStart; Y < YEnd; ++Y)
@@ -3631,7 +3591,7 @@ void VRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
                 }
 
                 Buffer += Pitch;
-                ZBufferArray += ZBuffer.Pitch;
+                ZBufferArray += RenderContext.ZBuffer.Pitch;
             }
         }
     }
@@ -3810,7 +3770,7 @@ void VRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
         {
             // Align buffer pointer
             Buffer += Pitch * YStart;
-            ZBufferArray = (fx28*)ZBuffer.Buffer + (ZBuffer.Pitch * YStart);
+            ZBufferArray = (fx28*)RenderContext.ZBuffer.Buffer + (RenderContext.ZBuffer.Pitch * YStart);
 
             // Process each Y
             for (i32f Y = YStart; Y < YEnd; ++Y)
@@ -3896,7 +3856,7 @@ void VRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
                 }
 
                 Buffer += Pitch;
-                ZBufferArray += ZBuffer.Pitch;
+                ZBufferArray += RenderContext.ZBuffer.Pitch;
 
                 // Test for changing interpolant
                 if (Y == YRestartInterpolation)
@@ -3952,7 +3912,7 @@ void VRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
         {
             // Align buffer pointer
             Buffer += Pitch * YStart;
-            ZBufferArray = (fx28*)ZBuffer.Buffer + (ZBuffer.Pitch * YStart);
+            ZBufferArray = (fx28*)RenderContext.ZBuffer.Buffer + (RenderContext.ZBuffer.Pitch * YStart);
 
             // Process each Y
             for (i32f Y = YStart; Y < YEnd; ++Y)
@@ -4020,7 +3980,7 @@ void VRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
                 }
 
                 Buffer += Pitch;
-                ZBufferArray += ZBuffer.Pitch;
+                ZBufferArray += RenderContext.ZBuffer.Pitch;
 
                 // Test for changing interpolant
                 if (Y == YRestartInterpolation)

@@ -1,10 +1,19 @@
 #pragma once
 
-#include "Engine/Graphics/RenderList.h"
+#include "Engine/Graphics/ZBuffer.h"
+
+class VRenderList;
 
 class VRenderContext
 {
-    VRenderList RenderList;
-};
+public:
+    VRenderList* RenderList;
+    VZBuffer ZBuffer;
 
-extern VRenderContext RenderContext;
+public:
+    void Init(i32 ScreenWidth, i32 ScreenHeight);
+    void Destroy();
+
+    void PrepareToRender();
+    void RenderWorld(u32* Buffer, i32 Pitch);
+};

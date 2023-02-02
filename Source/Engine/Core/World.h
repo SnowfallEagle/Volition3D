@@ -63,6 +63,7 @@ public:
     }
 
     friend class VRenderer;
+    friend class VRenderContext;
 };
 
 extern VWorld World;

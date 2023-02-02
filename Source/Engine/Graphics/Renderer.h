@@ -18,13 +18,12 @@
 #include "Engine/Graphics/Polygon.h"
 #include "Engine/Graphics/Camera.h"
 #include "Engine/Graphics/ZBuffer.h"
+#include "Engine/Graphics/RenderContext.h"
 #include "Engine/Graphics/Interpolators/IInterpolator.h"
 #include "Engine/Graphics/Interpolators/GouraudInterpolator.h"
 #include "Engine/Graphics/Interpolators/FlatInterpolator.h"
 #include "Engine/Graphics/Interpolators/BillinearPerspectiveTextureInterpolator.h"
 #include "Engine/Graphics/Interpolators/AlphaInterpolator.h"
-
-class VRenderList;
 
 class VRenderer
 {
@@ -60,11 +59,11 @@ public:
     VLight Lights[MaxLights];
     i32 NumLights;
 
-    VZBuffer ZBuffer;
-
+    // TODO(sean): Put here all interpolators and later we will use them with poly attributes
     IInterpolator* Interpolators[NumInterpolators];
 
-    VRenderList* RenderList;
+    VRenderSpecification RenderSpec;
+    VRenderContext RenderContext;
 
 public:
     // TODO(sean): Remove Constructor/Destructor, move code in StartUp/ShutDown
@@ -88,7 +87,7 @@ public:
         }
     }
 
-    void StartUp();
+    void StartUp(const VRenderSpecification& InRenderSpec);
     void ShutDown();
 
     void ResetMaterials()
@@ -134,13 +133,22 @@ public:
         }
     }
 
-    void PrepareToRender()
+    VL_FINLINE void PrepareToRender()
     {
         BackSurface.FillRectHW(nullptr, MAP_XRGB32(0x00, 0x00, 0x00));
-        ZBuffer.Clear();
+        RenderContext.PrepareToRender();
     }
 
-    void RenderWorld();
+    VL_FINLINE void RenderWorld()
+    {
+        u32* Buffer;
+        i32 Pitch;
+        BackSurface.Lock(Buffer, Pitch);
+
+        RenderContext.RenderWorld(Buffer, Pitch);
+
+        BackSurface.Unlock();
+    }
 
     void Flip();
 
@@ -174,7 +182,7 @@ public:
     // General case
     void DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) const;
 
-    // Deprecated >>>
+    /* Deprecated >> >
         // Naive implementation of triangle rasterization without using top-left convention
         void DrawTopTriangleInt(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, i32 X3, i32 Y3, u32 Color) const;
         void DrawBottomTriangleInt(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, i32 X3, i32 Y3, u32 Color) const;
@@ -193,7 +201,7 @@ public:
 
         // For Emissive and Flat shade modes
         void DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) const;
-    // <<< Deprecated
+    <<< Deprecated */
 
     void DrawText(i32 X, i32 Y, VColorARGB Color, const char* Format, ...);
 
