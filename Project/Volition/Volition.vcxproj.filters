@@ -7,35 +7,32 @@
     <Filter Include="ThirdParty\SDL">
       <UniqueIdentifier>{5f6a85fb-9c10-4131-9615-803969d4127b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ThirdParty\tlm">
-      <UniqueIdentifier>{dddc2163-9b6c-4de1-a49c-bc395ec69dd8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source">
+    <Filter Include="Engine">
       <UniqueIdentifier>{de934220-aa3a-4c61-bf3c-b5af471e8db4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Core">
+    <Filter Include="Engine\Core">
       <UniqueIdentifier>{b58576f9-0117-4e89-b462-34d35a8c9cc5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\GameFramework">
-      <UniqueIdentifier>{c99d54a6-d6e7-406a-a1bc-341ce5d43989}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Input">
-      <UniqueIdentifier>{69adadf5-5484-4b29-b681-ac65d64a233d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Graphics">
-      <UniqueIdentifier>{af3b9950-500f-4fad-8050-e72fb60c8e16}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Math">
-      <UniqueIdentifier>{4f349201-4916-4d0c-9bc6-6ca54ce8e312}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Core\Containers">
+    <Filter Include="Engine\Core\Containers">
       <UniqueIdentifier>{760dd73b-2715-443f-865b-e7722505ff39}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Core\Thread">
+    <Filter Include="Engine\Core\Thread">
       <UniqueIdentifier>{a967c48a-8b46-4a48-b699-6d523ce1b71d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Graphics\Interpolators">
+    <Filter Include="Engine\GameFramework">
+      <UniqueIdentifier>{c99d54a6-d6e7-406a-a1bc-341ce5d43989}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Input">
+      <UniqueIdentifier>{69adadf5-5484-4b29-b681-ac65d64a233d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Graphics">
+      <UniqueIdentifier>{af3b9950-500f-4fad-8050-e72fb60c8e16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Graphics\Interpolators">
       <UniqueIdentifier>{601c1456-e621-40a1-b270-7c0afea9dd7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Math">
+      <UniqueIdentifier>{4f349201-4916-4d0c-9bc6-6ca54ce8e312}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -306,226 +303,208 @@
     <ClInclude Include="..\..\ThirdParty\SDL\Include\SDL_vulkan.h">
       <Filter>ThirdParty\SDL</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\ThirdParty\ltm\tlm.h">
-      <Filter>ThirdParty\tlm</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ThirdParty\ltm\tlm-add.h">
-      <Filter>ThirdParty\tlm</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Core\Assert.h">
-      <Filter>Source\Core</Filter>
+      <Filter>Engine\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Core\DebugLog.h">
-      <Filter>Source\Core</Filter>
+      <Filter>Engine\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Core\Memory.h">
-      <Filter>Source\Core</Filter>
+      <Filter>Engine\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Core\Platform.h">
-      <Filter>Source\Core</Filter>
+      <Filter>Engine\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Core\Time.h">
-      <Filter>Source\Core</Filter>
+      <Filter>Engine\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Core\Types.h">
-      <Filter>Source\Core</Filter>
+      <Filter>Engine\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Core\Volition.h">
-      <Filter>Source\Core</Filter>
+      <Filter>Engine\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Core\Window.h">
-      <Filter>Source\Core</Filter>
+      <Filter>Engine\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Core\WindowSpecification.h">
-      <Filter>Source\Core</Filter>
+      <Filter>Engine\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Core\Containers\SparseArray.h">
-      <Filter>Source\Core\Containers</Filter>
+      <Filter>Engine\Core\Containers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Core\Containers\String.h">
-      <Filter>Source\Core\Containers</Filter>
+      <Filter>Engine\Core\Containers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Core\Thread\SpinLock.h">
-      <Filter>Source\Core\Thread</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\GameFramework\Game.h">
-      <Filter>Source\GameFramework</Filter>
+      <Filter>Engine\Core\Thread</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Input\Input.h">
-      <Filter>Source\Input</Filter>
+      <Filter>Engine\Input</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Math\Fixed16.h">
-      <Filter>Source\Math</Filter>
+      <Filter>Engine\Math</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Math\Fixed22.h">
-      <Filter>Source\Math</Filter>
+      <Filter>Engine\Math</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Math\Fixed28.h">
-      <Filter>Source\Math</Filter>
+      <Filter>Engine\Math</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Math\Math.h">
-      <Filter>Source\Math</Filter>
+      <Filter>Engine\Math</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Math\Matrix.h">
-      <Filter>Source\Math</Filter>
+      <Filter>Engine\Math</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Math\Minimal.h">
-      <Filter>Source\Math</Filter>
+      <Filter>Engine\Math</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Math\Rect.h">
-      <Filter>Source\Math</Filter>
+      <Filter>Engine\Math</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Math\Vector.h">
-      <Filter>Source\Math</Filter>
+      <Filter>Engine\Math</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Graphics\Camera.h">
-      <Filter>Source\Graphics</Filter>
+      <Filter>Engine\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Graphics\Color.h">
-      <Filter>Source\Graphics</Filter>
+      <Filter>Engine\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Graphics\Light.h">
-      <Filter>Source\Graphics</Filter>
+      <Filter>Engine\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Graphics\Material.h">
-      <Filter>Source\Graphics</Filter>
+      <Filter>Engine\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Graphics\Object.h">
-      <Filter>Source\Graphics</Filter>
+      <Filter>Engine\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Graphics\Polygon.h">
-      <Filter>Source\Graphics</Filter>
+      <Filter>Engine\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Graphics\RenderContext.h">
-      <Filter>Source\Graphics</Filter>
+      <Filter>Engine\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Graphics\Renderer.h">
-      <Filter>Source\Graphics</Filter>
+      <Filter>Engine\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Graphics\RenderList.h">
-      <Filter>Source\Graphics</Filter>
+      <Filter>Engine\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Graphics\RenderSpecification.h">
-      <Filter>Source\Graphics</Filter>
+      <Filter>Engine\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Graphics\Surface.h">
-      <Filter>Source\Graphics</Filter>
+      <Filter>Engine\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Graphics\TransformType.h">
-      <Filter>Source\Graphics</Filter>
+      <Filter>Engine\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Graphics\Vertex.h">
-      <Filter>Source\Graphics</Filter>
+      <Filter>Engine\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Graphics\ZBuffer.h">
-      <Filter>Source\Graphics</Filter>
+      <Filter>Engine\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Graphics\Interpolators\AlphaInterpolator.h">
-      <Filter>Source\Graphics\Interpolators</Filter>
+      <Filter>Engine\Graphics\Interpolators</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Graphics\Interpolators\BillinearPerspectiveTextureInterpolator.h">
-      <Filter>Source\Graphics\Interpolators</Filter>
+      <Filter>Engine\Graphics\Interpolators</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Graphics\Interpolators\FlatInterpolator.h">
-      <Filter>Source\Graphics\Interpolators</Filter>
+      <Filter>Engine\Graphics\Interpolators</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Graphics\Interpolators\GouraudInterpolator.h">
-      <Filter>Source\Graphics\Interpolators</Filter>
+      <Filter>Engine\Graphics\Interpolators</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Graphics\Interpolators\IInterpolator.h">
-      <Filter>Source\Graphics\Interpolators</Filter>
+      <Filter>Engine\Graphics\Interpolators</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Graphics\Interpolators\LinearPiecewiseTextureInterpolator.h">
-      <Filter>Source\Graphics\Interpolators</Filter>
+      <Filter>Engine\Graphics\Interpolators</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Graphics\Interpolators\PerspectiveCorrectTextureInterpolator.h">
-      <Filter>Source\Graphics\Interpolators</Filter>
+      <Filter>Engine\Graphics\Interpolators</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Graphics\Interpolators\TextureInterpolator.h">
-      <Filter>Source\Graphics\Interpolators</Filter>
+      <Filter>Engine\Graphics\Interpolators</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Core\World.h">
-      <Filter>Source\Core</Filter>
+      <Filter>Engine\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\GameFramework\GameFlow.h">
-      <Filter>Source\GameFramework</Filter>
+      <Filter>Engine\GameFramework</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\GameFramework\GameState.h">
-      <Filter>Source\GameFramework</Filter>
+      <Filter>Engine\GameFramework</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\ThirdParty\ltm\tlm.cpp">
-      <Filter>ThirdParty\tlm</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Engine\Main.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Core\DebugLog.cpp">
-      <Filter>Source\Core</Filter>
+      <Filter>Engine\Core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Core\Memory.cpp">
-      <Filter>Source\Core</Filter>
+      <Filter>Engine\Core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Core\Time.cpp">
-      <Filter>Source\Core</Filter>
+      <Filter>Engine\Core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Core\Volition.cpp">
-      <Filter>Source\Core</Filter>
+      <Filter>Engine\Core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Core\Window.cpp">
-      <Filter>Source\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Engine\GameFramework\Game.cpp">
-      <Filter>Source\GameFramework</Filter>
+      <Filter>Engine\Core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Input\Input.cpp">
-      <Filter>Source\Input</Filter>
+      <Filter>Engine\Input</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Math\Math.cpp">
-      <Filter>Source\Math</Filter>
+      <Filter>Engine\Math</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Math\Matrix.cpp">
-      <Filter>Source\Math</Filter>
+      <Filter>Engine\Math</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Math\Vector.cpp">
-      <Filter>Source\Math</Filter>
+      <Filter>Engine\Math</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Graphics\Camera.cpp">
-      <Filter>Source\Graphics</Filter>
+      <Filter>Engine\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Graphics\Object.cpp">
-      <Filter>Source\Graphics</Filter>
+      <Filter>Engine\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Graphics\Polygon.cpp">
-      <Filter>Source\Graphics</Filter>
+      <Filter>Engine\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Graphics\RenderContext.cpp">
-      <Filter>Source\Graphics</Filter>
+      <Filter>Engine\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Graphics\Renderer.cpp">
-      <Filter>Source\Graphics</Filter>
+      <Filter>Engine\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Graphics\RenderList.cpp">
-      <Filter>Source\Graphics</Filter>
+      <Filter>Engine\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Graphics\Surface.cpp">
-      <Filter>Source\Graphics</Filter>
+      <Filter>Engine\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Graphics\Vertex.cpp">
-      <Filter>Source\Graphics</Filter>
+      <Filter>Engine\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\IInterpolator.cpp">
-      <Filter>Source\Graphics\Interpolators</Filter>
+      <Filter>Engine\Graphics\Interpolators</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Core\World.cpp">
-      <Filter>Source\Core</Filter>
+      <Filter>Engine\Core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\GameFramework\GameFlow.cpp">
-      <Filter>Source\GameFramework</Filter>
+      <Filter>Engine\GameFramework</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\GameFramework\GameState.cpp">
-      <Filter>Source\GameFramework</Filter>
+      <Filter>Engine\GameFramework</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

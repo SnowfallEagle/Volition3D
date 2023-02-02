@@ -11,6 +11,17 @@ class GMyGameFlow : public VGameFlow
 public:
     virtual void StartUp() override
     {
+        for (i32f I = 0; I < 3; ++I)
+        {
+            VObject* TempObject = World.SpawnObject<VObject>();
+            TempObject->LoadCOB(
+                "rec_gouraud_textured_02.cob",
+                { 500.0f * I, 100.0f * Math.Sin(I * 20.0f), 250.0f},
+                { 100.0f, 100.0f, 100.0f },
+                { 0.0f, 0.0f, 0.0f }
+            );
+        }
+
         Object = World.SpawnObject<VObject>();
         Object->LoadCOB(
             "rec_gouraud_textured_02.cob",

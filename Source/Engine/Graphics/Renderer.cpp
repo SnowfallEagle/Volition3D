@@ -33,6 +33,8 @@ void VRenderer::StartUp()
 
     ZBuffer.Create(ScreenWidth, ScreenHeight);
 
+    RenderList = new VRenderList();
+
     // Initialize TTF
     i32 Res = TTF_Init();
     VL_ASSERT(Res == 0);
@@ -46,24 +48,21 @@ void VRenderer::StartUp()
     Font = TTF_OpenFont("Default.ttf", (i32f)( (f32)FontCharWidth * PointDivPixel * QualityMultiplier ));
     VL_ASSERT(Font);
 
-    RenderList = new VRenderList();
-
     // Log
     VL_NOTE(hLogRenderer, "Initialized with %s pixel format\n", SDL_GetPixelFormatName(SDLPixelFormatEnum));
 }
 
 void VRenderer::ShutDown()
 {
-    delete RenderList;
-
     // Shut down TTF
     {
         TTF_CloseFont(Font);
         TTF_Quit();
     }
 
-    // Destroy surfaces and z-buffer
+    // Free renderer stuff
     {
+        delete RenderList;
         ZBuffer.Destroy();
         BackSurface.Destroy();
     }
