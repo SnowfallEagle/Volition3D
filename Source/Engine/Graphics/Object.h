@@ -168,8 +168,7 @@ public:
         }
     }
 
-    // This function used in initialization, just clean empty object
-    void Clean()
+    void Init()
     {
         Memory.MemSetByte(this, 0, sizeof(*this));
 

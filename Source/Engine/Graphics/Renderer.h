@@ -24,6 +24,8 @@
 #include "Engine/Graphics/Interpolators/BillinearPerspectiveTextureInterpolator.h"
 #include "Engine/Graphics/Interpolators/AlphaInterpolator.h"
 
+class VRenderList;
+
 class VRenderer
 {
 public:
@@ -61,6 +63,8 @@ public:
     VZBuffer ZBuffer;
 
     IInterpolator* Interpolators[NumInterpolators];
+
+    VRenderList* RenderList;
 
 public:
     // TODO(sean): Remove Constructor/Destructor, move code in StartUp/ShutDown
@@ -135,10 +139,10 @@ public:
         BackSurface.FillRectHW(nullptr, MAP_XRGB32(0x00, 0x00, 0x00));
         ZBuffer.Clear();
     }
-    void RenderAndFlip()
-    {
-        Flip();
-    }
+
+    void RenderWorld();
+
+    void Flip();
 
     // Very slow put pixel function to debug draw functions
     void PutPixel(u32* Buffer, i32 Pitch, i32 X, i32 Y, u32 Color) const
@@ -201,9 +205,6 @@ public:
     {
         return ScreenHeight;
     }
-
-protected:
-    void Flip();
 
     friend class VSurface;
 };

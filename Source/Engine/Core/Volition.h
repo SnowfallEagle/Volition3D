@@ -1,6 +1,5 @@
 #pragma once
 
-#include <cstdlib>
 #include "SDL.h"
 #include "Engine/Core/Types.h"
 #include "Engine/Core/Platform.h"
@@ -18,6 +17,7 @@ class VVolition
     b32 bRunning;
 
 public:
+    template <typename GAME_WORLD_TYPE>
     void StartUp(const VWindowSpecification& WindowSpec, const VRenderSpecification& RenderSpec)
     {
         DebugLog.StartUp();
@@ -26,8 +26,7 @@ public:
         Renderer.StartUp(); // TODO(sean): RenderSpec
         Input.StartUp();
         Time.StartUp(RenderSpec);
-        World.StartUp();
-        Game.StartUp();
+        World.StartUp<GAME_WORLD_TYPE>();
 
         bRunning = true;
     }
@@ -36,7 +35,6 @@ public:
     {
         bRunning = false;
 
-        Game.ShutDown();
         World.ShutDown();
         Time.ShutDown();
         Input.ShutDown();
@@ -56,16 +54,11 @@ public:
             Time.TickFrame();
 
             HandleEvents();
-            Game.Update(Time.GetDeltaTime());
-            // TODO(sean): World.Update(Time.GetDeltaTime());
+            World.Update(Time.GetDeltaTime());
 
             Renderer.PrepareToRender();
-            Game.Render();
-            Renderer.RenderAndFlip();
-            // TOOD(sean): Renderer.ScanWorld();
-            // TODO(sean): Renderer.RenderWorld();
-            // TODO(sean): Renderer.RenderUI();
-            // TODO(sean): Renderer.Flip();
+            Renderer.RenderWorld();
+            Renderer.Flip();
 
             Time.SyncFrame();
         }

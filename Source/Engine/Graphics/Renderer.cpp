@@ -1,6 +1,8 @@
 #include "Engine/Core/Memory.h"
 #include "Engine/Core/Window.h"
+#include "Engine/Core/World.h"
 #include "Engine/Graphics/Renderer.h"
+#include "Engine/Graphics/RenderList.h"
 
 VRenderer Renderer;
 
@@ -44,12 +46,16 @@ void VRenderer::StartUp()
     Font = TTF_OpenFont("Default.ttf", (i32f)( (f32)FontCharWidth * PointDivPixel * QualityMultiplier ));
     VL_ASSERT(Font);
 
+    RenderList = new VRenderList();
+
     // Log
     VL_NOTE(hLogRenderer, "Initialized with %s pixel format\n", SDL_GetPixelFormatName(SDLPixelFormatEnum));
 }
 
 void VRenderer::ShutDown()
 {
+    delete RenderList;
+
     // Shut down TTF
     {
         TTF_CloseFont(Font);
@@ -61,6 +67,68 @@ void VRenderer::ShutDown()
         ZBuffer.Destroy();
         BackSurface.Destroy();
     }
+}
+
+void VRenderer::RenderWorld()
+{
+    VCamera& Camera = *World.Camera;
+
+    // Set up
+    {
+        Camera.BuildWorldToCameraEulerMat44();
+        RenderList->Reset();
+    }
+
+    // Proccess and insert objects
+    {
+        for (auto Object : World.Objects)
+        {
+            Object->Reset();
+            Object->TransformModelToWorld();
+            Object->Cull(Camera);
+
+            RenderList->InsertObject(*Object, false);
+        }
+    }
+
+    // Proccess render list
+    {
+        RenderList->RemoveBackFaces(Camera);
+        RenderList->TransformWorldToCamera(Camera);
+        RenderList->Clip(Camera);
+        TransformLights(Camera);
+        RenderList->Light(Camera, Lights, MaxLights);
+        RenderList->SortPolygons(ESortPolygonsMethod::Average);
+        RenderList->TransformCameraToScreen(Camera);
+    }
+
+    // Draw background
+    {
+        VRelRectI Dest = { 0, 0, GetScreenWidth(), GetScreenHeight()};
+        BackSurface.FillRectHW(&Dest, MAP_XRGB32(0x66, 0x00, 0x00));
+
+        /*
+        VRelRectI Dest = { 0, 0, Volition.WindowWidth, Volition.WindowHeight/2 };
+        BackSurface.FillRectHW(&Dest, MAP_XRGB32(100, 20, 255));
+        Dest = { 0, Dest.H, Dest.W, Volition.WindowHeight / 2 - 1 };
+        BackSurface.FillRectHW(&Dest, MAP_XRGB32(60, 10, 255));
+        */
+    }
+
+    // Render stuff
+    u32* Buffer;
+    i32 Pitch;
+    BackSurface.Lock(Buffer, Pitch);
+    {
+        RenderList->RenderSolid(Buffer, Pitch);
+    }
+    BackSurface.Unlock();
+}
+
+void VRenderer::Flip()
+{
+    SDL_BlitSurface(BackSurface.SDLSurface, nullptr, VideoSurface.SDLSurface, nullptr);
+    SDL_UpdateWindowSurface(Window.SDLWindow);
 }
 
 void VRenderer::DrawLine(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, u32 Color)
@@ -4049,8 +4117,3 @@ void VRenderer::DrawText(i32 X, i32 Y, VColorARGB Color, const char* Format, ...
     SDL_FreeSurface(SDLConverted);
 }
 
-void VRenderer::Flip()
-{
-    SDL_BlitSurface(BackSurface.SDLSurface, nullptr, VideoSurface.SDLSurface, nullptr);
-    SDL_UpdateWindowSurface(Window.SDLWindow);
-}

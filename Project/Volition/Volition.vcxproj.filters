@@ -447,6 +447,12 @@
     <ClInclude Include="..\..\Source\Engine\Core\World.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\GameFramework\GameFlow.h">
+      <Filter>Source\GameFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\GameFramework\GameState.h">
+      <Filter>Source\GameFramework</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\ThirdParty\ltm\tlm.cpp">
@@ -514,6 +520,12 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Core\World.cpp">
       <Filter>Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\GameFramework\GameFlow.cpp">
+      <Filter>Source\GameFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\GameFramework\GameState.cpp">
+      <Filter>Source\GameFramework</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

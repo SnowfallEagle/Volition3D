@@ -62,7 +62,7 @@ b32 VObject::LoadPLG(
 
     // Initialize object
     {
-        Clean();
+        Init();
         Position = InPosition;
     }
 
@@ -321,7 +321,7 @@ b32 VObject::LoadCOB(const char* Path, const VVector4& InPosition, const VVector
 
     // Initialize object
     {
-        Clean();
+        Init();
         Position = InPosition;
     }
 
