@@ -10,7 +10,7 @@ VL_DEFINE_LOG_CHANNEL(hLogRenderer, "Renderer");
 
 void VRenderer::StartUp(const VRenderSpecification& InRenderSpec)
 {
-    // TODO(sean): Maybe we should put stuff like ScreenWidth/MaxClip in RenderSpec?
+    // TODO(sean): Maybe we should put stuff like RenderSpec.TargetSize.X/RenderSpec.MaxClip in RenderSpec?
     // Copy render specification
     {
         RenderSpec = InRenderSpec;
@@ -22,29 +22,28 @@ void VRenderer::StartUp(const VRenderSpecification& InRenderSpec)
         SDLSurface = SDL_GetWindowSurface(Window.SDLWindow);
         VL_ASSERT(SDLSurface);
 
-        SDLPixelFormat = SDLSurface->format;
-        SDLPixelFormatEnum = SDLPixelFormat->format;
+        RenderSpec.SDLPixelFormat = SDLSurface->format;
+        RenderSpec.SDLPixelFormatEnum = RenderSpec.SDLPixelFormat->format;
     }
 
     // Create video and back surfaces
     {
         VideoSurface.Create(SDLSurface);
 
-        ScreenWidth = VideoSurface.Width;
-        ScreenHeight = VideoSurface.Height;
+        RenderSpec.TargetSize = { VideoSurface.Width, VideoSurface.Height };
 
-        MinClip = { 0, 0 };
-        MaxClip = { ScreenWidth - 1, ScreenHeight - 1 };
-        MinClipFloat = { (f32)MinClip.X, (f32)MinClip.Y };
-        MaxClipFloat = { (f32)MaxClip.X, (f32)MaxClip.Y };
+        RenderSpec.MinClip = { 0, 0 };
+        RenderSpec.MaxClip = { RenderSpec.TargetSize.X - 1, RenderSpec.TargetSize.Y - 1 };
+        RenderSpec.MinClipFloat = { (f32)RenderSpec.MinClip.X, (f32)RenderSpec.MinClip.Y };
+        RenderSpec.MaxClipFloat = { (f32)RenderSpec.MaxClip.X, (f32)RenderSpec.MaxClip.Y };
 
-        BackSurface.Create(ScreenWidth, ScreenHeight);
+        BackSurface.Create(RenderSpec.TargetSize.X, RenderSpec.TargetSize.Y);
     }
 
     // Init render context
     // TODO(sean): Maybe'll be better to give it RenderSpec?
     {
-        RenderContext.Init(ScreenWidth, ScreenHeight);
+        RenderContext.Init(RenderSpec.TargetSize.X, RenderSpec.TargetSize.Y);
     }
 
     // Initialize TTF
@@ -56,7 +55,7 @@ void VRenderer::StartUp(const VRenderSpecification& InRenderSpec)
         i32 Res = TTF_Init();
         VL_ASSERT(Res == 0);
 
-        FontCharWidth = ScreenWidth / CharsPerLine;
+        FontCharWidth = RenderSpec.TargetSize.X / CharsPerLine;
         FontCharHeight = (i32)(FontCharWidth * 1.25f);
 
         Font = TTF_OpenFont("Default.ttf", (i32)( (f32)FontCharWidth * PointDivPixel * QualityMultiplier ));
@@ -64,7 +63,7 @@ void VRenderer::StartUp(const VRenderSpecification& InRenderSpec)
     }
 
     // Log
-    VL_NOTE(hLogRenderer, "Initialized with %s pixel format\n", SDL_GetPixelFormatName(SDLPixelFormatEnum));
+    VL_NOTE(hLogRenderer, "Initialized with %s pixel format\n", SDL_GetPixelFormatName(RenderSpec.SDLPixelFormatEnum));
 }
 
 void VRenderer::ShutDown()
@@ -224,22 +223,22 @@ b32 VRenderer::ClipLine(i32& X1, i32& Y1, i32& X2, i32& Y2) const
     i32 Code1 = 0, Code2 = 0;
 
     // Define codes
-    if (CX1 < MinClip.X)
+    if (CX1 < RenderSpec.MinClip.X)
         Code1 |= CC_W;
-    else if (CX1 > MaxClip.X)
+    else if (CX1 > RenderSpec.MaxClip.X)
         Code1 |= CC_E;
-    if (CY1 < MinClip.Y)
+    if (CY1 < RenderSpec.MinClip.Y)
         Code1 |= CC_N;
-    else if (CY1 > MaxClip.Y)
+    else if (CY1 > RenderSpec.MaxClip.Y)
         Code1 |= CC_S;
 
-    if (CX2 < MinClip.X)
+    if (CX2 < RenderSpec.MinClip.X)
         Code2 |= CC_W;
-    else if (CX2 > MaxClip.X)
+    else if (CX2 > RenderSpec.MaxClip.X)
         Code2 |= CC_E;
-    if (CY2 < MinClip.Y)
+    if (CY2 < RenderSpec.MinClip.Y)
         Code2 |= CC_N;
-    else if (CY2 > MaxClip.Y)
+    else if (CY2 > RenderSpec.MaxClip.Y)
         Code2 |= CC_S;
 
     // Center is 0, so check if we can't see whole line
@@ -255,7 +254,7 @@ b32 VRenderer::ClipLine(i32& X1, i32& Y1, i32& X2, i32& Y2) const
     {
     case CC_N:
     {
-        CY1 = MinClip.Y;
+        CY1 = RenderSpec.MinClip.Y;
         CX1 = (i32)(
             0.5f + (X1 + (CY1 - Y1) * (X2-X1) / (f32)(Y2-Y1))
         );
@@ -263,7 +262,7 @@ b32 VRenderer::ClipLine(i32& X1, i32& Y1, i32& X2, i32& Y2) const
 
     case CC_S:
     {
-        CY1 = MaxClip.Y;
+        CY1 = RenderSpec.MaxClip.Y;
         CX1 = (i32)(
             0.5f + (X1 + (CY1 - Y1) * (X2-X1) / (f32)(Y2-Y1))
         );
@@ -271,7 +270,7 @@ b32 VRenderer::ClipLine(i32& X1, i32& Y1, i32& X2, i32& Y2) const
 
     case CC_W:
     {
-        CX1 = MinClip.X;
+        CX1 = RenderSpec.MinClip.X;
         CY1 = (i32)(
             0.5f + (Y1 + (CX1 - X1) * (Y2-Y1) / (f32)(X2-X1))
         );
@@ -279,7 +278,7 @@ b32 VRenderer::ClipLine(i32& X1, i32& Y1, i32& X2, i32& Y2) const
 
     case CC_E:
     {
-        CX1 = MaxClip.X;
+        CX1 = RenderSpec.MaxClip.X;
         CY1 = (i32)(
             0.5f + (Y1 + (CX1 - X1) * (Y2-Y1) / (f32)(X2-X1))
         );
@@ -287,14 +286,14 @@ b32 VRenderer::ClipLine(i32& X1, i32& Y1, i32& X2, i32& Y2) const
 
     case CC_NW:
     {
-        CY1 = MinClip.Y;
+        CY1 = RenderSpec.MinClip.Y;
         CX1 = (i32)(
             0.5f + (X1 + (CY1 - Y1) * (X2-X1) / (f32)(Y2-Y1))
         );
 
-        if (CX1 < MinClip.X || CX1 > MaxClip.X)
+        if (CX1 < RenderSpec.MinClip.X || CX1 > RenderSpec.MaxClip.X)
         {
-            CX1 = MinClip.X;
+            CX1 = RenderSpec.MinClip.X;
             CY1 = (i32)(
                 0.5f + (Y1 + (CX1 - X1) * (Y2-Y1) / (f32)(X2-X1))
             );
@@ -303,14 +302,14 @@ b32 VRenderer::ClipLine(i32& X1, i32& Y1, i32& X2, i32& Y2) const
 
     case CC_NE:
     {
-        CY1 = MinClip.Y;
+        CY1 = RenderSpec.MinClip.Y;
         CX1 = (i32)(
             0.5f + (X1 + (CY1 - Y1) * (X2-X1) / (f32)(Y2-Y1))
         );
 
-        if (CX1 < MinClip.X || CX1 > MaxClip.X)
+        if (CX1 < RenderSpec.MinClip.X || CX1 > RenderSpec.MaxClip.X)
         {
-            CX1 = MaxClip.X;
+            CX1 = RenderSpec.MaxClip.X;
             CY1 = (i32)(
                 0.5f + (Y1 + (CX1 - X1) * (Y2-Y1) / (f32)(X2-X1))
             );
@@ -319,14 +318,14 @@ b32 VRenderer::ClipLine(i32& X1, i32& Y1, i32& X2, i32& Y2) const
 
     case CC_SW:
     {
-        CY1 = MaxClip.Y;
+        CY1 = RenderSpec.MaxClip.Y;
         CX1 = (i32)(
             0.5f + (X1 + (CY1 - Y1) * (X2-X1) / (f32)(Y2-Y1))
         );
 
-        if (CX1 < MinClip.X || CX1 > MaxClip.X)
+        if (CX1 < RenderSpec.MinClip.X || CX1 > RenderSpec.MaxClip.X)
         {
-            CX1 = MinClip.X;
+            CX1 = RenderSpec.MinClip.X;
             CY1 = (i32)(
                 0.5f + (Y1 + (CX1 - X1) * (Y2-Y1) / (f32)(X2-X1))
             );
@@ -335,14 +334,14 @@ b32 VRenderer::ClipLine(i32& X1, i32& Y1, i32& X2, i32& Y2) const
 
     case CC_SE:
     {
-        CY1 = MaxClip.Y;
+        CY1 = RenderSpec.MaxClip.Y;
         CX1 = (i32)(
             0.5f + (X1 + (CY1 - Y1) * (X2-X1) / (f32)(Y2-Y1))
         );
 
-        if (CX1 < MinClip.X || CX1 > MaxClip.X)
+        if (CX1 < RenderSpec.MinClip.X || CX1 > RenderSpec.MaxClip.X)
         {
-            CX1 = MaxClip.X;
+            CX1 = RenderSpec.MaxClip.X;
             CY1 = (i32)(
                 0.5f + (Y1 + (CX1 - X1) * (Y2-Y1) / (f32)(X2-X1))
             );
@@ -356,7 +355,7 @@ b32 VRenderer::ClipLine(i32& X1, i32& Y1, i32& X2, i32& Y2) const
     {
     case CC_N:
     {
-        CY2 = MinClip.Y;
+        CY2 = RenderSpec.MinClip.Y;
         CX2 = (i32)(
             0.5f + (X2 + (CY2 - Y2) * (X1-X2) / (f32)(Y1-Y2))
         );
@@ -364,7 +363,7 @@ b32 VRenderer::ClipLine(i32& X1, i32& Y1, i32& X2, i32& Y2) const
 
     case CC_S:
     {
-        CY2 = MaxClip.Y;
+        CY2 = RenderSpec.MaxClip.Y;
         CX2 = (i32)(
             0.5f + (X2 + (CY2 - Y2) * (X1-X2) / (f32)(Y1-Y2))
         );
@@ -372,7 +371,7 @@ b32 VRenderer::ClipLine(i32& X1, i32& Y1, i32& X2, i32& Y2) const
 
     case CC_W:
     {
-        CX2 = MinClip.X;
+        CX2 = RenderSpec.MinClip.X;
         CY2 = (i32)(
             0.5f + (Y2 + (CX2 - X2) * (Y1-Y2) / (f32)(X1-X2))
         );
@@ -380,7 +379,7 @@ b32 VRenderer::ClipLine(i32& X1, i32& Y1, i32& X2, i32& Y2) const
 
     case CC_E:
     {
-        CX2 = MaxClip.X;
+        CX2 = RenderSpec.MaxClip.X;
         CY2 = (i32)(
             0.5f + (Y2 + (CX2 - X2) * (Y1-Y2) / (f32)(X1-X2))
         );
@@ -388,14 +387,14 @@ b32 VRenderer::ClipLine(i32& X1, i32& Y1, i32& X2, i32& Y2) const
 
     case CC_NW:
     {
-        CY2 = MinClip.Y;
+        CY2 = RenderSpec.MinClip.Y;
         CX2 = (i32)(
             0.5f + (X2 + (CY2 - Y2) * (X1-X2) / (f32)(Y1-Y2))
         );
 
-        if (CX2 < MinClip.X || CX2 > MaxClip.X)
+        if (CX2 < RenderSpec.MinClip.X || CX2 > RenderSpec.MaxClip.X)
         {
-            CX2 = MinClip.X;
+            CX2 = RenderSpec.MinClip.X;
             CY2 = (i32)(
                 0.5f + (Y2 + (CX2 - X2) * (Y1-Y2) / (f32)(X1-X2))
             );
@@ -404,14 +403,14 @@ b32 VRenderer::ClipLine(i32& X1, i32& Y1, i32& X2, i32& Y2) const
 
     case CC_NE:
     {
-        CY2 = MinClip.Y;
+        CY2 = RenderSpec.MinClip.Y;
         CX2 = (i32)(
             0.5f + (X2 + (CY2 - Y2) * (X1-X2) / (f32)(Y1-Y2))
         );
 
-        if (CX2 < MinClip.X || CX2 > MaxClip.X)
+        if (CX2 < RenderSpec.MinClip.X || CX2 > RenderSpec.MaxClip.X)
         {
-            CX2 = MaxClip.X;
+            CX2 = RenderSpec.MaxClip.X;
             CY2 = (i32)(
                 0.5f + (Y2 + (CX2 - X2) * (Y1-Y2) / (f32)(X1-X2))
             );
@@ -420,14 +419,14 @@ b32 VRenderer::ClipLine(i32& X1, i32& Y1, i32& X2, i32& Y2) const
 
     case CC_SW:
     {
-        CY2 = MaxClip.Y;
+        CY2 = RenderSpec.MaxClip.Y;
         CX2 = (i32)(
             0.5f + (X2 + (CY2 - Y2) * (X1-X2) / (f32)(Y1-Y2))
         );
 
-        if (CX2 < MinClip.X || CX2 > MaxClip.X)
+        if (CX2 < RenderSpec.MinClip.X || CX2 > RenderSpec.MaxClip.X)
         {
-            CX2 = MinClip.X;
+            CX2 = RenderSpec.MinClip.X;
             CY2 = (i32)(
                 0.5f + (Y2 + (CX2 - X2) * (Y1-Y2) / (f32)(X1-X2))
             );
@@ -436,14 +435,14 @@ b32 VRenderer::ClipLine(i32& X1, i32& Y1, i32& X2, i32& Y2) const
 
     case CC_SE:
     {
-        CY2 = MaxClip.Y;
+        CY2 = RenderSpec.MaxClip.Y;
         CX2 = (i32)(
             0.5f + (X2 + (CY2 - Y2) * (X1-X2) / (f32)(Y1-Y2))
         );
 
-        if (CX2 < MinClip.X || CX2 > MaxClip.X)
+        if (CX2 < RenderSpec.MinClip.X || CX2 > RenderSpec.MaxClip.X)
         {
-            CX2 = MaxClip.X;
+            CX2 = RenderSpec.MaxClip.X;
             CY2 = (i32)(
                 0.5f + (Y2 + (CX2 - X2) * (Y1-Y2) / (f32)(X1-X2))
             );
@@ -454,10 +453,10 @@ b32 VRenderer::ClipLine(i32& X1, i32& Y1, i32& X2, i32& Y2) const
     }
 
     // Check if we still can't see the line
-    if (CX1 < MinClip.X || CX1 > MaxClip.X ||
-        CX2 < MinClip.X || CX2 > MaxClip.X ||
-        CY1 < MinClip.Y || CY1 > MaxClip.Y ||
-        CY2 < MinClip.Y || CY2 > MaxClip.Y)
+    if (CX1 < RenderSpec.MinClip.X || CX1 > RenderSpec.MaxClip.X ||
+        CX2 < RenderSpec.MinClip.X || CX2 > RenderSpec.MaxClip.X ||
+        CY1 < RenderSpec.MinClip.Y || CY1 > RenderSpec.MaxClip.Y ||
+        CY2 < RenderSpec.MinClip.Y || CY2 > RenderSpec.MaxClip.Y)
     {
         return false;
     }
@@ -488,23 +487,23 @@ void VRenderer::DrawTopTriangleInt(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X
     f32 XDiffEnd = (f32)(X3 - X2) * OneDivHeight;
 
     // Y clipping
-    if (Y1 < MinClip.Y)
+    if (Y1 < RenderSpec.MinClip.Y)
     {
-        XStart += XDiffStart * (MinClip.Y - Y1);
-        XEnd += XDiffEnd * (MinClip.Y - Y1);
-        Y1 = MinClip.Y;
+        XStart += XDiffStart * (RenderSpec.MinClip.Y - Y1);
+        XEnd += XDiffEnd * (RenderSpec.MinClip.Y - Y1);
+        Y1 = RenderSpec.MinClip.Y;
     }
-    if (Y3 > MaxClip.Y)
+    if (Y3 > RenderSpec.MaxClip.Y)
     {
-        Y3 = MaxClip.Y;
+        Y3 = RenderSpec.MaxClip.Y;
     }
 
     Buffer += Y1 * Pitch;
 
     // Test if we need X clipping
-    if (X1 >= MinClip.X && X1 <= MaxClip.X &&
-        X2 >= MinClip.X && X2 <= MaxClip.X &&
-        X3 >= MinClip.X && X3 <= MaxClip.X)
+    if (X1 >= RenderSpec.MinClip.X && X1 <= RenderSpec.MaxClip.X &&
+        X2 >= RenderSpec.MinClip.X && X2 <= RenderSpec.MaxClip.X &&
+        X3 >= RenderSpec.MinClip.X && X3 <= RenderSpec.MaxClip.X)
     {
         for (i32 Y = Y1; Y <= Y3; ++Y)
         {
@@ -524,24 +523,24 @@ void VRenderer::DrawTopTriangleInt(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X
             XStart += XDiffStart;
             XEnd += XDiffEnd;
 
-            if (XClippedStart < MinClipFloat.X)
+            if (XClippedStart < RenderSpec.MinClipFloat.X)
             {
-                if (XClippedEnd < MinClipFloat.X)
+                if (XClippedEnd < RenderSpec.MinClipFloat.X)
                 {
                     continue;
                 }
 
-                XClippedStart = MinClipFloat.X;
+                XClippedStart = RenderSpec.MinClipFloat.X;
             }
 
-            if (XClippedEnd > MaxClipFloat.X)
+            if (XClippedEnd > RenderSpec.MaxClipFloat.X)
             {
-                if (XClippedStart > MaxClipFloat.X)
+                if (XClippedStart > RenderSpec.MaxClipFloat.X)
                 {
                     continue;
                 }
 
-                XClippedEnd = MaxClipFloat.X;
+                XClippedEnd = RenderSpec.MaxClipFloat.X;
             }
 
             Memory.MemSetQuad(Buffer + (u32)XClippedStart, Color, ((i32)XClippedEnd - (i32)XClippedStart) + 1);
@@ -566,23 +565,23 @@ void VRenderer::DrawBottomTriangleInt(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i3
     f32 XDiffEnd = (f32)(X3 - X1) * OneDivHeight;
 
     // Y clipping
-    if (Y1 < MinClip.Y)
+    if (Y1 < RenderSpec.MinClip.Y)
     {
-        XStart += XDiffStart * (MinClip.Y - Y1);
-        XEnd += XDiffEnd * (MinClip.Y - Y1);
-        Y1 = MinClip.Y;
+        XStart += XDiffStart * (RenderSpec.MinClip.Y - Y1);
+        XEnd += XDiffEnd * (RenderSpec.MinClip.Y - Y1);
+        Y1 = RenderSpec.MinClip.Y;
     }
-    if (Y3 > MaxClip.Y)
+    if (Y3 > RenderSpec.MaxClip.Y)
     {
-        Y3 = MaxClip.Y;
+        Y3 = RenderSpec.MaxClip.Y;
     }
 
     Buffer += Y1 * Pitch;
 
     // Test if we need X clipping
-    if (X1 >= MinClip.X && X1 <= MaxClip.X &&
-        X2 >= MinClip.X && X2 <= MaxClip.X &&
-        X3 >= MinClip.X && X3 <= MaxClip.X)
+    if (X1 >= RenderSpec.MinClip.X && X1 <= RenderSpec.MaxClip.X &&
+        X2 >= RenderSpec.MinClip.X && X2 <= RenderSpec.MaxClip.X &&
+        X3 >= RenderSpec.MinClip.X && X3 <= RenderSpec.MaxClip.X)
     {
         for (i32 Y = Y1; Y <= Y3; ++Y)
         {
@@ -602,24 +601,24 @@ void VRenderer::DrawBottomTriangleInt(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i3
             XStart += XDiffStart;
             XEnd += XDiffEnd;
 
-            if (XClippedStart < MinClipFloat.X)
+            if (XClippedStart < RenderSpec.MinClipFloat.X)
             {
-                if (XClippedEnd < MinClipFloat.X)
+                if (XClippedEnd < RenderSpec.MinClipFloat.X)
                 {
                     continue;
                 }
 
-                XClippedStart = MinClipFloat.X;
+                XClippedStart = RenderSpec.MinClipFloat.X;
             }
 
-            if (XClippedEnd > MaxClipFloat.X)
+            if (XClippedEnd > RenderSpec.MaxClipFloat.X)
             {
-                if (XClippedStart > MaxClipFloat.X)
+                if (XClippedStart > RenderSpec.MaxClipFloat.X)
                 {
                     continue;
                 }
 
-                XClippedEnd = MaxClipFloat.X;
+                XClippedEnd = RenderSpec.MaxClipFloat.X;
             }
 
             Memory.MemSetQuad(Buffer + (u32)XClippedStart, Color, ((i32)XClippedEnd - (i32)XClippedStart) + 1);
@@ -654,9 +653,9 @@ void VRenderer::DrawTriangleInt(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, 
     }
 
     // Whole clipping test
-    if (Y3 < MinClip.Y || Y1 > MaxClip.Y ||
-        (X1 < MinClip.X && X2 < MinClip.X && X3 < MinClip.X) ||
-        (X1 > MaxClip.X && X2 > MaxClip.X && X3 > MaxClip.X))
+    if (Y3 < RenderSpec.MinClip.Y || Y1 > RenderSpec.MaxClip.Y ||
+        (X1 < RenderSpec.MinClip.X && X2 < RenderSpec.MinClip.X && X3 < RenderSpec.MinClip.X) ||
+        (X1 > RenderSpec.MaxClip.X && X2 > RenderSpec.MaxClip.X && X3 > RenderSpec.MaxClip.X))
     {
         return;
     }
@@ -697,9 +696,9 @@ void VRenderer::DrawTopTriangleFloat(u32* Buffer, i32 Pitch, f32 X1, f32 Y1, f32
     f32 XDeltaStart = (X3 - X1) / Height;
     f32 XDeltaEnd   = (X3 - X2) / Height;
 
-    if (Y1 < MinClipFloat.Y)
+    if (Y1 < RenderSpec.MinClipFloat.Y)
     {
-        YStart = MinClip.Y;
+        YStart = RenderSpec.MinClip.Y;
 
         f32 YDiff = (f32)YStart - Y1;
         XStart += YDiff * XDeltaStart;
@@ -714,9 +713,9 @@ void VRenderer::DrawTopTriangleFloat(u32* Buffer, i32 Pitch, f32 X1, f32 Y1, f32
         XEnd   += YDiff * XDeltaEnd;
     }
 
-    if (Y3 > MaxClipFloat.Y)
+    if (Y3 > RenderSpec.MaxClipFloat.Y)
     {
-        YEnd = MaxClip.Y;
+        YEnd = RenderSpec.MaxClip.Y;
     }
     else
     {
@@ -726,9 +725,9 @@ void VRenderer::DrawTopTriangleFloat(u32* Buffer, i32 Pitch, f32 X1, f32 Y1, f32
     Buffer += Pitch * YStart;
 
     // Test if we don't need X clipping
-    if ((X1 >= MinClip.X && X1 <= MaxClip.X) &&
-        (X2 >= MinClip.X && X2 <= MaxClip.X) &&
-        (X3 >= MinClip.X && X3 <= MaxClip.X))
+    if ((X1 >= RenderSpec.MinClip.X && X1 <= RenderSpec.MaxClip.X) &&
+        (X2 >= RenderSpec.MinClip.X && X2 <= RenderSpec.MaxClip.X) &&
+        (X3 >= RenderSpec.MinClip.X && X3 <= RenderSpec.MaxClip.X))
     {
         for (i32f Y = YStart; Y <= YEnd; ++Y, Buffer += Pitch)
         {
@@ -747,22 +746,22 @@ void VRenderer::DrawTopTriangleFloat(u32* Buffer, i32 Pitch, f32 X1, f32 Y1, f32
             XStart += XDeltaStart;
             XEnd   += XDeltaEnd;
 
-            if (XClippedStart < MinClipFloat.X)
+            if (XClippedStart < RenderSpec.MinClipFloat.X)
             {
-                if (XClippedEnd < MinClipFloat.X)
+                if (XClippedEnd < RenderSpec.MinClipFloat.X)
                 {
                     continue;
                 }
-                XClippedStart = MinClipFloat.X;
+                XClippedStart = RenderSpec.MinClipFloat.X;
             }
 
-            if (XClippedEnd > MaxClipFloat.X)
+            if (XClippedEnd > RenderSpec.MaxClipFloat.X)
             {
-                if (XClippedStart > MaxClipFloat.X)
+                if (XClippedStart > RenderSpec.MaxClipFloat.X)
                 {
                     continue;
                 }
-                XClippedEnd = MaxClipFloat.X;
+                XClippedEnd = RenderSpec.MaxClipFloat.X;
             }
 
             Memory.MemSetQuad(Buffer + (u32)XClippedStart, Color, (VSizeType)(XClippedEnd - XClippedStart) + 1);
@@ -787,9 +786,9 @@ void VRenderer::DrawBottomTriangleFloat(u32* Buffer, i32 Pitch, f32 X1, f32 Y1, 
     f32 XDeltaStart = (X2 - X1) / Height;
     f32 XDeltaEnd   = (X3 - X1) / Height;
 
-    if (Y1 < MinClipFloat.Y)
+    if (Y1 < RenderSpec.MinClipFloat.Y)
     {
-        YStart = MinClip.Y;
+        YStart = RenderSpec.MinClip.Y;
 
         f32 YDiff = (f32)YStart - Y1;
         XStart += YDiff * XDeltaStart;
@@ -804,9 +803,9 @@ void VRenderer::DrawBottomTriangleFloat(u32* Buffer, i32 Pitch, f32 X1, f32 Y1, 
         XEnd   += YDiff * XDeltaEnd;
     }
 
-    if (Y3 > MaxClipFloat.Y)
+    if (Y3 > RenderSpec.MaxClipFloat.Y)
     {
-        YEnd = MaxClip.Y;
+        YEnd = RenderSpec.MaxClip.Y;
     }
     else
     {
@@ -816,9 +815,9 @@ void VRenderer::DrawBottomTriangleFloat(u32* Buffer, i32 Pitch, f32 X1, f32 Y1, 
     Buffer += Pitch * YStart;
 
     // Test if we don't need X clipping
-    if ((X1 >= MinClip.X && X1 <= MaxClip.X) &&
-        (X2 >= MinClip.X && X2 <= MaxClip.X) &&
-        (X3 >= MinClip.X && X3 <= MaxClip.X))
+    if ((X1 >= RenderSpec.MinClip.X && X1 <= RenderSpec.MaxClip.X) &&
+        (X2 >= RenderSpec.MinClip.X && X2 <= RenderSpec.MaxClip.X) &&
+        (X3 >= RenderSpec.MinClip.X && X3 <= RenderSpec.MaxClip.X))
     {
         for (i32f Y = YStart; Y <= YEnd; ++Y, Buffer += Pitch)
         {
@@ -837,22 +836,22 @@ void VRenderer::DrawBottomTriangleFloat(u32* Buffer, i32 Pitch, f32 X1, f32 Y1, 
             XStart += XDeltaStart;
             XEnd   += XDeltaEnd;
 
-            if (XClippedStart < MinClipFloat.X)
+            if (XClippedStart < RenderSpec.MinClipFloat.X)
             {
-                if (XClippedEnd < MinClipFloat.X)
+                if (XClippedEnd < RenderSpec.MinClipFloat.X)
                 {
                     continue;
                 }
-                XClippedStart = MinClipFloat.X;
+                XClippedStart = RenderSpec.MinClipFloat.X;
             }
 
-            if (XClippedEnd > MaxClipFloat.X)
+            if (XClippedEnd > RenderSpec.MaxClipFloat.X)
             {
-                if (XClippedStart > MaxClipFloat.X)
+                if (XClippedStart > RenderSpec.MaxClipFloat.X)
                 {
                     continue;
                 }
-                XClippedEnd = MaxClipFloat.X;
+                XClippedEnd = RenderSpec.MaxClipFloat.X;
             }
 
             Memory.MemSetQuad(Buffer + (u32)XClippedStart, Color, (VSizeType)(XClippedEnd - XClippedStart) + 1);
@@ -889,9 +888,9 @@ void VRenderer::DrawTriangleFloat(u32* Buffer, i32 Pitch, f32 X1, f32 Y1, f32 X2
     }
 
     // Screen space clipping
-    if ((Y3 < MinClipFloat.Y || Y1 > MaxClipFloat.Y) ||
-        (X1 < MinClipFloat.X && X2 < MinClipFloat.X && X3 < MinClipFloat.X) ||
-        (X1 > MaxClipFloat.X && X2 > MaxClipFloat.X && X3 > MaxClipFloat.X))
+    if ((Y3 < RenderSpec.MinClipFloat.Y || Y1 > RenderSpec.MaxClipFloat.Y) ||
+        (X1 < RenderSpec.MinClipFloat.X && X2 < RenderSpec.MinClipFloat.X && X3 < RenderSpec.MinClipFloat.X) ||
+        (X1 > RenderSpec.MaxClipFloat.X && X2 > RenderSpec.MaxClipFloat.X && X3 > RenderSpec.MaxClipFloat.X))
     {
         return;
     }
@@ -939,10 +938,10 @@ void VRenderer::DrawFlatTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) 
     }
 
     // Test if we can't see it
-    if (Poly.TransVtx[V2].Y < MinClipFloat.Y ||
-        Poly.TransVtx[V0].Y > MaxClipFloat.Y ||
-        (Poly.TransVtx[V0].X < MinClipFloat.X && Poly.TransVtx[V1].X < MinClipFloat.X && Poly.TransVtx[V2].X < MinClipFloat.X) ||
-        (Poly.TransVtx[V0].X > MaxClipFloat.X && Poly.TransVtx[V1].X > MaxClipFloat.X && Poly.TransVtx[V2].X > MaxClipFloat.X))
+    if (Poly.TransVtx[V2].Y < RenderSpec.MinClipFloat.Y ||
+        Poly.TransVtx[V0].Y > RenderSpec.MaxClipFloat.Y ||
+        (Poly.TransVtx[V0].X < RenderSpec.MinClipFloat.X && Poly.TransVtx[V1].X < RenderSpec.MinClipFloat.X && Poly.TransVtx[V2].X < RenderSpec.MinClipFloat.X) ||
+        (Poly.TransVtx[V0].X > RenderSpec.MaxClipFloat.X && Poly.TransVtx[V1].X > RenderSpec.MaxClipFloat.X && Poly.TransVtx[V2].X > RenderSpec.MaxClipFloat.X))
     {
         return;
     }
@@ -1025,10 +1024,10 @@ void VRenderer::DrawFlatTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) 
             ZDeltaRightByY = IntToFx16(ZVtx2 - ZVtx1) / YDiff;
 
             // Clipping Y
-            if (Y0 < MinClip.Y)
+            if (Y0 < RenderSpec.MinClip.Y)
             {
-                YDiff = MinClip.Y - Y0;
-                YStart = MinClip.Y;
+                YDiff = RenderSpec.MinClip.Y - Y0;
+                YStart = RenderSpec.MinClip.Y;
 
                 XLeft = IntToFx16(X0) + YDiff * XDeltaLeftByY;
                 ZLeft = IntToFx16(ZVtx0) + YDiff * ZDeltaLeftByY;
@@ -1057,10 +1056,10 @@ void VRenderer::DrawFlatTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) 
             ZDeltaRightByY = IntToFx16(ZVtx2 - ZVtx0) / YDiff;
 
             // Clipping Y
-            if (Y0 < MinClip.Y)
+            if (Y0 < RenderSpec.MinClip.Y)
             {
-                YDiff = MinClip.Y - Y0;
-                YStart = MinClip.Y;
+                YDiff = RenderSpec.MinClip.Y - Y0;
+                YStart = RenderSpec.MinClip.Y;
 
                 XLeft = IntToFx16(X0) + YDiff * XDeltaLeftByY;
                 ZLeft = IntToFx16(ZVtx0) + YDiff * ZDeltaLeftByY;
@@ -1081,9 +1080,9 @@ void VRenderer::DrawFlatTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) 
         }
 
         // Clip bottom Y
-        if (Y2 > MaxClip.Y)
+        if (Y2 > RenderSpec.MaxClip.Y)
         {
-            YEnd = MaxClip.Y;
+            YEnd = RenderSpec.MaxClip.Y;
         }
         else
         {
@@ -1091,8 +1090,8 @@ void VRenderer::DrawFlatTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) 
         }
 
         // Test for clipping X
-        if (X0 < MinClip.X || X1 < MinClip.X || X2 < MinClip.X ||
-            X0 > MaxClip.X || X1 > MaxClip.X || X2 > MaxClip.X)
+        if (X0 < RenderSpec.MinClip.X || X1 < RenderSpec.MinClip.X || X2 < RenderSpec.MinClip.X ||
+            X0 > RenderSpec.MaxClip.X || X1 > RenderSpec.MaxClip.X || X2 > RenderSpec.MaxClip.X)
         {
             // Align buffer pointer
             Buffer += Pitch * YStart;
@@ -1121,16 +1120,16 @@ void VRenderer::DrawFlatTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) 
                 }
 
                 // X clipping
-                if (XStart < MinClip.X)
+                if (XStart < RenderSpec.MinClip.X)
                 {
-                    i32 XDiff = MinClip.X - XStart;
-                    XStart = MinClip.X;
+                    i32 XDiff = RenderSpec.MinClip.X - XStart;
+                    XStart = RenderSpec.MinClip.X;
 
                     Z += XDiff * ZDeltaByX;
                 }
-                if (XEnd > MaxClip.X)
+                if (XEnd > RenderSpec.MaxClip.X)
                 {
-                    XEnd = MaxClip.X;
+                    XEnd = RenderSpec.MaxClip.X;
                 }
 
                 // Process each X
@@ -1218,9 +1217,9 @@ void VRenderer::DrawFlatTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) 
         i32 YRestartInterpolation = Y1;
 
         // Clip bottom Y
-        if (Y2 > MaxClip.Y)
+        if (Y2 > RenderSpec.MaxClip.Y)
         {
-            YEnd = MaxClip.Y;
+            YEnd = RenderSpec.MaxClip.Y;
         }
         else
         {
@@ -1228,7 +1227,7 @@ void VRenderer::DrawFlatTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) 
         }
 
         // Clip top Y
-        if (Y1 < MinClip.Y)
+        if (Y1 < RenderSpec.MinClip.Y)
         {
             // Compute deltas
             i32 YDiffLeft = (Y2 - Y1);
@@ -1240,15 +1239,15 @@ void VRenderer::DrawFlatTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) 
             ZDeltaRightByY = IntToFx16(ZVtx2 - ZVtx0) / YDiffRight;
 
             // Do clipping
-            YDiffLeft = (MinClip.Y - Y1);
+            YDiffLeft = (RenderSpec.MinClip.Y - Y1);
             XLeft = IntToFx16(X1) + YDiffLeft * XDeltaLeftByY;
             ZLeft = IntToFx16(ZVtx1) + YDiffLeft * ZDeltaLeftByY;
 
-            YDiffRight = (MinClip.Y - Y0);
+            YDiffRight = (RenderSpec.MinClip.Y - Y0);
             XRight = IntToFx16(X0) + YDiffRight * XDeltaRightByY;
             ZRight = IntToFx16(ZVtx0) + YDiffRight * ZDeltaRightByY;
 
-            YStart = MinClip.Y;
+            YStart = RenderSpec.MinClip.Y;
 
             /* NOTE(sean):
                 Test if we need swap to keep rendering left to right.
@@ -1270,7 +1269,7 @@ void VRenderer::DrawFlatTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) 
                 bRestartInterpolationAtLeftHand = false; // Restart at right hand side
             }
         }
-        else if (Y0 < MinClip.Y)
+        else if (Y0 < RenderSpec.MinClip.Y)
         {
             i32 YDiffLeft = (Y1 - Y0);
             XDeltaLeftByY = IntToFx16(X1 - X0) / YDiffLeft;
@@ -1280,14 +1279,14 @@ void VRenderer::DrawFlatTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) 
             XDeltaRightByY = IntToFx16(X2 - X0) / YDiffRight;
             ZDeltaRightByY = IntToFx16(ZVtx2 - ZVtx0) / YDiffRight;
 
-            i32 YDiff = (MinClip.Y - Y0);
+            i32 YDiff = (RenderSpec.MinClip.Y - Y0);
             XLeft = IntToFx16(X0) + YDiff * XDeltaLeftByY;
             ZLeft = IntToFx16(ZVtx0) + YDiff * ZDeltaLeftByY;
 
             XRight = IntToFx16(X0) + YDiff * XDeltaRightByY;
             ZRight = IntToFx16(ZVtx0) + YDiff * ZDeltaRightByY;
 
-            YStart = MinClip.Y;
+            YStart = RenderSpec.MinClip.Y;
 
             /* NOTE(sean):
                 Test if we need swap to keep rendering left to right.
@@ -1347,8 +1346,8 @@ void VRenderer::DrawFlatTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) 
         }
 
         // Test for clipping X
-        if (X0 < MinClip.X || X1 < MinClip.X || X2 < MinClip.X ||
-            X0 > MaxClip.X || X1 > MaxClip.X || X2 > MaxClip.X)
+        if (X0 < RenderSpec.MinClip.X || X1 < RenderSpec.MinClip.X || X2 < RenderSpec.MinClip.X ||
+            X0 > RenderSpec.MaxClip.X || X1 > RenderSpec.MaxClip.X || X2 > RenderSpec.MaxClip.X)
         {
             // Align video buffer
             Buffer += Pitch * YStart;
@@ -1377,16 +1376,16 @@ void VRenderer::DrawFlatTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) 
                 }
 
                 // Test if we need clipping
-                if (XStart < MinClip.X)
+                if (XStart < RenderSpec.MinClip.X)
                 {
-                    XDiff = MinClip.X - XStart;
-                    XStart = MinClip.X;
+                    XDiff = RenderSpec.MinClip.X - XStart;
+                    XStart = RenderSpec.MinClip.X;
 
                     Z += ZDeltaByX * XDiff;
                 }
-                if (XEnd > MaxClip.X)
+                if (XEnd > RenderSpec.MaxClip.X)
                 {
-                    XEnd = MaxClip.X;
+                    XEnd = RenderSpec.MaxClip.X;
                 }
 
                 // Process each X
@@ -1565,10 +1564,10 @@ void VRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
     }
 
     // Test if we can't see it
-    if (Poly.TransVtx[V2].Y < MinClipFloat.Y ||
-        Poly.TransVtx[V0].Y > MaxClipFloat.Y ||
-        (Poly.TransVtx[V0].X < MinClipFloat.X && Poly.TransVtx[V1].X < MinClipFloat.X && Poly.TransVtx[V2].X < MinClipFloat.X) ||
-        (Poly.TransVtx[V0].X > MaxClipFloat.X && Poly.TransVtx[V1].X > MaxClipFloat.X && Poly.TransVtx[V2].X > MaxClipFloat.X))
+    if (Poly.TransVtx[V2].Y < RenderSpec.MinClipFloat.Y ||
+        Poly.TransVtx[V0].Y > RenderSpec.MaxClipFloat.Y ||
+        (Poly.TransVtx[V0].X < RenderSpec.MinClipFloat.X && Poly.TransVtx[V1].X < RenderSpec.MinClipFloat.X && Poly.TransVtx[V2].X < RenderSpec.MinClipFloat.X) ||
+        (Poly.TransVtx[V0].X > RenderSpec.MaxClipFloat.X && Poly.TransVtx[V1].X > RenderSpec.MaxClipFloat.X && Poly.TransVtx[V2].X > RenderSpec.MaxClipFloat.X))
     {
         return;
     }
@@ -1662,10 +1661,10 @@ void VRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
             ZDeltaRightByY = IntToFx16(ZVtx2 - ZVtx1) / YDiff;
 
             // Clipping Y
-            if (Y0 < MinClip.Y)
+            if (Y0 < RenderSpec.MinClip.Y)
             {
-                YDiff = MinClip.Y - Y0;
-                YStart = MinClip.Y;
+                YDiff = RenderSpec.MinClip.Y - Y0;
+                YStart = RenderSpec.MinClip.Y;
 
                 XLeft = IntToFx16(X0) + YDiff * XDeltaLeftByY;
                 RLeft = IntToFx16(RVtx0) + YDiff * RDeltaLeftByY;
@@ -1712,10 +1711,10 @@ void VRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
             ZDeltaRightByY = IntToFx16(ZVtx2 - ZVtx0) / YDiff;
 
             // Clipping Y
-            if (Y0 < MinClip.Y)
+            if (Y0 < RenderSpec.MinClip.Y)
             {
-                YDiff = MinClip.Y - Y0;
-                YStart = MinClip.Y;
+                YDiff = RenderSpec.MinClip.Y - Y0;
+                YStart = RenderSpec.MinClip.Y;
 
                 XLeft = IntToFx16(X0) + YDiff * XDeltaLeftByY;
                 RLeft = IntToFx16(RVtx0) + YDiff * RDeltaLeftByY;
@@ -1748,9 +1747,9 @@ void VRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
         }
 
         // Clip bottom Y
-        if (Y2 > MaxClip.Y)
+        if (Y2 > RenderSpec.MaxClip.Y)
         {
-            YEnd = MaxClip.Y;
+            YEnd = RenderSpec.MaxClip.Y;
         }
         else
         {
@@ -1758,8 +1757,8 @@ void VRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
         }
 
         // Test for clipping X
-        if (X0 < MinClip.X || X1 < MinClip.X || X2 < MinClip.X ||
-            X0 > MaxClip.X || X1 > MaxClip.X || X2 > MaxClip.X)
+        if (X0 < RenderSpec.MinClip.X || X1 < RenderSpec.MinClip.X || X2 < RenderSpec.MinClip.X ||
+            X0 > RenderSpec.MaxClip.X || X1 > RenderSpec.MaxClip.X || X2 > RenderSpec.MaxClip.X)
         {
             // Align buffer pointer
             Buffer += Pitch * YStart;
@@ -1801,19 +1800,19 @@ void VRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
                 }
 
                 // X clipping
-                if (XStart < MinClip.X)
+                if (XStart < RenderSpec.MinClip.X)
                 {
-                    i32 XDiff = MinClip.X - XStart;
-                    XStart = MinClip.X;
+                    i32 XDiff = RenderSpec.MinClip.X - XStart;
+                    XStart = RenderSpec.MinClip.X;
 
                     R += XDiff * RDeltaByX;
                     G += XDiff * GDeltaByX;
                     B += XDiff * BDeltaByX;
                     Z += XDiff * ZDeltaByX;
                 }
-                if (XEnd > MaxClip.X)
+                if (XEnd > RenderSpec.MaxClip.X)
                 {
-                    XEnd = MaxClip.X;
+                    XEnd = RenderSpec.MaxClip.X;
                 }
 
                 // Process each X
@@ -1939,9 +1938,9 @@ void VRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
         i32 YRestartInterpolation = Y1;
 
         // Clip bottom Y
-        if (Y2 > MaxClip.Y)
+        if (Y2 > RenderSpec.MaxClip.Y)
         {
-            YEnd = MaxClip.Y;
+            YEnd = RenderSpec.MaxClip.Y;
         }
         else
         {
@@ -1949,7 +1948,7 @@ void VRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
         }
 
         // Clip top Y
-        if (Y1 < MinClip.Y)
+        if (Y1 < RenderSpec.MinClip.Y)
         {
             // Compute deltas
             i32 YDiffLeft = (Y2 - Y1);
@@ -1967,21 +1966,21 @@ void VRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
             ZDeltaRightByY = IntToFx16(ZVtx2 - ZVtx0) / YDiffRight;
 
             // Do clipping
-            YDiffLeft = (MinClip.Y - Y1);
+            YDiffLeft = (RenderSpec.MinClip.Y - Y1);
             XLeft = IntToFx16(X1) + YDiffLeft * XDeltaLeftByY;
             RLeft = IntToFx16(RVtx1) + YDiffLeft * RDeltaLeftByY;
             GLeft = IntToFx16(GVtx1) + YDiffLeft * GDeltaLeftByY;
             BLeft = IntToFx16(BVtx1) + YDiffLeft * BDeltaLeftByY;
             ZLeft = IntToFx16(ZVtx1) + YDiffLeft * ZDeltaLeftByY;
 
-            YDiffRight = (MinClip.Y - Y0);
+            YDiffRight = (RenderSpec.MinClip.Y - Y0);
             XRight = IntToFx16(X0) + YDiffRight * XDeltaRightByY;
             RRight = IntToFx16(RVtx0) + YDiffRight * RDeltaRightByY;
             GRight = IntToFx16(GVtx0) + YDiffRight * GDeltaRightByY;
             BRight = IntToFx16(BVtx0) + YDiffRight * BDeltaRightByY;
             ZRight = IntToFx16(ZVtx0) + YDiffRight * ZDeltaRightByY;
 
-            YStart = MinClip.Y;
+            YStart = RenderSpec.MinClip.Y;
 
             /* NOTE(sean):
                 Test if we need swap to keep rendering left to right.
@@ -2012,7 +2011,7 @@ void VRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
                 bRestartInterpolationAtLeftHand = false; // Restart at right hand side
             }
         }
-        else if (Y0 < MinClip.Y)
+        else if (Y0 < RenderSpec.MinClip.Y)
         {
             i32 YDiffLeft = (Y1 - Y0);
             XDeltaLeftByY = IntToFx16(X1 - X0) / YDiffLeft;
@@ -2028,7 +2027,7 @@ void VRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
             BDeltaRightByY = IntToFx16(BVtx2 - BVtx0) / YDiffRight;
             ZDeltaRightByY = IntToFx16(ZVtx2 - ZVtx0) / YDiffRight;
 
-            i32 YDiff = (MinClip.Y - Y0);
+            i32 YDiff = (RenderSpec.MinClip.Y - Y0);
             XLeft = IntToFx16(X0) + YDiff * XDeltaLeftByY;
             RLeft = IntToFx16(RVtx0) + YDiff * RDeltaLeftByY;
             GLeft = IntToFx16(GVtx0) + YDiff * GDeltaLeftByY;
@@ -2041,7 +2040,7 @@ void VRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
             BRight = IntToFx16(BVtx0) + YDiff * BDeltaRightByY;
             ZRight = IntToFx16(ZVtx0) + YDiff * ZDeltaRightByY;
 
-            YStart = MinClip.Y;
+            YStart = RenderSpec.MinClip.Y;
 
             /* NOTE(sean):
                 Test if we need swap to keep rendering left to right.
@@ -2129,8 +2128,8 @@ void VRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
         }
 
         // Test for clipping X
-        if (X0 < MinClip.X || X1 < MinClip.X || X2 < MinClip.X ||
-            X0 > MaxClip.X || X1 > MaxClip.X || X2 > MaxClip.X)
+        if (X0 < RenderSpec.MinClip.X || X1 < RenderSpec.MinClip.X || X2 < RenderSpec.MinClip.X ||
+            X0 > RenderSpec.MaxClip.X || X1 > RenderSpec.MaxClip.X || X2 > RenderSpec.MaxClip.X)
         {
             // Align video buffer
             Buffer += Pitch * YStart;
@@ -2171,19 +2170,19 @@ void VRenderer::DrawGouraudTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Pol
                 }
 
                 // Test if we need clipping
-                if (XStart < MinClip.X)
+                if (XStart < RenderSpec.MinClip.X)
                 {
-                    XDiff = MinClip.X - XStart;
-                    XStart = MinClip.X;
+                    XDiff = RenderSpec.MinClip.X - XStart;
+                    XStart = RenderSpec.MinClip.X;
 
                     R += RDeltaByX * XDiff;
                     G += GDeltaByX * XDiff;
                     B += BDeltaByX * XDiff;
                     Z += ZDeltaByX * XDiff;
                 }
-                if (XEnd > MaxClip.X)
+                if (XEnd > RenderSpec.MaxClip.X)
                 {
-                    XEnd = MaxClip.X;
+                    XEnd = RenderSpec.MaxClip.X;
                 }
 
                 // Process each X
@@ -2436,10 +2435,10 @@ void VRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
     }
 
     // Test if we can't see it
-    if (Poly.TransVtx[V2].Y < MinClipFloat.Y ||
-        Poly.TransVtx[V0].Y > MaxClipFloat.Y ||
-        (Poly.TransVtx[V0].X < MinClipFloat.X && Poly.TransVtx[V1].X < MinClipFloat.X && Poly.TransVtx[V2].X < MinClipFloat.X) ||
-        (Poly.TransVtx[V0].X > MaxClipFloat.X && Poly.TransVtx[V1].X > MaxClipFloat.X && Poly.TransVtx[V2].X > MaxClipFloat.X))
+    if (Poly.TransVtx[V2].Y < RenderSpec.MinClipFloat.Y ||
+        Poly.TransVtx[V0].Y > RenderSpec.MaxClipFloat.Y ||
+        (Poly.TransVtx[V0].X < RenderSpec.MinClipFloat.X && Poly.TransVtx[V1].X < RenderSpec.MinClipFloat.X && Poly.TransVtx[V2].X < RenderSpec.MinClipFloat.X) ||
+        (Poly.TransVtx[V0].X > RenderSpec.MaxClipFloat.X && Poly.TransVtx[V1].X > RenderSpec.MaxClipFloat.X && Poly.TransVtx[V2].X > RenderSpec.MaxClipFloat.X))
     {
         return;
     }
@@ -2542,10 +2541,10 @@ void VRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
             ZDeltaRightByY = IntToFx16(ZVtx2 - ZVtx1) / YDiff;
 
             // Clipping Y
-            if (Y0 < MinClip.Y)
+            if (Y0 < RenderSpec.MinClip.Y)
             {
-                YDiff = MinClip.Y - Y0;
-                YStart = MinClip.Y;
+                YDiff = RenderSpec.MinClip.Y - Y0;
+                YStart = RenderSpec.MinClip.Y;
 
                 XLeft = IntToFx16(X0) + YDiff * XDeltaLeftByY;
                 ULeft = IntToFx16(UVtx0) + YDiff * UDeltaLeftByY;
@@ -2586,10 +2585,10 @@ void VRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
             ZDeltaRightByY = IntToFx16(ZVtx2 - ZVtx0) / YDiff;
 
             // Clipping Y
-            if (Y0 < MinClip.Y)
+            if (Y0 < RenderSpec.MinClip.Y)
             {
-                YDiff = MinClip.Y - Y0;
-                YStart = MinClip.Y;
+                YDiff = RenderSpec.MinClip.Y - Y0;
+                YStart = RenderSpec.MinClip.Y;
 
                 XLeft = IntToFx16(X0) + YDiff * XDeltaLeftByY;
                 ULeft = IntToFx16(UVtx0) + YDiff * UDeltaLeftByY;
@@ -2618,9 +2617,9 @@ void VRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
         }
 
         // Clip bottom Y
-        if (Y2 > MaxClip.Y)
+        if (Y2 > RenderSpec.MaxClip.Y)
         {
-            YEnd = MaxClip.Y;
+            YEnd = RenderSpec.MaxClip.Y;
         }
         else
         {
@@ -2628,8 +2627,8 @@ void VRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
         }
 
         // Test for clipping X
-        if (X0 < MinClip.X || X1 < MinClip.X || X2 < MinClip.X ||
-            X0 > MaxClip.X || X1 > MaxClip.X || X2 > MaxClip.X)
+        if (X0 < RenderSpec.MinClip.X || X1 < RenderSpec.MinClip.X || X2 < RenderSpec.MinClip.X ||
+            X0 > RenderSpec.MaxClip.X || X1 > RenderSpec.MaxClip.X || X2 > RenderSpec.MaxClip.X)
         {
             // Align buffer pointer
             Buffer += Pitch * YStart;
@@ -2666,18 +2665,18 @@ void VRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
                 }
 
                 // X clipping
-                if (XStart < MinClip.X)
+                if (XStart < RenderSpec.MinClip.X)
                 {
-                    i32 XDiff = MinClip.X - XStart;
-                    XStart = MinClip.X;
+                    i32 XDiff = RenderSpec.MinClip.X - XStart;
+                    XStart = RenderSpec.MinClip.X;
 
                     U += XDiff * UDeltaByX;
                     V += XDiff * VDeltaByX;
                     Z += XDiff * ZDeltaByX;
                 }
-                if (XEnd > MaxClip.X)
+                if (XEnd > RenderSpec.MaxClip.X)
                 {
-                    XEnd = MaxClip.X;
+                    XEnd = RenderSpec.MaxClip.X;
                 }
 
                 // Process each X
@@ -2793,9 +2792,9 @@ void VRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
         i32 YRestartInterpolation = Y1;
 
         // Clip bottom Y
-        if (Y2 > MaxClip.Y)
+        if (Y2 > RenderSpec.MaxClip.Y)
         {
-            YEnd = MaxClip.Y;
+            YEnd = RenderSpec.MaxClip.Y;
         }
         else
         {
@@ -2803,7 +2802,7 @@ void VRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
         }
 
         // Clip top Y
-        if (Y1 < MinClip.Y)
+        if (Y1 < RenderSpec.MinClip.Y)
         {
             // Compute deltas
             i32 YDiffLeft = (Y2 - Y1);
@@ -2819,19 +2818,19 @@ void VRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
             ZDeltaRightByY = IntToFx16(ZVtx2 - ZVtx0) / YDiffRight;
 
             // Do clipping
-            YDiffLeft = (MinClip.Y - Y1);
+            YDiffLeft = (RenderSpec.MinClip.Y - Y1);
             XLeft = IntToFx16(X1) + YDiffLeft * XDeltaLeftByY;
             ULeft = IntToFx16(UVtx1) + YDiffLeft * UDeltaLeftByY;
             VLeft = IntToFx16(VVtx1) + YDiffLeft * VDeltaLeftByY;
             ZLeft = IntToFx16(ZVtx1) + YDiffLeft * ZDeltaLeftByY;
 
-            YDiffRight = (MinClip.Y - Y0);
+            YDiffRight = (RenderSpec.MinClip.Y - Y0);
             XRight = IntToFx16(X0) + YDiffRight * XDeltaRightByY;
             URight = IntToFx16(UVtx0) + YDiffRight * UDeltaRightByY;
             VRight = IntToFx16(VVtx0) + YDiffRight * VDeltaRightByY;
             ZRight = IntToFx16(ZVtx0) + YDiffRight * ZDeltaRightByY;
 
-            YStart = MinClip.Y;
+            YStart = RenderSpec.MinClip.Y;
 
             /* NOTE(sean):
                 Test if we need swap to keep rendering left to right.
@@ -2859,7 +2858,7 @@ void VRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
                 bRestartInterpolationAtLeftHand = false; // Restart at right hand side
             }
         }
-        else if (Y0 < MinClip.Y)
+        else if (Y0 < RenderSpec.MinClip.Y)
         {
             i32 YDiffLeft = (Y1 - Y0);
             XDeltaLeftByY = IntToFx16(X1 - X0) / YDiffLeft;
@@ -2873,7 +2872,7 @@ void VRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
             VDeltaRightByY = IntToFx16(VVtx2 - VVtx0) / YDiffRight;
             ZDeltaRightByY = IntToFx16(ZVtx2 - ZVtx0) / YDiffRight;
 
-            i32 YDiff = (MinClip.Y - Y0);
+            i32 YDiff = (RenderSpec.MinClip.Y - Y0);
             XLeft = IntToFx16(X0) + YDiff * XDeltaLeftByY;
             ULeft = IntToFx16(UVtx0) + YDiff * UDeltaLeftByY;
             VLeft = IntToFx16(VVtx0) + YDiff * VDeltaLeftByY;
@@ -2884,7 +2883,7 @@ void VRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
             VRight = IntToFx16(VVtx0) + YDiff * VDeltaRightByY;
             ZRight = IntToFx16(ZVtx0) + YDiff * ZDeltaRightByY;
 
-            YStart = MinClip.Y;
+            YStart = RenderSpec.MinClip.Y;
 
             /* NOTE(sean):
                 Test if we need swap to keep rendering left to right.
@@ -2963,8 +2962,8 @@ void VRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
         }
 
         // Test for clipping X
-        if (X0 < MinClip.X || X1 < MinClip.X || X2 < MinClip.X ||
-            X0 > MaxClip.X || X1 > MaxClip.X || X2 > MaxClip.X)
+        if (X0 < RenderSpec.MinClip.X || X1 < RenderSpec.MinClip.X || X2 < RenderSpec.MinClip.X ||
+            X0 > RenderSpec.MaxClip.X || X1 > RenderSpec.MaxClip.X || X2 > RenderSpec.MaxClip.X)
         {
             // Align video buffer
             Buffer += Pitch * YStart;
@@ -3001,18 +3000,18 @@ void VRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
                 }
 
                 // Test if we need clipping
-                if (XStart < MinClip.X)
+                if (XStart < RenderSpec.MinClip.X)
                 {
-                    XDiff = MinClip.X - XStart;
-                    XStart = MinClip.X;
+                    XDiff = RenderSpec.MinClip.X - XStart;
+                    XStart = RenderSpec.MinClip.X;
 
                     U += UDeltaByX * XDiff;
                     V += VDeltaByX * XDiff;
                     Z += ZDeltaByX * XDiff;
                 }
-                if (XEnd > MaxClip.X)
+                if (XEnd > RenderSpec.MaxClip.X)
                 {
-                    XEnd = MaxClip.X;
+                    XEnd = RenderSpec.MaxClip.X;
                 }
 
                 // Process each X
@@ -3247,10 +3246,10 @@ void VRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
     }
 
     // Test if we can't see it
-    if (Poly.TransVtx[V2].Y < MinClipFloat.Y ||
-        Poly.TransVtx[V0].Y > MaxClipFloat.Y ||
-        (Poly.TransVtx[V0].X < MinClipFloat.X && Poly.TransVtx[V1].X < MinClipFloat.X && Poly.TransVtx[V2].X < MinClipFloat.X) ||
-        (Poly.TransVtx[V0].X > MaxClipFloat.X && Poly.TransVtx[V1].X > MaxClipFloat.X && Poly.TransVtx[V2].X > MaxClipFloat.X))
+    if (Poly.TransVtx[V2].Y < RenderSpec.MinClipFloat.Y ||
+        Poly.TransVtx[V0].Y > RenderSpec.MaxClipFloat.Y ||
+        (Poly.TransVtx[V0].X < RenderSpec.MinClipFloat.X && Poly.TransVtx[V1].X < RenderSpec.MinClipFloat.X && Poly.TransVtx[V2].X < RenderSpec.MinClipFloat.X) ||
+        (Poly.TransVtx[V0].X > RenderSpec.MaxClipFloat.X && Poly.TransVtx[V1].X > RenderSpec.MaxClipFloat.X && Poly.TransVtx[V2].X > RenderSpec.MaxClipFloat.X))
     {
         return;
     }
@@ -3344,10 +3343,10 @@ void VRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
             }
 
             // Clipping Y
-            if (Y0 < MinClip.Y)
+            if (Y0 < RenderSpec.MinClip.Y)
             {
-                YDiff = MinClip.Y - Y0;
-                YStart = MinClip.Y;
+                YDiff = RenderSpec.MinClip.Y - Y0;
+                YStart = RenderSpec.MinClip.Y;
 
                 XLeft = IntToFx16(X0) + YDiff * XDeltaLeftByY;
                 ZLeft = (ZVtx0) + YDiff * ZDeltaLeftByY;
@@ -3386,10 +3385,10 @@ void VRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
             }
 
             // Clipping Y
-            if (Y0 < MinClip.Y)
+            if (Y0 < RenderSpec.MinClip.Y)
             {
-                YDiff = MinClip.Y - Y0;
-                YStart = MinClip.Y;
+                YDiff = RenderSpec.MinClip.Y - Y0;
+                YStart = RenderSpec.MinClip.Y;
 
                 XLeft = IntToFx16(X0) + YDiff * XDeltaLeftByY;
                 ZLeft = (ZVtx0) + YDiff * ZDeltaLeftByY;
@@ -3415,9 +3414,9 @@ void VRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
         }
 
         // Clip bottom Y
-        if (Y2 > MaxClip.Y)
+        if (Y2 > RenderSpec.MaxClip.Y)
         {
-            YEnd = MaxClip.Y + 1; // + 1 because of top-left fill convention
+            YEnd = RenderSpec.MaxClip.Y + 1; // + 1 because of top-left fill convention
         }
         else
         {
@@ -3425,8 +3424,8 @@ void VRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
         }
 
         // Test for clipping X
-        if (X0 < MinClip.X || X1 < MinClip.X || X2 < MinClip.X ||
-            X0 > MaxClip.X || X1 > MaxClip.X || X2 > MaxClip.X)
+        if (X0 < RenderSpec.MinClip.X || X1 < RenderSpec.MinClip.X || X2 < RenderSpec.MinClip.X ||
+            X0 > RenderSpec.MaxClip.X || X1 > RenderSpec.MaxClip.X || X2 > RenderSpec.MaxClip.X)
         {
             // Align buffer pointer
             Buffer += Pitch * YStart;
@@ -3460,10 +3459,10 @@ void VRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
                 }
 
                 // X clipping
-                if (XStart < MinClip.X)
+                if (XStart < RenderSpec.MinClip.X)
                 {
-                    i32 XDiff = MinClip.X - XStart;
-                    XStart = MinClip.X;
+                    i32 XDiff = RenderSpec.MinClip.X - XStart;
+                    XStart = RenderSpec.MinClip.X;
 
                     Z += XDiff * ZDeltaByX;
 
@@ -3472,9 +3471,9 @@ void VRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
                         Interpolators[InterpIndex]->InterpolateX(XDiff);
                     }
                 }
-                if (XEnd > MaxClip.X)
+                if (XEnd > RenderSpec.MaxClip.X)
                 {
-                    XEnd = MaxClip.X + 1;
+                    XEnd = RenderSpec.MaxClip.X + 1;
                 }
 
                 // Process each X
@@ -3601,9 +3600,9 @@ void VRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
         i32 YRestartInterpolation = Y1;
 
         // Clip bottom Y
-        if (Y2 > MaxClip.Y)
+        if (Y2 > RenderSpec.MaxClip.Y)
         {
-            YEnd = MaxClip.Y + 1;
+            YEnd = RenderSpec.MaxClip.Y + 1;
         }
         else
         {
@@ -3611,7 +3610,7 @@ void VRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
         }
 
         // Clip top Y
-        if (Y1 < MinClip.Y)
+        if (Y1 < RenderSpec.MinClip.Y)
         {
             // Compute deltas
             i32 YDiffLeft = (Y2 - Y1);
@@ -3623,11 +3622,11 @@ void VRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
             ZDeltaRightByY = (ZVtx2 - ZVtx0) / YDiffRight;
 
             // Do clipping
-            i32 YOverClipLeft = (MinClip.Y - Y1);
+            i32 YOverClipLeft = (RenderSpec.MinClip.Y - Y1);
             XLeft = IntToFx16(X1) + YOverClipLeft * XDeltaLeftByY;
             ZLeft = (ZVtx1) + YOverClipLeft * ZDeltaLeftByY;
 
-            i32 YOverClipRight = (MinClip.Y - Y0);
+            i32 YOverClipRight = (RenderSpec.MinClip.Y - Y0);
             XRight = IntToFx16(X0) + YOverClipRight * XDeltaRightByY;
             ZRight = (ZVtx0) + YOverClipRight * ZDeltaRightByY;
 
@@ -3638,7 +3637,7 @@ void VRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
                 Interpolators[InterpIndex]->InterpolateY(YOverClipLeft, YOverClipRight);
             }
 
-            YStart = MinClip.Y;
+            YStart = RenderSpec.MinClip.Y;
 
             /* NOTE(sean):
                 Test if we need swap to keep rendering left to right.
@@ -3665,7 +3664,7 @@ void VRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
                 bRestartInterpolationAtLeftHand = false; // Restart at right hand side
             }
         }
-        else if (Y0 < MinClip.Y)
+        else if (Y0 < RenderSpec.MinClip.Y)
         {
             // Compute deltas
             i32 YDiffLeft = (Y1 - Y0);
@@ -3677,7 +3676,7 @@ void VRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
             ZDeltaRightByY = (ZVtx2 - ZVtx0) / YDiffRight;
 
             // Do clipping
-            i32 YOverClip = (MinClip.Y - Y0);
+            i32 YOverClip = (RenderSpec.MinClip.Y - Y0);
             XLeft = IntToFx16(X0) + YOverClip * XDeltaLeftByY;
             ZLeft = (ZVtx0) + YOverClip * ZDeltaLeftByY;
 
@@ -3690,7 +3689,7 @@ void VRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
                 Interpolators[InterpIndex]->InterpolateY(YOverClip, YOverClip);
             }
 
-            YStart = MinClip.Y;
+            YStart = RenderSpec.MinClip.Y;
 
             /* NOTE(sean):
                 Test if we need swap to keep rendering left to right.
@@ -3765,8 +3764,8 @@ void VRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
         }
 
         // Test for clipping X
-        if (X0 < MinClip.X || X1 < MinClip.X || X2 < MinClip.X ||
-            X0 > MaxClip.X || X1 > MaxClip.X || X2 > MaxClip.X)
+        if (X0 < RenderSpec.MinClip.X || X1 < RenderSpec.MinClip.X || X2 < RenderSpec.MinClip.X ||
+            X0 > RenderSpec.MaxClip.X || X1 > RenderSpec.MaxClip.X || X2 > RenderSpec.MaxClip.X)
         {
             // Align buffer pointer
             Buffer += Pitch * YStart;
@@ -3800,10 +3799,10 @@ void VRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
                 }
 
                 // X clipping
-                if (XStart < MinClip.X)
+                if (XStart < RenderSpec.MinClip.X)
                 {
-                    i32 XDiff = MinClip.X - XStart;
-                    XStart = MinClip.X;
+                    i32 XDiff = RenderSpec.MinClip.X - XStart;
+                    XStart = RenderSpec.MinClip.X;
 
                     Z += XDiff * ZDeltaByX;
 
@@ -3812,9 +3811,9 @@ void VRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
                         Interpolators[InterpIndex]->InterpolateX(XDiff);
                     }
                 }
-                if (XEnd > MaxClip.X)
+                if (XEnd > RenderSpec.MaxClip.X)
                 {
-                    XEnd = MaxClip.X + 1;
+                    XEnd = RenderSpec.MaxClip.X + 1;
                 }
 
                 // Process each X
@@ -4064,7 +4063,7 @@ void VRenderer::DrawText(i32 X, i32 Y, VColorARGB Color, const char* Format, ...
     SDL_SetColorKey(SDLSurface, SDL_TRUE, static_cast<u32*>(SDLSurface->pixels)[0]);
 
     // Convert surface
-    SDL_Surface* SDLConverted = SDL_ConvertSurface(SDLSurface, SDLPixelFormat, 0);
+    SDL_Surface* SDLConverted = SDL_ConvertSurface(SDLSurface, RenderSpec.SDLPixelFormat, 0);
     VL_ASSERT(SDLConverted);
 
     // Blit

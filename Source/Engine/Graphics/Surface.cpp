@@ -17,7 +17,7 @@ void VSurface::Create(i32 InWidth, i32 InHeight)
 
     SDL_Surface* PlatformSurface = SDL_CreateRGBSurfaceWithFormat(
         0, InWidth, InHeight, Renderer.BitsPerPixel,
-        Renderer.SDLPixelFormatEnum
+        Renderer.RenderSpec.SDLPixelFormatEnum
     );
     VL_ASSERT(PlatformSurface);
 
@@ -34,7 +34,7 @@ void VSurface::Load(const char* Path)
     VL_ASSERT(Temp);
 
     SDL_Surface* Converted = SDL_ConvertSurface(
-        Temp, Renderer.SDLPixelFormat, 0
+        Temp, Renderer.RenderSpec.SDLPixelFormat, 0
     );
     VL_ASSERT(Converted);
     SDL_FreeSurface(Temp);

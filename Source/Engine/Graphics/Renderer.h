@@ -30,6 +30,8 @@ class VRenderer
 public:
     static constexpr i32f BytesPerPixel = 4;
     static constexpr i32f BitsPerPixel = 32;
+
+    // TODO(sean): Remove it later
     static constexpr i32f MaxMaterials = 256;
     static constexpr i32f MaxLights = 8;
     static constexpr i32f NumInterpolators = 3;
@@ -38,32 +40,24 @@ public:
     VSurface VideoSurface;
     VSurface BackSurface;
 
-    SDL_PixelFormat* SDLPixelFormat;
-    u32 SDLPixelFormatEnum;
+    VRenderSpecification RenderSpec;
+    VRenderContext RenderContext;
 
-    i32 ScreenWidth;
-    i32 ScreenHeight;
-
-    VVector2I MinClip;
-    VVector2I MaxClip;
-    VVector2 MinClipFloat;
-    VVector2 MaxClipFloat;
-
+    // TODO(sean): Do we need support multiple fonts?
     TTF_Font* Font;
     i32 FontCharWidth; // In pixels
     i32 FontCharHeight;
 
+    // TODO(sean): Make sparse array
     VMaterial Materials[MaxMaterials];
     i32 NumMaterials;
 
+    // TODO(sean): Later we could put light as entity in world
     VLight Lights[MaxLights];
     i32 NumLights;
 
     // TODO(sean): Put here all interpolators and later we will use them with poly attributes
     IInterpolator* Interpolators[NumInterpolators];
-
-    VRenderSpecification RenderSpec;
-    VRenderContext RenderContext;
 
 public:
     // TODO(sean): Remove Constructor/Destructor, move code in StartUp/ShutDown
@@ -89,6 +83,20 @@ public:
 
     void StartUp(const VRenderSpecification& InRenderSpec);
     void ShutDown();
+
+    VL_FINLINE const VRenderSpecification& GetRenderSpec() const
+    {
+        return RenderSpec;
+    }
+
+    VL_FINLINE i32 GetScreenWidth() const
+    {
+        return RenderSpec.TargetSize.X;
+    }
+    VL_FINLINE i32 GetScreenHeight() const
+    {
+        return RenderSpec.TargetSize.Y;
+    }
 
     void ResetMaterials()
     {
@@ -156,9 +164,9 @@ public:
     void PutPixel(u32* Buffer, i32 Pitch, i32 X, i32 Y, u32 Color) const
     {
         VL_ASSERT(X >= 0);
-        VL_ASSERT(X < ScreenWidth);
+        VL_ASSERT(X < RenderSpec.TargetSize.X);
         VL_ASSERT(Y >= 0);
-        VL_ASSERT(Y < ScreenHeight);
+        VL_ASSERT(Y < RenderSpec.TargetSize.Y);
 
         Buffer[Y*Pitch + X] = Color;
     }
@@ -204,15 +212,6 @@ public:
     <<< Deprecated */
 
     void DrawText(i32 X, i32 Y, VColorARGB Color, const char* Format, ...);
-
-    VL_FINLINE i32 GetScreenWidth() const
-    {
-        return ScreenWidth;
-    }
-    VL_FINLINE i32 GetScreenHeight() const
-    {
-        return ScreenHeight;
-    }
 
     friend class VSurface;
 };
