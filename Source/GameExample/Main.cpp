@@ -11,7 +11,7 @@ class GMyGameFlow : public VGameFlow
 public:
     virtual void StartUp() override
     {
-        for (i32f I = 0; I < 3; ++I)
+        for (i32f I = 0; I < 4; ++I)
         {
             VObject* TempObject = World.SpawnObject<VObject>();
             TempObject->LoadCOB(

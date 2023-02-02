@@ -29,3 +29,4 @@ Bin/*.png
 *.\#*
 \#*\#
 desktop.ini
+ThirdParty/*
