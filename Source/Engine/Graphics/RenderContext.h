@@ -11,7 +11,7 @@ public:
     VZBuffer ZBuffer;
 
 public:
-    void Init(i32 ScreenWidth, i32 ScreenHeight);
+    void Init(const VRenderSpecification& RenderSpec);
     void Destroy();
 
     void PrepareToRender();

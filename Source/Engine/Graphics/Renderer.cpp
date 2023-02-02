@@ -10,7 +10,6 @@ VL_DEFINE_LOG_CHANNEL(hLogRenderer, "Renderer");
 
 void VRenderer::StartUp(const VRenderSpecification& InRenderSpec)
 {
-    // TODO(sean): Maybe we should put stuff like RenderSpec.TargetSize.X/RenderSpec.MaxClip in RenderSpec?
     // Copy render specification
     {
         RenderSpec = InRenderSpec;
@@ -34,6 +33,7 @@ void VRenderer::StartUp(const VRenderSpecification& InRenderSpec)
 
         RenderSpec.MinClip = { 0, 0 };
         RenderSpec.MaxClip = { RenderSpec.TargetSize.X - 1, RenderSpec.TargetSize.Y - 1 };
+
         RenderSpec.MinClipFloat = { (f32)RenderSpec.MinClip.X, (f32)RenderSpec.MinClip.Y };
         RenderSpec.MaxClipFloat = { (f32)RenderSpec.MaxClip.X, (f32)RenderSpec.MaxClip.Y };
 
@@ -41,9 +41,8 @@ void VRenderer::StartUp(const VRenderSpecification& InRenderSpec)
     }
 
     // Init render context
-    // TODO(sean): Maybe'll be better to give it RenderSpec?
     {
-        RenderContext.Init(RenderSpec.TargetSize.X, RenderSpec.TargetSize.Y);
+        RenderContext.Init(RenderSpec);
     }
 
     // Initialize TTF

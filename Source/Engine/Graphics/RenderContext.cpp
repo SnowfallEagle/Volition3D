@@ -3,10 +3,10 @@
 #include "Engine/Graphics/RenderList.h"
 #include "Engine/Graphics/RenderContext.h"
 
-void VRenderContext::Init(i32 ScreenWidth, i32 ScreenHeight)
+void VRenderContext::Init(const VRenderSpecification& RenderSpec)
 {
     RenderList = new VRenderList();
-    ZBuffer.Create(ScreenWidth, ScreenHeight);
+    ZBuffer.Create(RenderSpec.TargetSize.X, RenderSpec.TargetSize.Y);
 }
 
 void VRenderContext::Destroy()
