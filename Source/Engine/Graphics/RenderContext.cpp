@@ -27,15 +27,20 @@ void VRenderContext::RenderWorld(u32* Buffer, i32 Pitch)
     VCamera& Camera = *World.Camera;
     Camera.BuildWorldToCameraEulerMat44();
 
-    // Proccess and insert objects
+    // Proccess and insert meshes
     {
-        for (auto Mesh : World.Meshes)
+        for (auto Entity : World.Entities)
         {
-            Mesh->Reset();
-            Mesh->TransformModelToWorld();
-            Mesh->Cull(Camera);
+            if (Entity && Entity->Mesh)
+            {
+                VMesh* Mesh = Entity->Mesh;
 
-            RenderList->InsertMesh(*Mesh, false);
+                Mesh->Reset();
+                Mesh->TransformModelToWorld();
+                Mesh->Cull(Camera);
+
+                RenderList->InsertMesh(*Mesh, false);
+            }
         }
     }
 

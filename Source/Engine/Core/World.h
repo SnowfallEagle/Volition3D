@@ -6,7 +6,7 @@
 
 class VWorld
 {
-    TSparseArray<VMesh*> Meshes;
+    TSparseArray<VEntity*> Entities;
     VCamera* Camera;
 
     VGameFlow* GameFlow;
@@ -26,21 +26,31 @@ public:
         GameFlow->ShutDown();
         delete GameFlow;
 
-        // TODO(sean): Delete entities
-        for (auto Mesh : Meshes)
+        for (auto& Entity : Entities)
         {
-            Mesh->Destroy();
-            delete Mesh;
+            if (Entity)
+            {
+                Entity->Destroy();
+                delete Entity;
+                Entity = nullptr;
+            }
         }
 
         delete Camera;
+        Camera = nullptr;
     }
 
     void Update(f32 DeltaTime)
     {
         GameFlow->Update(DeltaTime);
 
-        // TODO(sean): Update entities
+        for (auto Entity : Entities)
+        {
+            if (Entity)
+            {
+                Entity->Update(DeltaTime);
+            }
+        }
     }
 
     VL_FINLINE VCamera* GetCamera()
@@ -49,12 +59,13 @@ public:
     }
 
     template <typename T>
-    T* SpawnMesh()
+    T* SpawnEntity()
     {
-        VMesh* Mesh = new T();
-        // TODO(sean): Init
-        Meshes.EmplaceBack(Mesh);
-        return Mesh;
+        VEntity* Entity = new T();
+        Entity->Init();
+
+        Entities.EmplaceBack(Entity);
+        return Entity;
     }
 
     friend class VRenderer;
