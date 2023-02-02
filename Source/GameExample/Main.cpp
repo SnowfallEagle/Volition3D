@@ -1,5 +1,3 @@
-/* NOTE(sean): It should be file main file for game that uses engine */
-
 #include "Engine/Core/Volition.h"
 #include "Engine/Math/Matrix.h"
 
