@@ -1,3 +1,7 @@
+[submodule "ThirdParty/SDL"]
+	path = ThirdParty/SDL
+	url = git@github.com:libsdl-org/SDL.git
+	branch = release-2.26.x
 [submodule "ThirdParty/SDL_ttf"]
 	path = ThirdParty/SDL_ttf
 	url = git@github.com:libsdl-org/SDL_ttf.git
