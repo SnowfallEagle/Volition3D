@@ -46,7 +46,10 @@ void VRenderContext::RenderWorld(u32* Buffer, i32 Pitch)
 
     // Proccess render list
     {
-        RenderList->RemoveBackFaces(Camera);
+        if (RenderSpec.bBackfaceRemoval)
+        {
+            RenderList->RemoveBackFaces(Camera);
+        }
         RenderList->TransformWorldToCamera(Camera);
         RenderList->Clip(Camera);
         Renderer.TransformLights(Camera);
@@ -56,20 +59,63 @@ void VRenderContext::RenderWorld(u32* Buffer, i32 Pitch)
     }
 
     // Render stuff
-    // TODO(sean): RenderSpec.bRenderSolid ? RenderSolid() : RenderWire()
-
     InterpolationContext.Buffer = Buffer;
     InterpolationContext.BufferPitch = Pitch;
 
-    RenderSolid();
+    RenderSpec.bRenderSolid ? RenderSolid() : RenderWire();
 }
 
 void VRenderContext::RenderSolid()
 {
-    RenderList->RenderSolid(InterpolationContext.Buffer, InterpolationContext.BufferPitch);
+    /* TODO(sean)
+    for (i32f I = 0; I < RenderList->NumPoly; ++I)
+    {
+        VPolyFace* Poly = RenderList->PolyPtrList[I];
+        if (!Poly ||
+            ~Poly->State & EPolyState::Active ||
+            Poly->State & EPolyState::BackFace ||
+            Poly->State & EPolyState::Clipped)
+        {
+            continue;
+        }
+
+        InterpolationContext.Poly = Poly;
+
+        Renderer.DrawTriangle(InterpolationContext);
+    }
+    */
 }
 
 void VRenderContext::RenderWire()
 {
-    // TODO(sean): Implement
+    for (i32f I = 0; I < RenderList->NumPoly; ++I)
+    {
+        VPolyFace* Poly = RenderList->PolyPtrList[I];
+        if (!Poly ||
+            ~Poly->State & EPolyState::Active ||
+            Poly->State & EPolyState::BackFace ||
+            Poly->State & EPolyState::Clipped)
+        {
+            continue;
+        }
+
+        Renderer.DrawClippedLine(
+            InterpolationContext.Buffer, InterpolationContext.BufferPitch,
+            (i32)Poly->TransVtx[0].X, (i32)Poly->TransVtx[0].Y,
+            (i32)Poly->TransVtx[1].X, (i32)Poly->TransVtx[1].Y,
+            Poly->LitColor[0]
+        );
+        Renderer.DrawClippedLine(
+            InterpolationContext.Buffer, InterpolationContext.BufferPitch,
+            (i32)Poly->TransVtx[1].X, (i32)Poly->TransVtx[1].Y,
+            (i32)Poly->TransVtx[2].X, (i32)Poly->TransVtx[2].Y,
+            Poly->LitColor[1]
+        );
+        Renderer.DrawClippedLine(
+            InterpolationContext.Buffer, InterpolationContext.BufferPitch,
+            (i32)Poly->TransVtx[2].X, (i32)Poly->TransVtx[2].Y,
+            (i32)Poly->TransVtx[0].X, (i32)Poly->TransVtx[0].Y,
+            Poly->LitColor[2]
+        );
+    }
 }

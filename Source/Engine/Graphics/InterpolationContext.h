@@ -8,15 +8,15 @@ class VInterpolationContext
 public:
     const VRenderSpecification& RenderSpec;
 
-    // RenderContext set up this every frame
+    // RenderContext sets this up every frame
     u32* Buffer;
     i32 BufferPitch;
 
-    // InterpolationContext set up this every polygon
+    // InterpolationContext sets this up every polygon
     u32* TextureBuffer;
     i32 TextureBufferPitch;
 
-    // InterpolationContext set up this while rasterizing
+    // InterpolationContext sets this up during rasterization
     i32 X, Y;
     fx28 Z;
 
