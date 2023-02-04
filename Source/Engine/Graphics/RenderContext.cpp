@@ -3,7 +3,7 @@
 #include "Engine/Graphics/RenderList.h"
 #include "Engine/Graphics/RenderContext.h"
 
-void VRenderContext::Init(const VRenderSpecification& RenderSpec)
+void VRenderContext::Init()
 {
     RenderList = new VRenderList();
     ZBuffer.Create(RenderSpec.TargetSize.X, RenderSpec.TargetSize.Y);
@@ -56,6 +56,20 @@ void VRenderContext::RenderWorld(u32* Buffer, i32 Pitch)
     }
 
     // Render stuff
-    // TODO(sean): RenderSolid() that set up InterpolationContext
-    RenderList->RenderSolid(Buffer, Pitch);
+    // TODO(sean): RenderSpec.bRenderSolid ? RenderSolid() : RenderWire()
+
+    InterpolationContext.Buffer = Buffer;
+    InterpolationContext.BufferPitch = Pitch;
+
+    RenderSolid();
+}
+
+void VRenderContext::RenderSolid()
+{
+    RenderList->RenderSolid(InterpolationContext.Buffer, InterpolationContext.BufferPitch);
+}
+
+void VRenderContext::RenderWire()
+{
+    // TODO(sean): Implement
 }

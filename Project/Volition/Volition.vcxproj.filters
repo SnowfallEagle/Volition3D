@@ -171,6 +171,9 @@
     <ClInclude Include="..\..\Source\Engine\GameFramework\Entity.h">
       <Filter>Engine\GameFramework</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Graphics\InterpolationContext.h">
+      <Filter>Engine\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Engine\Core\DebugLog.cpp">
@@ -238,6 +241,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\GameFramework\Entity.cpp">
       <Filter>Engine\GameFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Graphics\InterpolationContext.cpp">
+      <Filter>Engine\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

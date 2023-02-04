@@ -42,7 +42,7 @@ void VRenderer::StartUp(const VRenderSpecification& InRenderSpec)
 
     // Init render context
     {
-        RenderContext.Init(RenderSpec);
+        RenderContext.Init();
     }
 
     // Initialize TTF

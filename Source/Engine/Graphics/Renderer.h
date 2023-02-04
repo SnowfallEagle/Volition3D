@@ -71,7 +71,8 @@ public:
 
 public:
     // TODO(sean): Remove Constructor/Destructor, move code in StartUp/ShutDown
-    VRenderer()
+    VRenderer() :
+        RenderContext(RenderSpec)
     {
         ResetMaterials();
         ResetLights();
@@ -80,11 +81,6 @@ public:
     {
         ResetMaterials();
         ResetLights();
-
-        for (i32 I = 0; I < NumInterpolators; ++I)
-        {
-            delete Interpolators[I];
-        }
     }
 
     void StartUp(const VRenderSpecification& InRenderSpec);
