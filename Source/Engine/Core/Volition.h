@@ -16,7 +16,7 @@ class VVolition
     b32 bRunning;
 
 public:
-    template <typename GAME_WORLD_TYPE>
+    template <typename GAME_FLOW_TYPE>
     void StartUp(const VWindowSpecification& WindowSpec, const VRenderSpecification& RenderSpec)
     {
         DebugLog.StartUp();
@@ -25,7 +25,7 @@ public:
         Renderer.StartUp(RenderSpec);
         Input.StartUp();
         Time.StartUp(RenderSpec);
-        World.StartUp<GAME_WORLD_TYPE>();
+        World.StartUp<GAME_FLOW_TYPE>();
 
         bRunning = true;
     }

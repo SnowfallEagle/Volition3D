@@ -11,13 +11,19 @@ public:
     {
         for (i32f I = 0; I < 4; ++I)
         {
+            // TODO(sean): We should make shared pointers for meshes...
+
+            i32 Random = Math.Random(0, 2);
+
             VEntity* TempEntity = World.SpawnEntity<VEntity>();
-            // TODO(sean): We should make shared pointers
             TempEntity->Mesh->LoadCOB(
-                "rec_gouraud_textured_02.cob",
+                Random == 0 ? "hammer03.cob" :
+                    Random == 1 ? "jetski05.cob" :
+                        "s.cob",
                 { 500.0f * I, 100.0f * Math.Sin(I * 20.0f), 250.0f},
                 { 100.0f, 100.0f, 100.0f },
-                { 0.0f, 0.0f, 0.0f }
+                { 0.0f, 0.0f, 0.0f },
+                ECOB::SwapYZ | ECOB::InvertV
             );
         }
 
@@ -39,7 +45,7 @@ public:
                 ELightState::Active,
                 ELightAttr::Ambient,
 
-                MAP_RGBX32(0x33, 0x33, 0x33), 0, 0,
+                MAP_RGBX32(0x22, 0x22, 0x22), 0, 0,
                 { 0, 0, 0, 0 }, { 0, 0, 0, 0}, VVector4{0, 0, 0, 0}.GetNormalized(), { 0 , 0, 0, 0 },
 
                 0, 0, 0,
@@ -52,7 +58,7 @@ public:
                 ELightState::Active,
                 ELightAttr::Infinite,
 
-                0, MAP_RGBX32(0x88, 0x44, 0x22), 0,
+                0, MAP_RGBX32(0x44, 0x44, 0x22), 0,
                 { 0, 1000, 1000, 0 }, { 0, 0, 0, 0 }, VVector4{ -1.0f, -1.0f, 0, 0 }.GetNormalized(), { 0, 0, 0, 0 },
 
                 0, 0, 0,
@@ -65,7 +71,7 @@ public:
                 ELightState::Active,
                 ELightAttr::Point,
 
-                0, MAP_RGBX32(0xFF, 0xFF, 0xFF), 0,
+                0, MAP_RGBX32(0x33, 0x00, 0x77), 0,
                 { 1000.0f, 1000.0f, 0, 0 }, { 0, 0, 0, 0 }, VVector4{ 0, 0, 0, 0 }.GetNormalized(), { 0, 0, 0, 0 },
 
                 0, 0.0001f, 0,
@@ -91,7 +97,7 @@ public:
                 ELightState::Active,
                 ELightAttr::ComplexSpotlight,
 
-                0, MAP_RGBX32(0xCC, 0xCC, 0xCC), 0,
+                0, MAP_RGBX32(0x00, 0x66, 0x00), 0,
                 { 0.0f, 1000.0f, -300.0f, 0 }, { 0, 0, 0, 0 }, VVector4(-0.5f, -1.0f, 1.0f).GetNormalized(), { 0, 0, 0, 0 },
 
                 0, 0.0005f, 0,
@@ -100,8 +106,8 @@ public:
             };
 
             Renderer.AddLight(AmbientLight);
-            //Renderer.AddLight(InfiniteLight);
-            //Renderer.AddLight(PointLight);
+            Renderer.AddLight(InfiniteLight);
+            Renderer.AddLight(PointLight);
             Renderer.AddLight(ComplexSpotlight);
             //Renderer.AddLight(SimpleSpotlight);
         }
@@ -114,7 +120,7 @@ public:
             Volition.Stop();
         }
 
-        f32 CamPosSpeed = 0.1f * DeltaTime;
+        f32 CamPosSpeed = 0.5f * DeltaTime;
         if (Input.IsKeyDown(EKeycode::W))
         {
             Camera->Pos.X += Math.FastSin(Camera->Dir.Y) * CamPosSpeed;
@@ -126,7 +132,7 @@ public:
             Camera->Pos.Z -= Math.FastCos(Camera->Dir.Y) * CamPosSpeed;
         }
 
-        f32 CamDirSpeed = 0.2f * DeltaTime;
+        f32 CamDirSpeed = 0.5f * DeltaTime;
         if (Input.IsKeyDown(EKeycode::Left))
         {
             Camera->Dir.Y -= CamDirSpeed;

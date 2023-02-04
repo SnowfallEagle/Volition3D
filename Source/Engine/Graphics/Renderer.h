@@ -23,6 +23,9 @@
 #include "Engine/Graphics/Interpolators/GouraudInterpolator.h"
 #include "Engine/Graphics/Interpolators/FlatInterpolator.h"
 #include "Engine/Graphics/Interpolators/BillinearPerspectiveTextureInterpolator.h"
+#include "Engine/Graphics/Interpolators/PerspectiveCorrectTextureInterpolator.h"
+#include "Engine/Graphics/Interpolators/LinearPiecewiseTextureInterpolator.h"
+#include "Engine/Graphics/Interpolators/TextureInterpolator.h" // TODO(sean): Rename in affine texture interpolator
 #include "Engine/Graphics/Interpolators/AlphaInterpolator.h"
 
 class VRenderer
@@ -34,7 +37,7 @@ public:
     // TODO(sean): Remove it later
     static constexpr i32f MaxMaterials = 256;
     static constexpr i32f MaxLights = 8;
-    static constexpr i32f NumInterpolators = 3;
+    static constexpr i32f MaxInterpolators = 8;
 
 public:
     VSurface VideoSurface;
@@ -48,7 +51,6 @@ public:
     i32 FontCharWidth; // In pixels
     i32 FontCharHeight;
 
-    // TODO(sean): Make sparse array
     VMaterial Materials[MaxMaterials];
     i32 NumMaterials;
 
@@ -56,8 +58,16 @@ public:
     VLight Lights[MaxLights];
     i32 NumLights;
 
-    // TODO(sean): Put here all interpolators and later we will use them with poly attributes
-    IInterpolator* Interpolators[NumInterpolators];
+    IInterpolator* Interpolators[MaxInterpolators];
+    i32 NumInterpolators;
+
+    VFlatInterpolator FlatInterpolator;
+    VGouraudInterpolator GouraudInterpolator;
+    VBillinearPerspectiveTextureInterpolator BillinearPerspectiveTextureInterpolator;
+    VPerspectiveCorrectTextureInterpolator PerspectiveCorrectTextureInterpolator;
+    VLinearPiecewiseTextureInterpolator LinearPiecewiseTextureInterpolator;
+    VTextureInterpolator AffineTextureInterpolator;
+    VAlphaInterpolator AlphaInterpolator;
 
 public:
     // TODO(sean): Remove Constructor/Destructor, move code in StartUp/ShutDown
@@ -65,10 +75,6 @@ public:
     {
         ResetMaterials();
         ResetLights();
-
-        Interpolators[0] = new VGouraudInterpolator();
-        Interpolators[1] = new VBillinearPerspectiveTextureInterpolator();
-        Interpolators[2] = new VAlphaInterpolator();
     }
     ~VRenderer()
     {
@@ -188,7 +194,7 @@ public:
     *****************************************************************************************/
 
     // General case
-    void DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) const;
+    void DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly);
 
     /* Deprecated >> >
         // Naive implementation of triangle rasterization without using top-left convention

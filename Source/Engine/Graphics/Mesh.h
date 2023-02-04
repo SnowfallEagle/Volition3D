@@ -1,5 +1,6 @@
 /* TODO:
     - Scale: Recompute polygon normal length, recompute average, max radiuses
+    - Make it more safe
  */
 
 #pragma once

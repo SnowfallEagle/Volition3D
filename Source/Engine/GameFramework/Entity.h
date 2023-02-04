@@ -9,7 +9,7 @@ public:
     VString Name = "Entity";
 
     VMesh* Mesh = new VMesh();
-    VMatrix44 MatTransform = VMatrix44::Identity; // TODO(sean): Implement
+    VMatrix44 MatTransform = VMatrix44::Identity; // TODO(sean): Maybe start implement it from Mesh?
 
 public:
     virtual ~VEntity()

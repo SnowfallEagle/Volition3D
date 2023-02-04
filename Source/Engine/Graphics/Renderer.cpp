@@ -3219,7 +3219,7 @@ void VRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
 
 #endif // Deprecated
 
-void VRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) const
+void VRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly)
 {
     enum class ETriangleCase
     {
@@ -3295,15 +3295,39 @@ void VRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly) cons
         return;
     }
 
-    i32 YStart;
-    i32 YEnd;
+    // Set interpolators
+    NumInterpolators = 0;
 
-    // Maybe use array from the beginning?
+    if (Poly.Attr & EPolyAttr::ShadeModeGouraud ||
+        Poly.Attr & EPolyAttr::ShadeModePhong)
+    {
+        Interpolators[NumInterpolators] = &GouraudInterpolator;
+    }
+    else
+    {
+        Interpolators[NumInterpolators] = &FlatInterpolator;
+    }
+    ++NumInterpolators;
+
+    if (Poly.Attr & EPolyAttr::ShadeModeTexture)
+    {
+        // TODO(sean): Choose using distance and factors from RenderSpec
+        Interpolators[NumInterpolators] = &BillinearPerspectiveTextureInterpolator;
+        ++NumInterpolators;
+    }
+
+    Interpolators[NumInterpolators] = &AlphaInterpolator;
+    ++NumInterpolators;
+
+    // Start interpolators
     i32 VtxIndices[3] = { V0, V1, V2 };
     for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
     {
         Interpolators[InterpIndex]->Start(Buffer, Pitch, Poly, VtxIndices);
     }
+
+    i32 YStart;
+    i32 YEnd;
 
     fx28 ZVtx0 = IntToFx28(1) / (i32)(Poly.TransVtx[V0].Z + 0.5f);
     fx28 ZVtx1 = IntToFx28(1) / (i32)(Poly.TransVtx[V1].Z + 0.5f);

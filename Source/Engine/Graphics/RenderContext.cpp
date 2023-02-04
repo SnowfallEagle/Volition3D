@@ -56,5 +56,6 @@ void VRenderContext::RenderWorld(u32* Buffer, i32 Pitch)
     }
 
     // Render stuff
+    // TODO(sean): RenderSolid() that set up InterpolationContext
     RenderList->RenderSolid(Buffer, Pitch);
 }
