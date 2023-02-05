@@ -19,16 +19,6 @@
 #include "Engine/Graphics/Camera.h"
 #include "Engine/Graphics/ZBuffer.h"
 #include "Engine/Graphics/RenderContext.h"
-#include "Engine/Graphics/Interpolators/IInterpolator.h"
-#include "Engine/Graphics/Interpolators/FlatInterpolator.h"
-/* TODO(sean)
-#include "Engine/Graphics/Interpolators/GouraudInterpolator.h"
-#include "Engine/Graphics/Interpolators/BillinearPerspectiveTextureInterpolator.h"
-#include "Engine/Graphics/Interpolators/PerspectiveCorrectTextureInterpolator.h"
-#include "Engine/Graphics/Interpolators/LinearPiecewiseTextureInterpolator.h"
-#include "Engine/Graphics/Interpolators/TextureInterpolator.h" // TODO(sean): Rename in affine texture interpolator
-#include "Engine/Graphics/Interpolators/AlphaInterpolator.h"
-*/
 
 class VRenderer
 {
@@ -39,7 +29,6 @@ public:
     // TODO(sean): Remove it later
     static constexpr i32f MaxMaterials = 256;
     static constexpr i32f MaxLights = 8;
-    static constexpr i32f MaxInterpolators = 8;
 
 private:
     VSurface VideoSurface;
@@ -59,9 +48,6 @@ private:
     // TODO(sean): Later we could put light as entity in world
     VLight Lights[MaxLights];
     i32 NumLights;
-
-    IInterpolator* Interpolators[MaxInterpolators];
-    i32 NumInterpolators;
 
     VFlatInterpolator FlatInterpolator;
     /* TODO(sean)

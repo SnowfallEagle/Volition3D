@@ -1,7 +1,10 @@
 #include "Engine/Core/Types.h"
 #include "Engine/Math/Fixed28.h"
+#include "Engine/Graphics/Color.h"
+#include "Engine/Graphics/Polygon.h"
 
 class VRenderSpecification;
+class IInterpolator;
 
 class VInterpolationContext
 {
@@ -32,13 +35,9 @@ public:
 
     void Start()
     {
-        // TODO(sean): Renderer calls when InterpolationContext should choose texture, set interpolators and so on
     }
 
     void End()
     {
-        // TODO(sean): Unlock texture...
     }
-
-    // TODO(sean): Swap VtxIndices here...
 };

@@ -52,8 +52,4 @@ public:
         InterpolateYLeft(YLeft);
         InterpolateYRight(YRight);
     }
-
-    // TODO(sean): Remove it, because we don't need it anymore
-    virtual void End()
-    {}
 };

@@ -65,6 +65,36 @@ void VRenderContext::RenderWorld(u32* Buffer, i32 Pitch)
     RenderSpec.bRenderSolid ? RenderSolid() : RenderWire();
 }
 
+void VRenderContext::SetInterpolators()
+{
+    NumInterpolators = 0;
+
+    /* TODO(sean)
+    if (Poly.Attr & EPolyAttr::ShadeModeGouraud ||
+        Poly.Attr & EPolyAttr::ShadeModePhong)
+    {
+        Interpolators[NumInterpolators] = &GouraudInterpolator;
+    }
+    else
+    */
+    {
+        Interpolators[NumInterpolators] = &FlatInterpolator;
+    }
+    ++NumInterpolators;
+
+    /* TODO(sean)
+    if (Poly.Attr & EPolyAttr::ShadeModeTexture)
+    {
+        // TODO(sean): Choose using distance and factors from RenderSpec
+        Interpolators[NumInterpolators] = &BillinearPerspectiveTextureInterpolator;
+        ++NumInterpolators;
+    }
+
+    Interpolators[NumInterpolators] = &AlphaInterpolator;
+    ++NumInterpolators;
+    */
+}
+
 void VRenderContext::RenderSolid()
 {
     for (i32f I = 0; I < RenderList->NumPoly; ++I)
