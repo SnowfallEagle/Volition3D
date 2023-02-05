@@ -12,15 +12,17 @@ public:
 
     virtual void Start() override
     {
-        Color = InterpolationContext->Poly->LitColor[0];
+        Color = InterpolationContext->LitColor[0];
     }
 
     virtual void ProcessPixel() override
     {
+        VColorARGB Pixel = InterpolationContext->Pixel;
+
         InterpolationContext->Pixel = MAP_XRGB32(
-            (Color.R * InterpolationContext->Pixel.R) >> 8,
-            (Color.G * InterpolationContext->Pixel.G) >> 8,
-            (Color.B * InterpolationContext->Pixel.B) >> 8
+            (Color.R * Pixel.R) >> 8,
+            (Color.G * Pixel.G) >> 8,
+            (Color.B * Pixel.B) >> 8
         );
     }
 };

@@ -1,7 +1,10 @@
+#pragma once
+
 #include "Engine/Core/Types.h"
 #include "Engine/Math/Fixed28.h"
 #include "Engine/Graphics/Color.h"
 #include "Engine/Graphics/Polygon.h"
+#include "Engine/Graphics/Material.h"
 
 class VRenderSpecification;
 class IInterpolator;
@@ -16,12 +19,18 @@ public:
     u32* Buffer;
     i32 BufferPitch;
 
+    VVertex* Vtx;
+    const VMaterial* Material;
+
+    VColorARGB OriginalColor;
+    VColorARGB LitColor[3];
+
+    u32 PolyAttr;
+
     // InterpolationContext sets this up every polygon face
-    VPolyFace* Poly; // TODO(sean): Remove it, use only it's properties such as material, Origin/Lit Colors
     i32 VtxIndices[3];
 
-    u32* TextureBuffer;
-    i32 TextureBufferPitch;
+    i32 MipMapLevel;
 
     // InterpolationContext sets this up during rasterization
     VColorARGB Pixel;
@@ -35,6 +44,7 @@ public:
 
     void Start()
     {
+        MipMapLevel = 0; // TODO(sean)
     }
 
     void End()

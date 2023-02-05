@@ -33,11 +33,18 @@ public:
         VL_ASSERT(bLocked);
         return Buffer;
     }
+    VL_FINLINE const u32* GetBuffer() const
+    {
+        VL_ASSERT(bLocked);
+        return Buffer;
+    }
+
     VL_FINLINE i32 GetPitch() const
     {
         VL_ASSERT(bLocked);
         return Pitch;
     }
+
     VL_FINLINE b32 IsLocked() const
     {
         return bLocked;

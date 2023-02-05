@@ -3230,44 +3230,47 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
 
     u32* Buffer = InterpolationContext.Buffer;
     i32 Pitch = InterpolationContext.BufferPitch;
-    VPolyFace& Poly = *InterpolationContext.Poly;
 
     i32 V0 = 0, V1 = 1, V2 = 2;
 
     // Sort by Y
     i32 TempInt;
-    if (Poly.TransVtx[V1].Y < Poly.TransVtx[V0].Y)
+    if (InterpolationContext.Vtx[V1].Y < InterpolationContext.Vtx[V0].Y)
     {
         VL_SWAP(V0, V1, TempInt);
     }
-    if (Poly.TransVtx[V2].Y < Poly.TransVtx[V0].Y)
+    if (InterpolationContext.Vtx[V2].Y < InterpolationContext.Vtx[V0].Y)
     {
         VL_SWAP(V0, V2, TempInt);
     }
-    if (Poly.TransVtx[V2].Y < Poly.TransVtx[V1].Y)
+    if (InterpolationContext.Vtx[V2].Y < InterpolationContext.Vtx[V1].Y)
     {
         VL_SWAP(V1, V2, TempInt);
     }
 
     // Test if we can't see it
-    if (Poly.TransVtx[V2].Y < RenderSpec.MinClipFloat.Y ||
-        Poly.TransVtx[V0].Y > RenderSpec.MaxClipFloat.Y ||
-        (Poly.TransVtx[V0].X < RenderSpec.MinClipFloat.X && Poly.TransVtx[V1].X < RenderSpec.MinClipFloat.X && Poly.TransVtx[V2].X < RenderSpec.MinClipFloat.X) ||
-        (Poly.TransVtx[V0].X > RenderSpec.MaxClipFloat.X && Poly.TransVtx[V1].X > RenderSpec.MaxClipFloat.X && Poly.TransVtx[V2].X > RenderSpec.MaxClipFloat.X))
+    if (InterpolationContext.Vtx[V2].Y < RenderSpec.MinClipFloat.Y ||
+        InterpolationContext.Vtx[V0].Y > RenderSpec.MaxClipFloat.Y ||
+        (InterpolationContext.Vtx[V0].X < RenderSpec.MinClipFloat.X &&
+         InterpolationContext.Vtx[V1].X < RenderSpec.MinClipFloat.X &&
+         InterpolationContext.Vtx[V2].X < RenderSpec.MinClipFloat.X) ||
+        (InterpolationContext.Vtx[V0].X > RenderSpec.MaxClipFloat.X &&
+         InterpolationContext.Vtx[V1].X > RenderSpec.MaxClipFloat.X &&
+         InterpolationContext.Vtx[V2].X > RenderSpec.MaxClipFloat.X))
     {
         return;
     }
 
     // Convert Y to integers
-    i32 Y0 = (i32)(Poly.TransVtx[V0].Y + 0.5f);
-    i32 Y1 = (i32)(Poly.TransVtx[V1].Y + 0.5f);
-    i32 Y2 = (i32)(Poly.TransVtx[V2].Y + 0.5f);
+    i32 Y0 = (i32)(InterpolationContext.Vtx[V0].Y + 0.5f);
+    i32 Y1 = (i32)(InterpolationContext.Vtx[V1].Y + 0.5f);
+    i32 Y2 = (i32)(InterpolationContext.Vtx[V2].Y + 0.5f);
 
     // Found triangle case and sort vertices by X
     ETriangleCase TriangleCase;
     if (Y0 == Y1)
     {
-        if (Poly.TransVtx[V1].X < Poly.TransVtx[V0].X)
+        if (InterpolationContext.Vtx[V1].X < InterpolationContext.Vtx[V0].X)
         {
             VL_SWAP(V0, V1, TempInt);
             VL_SWAP(Y0, Y1, TempInt);
@@ -3276,7 +3279,7 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
     }
     else if (Y1 == Y2)
     {
-        if (Poly.TransVtx[V2].X < Poly.TransVtx[V1].X)
+        if (InterpolationContext.Vtx[V2].X < InterpolationContext.Vtx[V1].X)
         {
             VL_SWAP(V1, V2, TempInt);
             VL_SWAP(Y1, Y2, TempInt);
@@ -3289,9 +3292,9 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
     }
 
     // Convert coords to integer
-    i32 X0 = (i32)(Poly.TransVtx[V0].X + 0.5f);
-    i32 X1 = (i32)(Poly.TransVtx[V1].X + 0.5f);
-    i32 X2 = (i32)(Poly.TransVtx[V2].X + 0.5f);
+    i32 X0 = (i32)(InterpolationContext.Vtx[V0].X + 0.5f);
+    i32 X1 = (i32)(InterpolationContext.Vtx[V1].X + 0.5f);
+    i32 X2 = (i32)(InterpolationContext.Vtx[V2].X + 0.5f);
 
     // Vertical, horizontal triangle test
     if ((Y0 == Y1 && Y1 == Y2) || (X0 == X1 && X1 == X2))
@@ -3315,9 +3318,9 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
     i32 YStart;
     i32 YEnd;
 
-    fx28 ZVtx0 = IntToFx28(1) / (i32)(Poly.TransVtx[V0].Z + 0.5f);
-    fx28 ZVtx1 = IntToFx28(1) / (i32)(Poly.TransVtx[V1].Z + 0.5f);
-    fx28 ZVtx2 = IntToFx28(1) / (i32)(Poly.TransVtx[V2].Z + 0.5f);
+    fx28 ZVtx0 = IntToFx28(1) / (i32)(InterpolationContext.Vtx[V0].Z + 0.5f);
+    fx28 ZVtx1 = IntToFx28(1) / (i32)(InterpolationContext.Vtx[V1].Z + 0.5f);
+    fx28 ZVtx2 = IntToFx28(1) / (i32)(InterpolationContext.Vtx[V2].Z + 0.5f);
 
     // Fixed coords, color channels for rasterization
     fx16 XLeft;

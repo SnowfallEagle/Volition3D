@@ -3,10 +3,9 @@
 #include "Engine/Graphics/Interpolators/IInterpolator.h"
 #include "Engine/Math/Fixed16.h"
 
-class VTextureInterpolator final : public IInterpolator
+class VAffineTextureInterpolator final : public IInterpolator
 {
 private:
-    i32 VtxIndices[3];
     fx16 UVtx[3], VVtx[3];
 
     fx16 U, V;
@@ -19,25 +18,25 @@ private:
 
     fx16 UDeltaByX, VDeltaByX;
 
-    VSurface* Texture;
-    u32* TextureBuffer;
+    const VSurface* Texture;
+    const u32* TextureBuffer;
     i32 TexturePitch;
 
 public:
-    virtual ~VTextureInterpolator() = default;
+    virtual ~VAffineTextureInterpolator() = default;
 
-    virtual void Start(const u32* Buffer, i32 Pitch, const VPolyFace& Poly, const i32 InVtxIndices[3]) override
+    virtual void Start() override
     {
-        VL_ASSERT(Poly.Texture);
+        Texture = &InterpolationContext->Material->Texture.Get(InterpolationContext->MipMapLevel);
+        VL_ASSERT(Texture);
 
-        Texture = Poly.Texture;
-        Texture->Lock(TextureBuffer, TexturePitch);
+        TextureBuffer = Texture->GetBuffer();
+        TexturePitch = Texture->GetPitch();
 
         for (i32f I = 0; I < 3; ++I)
         {
-            VtxIndices[I] = InVtxIndices[I];
-            UVtx[I] = IntToFx16((i32)(Poly.TransVtx[I].U + 0.5f));
-            VVtx[I] = IntToFx16((i32)(Poly.TransVtx[I].V + 0.5f));
+            UVtx[I] = IntToFx16((i32)(InterpolationContext->Vtx[I].U + 0.5f));
+            VVtx[I] = IntToFx16((i32)(InterpolationContext->Vtx[I].V + 0.5f));
         }
     }
 
@@ -68,8 +67,8 @@ public:
         VL_SWAP(ULeft, URight, TempInt);
         VL_SWAP(VLeft, VRight, TempInt);
 
-        VL_SWAP(UVtx[VtxIndices[1]], UVtx[VtxIndices[2]], TempInt);
-        VL_SWAP(VVtx[VtxIndices[1]], VVtx[VtxIndices[2]], TempInt);
+        VL_SWAP(UVtx[InterpolationContext->VtxIndices[1]], UVtx[InterpolationContext->VtxIndices[2]], TempInt);
+        VL_SWAP(VVtx[InterpolationContext->VtxIndices[1]], VVtx[InterpolationContext->VtxIndices[2]], TempInt);
     }
 
     virtual void ComputeXStartsAndDeltas(i32 XDiff, fx28 ZLeft, fx28 ZRight) override
@@ -89,10 +88,12 @@ public:
         }
     }
 
-    virtual VColorARGB ProcessPixel(VColorARGB Pixel, i32f X, i32f Y, fx28 Z) override
+    virtual void ProcessPixel() override
     {
         VColorARGB TextureColor = TextureBuffer[Fx16ToInt(V) * TexturePitch + Fx16ToInt(U)];
-        return MAP_XRGB32(
+        VColorARGB Pixel = InterpolationContext->Pixel;
+
+        InterpolationContext->Pixel = MAP_XRGB32(
             (TextureColor.R * Pixel.R) >> 8,
             (TextureColor.G * Pixel.G) >> 8,
             (TextureColor.B * Pixel.B) >> 8
@@ -114,10 +115,5 @@ public:
     {
         URight += UDeltaRightByY * YRight;
         VRight += VDeltaRightByY * YRight;
-    }
-
-    virtual void End() override
-    {
-        Texture->Unlock();
     }
 };
