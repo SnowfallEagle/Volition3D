@@ -15,12 +15,14 @@ public:
 
     // InterpolationContext sets this up every polygon face
     VPolyFace* Poly; // TODO(sean): Remove it, use only it's properties such as material, Origin/Lit Colors
+    i32 VtxIndices[3];
 
     u32* TextureBuffer;
     i32 TextureBufferPitch;
 
     // InterpolationContext sets this up during rasterization
-    i32 X, Y;
+    VColorARGB Pixel;
+    i32f X, Y;
     fx28 Z;
 
 public:
@@ -28,8 +30,15 @@ public:
         RenderSpec(InRenderSpec)
     {}
 
-    void StartInterpolation()
+    void Start()
     {
-        // TODO(sean): Renderer calls when InterpolationContext should compute stuff
+        // TODO(sean): Renderer calls when InterpolationContext should choose texture, set interpolators and so on
     }
+
+    void End()
+    {
+        // TODO(sean): Unlock texture...
+    }
+
+    // TODO(sean): Swap VtxIndices here...
 };

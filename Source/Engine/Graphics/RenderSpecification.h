@@ -11,11 +11,8 @@ public: // Set by user
     i32 TargetFPS = 60;
     b32 bLimitFPS = false;
 
-    b32 bRenderSolid = false; // DEBUG(sean)
-    //b32 bRenderSolid = true;
-
-    b32 bBackfaceRemoval = false; // DEBUG(sean)
-    //b32 bBackfaceRemoval = true;
+    b32 bRenderSolid = true;
+    b32 bBackfaceRemoval = true;
 
     f32 BestDrawDistance = 0.5f;
     i32 MaxMipMappingLevel = 4;

@@ -20,13 +20,15 @@
 #include "Engine/Graphics/ZBuffer.h"
 #include "Engine/Graphics/RenderContext.h"
 #include "Engine/Graphics/Interpolators/IInterpolator.h"
-#include "Engine/Graphics/Interpolators/GouraudInterpolator.h"
 #include "Engine/Graphics/Interpolators/FlatInterpolator.h"
+/* TODO(sean)
+#include "Engine/Graphics/Interpolators/GouraudInterpolator.h"
 #include "Engine/Graphics/Interpolators/BillinearPerspectiveTextureInterpolator.h"
 #include "Engine/Graphics/Interpolators/PerspectiveCorrectTextureInterpolator.h"
 #include "Engine/Graphics/Interpolators/LinearPiecewiseTextureInterpolator.h"
 #include "Engine/Graphics/Interpolators/TextureInterpolator.h" // TODO(sean): Rename in affine texture interpolator
 #include "Engine/Graphics/Interpolators/AlphaInterpolator.h"
+*/
 
 class VRenderer
 {
@@ -62,12 +64,14 @@ private:
     i32 NumInterpolators;
 
     VFlatInterpolator FlatInterpolator;
+    /* TODO(sean)
     VGouraudInterpolator GouraudInterpolator;
     VBillinearPerspectiveTextureInterpolator BillinearPerspectiveTextureInterpolator;
     VPerspectiveCorrectTextureInterpolator PerspectiveCorrectTextureInterpolator;
     VLinearPiecewiseTextureInterpolator LinearPiecewiseTextureInterpolator;
     VTextureInterpolator AffineTextureInterpolator;
     VAlphaInterpolator AlphaInterpolator;
+    */
 
 public:
     // TODO(sean): Remove Constructor/Destructor, move code in StartUp/ShutDown

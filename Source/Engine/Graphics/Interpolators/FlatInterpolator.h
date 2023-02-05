@@ -10,17 +10,17 @@ private:
 public:
     virtual ~VFlatInterpolator() = default;
 
-    virtual void Start(const u32* Buffer, i32 Pitch, const VPolyFace& Poly, const i32 InVtxIndices[3]) override
+    virtual void Start() override
     {
-        Color = Poly.LitColor[0];
+        Color = InterpolationContext->Poly->LitColor[0];
     }
 
-    virtual VColorARGB ProcessPixel(VColorARGB Pixel, i32f X, i32f Y, fx28 Z) override
+    virtual void ProcessPixel() override
     {
-        return MAP_XRGB32(
-            (Color.R * Pixel.R) >> 8,
-            (Color.G * Pixel.G) >> 8,
-            (Color.B * Pixel.B) >> 8
+        InterpolationContext->Pixel = MAP_XRGB32(
+            (Color.R * InterpolationContext->Pixel.R) >> 8,
+            (Color.G * InterpolationContext->Pixel.G) >> 8,
+            (Color.B * InterpolationContext->Pixel.B) >> 8
         );
     }
 };

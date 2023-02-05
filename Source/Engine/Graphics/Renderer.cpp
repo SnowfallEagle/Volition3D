@@ -3300,19 +3300,23 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
     }
 
     // Set interpolators
+    // TODO(sean): Set interpolators in InterpolationContext
     NumInterpolators = 0;
 
+    /* TODO(sean)
     if (Poly.Attr & EPolyAttr::ShadeModeGouraud ||
         Poly.Attr & EPolyAttr::ShadeModePhong)
     {
         Interpolators[NumInterpolators] = &GouraudInterpolator;
     }
     else
+    */
     {
         Interpolators[NumInterpolators] = &FlatInterpolator;
     }
     ++NumInterpolators;
 
+    /* TODO(sean)
     if (Poly.Attr & EPolyAttr::ShadeModeTexture)
     {
         // TODO(sean): Choose using distance and factors from RenderSpec
@@ -3322,12 +3326,17 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
 
     Interpolators[NumInterpolators] = &AlphaInterpolator;
     ++NumInterpolators;
+    */
 
     // Start interpolators
-    i32 VtxIndices[3] = { V0, V1, V2 };
+    InterpolationContext.VtxIndices[0] = V0;
+    InterpolationContext.VtxIndices[1] = V1;
+    InterpolationContext.VtxIndices[2] = V2;
+
     for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
     {
-        Interpolators[InterpIndex]->Start(Buffer, Pitch, Poly, VtxIndices);
+        Interpolators[InterpIndex]->SetInterpolationContext(InterpolationContext);
+        Interpolators[InterpIndex]->Start();
     }
 
     i32 YStart;
@@ -3460,7 +3469,7 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
             ZBufferArray = (fx28*)RenderContext.ZBuffer.Buffer + (RenderContext.ZBuffer.Pitch * YStart);
 
             // Process each Y
-            for (i32f Y = YStart; Y < YEnd; ++Y)
+            for (InterpolationContext.Y = YStart; InterpolationContext.Y < YEnd; ++InterpolationContext.Y)
             {
                 // Compute starting values
                 i32f XStart = Fx16ToIntRounded(XLeft);
@@ -3509,14 +3518,16 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                 {
                     if (Z > ZBufferArray[X])
                     {
-                        VColorARGB FinalPixel = 0xFFFFFFFF;
+                        InterpolationContext.Pixel = 0xFFFFFFFF;
+                        InterpolationContext.X = X;
+                        InterpolationContext.Z = Z;
 
                         for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
                         {
-                            FinalPixel = Interpolators[InterpIndex]->ProcessPixel(FinalPixel, X, Y, Z);
+                            Interpolators[InterpIndex]->ProcessPixel();
                         }
 
-                        Buffer[X] = FinalPixel;
+                        Buffer[X] = InterpolationContext.Pixel;
 
                         ZBufferArray[X] = Z;
                     }
@@ -3553,7 +3564,7 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
             ZBufferArray = (fx28*)RenderContext.ZBuffer.Buffer + (RenderContext.ZBuffer.Pitch * YStart);
 
             // Process each Y
-            for (i32f Y = YStart; Y < YEnd; ++Y)
+            for (InterpolationContext.Y = YStart; InterpolationContext.Y < YEnd; ++InterpolationContext.Y)
             {
                 // Compute starting values
                 i32f XStart = Fx16ToIntRounded(XLeft);
@@ -3584,14 +3595,16 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                 {
                     if (Z > ZBufferArray[X])
                     {
-                        VColorARGB FinalPixel = 0xFFFFFFFF;
+                        InterpolationContext.Pixel = 0xFFFFFFFF;
+                        InterpolationContext.X = X;
+                        InterpolationContext.Z = Z;
 
                         for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
                         {
-                            FinalPixel = Interpolators[InterpIndex]->ProcessPixel(FinalPixel, X, Y, Z);
+                            Interpolators[InterpIndex]->ProcessPixel();
                         }
 
-                        Buffer[X] = FinalPixel;
+                        Buffer[X] = InterpolationContext.Pixel;
 
                         ZBufferArray[X] = Z;
                     }
@@ -3800,7 +3813,7 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
             ZBufferArray = (fx28*)RenderContext.ZBuffer.Buffer + (RenderContext.ZBuffer.Pitch * YStart);
 
             // Process each Y
-            for (i32f Y = YStart; Y < YEnd; ++Y)
+            for (InterpolationContext.Y = YStart; InterpolationContext.Y < YEnd; ++InterpolationContext.Y)
             {
                 // Compute starting values
                 i32f XStart = Fx16ToIntRounded(XLeft);
@@ -3849,14 +3862,16 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                 {
                     if (Z > ZBufferArray[X])
                     {
-                        VColorARGB FinalPixel = 0xFFFFFFFF;
+                        InterpolationContext.Pixel = 0xFFFFFFFF;
+                        InterpolationContext.X = X;
+                        InterpolationContext.Z = Z;
 
                         for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
                         {
-                            FinalPixel = Interpolators[InterpIndex]->ProcessPixel(FinalPixel, X, Y, Z);
+                            Interpolators[InterpIndex]->ProcessPixel();
                         }
 
-                        Buffer[X] = FinalPixel;
+                        Buffer[X] = InterpolationContext.Pixel;
 
                         ZBufferArray[X] = Z;
                     }
@@ -3886,7 +3901,7 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                 ZBufferArray += RenderContext.ZBuffer.Pitch;
 
                 // Test for changing interpolant
-                if (Y == YRestartInterpolation)
+                if (InterpolationContext.Y == YRestartInterpolation)
                 {
                     if (bRestartInterpolationAtLeftHand)
                     {
@@ -3942,7 +3957,7 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
             ZBufferArray = (fx28*)RenderContext.ZBuffer.Buffer + (RenderContext.ZBuffer.Pitch * YStart);
 
             // Process each Y
-            for (i32f Y = YStart; Y < YEnd; ++Y)
+            for (InterpolationContext.Y = YStart; InterpolationContext.Y < YEnd; ++InterpolationContext.Y)
             {
                 // Compute starting values
                 i32f XStart = Fx16ToIntRounded(XLeft);
@@ -3973,14 +3988,16 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                 {
                     if (Z > ZBufferArray[X])
                     {
-                        VColorARGB FinalPixel = 0xFFFFFFFF;
+                        InterpolationContext.Pixel = 0xFFFFFFFF;
+                        InterpolationContext.X = X;
+                        InterpolationContext.Z = Z;
 
                         for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
                         {
-                            FinalPixel = Interpolators[InterpIndex]->ProcessPixel(FinalPixel, X, Y, Z);
+                            Interpolators[InterpIndex]->ProcessPixel();
                         }
 
-                        Buffer[X] = FinalPixel;
+                        Buffer[X] = InterpolationContext.Pixel;
 
                         ZBufferArray[X] = Z;
                     }
@@ -4010,7 +4027,7 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                 ZBufferArray += RenderContext.ZBuffer.Pitch;
 
                 // Test for changing interpolant
-                if (Y == YRestartInterpolation)
+                if (InterpolationContext.Y == YRestartInterpolation)
                 {
                     if (bRestartInterpolationAtLeftHand)
                     {
