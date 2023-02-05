@@ -203,7 +203,7 @@
     <ClInclude Include="..\..\Source\Engine\Graphics\Interpolators\IInterpolator.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\Interpolators\LinearPiecewiseTextureInterpolator.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\Interpolators\PerspectiveCorrectTextureInterpolator.h" />
-    <ClInclude Include="..\..\Source\Engine\Graphics\Interpolators\TextureInterpolator.h" />
+    <ClInclude Include="..\..\Source\Engine\Graphics\Interpolators\AffineTextureInterpolator.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\Light.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\Material.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\Mesh.h" />

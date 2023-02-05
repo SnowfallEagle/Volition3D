@@ -9,7 +9,7 @@
 #include "Engine/Graphics/Interpolators/BillinearPerspectiveTextureInterpolator.h"
 #include "Engine/Graphics/Interpolators/PerspectiveCorrectTextureInterpolator.h"
 #include "Engine/Graphics/Interpolators/LinearPiecewiseTextureInterpolator.h"
-#include "Engine/Graphics/Interpolators/TextureInterpolator.h" // TODO(sean): Rename in affine texture interpolator
+#include "Engine/Graphics/Interpolators/AffineTextureInterpolator.h"
 #include "Engine/Graphics/Interpolators/AlphaInterpolator.h"
 */
 

@@ -11,15 +11,12 @@ public:
     {
         for (i32f I = 0; I < 4; ++I)
         {
-            // TODO(sean): We should make shared pointers for meshes...
-
-            i32 Random = Math.Random(0, 2);
-
             VEntity* TempEntity = World.SpawnEntity<VEntity>();
             TempEntity->Mesh->LoadCOB(
-                Random == 0 ? "hammer03.cob" :
-                    Random == 1 ? "jetski05.cob" :
-                        "s.cob",
+                I == 0 ? "hammer03.cob" :
+                    I == 1 ? "jetski05.cob" :
+                        I == 2 ? "s.cob" :
+                            "tie04.cob",
                 { 500.0f * I, 100.0f * Math.Sin(I * 20.0f), 250.0f},
                 { 100.0f, 100.0f, 100.0f },
                 { 0.0f, 0.0f, 0.0f },
@@ -30,7 +27,7 @@ public:
         Entity = World.SpawnEntity<VEntity>();
         Entity->Mesh->LoadCOB(
             "rec_gouraud_textured_02.cob",
-            { 0.0f, 0.0f, 250.0f},
+            { -500.0f, 0.0f, 250.0f},
             { 100.0f, 100.0f, 100.0f },
             { 0.0f, 0.0f, 0.0f }
         );

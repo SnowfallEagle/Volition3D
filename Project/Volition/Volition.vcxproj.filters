@@ -156,7 +156,7 @@
     <ClInclude Include="..\..\Source\Engine\Graphics\Interpolators\PerspectiveCorrectTextureInterpolator.h">
       <Filter>Engine\Graphics\Interpolators</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Graphics\Interpolators\TextureInterpolator.h">
+    <ClInclude Include="..\..\Source\Engine\Graphics\Interpolators\AffineTextureInterpolator.h">
       <Filter>Engine\Graphics\Interpolators</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Core\World.h">
