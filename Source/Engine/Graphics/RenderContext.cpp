@@ -67,7 +67,6 @@ void VRenderContext::RenderWorld(u32* Buffer, i32 Pitch)
 
 void VRenderContext::RenderSolid()
 {
-    /* TODO(sean)
     for (i32f I = 0; I < RenderList->NumPoly; ++I)
     {
         VPolyFace* Poly = RenderList->PolyPtrList[I];
@@ -83,7 +82,6 @@ void VRenderContext::RenderSolid()
 
         Renderer.DrawTriangle(InterpolationContext);
     }
-    */
 }
 
 void VRenderContext::RenderWire()

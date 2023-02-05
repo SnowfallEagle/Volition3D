@@ -31,15 +31,15 @@
 class VRenderer
 {
 public:
-    static constexpr i32f BytesPerPixel = 4;
-    static constexpr i32f BitsPerPixel = 32;
+    static constexpr i32f BytesPerPixel = 4; // TODO(sean): -> RenderSpec
+    static constexpr i32f BitsPerPixel = 32; // TODO(sean): -> RenderSpec
 
     // TODO(sean): Remove it later
     static constexpr i32f MaxMaterials = 256;
     static constexpr i32f MaxLights = 8;
     static constexpr i32f MaxInterpolators = 8;
 
-public:
+private:
     VSurface VideoSurface;
     VSurface BackSurface;
 
@@ -190,7 +190,7 @@ public:
     *****************************************************************************************/
 
     // General case
-    void DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly);
+    void DrawTriangle(VInterpolationContext& InterpolationContext);
 
     /* Deprecated >> >
         // Naive implementation of triangle rasterization without using top-left convention
@@ -216,6 +216,8 @@ public:
     void DrawText(i32 X, i32 Y, VColorARGB Color, const char* Format, ...);
 
     friend class VSurface;
+    friend class VMesh;
+    friend class VRenderContext;
 };
 
 extern VRenderer Renderer;

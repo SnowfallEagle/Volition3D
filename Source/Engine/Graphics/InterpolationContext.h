@@ -5,6 +5,7 @@ class VRenderSpecification;
 
 class VInterpolationContext
 {
+// TODO(sean): Of course it would be better to use getters, setters to prevent Renderer to set value in TextureBuffer...
 public:
     const VRenderSpecification& RenderSpec;
 
@@ -12,7 +13,9 @@ public:
     u32* Buffer;
     i32 BufferPitch;
 
-    // InterpolationContext sets this up every polygon
+    // InterpolationContext sets this up every polygon face
+    VPolyFace* Poly; // TODO(sean): Remove it, use only it's properties such as material, Origin/Lit Colors
+
     u32* TextureBuffer;
     i32 TextureBufferPitch;
 

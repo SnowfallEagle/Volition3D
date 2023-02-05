@@ -3219,7 +3219,7 @@ void VRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
 
 #endif // Deprecated
 
-void VRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly)
+void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
 {
     enum class ETriangleCase
     {
@@ -3227,6 +3227,10 @@ void VRenderer::DrawTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Poly)
         Bottom,
         General
     };
+
+    u32* Buffer = InterpolationContext.Buffer;
+    i32 Pitch = InterpolationContext.BufferPitch;
+    VPolyFace& Poly = *InterpolationContext.Poly;
 
     i32 V0 = 0, V1 = 1, V2 = 2;
 
