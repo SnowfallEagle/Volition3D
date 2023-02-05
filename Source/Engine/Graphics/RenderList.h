@@ -55,7 +55,6 @@ public:
         PolyList[NumPoly].Attr = Poly.Attr;
         PolyList[NumPoly].OriginalColor = Poly.OriginalColor;
         PolyList[NumPoly].NormalLength = Poly.NormalLength;
-        PolyList[NumPoly].Texture = Poly.Texture;
         PolyList[NumPoly].Material = Poly.Material;
 
         for (i32f I = 0; I < 3; ++I)

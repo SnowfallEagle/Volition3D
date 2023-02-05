@@ -87,10 +87,8 @@ public:
     f32* AverageRadiusList;
     f32* MaxRadiusList;
 
-    VSurface* Texture;
+    VTexture* Texture; // TODO(sean): Remove it after removing normalization
     VPoint2* TextureCoordsList;
-
-    VMaterial* Material; // TODO(sean): ?
 
 public:
     // Allocates verticies, polygons, radius lists and texture list
@@ -285,7 +283,7 @@ public:
     }
 
     // TODO(sean): Remove Position, Scale, Rot from function arguments
-    b32 LoadPLG(const char* Path, const VVector4& InPosition, const VVector4& Scale, const VVector4& Rot);
+    // Deprecated: b32 LoadPLG(const char* Path, const VVector4& InPosition, const VVector4& Scale, const VVector4& Rot);
     b32 LoadCOB(const char* Path, const VVector4& InPosition, const VVector4& Scale, const VVector4& Rot, u32 Flags = 0);
 
     void Transform(const VMatrix44& M, ETransformType Type, b32 bTransBasis)

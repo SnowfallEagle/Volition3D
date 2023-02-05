@@ -6,6 +6,7 @@
 #include "Engine/Graphics/Renderer.h"
 #include "Engine/Graphics/Mesh.h"
 
+#if 0 // Deprecated
 /* ==============================================
                     PLG/X Loader
    ============================================== */
@@ -27,7 +28,7 @@ namespace EPLX
     };
 }
 
-VL_DEFINE_LOG_CHANNEL(hLogPLX, "PLX Loader"); // TODO(sean)
+VL_DEFINE_LOG_CHANNEL(hLogPLX, "PLX Loader");
 
 char* GetLinePLG(std::FILE* File, char* Buffer, i32 Size)
 {
@@ -253,6 +254,7 @@ b32 VMesh::LoadPLG(
 
     return true;
 }
+#endif
 
 /* ==============================================
                     COB Loader
@@ -583,7 +585,7 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
 
                         // Load texture in material
                         std::strncpy(CurrentMaterial.Name, TexturePath, CurrentMaterial.NameSize);
-                        CurrentMaterial.Texture.Load(TexturePath);
+                        CurrentMaterial.Texture.LoadBMP(TexturePath);
                         CurrentMaterial.Attr |= EMaterialAttr::ShadeModeTexture;
 
                         // Texture in object
@@ -732,7 +734,6 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                 if (PolyMaterial.Attr & EMaterialAttr::ShadeModeTexture)
                 {
                     Poly.Attr |= EPolyAttr::ShadeModeTexture;
-                    Poly.Texture = &PolyMaterial.Texture;
 
                     TransVtxList[Poly.VtxIndices[0]].Attr =
                         LocalVtxList[Poly.VtxIndices[0]].Attr |= EVertexAttr::HasTextureCoords;
@@ -763,7 +764,8 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
             {
                 for (i32f I = 0; I < NumTextureVtx; ++I)
                 {
-                    i32 TextureScaleSize = Texture->GetWidth() - 1;
+                    // TODO(sean): Remove normalizing stage because we'll need different mip mapped textures
+                    i32 TextureScaleSize = Texture->Get(0).GetWidth() - 1;
 
                     TextureCoordsList[I].X *= TextureScaleSize;
                     TextureCoordsList[I].Y *= TextureScaleSize;

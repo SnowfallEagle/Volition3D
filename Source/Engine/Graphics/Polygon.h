@@ -45,12 +45,11 @@ public:
 	VColorARGB OriginalColor;
 	VColorARGB LitColor[3]; // For each vertex, 0 for flat shading
 
-	VSurface* Texture;
-	VMaterial* Material;
+	const VMaterial* Material;
 
 	i32 VtxIndices[3];
 
-	VPoint2* TextureCoordsList;
+	const VPoint2* TextureCoordsList;
 	i32 TextureCoordsIndices[3];
 
 	f32 NormalLength;
@@ -63,16 +62,12 @@ public:
 	u32 Attr;
 
 	VColorARGB OriginalColor;
-	VColorARGB LitColor[3]; // For each vertex, 0 for flat shading
+	VColorARGB LitColor[3];
 
-	VSurface* Texture;
-	VMaterial* Material;
+	const VMaterial* Material;
 
 	VVertex LocalVtx[3];
 	VVertex TransVtx[3];
 
-	VVector4 Normal; // TODO(sean)
 	f32 NormalLength;
-
-	f32 AverageZ; // TODO(sean)
 };

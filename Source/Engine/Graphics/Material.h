@@ -3,7 +3,7 @@
 #include "Engine/Core/Platform.h"
 #include "Engine/Core/Types.h"
 #include "Engine/Graphics/Color.h"
-#include "Engine/Graphics/Surface.h"
+#include "Engine/Graphics/Texture.h"
 
 namespace EMaterialState
 {
@@ -46,7 +46,7 @@ public:
     f32 KAmbient, KDiffuse, KSpecular, Power;
     VColorRGBA RAmbient, RDiffuse, RSpecular; // K * Color
 
-    VSurface Texture;
+    VTexture Texture;
 
 public:
     VMaterial() = default;
