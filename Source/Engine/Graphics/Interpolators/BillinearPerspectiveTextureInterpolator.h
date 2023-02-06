@@ -35,8 +35,12 @@ public:
 
         for (i32f I = 0; I < 3; ++I)
         {
-            UVtx[I] = IntToFx22((i32)(InterpolationContext->Vtx[I].U + 0.5f)) / (i32)(InterpolationContext->Vtx[I].Z + 0.5f);
-            VVtx[I] = IntToFx22((i32)(InterpolationContext->Vtx[I].V + 0.5f)) / (i32)(InterpolationContext->Vtx[I].Z + 0.5f);
+            UVtx[I] =
+                IntToFx22((i32)(InterpolationContext->Vtx[I].U * (f32)TextureSize + 0.5f)) /
+                    (i32)(InterpolationContext->Vtx[I].Z + 0.5f);
+            VVtx[I] =
+                IntToFx22((i32)(InterpolationContext->Vtx[I].V * (f32)TextureSize + 0.5f)) /
+                    (i32)(InterpolationContext->Vtx[I].Z + 0.5f);
         }
     }
 
@@ -126,7 +130,7 @@ public:
         i32 OneMinusFracUMulFracV         = OneMinusFracU * FracV;
         i32 FracUMulFracV                 = FracU         * FracV;
 
-        // fx16 -> int
+        // fx16 * fx8 = fx24 -> fx8
         VColorARGB FilteredColor;
         FilteredColor.R = (
             OneMinusFracUMulOneMinusFracV * TextureColors[0].R +

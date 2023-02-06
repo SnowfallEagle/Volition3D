@@ -764,19 +764,13 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
             {
                 for (i32f I = 0; I < NumTextureVtx; ++I)
                 {
-                    // TODO(sean): Remove normalizing stage because we'll need different mip mapped textures
-                    i32 TextureScaleSize = Texture->Get(0).GetWidth() - 1;
-
-                    TextureCoordsList[I].X *= TextureScaleSize;
-                    TextureCoordsList[I].Y *= TextureScaleSize;
-
                     if (Flags & ECOB::InvertU)
                     {
-                        TextureCoordsList[I].X = TextureScaleSize - TextureCoordsList[I].X;
+                        TextureCoordsList[I].X = 1 - TextureCoordsList[I].X;
                     }
                     if (Flags & ECOB::InvertV)
                     {
-                        TextureCoordsList[I].Y = TextureScaleSize - TextureCoordsList[I].Y;
+                        TextureCoordsList[I].Y = 1 - TextureCoordsList[I].Y;
                     }
                     if (Flags & ECOB::SwapUV)
                     {

@@ -18,7 +18,7 @@ public:
                         I == 2 ? "s.cob" :
                             "tie04.cob",
                 { 500.0f * I, 100.0f * Math.Sin(I * 20.0f), 250.0f},
-                { 100.0f, 100.0f, 100.0f },
+                { 200.0f, 200.0f, 200.0f },
                 { 0.0f, 0.0f, 0.0f },
                 ECOB::SwapYZ | ECOB::InvertV
             );
@@ -34,7 +34,7 @@ public:
 
         // TODO(sean): Later we should spawn camera as entity and attach it to world
         Camera = World.GetCamera();
-        Camera->Init(ECameraAttr::Euler, { 0, 75.0f, 0 }, { 0, 0, 0 }, Entity->Mesh->Position, 90, 50, 3000, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
+        Camera->Init(ECameraAttr::Euler, { 0, 75.0f, 0 }, { 0, 0, 0 }, Entity->Mesh->Position, 90, 50, 10000, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
 
         {
             VLight AmbientLight = {

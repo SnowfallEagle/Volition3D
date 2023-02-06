@@ -30,11 +30,16 @@ public:
 
         TextureBuffer = Texture->GetBuffer();
         TexturePitch = Texture->GetPitch();
+        f32 TextureSize = (f32)Texture->GetWidth();
 
         for (i32f I = 0; I < 3; ++I)
         {
-            UVtx[I] = IntToFx22((i32)(InterpolationContext->Vtx[I].U + 0.5f)) / (i32)(InterpolationContext->Vtx[I].Z + 0.5f);
-            VVtx[I] = IntToFx22((i32)(InterpolationContext->Vtx[I].V + 0.5f)) / (i32)(InterpolationContext->Vtx[I].Z + 0.5f);
+            UVtx[I] =
+                IntToFx22((i32)(InterpolationContext->Vtx[I].U * TextureSize + 0.5f)) /
+                    (i32)(InterpolationContext->Vtx[I].Z + 0.5f);
+            VVtx[I] =
+                IntToFx22((i32)(InterpolationContext->Vtx[I].V * TextureSize + 0.5f)) /
+                    (i32)(InterpolationContext->Vtx[I].Z + 0.5f);
         }
     }
 

@@ -92,15 +92,15 @@ void VRenderContext::SetInterpolators()
 
             f32 DetailFactor = (f32)InterpolationContext.MipMapLevel / (f32)MaxMipMappingLevel;
 
-            if (DetailFactor < 0.25f)
+            if (DetailFactor < 0.5f)
             {
                 Interpolators[NumInterpolators] = &BillinearPerspectiveTextureInterpolator;
             }
-            else if (DetailFactor < 0.5f)
+            else if (DetailFactor < 0.75)
             {
                 Interpolators[NumInterpolators] = &PerspectiveCorrectTextureInterpolator;
             }
-            else if (DetailFactor < 0.75f)
+            else if (DetailFactor < 0.90f)
             {
                 Interpolators[NumInterpolators] = &LinearPiecewiseTextureInterpolator;
             }
@@ -109,6 +109,7 @@ void VRenderContext::SetInterpolators()
                 Interpolators[NumInterpolators] = &AffineTextureInterpolator;
             }
 
+            // DEBUG(sean)
             VL_LOG("MipMappingLevel %d, Detail Factor %.2f\n", InterpolationContext.MipMapLevel, DetailFactor);
         }
         else
