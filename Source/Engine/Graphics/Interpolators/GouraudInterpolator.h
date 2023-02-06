@@ -5,7 +5,6 @@
 class VGouraudInterpolator final : public IInterpolator
 {
 private:
-    i32 VtxIndices[3];
     fx16 RVtx[3], GVtx[3], BVtx[3];
 
     fx16 R, G, B;
@@ -21,14 +20,13 @@ private:
 public:
     virtual ~VGouraudInterpolator() = default;
 
-    virtual void Start(const u32* Buffer, i32 Pitch, const VPolyFace& Poly, const i32 InVtxIndices[3]) override
+    virtual void Start() override
     {
         for (i32f I = 0; I < 3; ++I)
         {
-            VtxIndices[I] = InVtxIndices[I];
-            RVtx[I] = IntToFx16(Poly.LitColor[I].R);
-            GVtx[I] = IntToFx16(Poly.LitColor[I].G);
-            BVtx[I] = IntToFx16(Poly.LitColor[I].B);
+            RVtx[I] = IntToFx16(InterpolationContext->LitColor[I].R);
+            GVtx[I] = IntToFx16(InterpolationContext->LitColor[I].G);
+            BVtx[I] = IntToFx16(InterpolationContext->LitColor[I].B);
         }
     }
 
@@ -65,9 +63,9 @@ public:
         VL_SWAP(GLeft, GRight, TempInt);
         VL_SWAP(BLeft, BRight, TempInt);
 
-        VL_SWAP(RVtx[VtxIndices[1]], RVtx[VtxIndices[2]], TempInt);
-        VL_SWAP(GVtx[VtxIndices[1]], GVtx[VtxIndices[2]], TempInt);
-        VL_SWAP(BVtx[VtxIndices[1]], BVtx[VtxIndices[2]], TempInt);
+        VL_SWAP(RVtx[InterpolationContext->VtxIndices[1]], RVtx[InterpolationContext->VtxIndices[2]], TempInt);
+        VL_SWAP(GVtx[InterpolationContext->VtxIndices[1]], GVtx[InterpolationContext->VtxIndices[2]], TempInt);
+        VL_SWAP(BVtx[InterpolationContext->VtxIndices[1]], BVtx[InterpolationContext->VtxIndices[2]], TempInt);
     }
 
     virtual void ComputeXStartsAndDeltas(i32 XDiff, fx28 ZLeft, fx28 ZRight) override
@@ -90,9 +88,11 @@ public:
         }
     }
 
-    virtual VColorARGB ProcessPixel(VColorARGB Pixel, i32f X, i32f Y, fx28 Z) override
+    virtual void ProcessPixel() override
     {
-        return MAP_XRGB32(
+        VColorARGB Pixel = InterpolationContext->Pixel;
+
+        InterpolationContext->Pixel = MAP_XRGB32(
             (Fx16ToInt(R) * Pixel.R) >> 8,
             (Fx16ToInt(G) * Pixel.G) >> 8,
             (Fx16ToInt(B) * Pixel.B) >> 8

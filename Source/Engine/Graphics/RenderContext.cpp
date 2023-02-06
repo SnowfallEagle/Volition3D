@@ -69,14 +69,12 @@ void VRenderContext::SetInterpolators()
 {
     NumInterpolators = 0;
 
-    /* TODO(sean)
-    if (Poly.Attr & EPolyAttr::ShadeModeGouraud ||
-        Poly.Attr & EPolyAttr::ShadeModePhong)
+    if (InterpolationContext.PolyAttr & EPolyAttr::ShadeModeGouraud ||
+        InterpolationContext.PolyAttr & EPolyAttr::ShadeModePhong)
     {
         Interpolators[NumInterpolators] = &GouraudInterpolator;
     }
     else
-    */
     {
         Interpolators[NumInterpolators] = &FlatInterpolator;
     }
@@ -114,7 +112,7 @@ void VRenderContext::RenderSolid()
         InterpolationContext.OriginalColor = Poly->OriginalColor;
         InterpolationContext.LitColor[0] = Poly->LitColor[0];
         InterpolationContext.LitColor[1] = Poly->LitColor[1];
-        InterpolationContext.LitColor[1] = Poly->LitColor[2];
+        InterpolationContext.LitColor[2] = Poly->LitColor[2];
 
         InterpolationContext.PolyAttr = Poly->Attr;
 

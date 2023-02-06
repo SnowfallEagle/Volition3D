@@ -4,9 +4,9 @@
 #include "Engine/Graphics/InterpolationContext.h"
 #include "Engine/Graphics/Interpolators/IInterpolator.h"
 #include "Engine/Graphics/Interpolators/FlatInterpolator.h"
+#include "Engine/Graphics/Interpolators/GouraudInterpolator.h"
 #include "Engine/Graphics/Interpolators/AffineTextureInterpolator.h"
 /* TODO(sean)
-#include "Engine/Graphics/Interpolators/GouraudInterpolator.h"
 #include "Engine/Graphics/Interpolators/BillinearPerspectiveTextureInterpolator.h"
 #include "Engine/Graphics/Interpolators/PerspectiveCorrectTextureInterpolator.h"
 #include "Engine/Graphics/Interpolators/LinearPiecewiseTextureInterpolator.h"
@@ -31,6 +31,7 @@ public:
     i32 NumInterpolators;
 
     VFlatInterpolator FlatInterpolator;
+    VGouraudInterpolator GouraudInterpolator;
     VAffineTextureInterpolator AffineTextureInterpolator;
 
 public:
