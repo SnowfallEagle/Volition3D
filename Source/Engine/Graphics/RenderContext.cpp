@@ -83,7 +83,11 @@ void VRenderContext::SetInterpolators()
     if (InterpolationContext.PolyAttr & EPolyAttr::ShadeModeTexture)
     {
         // TODO(sean): Choose using distance and factors from RenderSpec
+
         Interpolators[NumInterpolators] = &AffineTextureInterpolator;
+
+        InterpolationContext.MipMapLevel = 0; // TODO(sean)
+
         ++NumInterpolators;
     }
 

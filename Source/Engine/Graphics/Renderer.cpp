@@ -3219,6 +3219,7 @@ void VRenderer::DrawTexturedTriangle(u32* Buffer, i32 Pitch, const VPolyFace& Po
 
 #endif // Deprecated
 
+// TODO(sean): Simplify chain of Renderer -> RenderContext -> InterpolationContext
 void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
 {
     enum class ETriangleCase
@@ -3306,7 +3307,6 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
     InterpolationContext.VtxIndices[1] = V1;
     InterpolationContext.VtxIndices[2] = V2;
 
-    InterpolationContext.Start();
     RenderContext.SetInterpolators();
 
     for (i32f InterpIndex = 0; InterpIndex < RenderContext.NumInterpolators; ++InterpIndex)
@@ -4053,8 +4053,6 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
             }
         }
     }
-    
-    InterpolationContext.End();
 }
 
 void VRenderer::DrawText(i32 X, i32 Y, VColorARGB Color, const char* Format, ...)

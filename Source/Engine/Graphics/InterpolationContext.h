@@ -27,10 +27,10 @@ public:
 
     u32 PolyAttr;
 
-    // InterpolationContext sets this up every polygon face
-    i32 VtxIndices[3];
-
     i32 MipMapLevel;
+
+    // Renderer sets this up every polygon face
+    i32 VtxIndices[3];
 
     // InterpolationContext sets this up during rasterization
     VColorARGB Pixel;
@@ -41,13 +41,4 @@ public:
     VInterpolationContext(const VRenderSpecification& InRenderSpec) :
         RenderSpec(InRenderSpec)
     {}
-
-    void Start()
-    {
-        MipMapLevel = 0; // TODO(sean)
-    }
-
-    void End()
-    {
-    }
 };
