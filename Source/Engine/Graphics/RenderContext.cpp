@@ -91,10 +91,8 @@ void VRenderContext::SetInterpolators()
         ++NumInterpolators;
     }
 
-    /*
     Interpolators[NumInterpolators] = &AlphaInterpolator;
     ++NumInterpolators;
-    */
 }
 
 void VRenderContext::RenderSolid()

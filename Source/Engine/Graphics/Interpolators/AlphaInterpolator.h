@@ -5,28 +5,27 @@
 class VAlphaInterpolator final : public IInterpolator
 {
 private:
-    const u32* Buffer;
-    i32 Pitch;
     i32 Alpha;
 
 public:
     virtual ~VAlphaInterpolator() = default;
 
-    virtual void Start(const u32* InBuffer, i32 InPitch, const VPolyFace& Poly, const i32 InVtxIndices[3]) override
+    virtual void Start() override
     {
-        Buffer = InBuffer;
-        Pitch = InPitch;
-        Alpha = Poly.LitColor[0].A;
+        Alpha = InterpolationContext->LitColor[0].A;
     }
 
-    virtual VColorARGB ProcessPixel(VColorARGB Pixel, i32f X, i32f Y, fx28 Z) override
+    virtual void ProcessPixel() override
     {
-        VColorARGB ScreenColor = Buffer[Y * Pitch + X];
+        VColorARGB Pixel = InterpolationContext->Pixel;
+        VColorARGB BufferPixel = InterpolationContext->Buffer[
+            InterpolationContext->Y * InterpolationContext->BufferPitch + InterpolationContext->X
+        ];
 
-        return MAP_XRGB32(
-            ( (Alpha * Pixel.R) + ((255 - Alpha) * ScreenColor.R) ) >> 8,
-            ( (Alpha * Pixel.G) + ((255 - Alpha) * ScreenColor.G) ) >> 8,
-            ( (Alpha * Pixel.B) + ((255 - Alpha) * ScreenColor.B) ) >> 8
+        InterpolationContext->Pixel = MAP_XRGB32(
+            ( (Alpha * Pixel.R) + ((255 - Alpha) * BufferPixel.R) ) >> 8,
+            ( (Alpha * Pixel.G) + ((255 - Alpha) * BufferPixel.G) ) >> 8,
+            ( (Alpha * Pixel.B) + ((255 - Alpha) * BufferPixel.B) ) >> 8
         );
     }
 };
