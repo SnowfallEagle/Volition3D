@@ -5,7 +5,6 @@
 class VBillinearPerspectiveTextureInterpolator final : public IInterpolator
 {
 private:
-    i32 VtxIndices[3];
     fx22 UVtx[3], VVtx[3];
 
     fx22 U, V;
@@ -18,25 +17,26 @@ private:
 
     fx22 UDeltaByX, VDeltaByX;
 
-    VSurface* Texture;
-    u32* TextureBuffer;
+    const u32* TextureBuffer;
     i32 TexturePitch;
+    i32 TextureSize;
 
 public:
     virtual ~VBillinearPerspectiveTextureInterpolator() = default;
 
-    virtual void Start(const u32* Buffer, i32 Pitch, const VPolyFace& Poly, const i32 InVtxIndices[3]) override
+    virtual void Start() override
     {
-        VL_ASSERT(Poly.Texture);
+        const VSurface* Texture = &InterpolationContext->Material->Texture.Get(InterpolationContext->MipMapLevel);
+        VL_ASSERT(Texture);
 
-        Texture = Poly.Texture;
-        Texture->Lock(TextureBuffer, TexturePitch);
+        TextureBuffer = Texture->GetBuffer();
+        TexturePitch = Texture->GetPitch();
+        TextureSize = Texture->GetWidth();
 
         for (i32f I = 0; I < 3; ++I)
         {
-            VtxIndices[I] = InVtxIndices[I];
-            UVtx[I] = IntToFx22((i32)(Poly.TransVtx[I].U + 0.5f)) / (i32)(Poly.TransVtx[I].Z + 0.5f);
-            VVtx[I] = IntToFx22((i32)(Poly.TransVtx[I].V + 0.5f)) / (i32)(Poly.TransVtx[I].Z + 0.5f);
+            UVtx[I] = IntToFx22((i32)(InterpolationContext->Vtx[I].U + 0.5f)) / (i32)(InterpolationContext->Vtx[I].Z + 0.5f);
+            VVtx[I] = IntToFx22((i32)(InterpolationContext->Vtx[I].V + 0.5f)) / (i32)(InterpolationContext->Vtx[I].Z + 0.5f);
         }
     }
 
@@ -67,8 +67,8 @@ public:
         VL_SWAP(ULeft, URight, TempInt);
         VL_SWAP(VLeft, VRight, TempInt);
 
-        VL_SWAP(UVtx[VtxIndices[1]], UVtx[VtxIndices[2]], TempInt);
-        VL_SWAP(VVtx[VtxIndices[1]], VVtx[VtxIndices[2]], TempInt);
+        VL_SWAP(UVtx[InterpolationContext->VtxIndices[1]], UVtx[InterpolationContext->VtxIndices[2]], TempInt);
+        VL_SWAP(VVtx[InterpolationContext->VtxIndices[1]], VVtx[InterpolationContext->VtxIndices[2]], TempInt);
     }
 
     virtual void ComputeXStartsAndDeltas(i32 XDiff, fx28 ZLeft, fx28 ZRight) override
@@ -88,19 +88,19 @@ public:
         }
     }
 
-    virtual VColorARGB ProcessPixel(VColorARGB Pixel, i32f X, i32f Y, fx28 Z) override
+    virtual void ProcessPixel() override
     {
-        i32f X0 = ((U << (Fx28Shift - Fx22Shift)) / Z);
-        i32f Y0 = ((V << (Fx28Shift - Fx22Shift)) / Z) * TexturePitch;
+        i32f X0 = ((U << (Fx28Shift - Fx22Shift)) / InterpolationContext->Z);
+        i32f Y0 = ((V << (Fx28Shift - Fx22Shift)) / InterpolationContext->Z) * TexturePitch;
 
         i32f X1 = X0 + 1;
-        if (X1 >= Texture->GetWidth())
+        if (X1 >= TextureSize)
         {
             X1 = X0;
         }
 
         i32f Y1 = Y0 + TexturePitch;
-        if (Y1 >= (Texture->GetHeight() * TexturePitch))
+        if (Y1 >= (TextureSize * TexturePitch))
         {
             Y1 = Y0;
         }
@@ -149,7 +149,9 @@ public:
             FracUMulFracV                 * TextureColors[3].B
         ) >> 16;
 
-        return MAP_XRGB32(
+        VColorARGB Pixel = InterpolationContext->Pixel;
+
+        InterpolationContext->Pixel = MAP_XRGB32(
             (FilteredColor.R * Pixel.R) >> 8,
             (FilteredColor.G * Pixel.G) >> 8,
             (FilteredColor.B * Pixel.B) >> 8
@@ -171,10 +173,5 @@ public:
     {
         URight += UDeltaRightByY * YRight;
         VRight += VDeltaRightByY * YRight;
-    }
-
-    virtual void End() override
-    {
-        Texture->Unlock();
     }
 };

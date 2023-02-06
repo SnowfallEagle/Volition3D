@@ -18,7 +18,6 @@ private:
 
     fx16 UDeltaByX, VDeltaByX;
 
-    const VSurface* Texture;
     const u32* TextureBuffer;
     i32 TexturePitch;
 
@@ -27,7 +26,7 @@ public:
 
     virtual void Start() override
     {
-        Texture = &InterpolationContext->Material->Texture.Get(InterpolationContext->MipMapLevel);
+        const VSurface* Texture = &InterpolationContext->Material->Texture.Get(InterpolationContext->MipMapLevel);
         VL_ASSERT(Texture);
 
         TextureBuffer = Texture->GetBuffer();

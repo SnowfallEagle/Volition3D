@@ -34,7 +34,7 @@ public:
 
         // TODO(sean): Later we should spawn camera as entity and attach it to world
         Camera = World.GetCamera();
-        Camera->Init(ECameraAttr::Euler, { 0, 75.0f, 0 }, { 0, 0, 0 }, Entity->Mesh->Position, 90, 50, 12000, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
+        Camera->Init(ECameraAttr::Euler, { 0, 75.0f, 0 }, { 0, 0, 0 }, Entity->Mesh->Position, 90, 50, 3000, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
 
         {
             VLight AmbientLight = {

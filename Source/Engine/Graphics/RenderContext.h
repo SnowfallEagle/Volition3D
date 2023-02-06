@@ -6,12 +6,10 @@
 #include "Engine/Graphics/Interpolators/FlatInterpolator.h"
 #include "Engine/Graphics/Interpolators/GouraudInterpolator.h"
 #include "Engine/Graphics/Interpolators/AffineTextureInterpolator.h"
-#include "Engine/Graphics/Interpolators/AlphaInterpolator.h"
-/* TODO(sean)
-#include "Engine/Graphics/Interpolators/BillinearPerspectiveTextureInterpolator.h"
-#include "Engine/Graphics/Interpolators/PerspectiveCorrectTextureInterpolator.h"
 #include "Engine/Graphics/Interpolators/LinearPiecewiseTextureInterpolator.h"
-*/
+#include "Engine/Graphics/Interpolators/PerspectiveCorrectTextureInterpolator.h"
+#include "Engine/Graphics/Interpolators/BillinearPerspectiveTextureInterpolator.h"
+#include "Engine/Graphics/Interpolators/AlphaInterpolator.h"
 
 class VRenderList;
 
@@ -33,6 +31,9 @@ public:
     VFlatInterpolator FlatInterpolator;
     VGouraudInterpolator GouraudInterpolator;
     VAffineTextureInterpolator AffineTextureInterpolator;
+    VLinearPiecewiseTextureInterpolator LinearPiecewiseTextureInterpolator;
+    VPerspectiveCorrectTextureInterpolator PerspectiveCorrectTextureInterpolator;
+    VBillinearPerspectiveTextureInterpolator BillinearPerspectiveTextureInterpolator;
     VAlphaInterpolator AlphaInterpolator;
 
 public:
