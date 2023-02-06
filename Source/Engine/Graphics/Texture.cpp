@@ -33,9 +33,9 @@ const VSurface& VTexture::Get(i32 MipMapLevel) const
     {
         MipMapLevel = 0;
     }
-    else if (MipMapLevel > NumMipMaps)
+    else if (MipMapLevel >= NumMipMaps)
     {
-        MipMapLevel = NumMipMaps;
+        MipMapLevel = NumMipMaps - 1;
     }
 
     return Surfaces[MipMapLevel];

@@ -14,7 +14,7 @@ public: // Set by user
     b32 bRenderSolid = true;
     b32 bBackfaceRemoval = true;
 
-    f32 BestDrawDistance = 0.5f;
+    f32 BestDrawDistanceFactor = 0.5f; // Factor to ZFar
     i32 MaxMipMappingLevel = 4;
 
 private: // Set by rendering engine

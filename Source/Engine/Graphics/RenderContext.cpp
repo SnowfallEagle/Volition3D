@@ -82,11 +82,38 @@ void VRenderContext::SetInterpolators()
 
     if (InterpolationContext.PolyAttr & EPolyAttr::ShadeModeTexture)
     {
-        // TODO(sean): Choose using distance and factors from RenderSpec
+        i32 MaxMipMappingLevel = Renderer.GetRenderSpec().MaxMipMappingLevel;
 
-        Interpolators[NumInterpolators] = &AffineTextureInterpolator;
+        if (MaxMipMappingLevel > 0)
+        {
+            InterpolationContext.MipMapLevel = (i32)(
+                InterpolationContext.Distance / (World.Camera->ZFarClip / (f32)MaxMipMappingLevel)
+            );
 
-        InterpolationContext.MipMapLevel = 0; // TODO(sean)
+            f32 DetailFactor = (f32)InterpolationContext.MipMapLevel / (f32)MaxMipMappingLevel;
+
+            if (DetailFactor < 0.25f)
+            {
+                Interpolators[NumInterpolators] = &AffineTextureInterpolator; // TODO(sean): Billinear
+            }
+            else if (DetailFactor < 0.5f)
+            {
+                Interpolators[NumInterpolators] = &AffineTextureInterpolator; // TODO(sean): PC
+            }
+            else if (DetailFactor < 0.75f)
+            {
+                Interpolators[NumInterpolators] = &AffineTextureInterpolator; // TODO(sean): LP
+            }
+            else
+            {
+                Interpolators[NumInterpolators] = &AffineTextureInterpolator;
+            }
+        }
+        else
+        {
+            InterpolationContext.MipMapLevel = 0;
+            Interpolators[NumInterpolators] = &AffineTextureInterpolator; // TODO(sean): Billinear
+        }
 
         ++NumInterpolators;
     }
@@ -117,6 +144,8 @@ void VRenderContext::RenderSolid()
         InterpolationContext.LitColor[2] = Poly->LitColor[2];
 
         InterpolationContext.PolyAttr = Poly->Attr;
+
+        InterpolationContext.Distance = Poly->TransVtx[0].Z;
 
         Renderer.DrawTriangle(InterpolationContext);
     }
