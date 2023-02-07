@@ -3,6 +3,7 @@
 #include "Engine/Graphics/Interpolators/IInterpolator.h"
 #include "Engine/Math/Fixed22.h"
 
+// TODO(sean): Check if it has bugs
 class VLinearPiecewiseTextureInterpolator final : public IInterpolator
 {
 private:
