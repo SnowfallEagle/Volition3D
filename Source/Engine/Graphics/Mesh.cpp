@@ -285,9 +285,7 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                         &A, &CurrentMaterial.KAmbient, &CurrentMaterial.KSpecular, &CurrentMaterial.Power
                     );
 
-                    /* NOTE(sean):
-                        We try to find diffuse factor below, but this is default
-                     */
+                    // We try to find diffuse factor below, but this is default
                     CurrentMaterial.KDiffuse = 1.0f;
 
                     // Log color
@@ -383,9 +381,7 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                     else if (0 == strncmp(ShaderName, "plastic", ShaderNameSize) ||
                              0 == strncmp(ShaderName, "phong", ShaderNameSize))
                     {
-                        /* NOTE(sean):
-                            We have no phong support, so we use gouraud for phong too
-                         */
+                        // We have no phong support, so we use gouraud for phong too
                         CurrentMaterial.Attr |= EMaterialAttr::ShadeModeGouraud;
                     }
                     else

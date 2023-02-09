@@ -64,7 +64,7 @@ void VSurface::Lock(u32*& OutBuffer, i32& OutPitch)
     /* NOTE(sean):
         We don't have to lock SDL surface
         since we don't use RLE
-     */
+    */
 
     OutBuffer = Buffer = (u32*)SDLSurface->pixels;
     OutPitch = Pitch = SDLSurface->pitch >> 2; // Divide by 4 (Bytes per pixel)

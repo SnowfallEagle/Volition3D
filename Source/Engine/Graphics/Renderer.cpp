@@ -210,7 +210,7 @@ b32 VRenderer::ClipLine(i32& X1, i32& Y1, i32& X2, i32& Y2) const
     /* NOTE(sean):
         We can optimize this function if we throw away floating
         point computations, but we could loss in accuracy...
-     */
+    */
 
     enum EClipCode
     {
@@ -915,7 +915,7 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                 Test if we need swap to keep rendering left to right.
                 It can happen because we assume that
                 Y1 is on left hand side and Y2 on right.
-             */
+            */
             if (XDeltaRightByY > XDeltaLeftByY)
             {
                 VL_SWAP(XDeltaLeftByY, XDeltaRightByY, TempInt);
@@ -967,7 +967,7 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                 Test if we need swap to keep rendering left to right.
                 It can happen because we assume that
                 Y1 is on left hand side and Y2 on right.
-             */
+            */
             if (XDeltaRightByY < XDeltaLeftByY)
             {
                 VL_SWAP(XDeltaLeftByY, XDeltaRightByY, TempInt);
@@ -1012,7 +1012,7 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                 Test if we need swap to keep rendering left to right.
                 It can happen because we assume that
                 Y1 is on left hand side and Y2 on right.
-             */
+            */
             if (XDeltaRightByY < XDeltaLeftByY)
             {
                 VL_SWAP(XDeltaLeftByY, XDeltaRightByY, TempInt);

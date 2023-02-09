@@ -12,7 +12,6 @@ public:
 typedef TRect<i32> VRectI;
 typedef TRect<f32> VRectF;
 
-// NOTE(sean): In memory it's equivalent of SDL_Rect
 template<class T>
 class TRelRect // Relative rectangle
 {

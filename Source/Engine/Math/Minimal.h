@@ -6,11 +6,6 @@
 #include "Engine/Math/Vector.h"
 #include "Engine/Math/Matrix.h"
 
-/** NOTE(sean):
-    Here some stuff that we don't
-    put in header, but later we may will
- */
-
 // *** Quaternion ***
 class VQuat
 {
@@ -25,10 +20,10 @@ public:
         };
         struct
         {
-            /** NOTE(sean):
+            /* NOTE(sean):
                 We can't cast quaternion to 4d
                 vector because of W on first place
-              */
+            */
             f32 W, X, Y, Z;
         };
     };

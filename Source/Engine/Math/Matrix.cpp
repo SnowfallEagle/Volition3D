@@ -45,10 +45,6 @@ void VMatrix44::BuildTranslate(const VVector4& V)
 
 void VMatrix44::BuildRotationXYZ(f32 X, f32 Y, f32 Z)
 {
-    // NOTE(sean):
-    // We can optimize this function by checking
-    // special conditions with switch case
-
     VMatrix44 MatX, MatY, MatZ, MatTemp;
     f32 SinAngle, CosAngle;
 

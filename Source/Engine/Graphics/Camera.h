@@ -283,7 +283,7 @@ public:
         /* NOTE(sean):
             This function assumes that later in code
             we will perform conversion 4D->3D
-         */
+        */
 
         f32 Alpha = ViewPortSize.X * 0.5f - 0.5f;
         f32 Beta = ViewPortSize.Y * 0.5f - 0.5f;
@@ -301,7 +301,7 @@ public:
         /* NOTE(sean):
             This function assumes that we are already
             performed conversion 4D->3D
-         */
+        */
 
         f32 Alpha = ViewPortSize.X * 0.5f - 0.5f;
         f32 Beta = ViewPortSize.Y * 0.5f - 0.5f;
