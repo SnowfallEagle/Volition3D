@@ -1,9 +1,5 @@
 #pragma once
 
-/* TODO(sean):
-	- Declare/Define log channels
- */
-
 #include <stdio.h>
 #include <stdarg.h>
 #include "Engine/Core/Types.h"

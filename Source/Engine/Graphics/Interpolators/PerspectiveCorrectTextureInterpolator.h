@@ -25,7 +25,7 @@ public:
 
     virtual void Start() override
     {
-        const VSurface* Texture = &InterpolationContext->Material->Texture.Get(InterpolationContext->MipMapLevel);
+        const VSurface* Texture = &InterpolationContext->Material->Texture.Get(InterpolationContext->MipMappingLevel);
         VL_ASSERT(Texture);
 
         TextureBuffer = Texture->GetBuffer();

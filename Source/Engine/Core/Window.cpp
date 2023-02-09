@@ -24,12 +24,6 @@ void VWindow::Create(const VWindowSpecification& WindowSpec)
         {
             Flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
         }
-
-        if (WindowSpec.Flags & EWindowSpecificationFlags::Resizable)
-        {
-            // TODO(sean): Add support for resizing window
-            Flags |= SDL_WINDOW_RESIZABLE;
-        }
     }
 
     // Create window

@@ -192,7 +192,6 @@
     <ClInclude Include="..\..\Source\Engine\Core\World.h" />
     <ClInclude Include="..\..\Source\Engine\GameFramework\Entity.h" />
     <ClInclude Include="..\..\Source\Engine\GameFramework\GameFlow.h" />
-    <ClInclude Include="..\..\Source\Engine\GameFramework\GameState.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\Camera.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\Color.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\InterpolationContext.h" />
@@ -236,7 +235,6 @@
     <ClCompile Include="..\..\Source\Engine\Core\World.cpp" />
     <ClCompile Include="..\..\Source\Engine\GameFramework\Entity.cpp" />
     <ClCompile Include="..\..\Source\Engine\GameFramework\GameFlow.cpp" />
-    <ClCompile Include="..\..\Source\Engine\GameFramework\GameState.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Camera.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\InterpolationContext.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\IInterpolator.cpp" />

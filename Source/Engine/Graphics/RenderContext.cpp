@@ -86,11 +86,11 @@ void VRenderContext::SetInterpolators()
 
         if (MaxMipMappingLevel > 0)
         {
-            InterpolationContext.MipMapLevel = (i32)(
+            InterpolationContext.MipMappingLevel = (i32)(
                 InterpolationContext.Distance / (World.Camera->ZFarClip / (f32)MaxMipMappingLevel)
             );
 
-            f32 DetailFactor = (f32)InterpolationContext.MipMapLevel / (f32)MaxMipMappingLevel;
+            f32 DetailFactor = (f32)InterpolationContext.MipMappingLevel / (f32)MaxMipMappingLevel;
 
             if (DetailFactor < 0.5f)
             {
@@ -110,12 +110,12 @@ void VRenderContext::SetInterpolators()
             }
 
             // DEBUG(sean)
-            VL_LOG("MipMappingLevel %d, Detail Factor %.2f\n", InterpolationContext.MipMapLevel, DetailFactor);
+            VL_LOG("MipMappingLevel %d, Detail Factor %.2f\n", InterpolationContext.MipMappingLevel, DetailFactor);
         }
         else
         {
-            InterpolationContext.MipMapLevel = 0;
-            Interpolators[NumInterpolators] = &AffineTextureInterpolator; // TODO(sean): Billinear
+            InterpolationContext.MipMappingLevel = 0;
+            Interpolators[NumInterpolators] = &BillinearPerspectiveTextureInterpolator;
         }
 
         ++NumInterpolators;

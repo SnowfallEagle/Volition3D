@@ -165,9 +165,6 @@
     <ClInclude Include="..\..\Source\Engine\GameFramework\GameFlow.h">
       <Filter>Engine\GameFramework</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\GameFramework\GameState.h">
-      <Filter>Engine\GameFramework</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Engine\GameFramework\Entity.h">
       <Filter>Engine\GameFramework</Filter>
     </ClInclude>
@@ -237,9 +234,6 @@
       <Filter>Engine\Core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\GameFramework\GameFlow.cpp">
-      <Filter>Engine\GameFramework</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Engine\GameFramework\GameState.cpp">
       <Filter>Engine\GameFramework</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\GameFramework\Entity.cpp">

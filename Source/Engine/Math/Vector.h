@@ -1,7 +1,3 @@
-/* TODO:
-    - Fixed point vector?
- */
-
 #pragma once
 
 #include "Engine/Core/Types.h"

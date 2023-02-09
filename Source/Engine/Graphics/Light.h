@@ -32,7 +32,7 @@ public:
     u32 State;
     u32 Attr;
 
-    VColorRGBA CAmbient, CDiffuse, CSpecular;
+    VColorARGB CAmbient, CDiffuse, CSpecular;
     VPoint4 Pos, TransPos;
     VVector4 Dir, TransDir;
 

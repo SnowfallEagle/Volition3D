@@ -42,9 +42,9 @@ public:
     i32 State;
     i32 Attr;
 
-    VColorRGBA Color;
+    VColorARGB Color;
     f32 KAmbient, KDiffuse, KSpecular, Power;
-    VColorRGBA RAmbient, RDiffuse, RSpecular; // K * Color
+    VColorARGB RAmbient, RDiffuse, RSpecular; // K * Color
 
     VTexture Texture;
 

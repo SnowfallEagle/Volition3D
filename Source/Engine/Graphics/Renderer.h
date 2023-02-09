@@ -23,9 +23,6 @@
 class VRenderer
 {
 public:
-    static constexpr i32f BytesPerPixel = 4; // TODO(sean): -> RenderSpec
-    static constexpr i32f BitsPerPixel = 32; // TODO(sean): -> RenderSpec
-
     // TODO(sean): Remove it later
     static constexpr i32f MaxMaterials = 256;
     static constexpr i32f MaxLights = 8;
@@ -37,7 +34,6 @@ private:
     VRenderSpecification RenderSpec;
     VRenderContext RenderContext;
 
-    // TODO(sean): Do we need support multiple fonts?
     TTF_Font* Font;
     i32 FontCharWidth; // In pixels
     i32 FontCharHeight;
@@ -49,29 +45,10 @@ private:
     VLight Lights[MaxLights];
     i32 NumLights;
 
-    VFlatInterpolator FlatInterpolator;
-    /* TODO(sean)
-    VGouraudInterpolator GouraudInterpolator;
-    VBillinearPerspectiveTextureInterpolator BillinearPerspectiveTextureInterpolator;
-    VPerspectiveCorrectTextureInterpolator PerspectiveCorrectTextureInterpolator;
-    VLinearPiecewiseTextureInterpolator LinearPiecewiseTextureInterpolator;
-    VTextureInterpolator AffineTextureInterpolator;
-    VAlphaInterpolator AlphaInterpolator;
-    */
-
 public:
-    // TODO(sean): Remove Constructor/Destructor, move code in StartUp/ShutDown
     VRenderer() :
         RenderContext(RenderSpec)
-    {
-        ResetMaterials();
-        ResetLights();
-    }
-    ~VRenderer()
-    {
-        ResetMaterials();
-        ResetLights();
-    }
+    {}
 
     void StartUp(const VRenderSpecification& InRenderSpec);
     void ShutDown();
@@ -92,15 +69,6 @@ public:
 
     void ResetMaterials()
     {
-        static b32 bFirstTime = true;
-
-        if (bFirstTime)
-        {
-            Memory.MemSetByte(Materials, 0, sizeof(Materials));
-            bFirstTime = false;
-            return;
-        }
-
         for (i32f I = 0; I < MaxMaterials; ++I)
         {
             Materials[I].Texture.Destroy();

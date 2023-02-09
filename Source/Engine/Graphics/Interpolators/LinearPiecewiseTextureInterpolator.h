@@ -3,7 +3,6 @@
 #include "Engine/Graphics/Interpolators/IInterpolator.h"
 #include "Engine/Math/Fixed22.h"
 
-// TODO(sean): Check if it has bugs
 class VLinearPiecewiseTextureInterpolator final : public IInterpolator
 {
 private:
@@ -27,7 +26,7 @@ public:
 
     virtual void Start() override
     {
-        const VSurface* Texture = &InterpolationContext->Material->Texture.Get(InterpolationContext->MipMapLevel);
+        const VSurface* Texture = &InterpolationContext->Material->Texture.Get(InterpolationContext->MipMappingLevel);
         VL_ASSERT(Texture);
 
         TextureBuffer = Texture->GetBuffer();

@@ -6,260 +6,6 @@
 #include "Engine/Graphics/Renderer.h"
 #include "Engine/Graphics/Mesh.h"
 
-#if 0 // Deprecated
-/* ==============================================
-                    PLG/X Loader
-   ============================================== */
-namespace EPLX
-{
-    enum
-    {
-        RGBFlag = VL_BIT(16),
-        TwoSidedFlag = VL_BIT(13),
-
-        ShadeModeMask        = VL_BIT(15) | VL_BIT(14),
-        ShadeModePureFlag    = 0,
-        ShadeModeFlatFlag    = VL_BIT(14),
-        ShadeModeGouraudFlag = VL_BIT(15),
-        ShadeModePhongFlag   = VL_BIT(14) | VL_BIT(15),
-
-        RGB16Mask = 0x0FFF,
-        RGB8Mask  = 0x00FF,
-    };
-}
-
-VL_DEFINE_LOG_CHANNEL(hLogPLX, "PLX Loader");
-
-char* GetLinePLG(std::FILE* File, char* Buffer, i32 Size)
-{
-    for (;;)
-    {
-        if (!std::fgets(Buffer, Size, File))
-        {
-            return nullptr;
-        }
-
-        i32f I, Len = std::strlen(Buffer);
-        for (I = 0;
-             I < Len && (Buffer[I] == ' ' || Buffer[I] == '\t' || Buffer[I] == '\r' || Buffer[I] == '\n');
-             ++I)
-            {}
-
-        if (I < Len && Buffer[I] != '#')
-        {
-            return &Buffer[I];
-        }
-    }
-}
-
-b32 VMesh::LoadPLG(
-    const char* Path,
-    const VVector4& InPosition,
-    const VVector4& Scale,
-    const VVector4& Rot
-)
-{
-    static constexpr i32f BufferSize = 4096;
-
-    // Initialize object
-    {
-        Init();
-        Position = InPosition;
-    }
-
-    // Load from file
-    {
-        std::FILE* File;
-        char Buffer[BufferSize];
-
-        // Open
-        if (!(File = std::fopen(Path, "rb")))
-        {
-            VL_ERROR(hLogPLX, "Can't open %s file: %s\n", Path, strerror(errno));
-            return false;
-        }
-
-        // Read header and allocate object
-        {
-            if (!GetLinePLG(File, Buffer, BufferSize))
-            {
-                VL_ERROR(hLogObject, "Can't read PLG header\n");
-                std::fclose(File);
-                return false;
-            }
-            if (sscanf(Buffer, "%s %d %d", Name, &NumVtx, &NumPoly) <= 0)
-            {
-                VL_ERROR(hLogObject, "Can't parse PLG header\n");
-                std::fclose(File);
-                return false;
-            }
-
-            Allocate(NumVtx, NumPoly, NumFrames);
-
-            VL_NOTE(hLogObject, "Loading %s %d %d\n", Name, NumVtx, NumPoly);
-        }
-
-        // Read vertices and compute radius
-        {
-            VL_LOG("Vertices:\n");
-
-            for (i32f I = 0; I < NumVtx; ++I)
-            {
-                if (!GetLinePLG(File, Buffer, BufferSize))
-                {
-                    VL_ERROR(hLogObject, "Can't parse PLG vertices\n");
-                    std::fclose(File);
-                    return false;
-                }
-
-                // Parse
-                if (sscanf(Buffer, "%f %f %f",
-                    &LocalVtxList[I].X, &LocalVtxList[I].Y, &LocalVtxList[I].Z) <= 0)
-                {
-                    VL_ERROR(hLogObject, "Can't parse vertex\n");
-                    std::fclose(File);
-                    return false;
-                }
-                LocalVtxList[I].W = 1.0f;
-
-                // Scale
-                LocalVtxList[I].X *= Scale.X;
-                LocalVtxList[I].Y *= Scale.Y;
-                LocalVtxList[I].Z *= Scale.Z;
-
-                // Log
-                VL_LOG("\t<%f, %f, %f>\n",
-                    LocalVtxList[I].X, LocalVtxList[I].Y, LocalVtxList[I].Z
-                );
-            }
-        }
-
-        // Read polygons
-        {
-            i32f PolyDesc;
-            char StrPolyDesc[BufferSize];
-
-            VL_LOG("Polygons:\n");
-
-            for (i32f I = 0; I < NumPoly; ++I)
-            {
-                if (!GetLinePLG(File, Buffer, BufferSize))
-                {
-                    VL_ERROR(hLogObject, "Can't parse PLG polygons\n");
-                    std::fclose(File);
-                    return false;
-                }
-
-                // Parse
-                i32 NumPolyVtx;
-                if (std::sscanf(Buffer, "%255s %d %d %d %d",
-                    StrPolyDesc, &NumPolyVtx,
-                    &PolyList[I].VtxIndices[0], &PolyList[I].VtxIndices[1], &PolyList[I].VtxIndices[2]) <= 0)
-                {
-                    VL_ERROR(hLogObject, "Can't parse polygon\n");
-                    std::fclose(File);
-                    return false;
-                }
-
-                // Get polygon description
-                if (StrPolyDesc[1] == 'x' || StrPolyDesc[1] == 'X')
-                {
-                    if (std::sscanf(Buffer, "%x", &PolyDesc) <= 0)
-                    {
-                        VL_ERROR(hLogObject, "Can't parse polygon description\n");
-                        fclose(File);
-                        return false;
-                    }
-                }
-                else
-                {
-                    if (sscanf(Buffer, "%d", &PolyDesc) <= 0)
-                    {
-                        VL_ERROR(hLogObject, "Can't parse polygon description\n");
-                        std::fclose(File);
-                        return false;
-                    }
-                }
-
-                // Log
-                VL_LOG("\t<0x%x, %d, <%d %d %d>>\n",
-                    PolyDesc, NumVtx,
-                    PolyList[I].VtxIndices[0], PolyList[I].VtxIndices[1], PolyList[I].VtxIndices[2]
-                );
-
-                // Set attributes and color
-                if (PolyDesc & EPLX::RGBFlag)
-                {
-                    u32 Color444 = PolyDesc & EPLX::RGB16Mask;
-
-                    /* NOTE(sean):
-                        4 bit is 0xF but we need 8 since we use rgb32,
-                        so 8 bit is 0xFF and we have to shift our colors
-                     */
-                    PolyList[I].Attr |= EPolyAttr::RGB32;
-                    PolyList[I].OriginalColor = MAP_XRGB32(
-                        (Color444 & 0xF00) >> 4,
-                        (Color444 & 0xF0),
-                        (Color444 & 0xF)   << 4
-                    );
-                }
-                else
-                {
-                    // Just something like orange with index as blue
-                    PolyList[I].OriginalColor = MAP_XRGB32(255, 255, PolyDesc & EPLX::RGB8Mask);
-                    VL_WARNING(hLogObject, "There're no 8-bit support");
-                }
-
-                if (PolyDesc & EPLX::TwoSidedFlag)
-                {
-                    PolyList[I].Attr |= EPolyAttr::TwoSided;
-                }
-
-                switch (PolyDesc & EPLX::ShadeModeMask)
-                {
-                case EPLX::ShadeModePureFlag:
-                {
-                    PolyList[I].Attr |= EPolyAttr::ShadeModeEmissive;
-                } break;
-
-                case EPLX::ShadeModeFlatFlag:
-                {
-                    PolyList[I].Attr |= EPolyAttr::ShadeModeFlat;
-                } break;
-
-                case EPLX::ShadeModeGouraudFlag:
-                {
-                    PolyList[I].Attr |= EPolyAttr::ShadeModeGouraud;
-                } break;
-
-                case EPLX::ShadeModePhongFlag:
-                {
-                    PolyList[I].Attr |= EPolyAttr::ShadeModePhong;
-                } break;
-
-                default: {} break;
-                }
-
-                // Final
-                PolyList[I].State = EPolyState::Active;
-            }
-        }
-
-        std::fclose(File);
-    }
-
-    ComputeRadius();
-    ComputePolygonNormalsLength();
-    ComputeVertexNormals();
-
-    return true;
-}
-#endif
-
-/* ==============================================
-                    COB Loader
-   ============================================== */
-
 VL_DEFINE_LOG_CHANNEL(hLogCOB, "COB Loader");
 
 char* GetLineCOB(std::FILE* File, char* Buffer, i32 Size)
@@ -314,7 +60,7 @@ char* FindLineCOB(const char* Pattern, std::FILE* File, char* Buffer, i32 Size)
     }
 }
 
-b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4& Scale, const VVector4& Rot, u32 Flags)
+b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4& Scale, u32 Flags)
 {
     static constexpr i32f BufferSize = 4096;
 
@@ -526,11 +272,11 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                     Line = FindLineCOB("rgb", File, Buffer, BufferSize);
                     std::sscanf(Line, "rgb %f,%f,%f", &R, &G, &B);
 
-                    CurrentMaterial.Color = MAP_RGBA32(
+                    CurrentMaterial.Color = MAP_ARGB32(
+                        255, // Opaque by default, may be overriden by transparency shader
                         (i32)(R * 255.0f + 0.5f),
                         (i32)(G * 255.0f + 0.5f),
-                        (i32)(B * 255.0f + 0.5f),
-                        255 // Opaque by default, may be overriden by transparency shader
+                        (i32)(B * 255.0f + 0.5f)
                     );
 
                     // Material parameters
@@ -589,7 +335,6 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                         CurrentMaterial.Attr |= EMaterialAttr::ShadeModeTexture;
 
                         // Texture in object
-                        Texture = &CurrentMaterial.Texture;
                         Attr |= EMeshAttr::HasTexture;
 
                         VL_LOG("\tMaterial has texture, file path: %s\n", TexturePath);
@@ -672,7 +417,7 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                 }
 
                 // Precompute reflectivities for engine
-                for (i32f RGBIndex = 0; RGBIndex < 3; ++RGBIndex)
+                for (i32f RGBIndex = 1; RGBIndex < 4; ++RGBIndex)
                 {
                     CurrentMaterial.RAmbient.C[RGBIndex]  = (u8)(CurrentMaterial.KAmbient * CurrentMaterial.Color.C[RGBIndex]);
                     CurrentMaterial.RDiffuse.C[RGBIndex]  = (u8)(CurrentMaterial.KDiffuse * CurrentMaterial.Color.C[RGBIndex]);
@@ -708,12 +453,7 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                 }
                 else
                 {
-                    Poly.OriginalColor = MAP_ARGB32(
-                        PolyMaterial.Color.A,
-                        PolyMaterial.Color.R,
-                        PolyMaterial.Color.G,
-                        PolyMaterial.Color.B
-                    );
+                    Poly.OriginalColor = PolyMaterial.Color;
                 }
 
                 // Set shade mode and params

@@ -1,8 +1,3 @@
-/* TODO:
-	- MemCopy()
-	- Assembly version of MemSetByte()?
- */
-
 #pragma once
 
 #include <cstring>

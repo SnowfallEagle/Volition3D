@@ -19,7 +19,6 @@ public:
                             "tie04.cob",
                 { 500.0f * I, 100.0f * Math.Sin(I * 20.0f), 250.0f},
                 { 100.0f, 100.0f, 100.0f },
-                { 0.0f, 0.0f, 0.0f },
                 ECOB::SwapYZ | ECOB::InvertV
             );
         }
@@ -28,8 +27,7 @@ public:
         Entity->Mesh->LoadCOB(
             "rec_gouraud_textured_02.cob",
             { -500.0f, 0.0f, 250.0f},
-            { 100.0f, 100.0f, 100.0f },
-            { 0.0f, 0.0f, 0.0f }
+            { 100.0f, 100.0f, 100.0f }
         );
 
         // TODO(sean): Later we should spawn camera as entity and attach it to world
@@ -42,7 +40,7 @@ public:
                 ELightState::Active,
                 ELightAttr::Ambient,
 
-                MAP_RGBX32(0x22, 0x22, 0x22), 0, 0,
+                MAP_XRGB32(0x22, 0x22, 0x22), 0, 0,
                 { 0, 0, 0, 0 }, { 0, 0, 0, 0}, VVector4{0, 0, 0, 0}.GetNormalized(), { 0 , 0, 0, 0 },
 
                 0, 0, 0,
@@ -55,7 +53,7 @@ public:
                 ELightState::Active,
                 ELightAttr::Infinite,
 
-                0, MAP_RGBX32(0x44, 0x44, 0x22), 0,
+                0, MAP_XRGB32(0x44, 0x44, 0x22), 0,
                 { 0, 1000, 1000, 0 }, { 0, 0, 0, 0 }, VVector4{ -1.0f, -1.0f, 0, 0 }.GetNormalized(), { 0, 0, 0, 0 },
 
                 0, 0, 0,
@@ -68,7 +66,7 @@ public:
                 ELightState::Active,
                 ELightAttr::Point,
 
-                0, MAP_RGBX32(0x33, 0x00, 0x77), 0,
+                0, MAP_XRGB32(0x33, 0x00, 0x77), 0,
                 { 1000.0f, 1000.0f, 0, 0 }, { 0, 0, 0, 0 }, VVector4{ 0, 0, 0, 0 }.GetNormalized(), { 0, 0, 0, 0 },
 
                 0, 0.0001f, 0,
@@ -81,7 +79,7 @@ public:
                 ELightState::Active,
                 ELightAttr::SimpleSpotlight,
 
-                0, MAP_RGBX32(0xAA, 0xAA, 0xAA), 0,
+                0, MAP_XRGB32(0xAA, 0xAA, 0xAA), 0,
                 { 1000.0f, 1000.0f, 0.0f, 0 }, { 0, 0, 0, 0 }, VVector4(-1.0f, -1.0f, 0.0f).GetNormalized(), { 0, 0, 0, 0 },
 
                 0, 0.0005f, 0,
@@ -94,7 +92,7 @@ public:
                 ELightState::Active,
                 ELightAttr::ComplexSpotlight,
 
-                0, MAP_RGBX32(0x00, 0x66, 0x00), 0,
+                0, MAP_XRGB32(0x00, 0x66, 0x00), 0,
                 { 0.0f, 1000.0f, -300.0f, 0 }, { 0, 0, 0, 0 }, VVector4(-0.5f, -1.0f, 1.0f).GetNormalized(), { 0, 0, 0, 0 },
 
                 0, 0.0005f, 0,

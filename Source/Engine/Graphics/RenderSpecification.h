@@ -20,6 +20,9 @@ private: // Set by rendering engine
     SDL_PixelFormat* SDLPixelFormat = nullptr;
     u32 SDLPixelFormatEnum = 0;
 
+    i32 BitsPerPixel = 32;
+    i32 BytesPerPixel = 4;
+
     VVector2I TargetSize = { 0, 0 };
 
     VVector2I MinClip = { 0, 0 };

@@ -28,7 +28,7 @@ public:
     u32 PolyAttr;
 
     f32 Distance;
-    i32 MipMapLevel; // TODO(sean): Rename in MipMappingLevel
+    i32 MipMappingLevel;
 
     // Renderer sets this up every polygon face
     i32 VtxIndices[3];

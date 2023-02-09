@@ -1,6 +1,3 @@
-/* TODO:
- */
-
 #pragma once
 
 #include <stdlib.h> // qsort()
@@ -224,7 +221,6 @@ public:
 
                 for (i32f V = 0; V < 3; ++V)
                 {
-                    // TODO(sean): Maybe we should copy Intensity and Attr too
                     Poly->TransVtx[V].Position = Poly->LocalVtx[V].Position + WorldPos;
                     Poly->TransVtx[V].Normal = Poly->LocalVtx[V].Normal;
                 }
@@ -937,8 +933,6 @@ public:
 
                     if (NumVertsIn == 1)
                     {
-                        // TODO(sean): Try to optimize it through V0 - V1
-
                         /*
                             ZNearClip = Z0 + (Z1 - Z0) * t?
 
