@@ -29,7 +29,7 @@ public:
             delete GameFlow;
         }
 
-        for (auto& Entity : Entities)
+        for (auto Entity : Entities)
         {
             if (Entity)
             {
