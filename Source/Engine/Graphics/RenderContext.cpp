@@ -25,7 +25,7 @@ void VRenderContext::RenderWorld(u32* Buffer, i32 Pitch)
 {
     // Set up camera
     VCamera& Camera = *World.Camera;
-    Camera.BuildWorldToCameraEulerMat44();
+    Camera.BuildWorldToCameraMat44();
 
     // Proccess and insert meshes
     {
@@ -108,9 +108,6 @@ void VRenderContext::SetInterpolators()
             {
                 Interpolators[NumInterpolators] = &AffineTextureInterpolator;
             }
-
-            // DEBUG(sean)
-            VL_LOG("MipMappingLevel %d, Detail Factor %.2f\n", InterpolationContext.MipMappingLevel, DetailFactor);
         }
         else
         {

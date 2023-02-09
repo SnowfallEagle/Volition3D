@@ -150,6 +150,11 @@ public:
         }
     }
 
+    void BuildWorldToCameraMat44()
+    {
+        Attr & ECameraAttr::Euler ? BuildWorldToCameraEulerMat44() : BuildWorldToCameraUVNMat44(EUVNMode::Spherical);
+    }
+
     void BuildWorldToCameraEulerMat44(ERotateSeq Seq = ERotateSeq::YXZ)
     {
         VMatrix44 InvTranslate, InvX, InvY, InvZ, Rot, Temp;
@@ -235,35 +240,9 @@ public:
 
             f32 SinPhi = Math.FastSin(Dir.X);
 
-            /* TODO(sean):
-                   +Z
-                    ^
-                    |
-                    -------->+Y
-                    /
-                   /
-                  v
-                 +X
-
-                We convert this to:
-                X = -Y
-                Y = Z
-                Z = X
-
-                     +Y
-                     ^
-                     |
-               +X<----
-                     /
-                    /
-                   v
-                  +Z
-
-                But will just Z = -Z work???
-             */
-            Target.X = -1 * SinPhi * Math.FastSin(Dir.Y);
-            Target.Y = 1 * Math.FastCos(Dir.X);
-            Target.Z = 1 * SinPhi * Math.FastCos(Dir.Y);
+            Target.X = -1 * SinPhi * Math.FastSin(Dir.X);
+            Target.Y = 1 * Math.FastCos(Dir.Y);
+            Target.Z = 1 * SinPhi * Math.FastCos(Dir.Z);
         }
 
         // Compute UVN
