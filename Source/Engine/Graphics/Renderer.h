@@ -107,7 +107,7 @@ public:
         RenderContext.PrepareToRender();
     }
 
-    VL_FINLINE void RenderWorld()
+    VL_FINLINE void Render()
     {
         u32* Buffer;
         i32 Pitch;
@@ -143,13 +143,7 @@ public:
         }
     }
 
-    /*****************************************************************************************
-    *   Only DrawTriangle is supported because it uses inversed z-buffer and interpolators   *
-    *****************************************************************************************/
-
-    // General case
     void DrawTriangle(VInterpolationContext& InterpolationContext);
-
     void DrawText(i32 X, i32 Y, VColorARGB Color, const char* Format, ...);
 
     friend class VSurface;

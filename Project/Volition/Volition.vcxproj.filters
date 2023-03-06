@@ -57,7 +57,7 @@
     <ClInclude Include="..\..\Source\Engine\Core\WindowSpecification.h">
       <Filter>Engine\Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Core\Containers\SparseArray.h">
+    <ClInclude Include="..\..\Source\Engine\Core\Containers\Array.h">
       <Filter>Engine\Core\Containers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Core\Containers\String.h">
@@ -162,7 +162,7 @@
     <ClInclude Include="..\..\Source\Engine\Core\World.h">
       <Filter>Engine\Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\GameFramework\GameFlow.h">
+    <ClInclude Include="..\..\Source\Engine\GameFramework\GameState.h">
       <Filter>Engine\GameFramework</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\GameFramework\Entity.h">
@@ -233,7 +233,7 @@
     <ClCompile Include="..\..\Source\Engine\Core\World.cpp">
       <Filter>Engine\Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Engine\GameFramework\GameFlow.cpp">
+    <ClCompile Include="..\..\Source\Engine\GameFramework\GameState.cpp">
       <Filter>Engine\GameFramework</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\GameFramework\Entity.cpp">

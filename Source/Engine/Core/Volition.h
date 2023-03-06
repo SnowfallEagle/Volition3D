@@ -16,7 +16,7 @@ class VVolition
     b32 bRunning;
 
 public:
-    template <typename GAME_FLOW_TYPE>
+    template <typename GameStateT>
     void StartUp(const VWindowSpecification& WindowSpec, const VRenderSpecification& RenderSpec)
     {
         DebugLog.StartUp();
@@ -25,7 +25,7 @@ public:
         Renderer.StartUp(RenderSpec);
         Input.StartUp();
         Time.StartUp(RenderSpec);
-        World.StartUp<GAME_FLOW_TYPE>();
+        World.StartUp<GameStateT>();
 
         bRunning = true;
     }
@@ -45,9 +45,6 @@ public:
 
     void Run()
     {
-        // Initial tick
-        Time.TickFrame();
-
         while (bRunning)
         {
             Time.TickFrame();
@@ -56,7 +53,7 @@ public:
             World.Update(Time.GetDeltaTime());
 
             Renderer.PrepareToRender();
-            Renderer.RenderWorld();
+            Renderer.Render();
             Renderer.Flip();
 
             Time.SyncFrame();

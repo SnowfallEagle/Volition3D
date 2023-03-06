@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Engine/Core/Containers/SparseArray.h"
+#include "Engine/Core/Containers/Array.h"
 #include "Engine/Graphics/Surface.h"
 
 class VTexture
 {
-    TSparseArray<VSurface> Surfaces;
+    TArray<VSurface> Surfaces;
     i32 NumMipMaps;
 
 public:

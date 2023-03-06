@@ -2,21 +2,25 @@
 
 #include <cstdint>
 
-typedef std::int8_t i8, b8;
-typedef std::int16_t i16;
-typedef std::int32_t i32, b32;
-typedef std::int64_t i64;
-typedef std::int_fast32_t i32f;
-typedef std::int_fast64_t i64f;
+using i8 = std::int8_t;
+using b8 = std::int8_t;
 
-typedef std::uint8_t u8;
-typedef std::uint16_t u16;
-typedef std::uint32_t u32;
-typedef std::uint64_t u64;
-typedef std::uint_fast32_t u32f;
-typedef std::uint_fast64_t u64f;
+using i16 = std::int16_t;
+using i32 = std::int32_t;
+using b32 = std::int32_t;
 
-typedef float f32;
-typedef double f64;
+using i64  = std::int64_t;
+using i32f = std::int_fast32_t;
+using i64f = std::int_fast64_t;
 
-typedef u32 VSizeType;
+using u8 = std::uint8_t;
+using u16 = std::uint16_t;
+using u32 = std::uint32_t;
+using u64 = std::uint64_t;
+using u32f = std::uint_fast32_t;
+using u64f = std::uint_fast64_t;
+
+using f32 = float;
+using f64 = double;
+
+using VSizeType = u32;

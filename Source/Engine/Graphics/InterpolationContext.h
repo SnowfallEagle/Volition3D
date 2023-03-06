@@ -11,7 +11,6 @@ class IInterpolator;
 
 class VInterpolationContext
 {
-// TODO(sean): Of course it would be better to use getters, setters to prevent Renderer to set value in TextureBuffer...
 public:
     const VRenderSpecification& RenderSpec;
 
@@ -33,13 +32,12 @@ public:
     // Renderer sets this up every polygon face
     i32 VtxIndices[3];
 
-    // InterpolationContext sets this up during rasterization
+    // Renderer sets this up during rasterization
     VColorARGB Pixel;
     i32f X, Y;
     fx28 Z;
 
 public:
-    VInterpolationContext(const VRenderSpecification& InRenderSpec) :
-        RenderSpec(InRenderSpec)
+    VInterpolationContext(const VRenderSpecification& InRenderSpec) : RenderSpec(InRenderSpec)
     {}
 };

@@ -59,10 +59,12 @@ void VRenderContext::RenderWorld(u32* Buffer, i32 Pitch)
     }
 
     // Render stuff
-    InterpolationContext.Buffer = Buffer;
-    InterpolationContext.BufferPitch = Pitch;
+    {
+        InterpolationContext.Buffer = Buffer;
+        InterpolationContext.BufferPitch = Pitch;
 
-    RenderSpec.bRenderSolid ? RenderSolid() : RenderWire();
+        RenderSpec.bRenderSolid ? RenderSolid() : RenderWire();
+    }
 }
 
 void VRenderContext::SetInterpolators()

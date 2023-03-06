@@ -1,7 +1,7 @@
 #include "Engine/Core/Volition.h"
 #include "Engine/Math/Matrix.h"
 
-class GMyGameFlow : public VGameFlow
+class GGameState : public VGameState
 {
     VEntity* Entity;
     VCamera* Camera;
@@ -32,7 +32,7 @@ public:
 
         // TODO(sean): Later we should spawn camera as entity and attach it to world
         Camera = World.GetCamera();
-        Camera->Init(ECameraAttr::UVN, { 0, 75.0f, 0 }, { 0, 0, 0 }, Entity->Mesh->Position, 90, 50, 7500, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
+        Camera->Init(ECameraAttr::Euler, { 0, 75.0f, 0 }, { 0, 0, 0 }, Entity->Mesh->Position, 90, 50, 7500, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
 
         {
             VLight AmbientLight = {
@@ -162,7 +162,7 @@ int main(int Argc, char** Argv)
     VWindowSpecification WindowSpec;
     VRenderSpecification RenderSpec;
 
-    Volition.StartUp<GMyGameFlow>(WindowSpec, RenderSpec);
+    Volition.StartUp<GGameState>(WindowSpec, RenderSpec);
     Volition.Run();
 
     return 0;

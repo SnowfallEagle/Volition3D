@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Engine/Core/Types.h"
-#include "Engine/Core/Containers/SparseArray.h"
+#include "Engine/Core/Containers/Array.h"
 
-class VGameFlow
+class VGameState
 {
 public:
     virtual void StartUp()

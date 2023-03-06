@@ -1,23 +1,23 @@
 #pragma once
 
-#include "Engine/Core/Containers/SparseArray.h"
+#include "Engine/Core/Containers/Array.h"
 #include "Engine/GameFramework/Entity.h"
-#include "Engine/GameFramework/GameFlow.h"
+#include "Engine/GameFramework/GameState.h"
 
 class VWorld
 {
-    TSparseArray<VEntity*> Entities;
+    TArray<VEntity*> Entities;
     VCamera* Camera;
 
-    VGameFlow* GameFlow;
+    VGameState* GameFlow;
 
 public:
-    template <typename GAME_FLOW_TYPE>
+    template <typename GameStateT>
     void StartUp()
     {
         Camera = new VCamera();
 
-        GameFlow = new GAME_FLOW_TYPE();
+        GameFlow = new GameStateT();
         GameFlow->StartUp();
     }
 
@@ -70,10 +70,8 @@ public:
     template <typename T>
     T* SpawnEntity()
     {
-        VEntity* Entity = new T();
+        T* Entity = Entities.EmplaceBack(new T());
         Entity->Init();
-
-        Entities.EmplaceBack(Entity);
         return Entity;
     }
 

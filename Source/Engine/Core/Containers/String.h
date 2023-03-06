@@ -2,22 +2,17 @@
 
 #include <string>
 
-class VString
+class VString : std::string
 {
 public:
-    std::string String;
+    using Super = std::string;
 
 public:
-    VString(std::string InString = "") :
-        String(InString)
-    {}
-
-    VString(const char* InString) :
-        String(InString)
+    VString(const std::string& InString = "") : Super(InString)
     {}
 
     operator const char*() const
     {
-        return String.c_str();
+        return Super::c_str();
     }
 };
