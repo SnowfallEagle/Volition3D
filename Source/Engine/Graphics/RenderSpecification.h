@@ -35,7 +35,6 @@ private: // Set by rendering engine
     VVector2 MaxClipFloat = { 0.0f, 0.0f };
 
     friend class VRenderer;
-    friend class VRenderContext;
     friend class VSurface;
 };
 

@@ -207,7 +207,6 @@
     <ClInclude Include="..\..\Source\Engine\Graphics\Material.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\Mesh.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\Polygon.h" />
-    <ClInclude Include="..\..\Source\Engine\Graphics\RenderContext.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\Renderer.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\RenderList.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\RenderSpecification.h" />
@@ -240,7 +239,6 @@
     <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\IInterpolator.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Mesh.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Polygon.cpp" />
-    <ClCompile Include="..\..\Source\Engine\Graphics\RenderContext.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Renderer.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\RenderList.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Surface.cpp" />

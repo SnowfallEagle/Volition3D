@@ -111,9 +111,6 @@
     <ClInclude Include="..\..\Source\Engine\Graphics\Polygon.h">
       <Filter>Engine\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Graphics\RenderContext.h">
-      <Filter>Engine\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Graphics\Renderer.h">
       <Filter>Engine\Graphics</Filter>
     </ClInclude>
@@ -210,9 +207,6 @@
       <Filter>Engine\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Graphics\Polygon.cpp">
-      <Filter>Engine\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Engine\Graphics\RenderContext.cpp">
       <Filter>Engine\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Graphics\Renderer.cpp">

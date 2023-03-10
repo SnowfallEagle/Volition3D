@@ -18,24 +18,49 @@
 #include "Engine/Graphics/Polygon.h"
 #include "Engine/Graphics/Camera.h"
 #include "Engine/Graphics/ZBuffer.h"
-#include "Engine/Graphics/RenderContext.h"
+#include "Engine/Graphics/RenderList.h"
+#include "Engine/Graphics/InterpolationContext.h"
+#include "Engine/Graphics/Interpolators/IInterpolator.h" // TODO: Move Interpolators in IntepolationContext
+#include "Engine/Graphics/Interpolators/FlatInterpolator.h"
+#include "Engine/Graphics/Interpolators/GouraudInterpolator.h"
+#include "Engine/Graphics/Interpolators/AffineTextureInterpolator.h"
+#include "Engine/Graphics/Interpolators/LinearPiecewiseTextureInterpolator.h"
+#include "Engine/Graphics/Interpolators/PerspectiveCorrectTextureInterpolator.h"
+#include "Engine/Graphics/Interpolators/BillinearPerspectiveTextureInterpolator.h"
+#include "Engine/Graphics/Interpolators/AlphaInterpolator.h"
 
 namespace Volition
 {
 
+class VRenderList;
+
 class VRenderer
 {
 public:
-    // TODO(sean): Remove it later
     static constexpr i32f MaxMaterials = 256;
     static constexpr i32f MaxLights = 8;
+    static constexpr i32f MaxInterpolators = 8; // TODO: Move in InterpolationContext
 
 private:
     VSurface VideoSurface;
     VSurface BackSurface;
 
+    VRenderList* RenderList;
+    VZBuffer ZBuffer;
+
     VRenderSpecification RenderSpec;
-    VRenderContext RenderContext; // TODO(sean): Remove RenderContext
+    VInterpolationContext InterpolationContext;
+
+    IInterpolator* Interpolators[MaxInterpolators];
+    i32 NumInterpolators;
+
+    VFlatInterpolator FlatInterpolator;
+    VGouraudInterpolator GouraudInterpolator;
+    VAffineTextureInterpolator AffineTextureInterpolator;
+    VLinearPiecewiseTextureInterpolator LinearPiecewiseTextureInterpolator;
+    VPerspectiveCorrectTextureInterpolator PerspectiveCorrectTextureInterpolator;
+    VBillinearPerspectiveTextureInterpolator BillinearPerspectiveTextureInterpolator;
+    VAlphaInterpolator AlphaInterpolator;
 
     TTF_Font* Font;
     i32 FontCharWidth; // In pixels
@@ -49,9 +74,7 @@ private:
     i32 NumLights;
 
 public:
-    VRenderer() :
-        RenderContext(RenderSpec)
-    {}
+    VRenderer() : InterpolationContext(RenderSpec) {}
 
     void StartUp(const VRenderSpecification& InRenderSpec);
     void ShutDown();
@@ -86,7 +109,7 @@ public:
         NumLights = 0;
     }
 
-    void AddLight(const VLight& InLight)
+    VLN_FINLINE void AddLight(const VLight& InLight)
     {
         Lights[NumLights] = InLight;
         ++NumLights;
@@ -107,19 +130,11 @@ public:
     VLN_FINLINE void PrepareToRender()
     {
         BackSurface.FillRectHW(nullptr, MAP_XRGB32(0x00, 0x00, 0x00));
-        RenderContext.PrepareToRender();
+        ZBuffer.Clear();
+        RenderList->Reset();
     }
 
-    VLN_FINLINE void Render()
-    {
-        u32* Buffer;
-        i32 Pitch;
-        BackSurface.Lock(Buffer, Pitch);
-
-        RenderContext.RenderWorld(Buffer, Pitch);
-
-        BackSurface.Unlock();
-    }
+    void Render();
 
     VLN_FINLINE void RenderUI()
     {
@@ -129,7 +144,7 @@ public:
     void Flip();
 
     // Very slow put pixel function to debug draw functions
-    void PutPixel(u32* Buffer, i32 Pitch, i32 X, i32 Y, u32 Color) const
+    VLN_FINLINE void PutPixel(u32* Buffer, i32 Pitch, i32 X, i32 Y, u32 Color) const
     {
         VLN_ASSERT(X >= 0);
         VLN_ASSERT(X < RenderSpec.TargetSize.X);
@@ -143,7 +158,7 @@ public:
     static void DrawLineSlow(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, u32 Color);
 
     b32 ClipLine(i32& X1, i32& Y1, i32& X2, i32& Y2) const;
-    void DrawClippedLine(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, u32 Color) const
+    VLN_FINLINE void DrawClippedLine(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, u32 Color) const
     {
         if (ClipLine(X1, Y1, X2, Y2))
         {
@@ -151,12 +166,16 @@ public:
         }
     }
 
+private:
     void DrawTriangle(VInterpolationContext& InterpolationContext);
     void DrawText(i32 X, i32 Y, VColorARGB Color, const char* Format, ...);
 
+    void SetInterpolators();
+    void RenderSolid();
+    void RenderWire();
+
     friend class VSurface;
     friend class VMesh;
-    friend class VRenderContext;
 };
 
 extern VRenderer Renderer;

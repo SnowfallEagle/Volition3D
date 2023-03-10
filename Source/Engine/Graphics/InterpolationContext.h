@@ -17,7 +17,6 @@ class VInterpolationContext
 public:
     const VRenderSpecification& RenderSpec;
 
-    // RenderContext sets this up every frame
     u32* Buffer;
     i32 BufferPitch;
 
@@ -32,10 +31,8 @@ public:
     f32 Distance;
     i32 MipMappingLevel;
 
-    // Renderer sets this up every polygon face
     i32 VtxIndices[3];
 
-    // Renderer sets this up during rasterization
     VColorARGB Pixel;
     i32f X, Y;
     fx28 Z;

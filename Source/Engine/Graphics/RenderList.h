@@ -5,8 +5,8 @@
 #include "Engine/Graphics/Polygon.h"
 #include "Engine/Graphics/Camera.h"
 #include "Engine/Graphics/TransformType.h"
-#include "Engine/Graphics/Renderer.h"
 #include "Engine/Graphics/Mesh.h"
+#include "Engine/Graphics/Light.h"
 
 namespace Volition
 {
