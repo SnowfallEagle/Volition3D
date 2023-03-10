@@ -55,17 +55,17 @@ public:
     {
         i32 TempInt;
 
-        VL_SWAP(RDeltaLeftByY, RDeltaRightByY, TempInt);
-        VL_SWAP(GDeltaLeftByY, GDeltaRightByY, TempInt);
-        VL_SWAP(BDeltaLeftByY, BDeltaRightByY, TempInt);
+        VLN_SWAP(RDeltaLeftByY, RDeltaRightByY, TempInt);
+        VLN_SWAP(GDeltaLeftByY, GDeltaRightByY, TempInt);
+        VLN_SWAP(BDeltaLeftByY, BDeltaRightByY, TempInt);
 
-        VL_SWAP(RLeft, RRight, TempInt);
-        VL_SWAP(GLeft, GRight, TempInt);
-        VL_SWAP(BLeft, BRight, TempInt);
+        VLN_SWAP(RLeft, RRight, TempInt);
+        VLN_SWAP(GLeft, GRight, TempInt);
+        VLN_SWAP(BLeft, BRight, TempInt);
 
-        VL_SWAP(RVtx[InterpolationContext->VtxIndices[1]], RVtx[InterpolationContext->VtxIndices[2]], TempInt);
-        VL_SWAP(GVtx[InterpolationContext->VtxIndices[1]], GVtx[InterpolationContext->VtxIndices[2]], TempInt);
-        VL_SWAP(BVtx[InterpolationContext->VtxIndices[1]], BVtx[InterpolationContext->VtxIndices[2]], TempInt);
+        VLN_SWAP(RVtx[InterpolationContext->VtxIndices[1]], RVtx[InterpolationContext->VtxIndices[2]], TempInt);
+        VLN_SWAP(GVtx[InterpolationContext->VtxIndices[1]], GVtx[InterpolationContext->VtxIndices[2]], TempInt);
+        VLN_SWAP(BVtx[InterpolationContext->VtxIndices[1]], BVtx[InterpolationContext->VtxIndices[2]], TempInt);
     }
 
     virtual void ComputeXStartsAndDeltas(i32 XDiff, fx28 ZLeft, fx28 ZRight) override

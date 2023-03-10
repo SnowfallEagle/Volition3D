@@ -26,7 +26,7 @@ public:
     virtual void Start() override
     {
         const VSurface* Texture = &InterpolationContext->Material->Texture.Get(InterpolationContext->MipMappingLevel);
-        VL_ASSERT(Texture);
+        VLN_ASSERT(Texture);
 
         TextureBuffer = Texture->GetBuffer();
         TexturePitch = Texture->GetPitch();
@@ -64,14 +64,14 @@ public:
     {
         i32 TempInt;
 
-        VL_SWAP(UDeltaLeftByY, UDeltaRightByY, TempInt);
-        VL_SWAP(VDeltaLeftByY, VDeltaRightByY, TempInt);
+        VLN_SWAP(UDeltaLeftByY, UDeltaRightByY, TempInt);
+        VLN_SWAP(VDeltaLeftByY, VDeltaRightByY, TempInt);
 
-        VL_SWAP(ULeft, URight, TempInt);
-        VL_SWAP(VLeft, VRight, TempInt);
+        VLN_SWAP(ULeft, URight, TempInt);
+        VLN_SWAP(VLeft, VRight, TempInt);
 
-        VL_SWAP(UVtx[InterpolationContext->VtxIndices[1]], UVtx[InterpolationContext->VtxIndices[2]], TempInt);
-        VL_SWAP(VVtx[InterpolationContext->VtxIndices[1]], VVtx[InterpolationContext->VtxIndices[2]], TempInt);
+        VLN_SWAP(UVtx[InterpolationContext->VtxIndices[1]], UVtx[InterpolationContext->VtxIndices[2]], TempInt);
+        VLN_SWAP(VVtx[InterpolationContext->VtxIndices[1]], VVtx[InterpolationContext->VtxIndices[2]], TempInt);
     }
 
     virtual void ComputeXStartsAndDeltas(i32 XDiff, fx28 ZLeft, fx28 ZRight) override

@@ -27,8 +27,8 @@ namespace ECameraAttr
 {
     enum
     {
-        Euler = VL_BIT(1),
-        UVN = VL_BIT(2)
+        Euler = VLN_BIT(1),
+        UVN = VLN_BIT(2)
     };
 }
 

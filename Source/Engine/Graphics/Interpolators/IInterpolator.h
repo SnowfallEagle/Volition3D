@@ -26,7 +26,7 @@ public:
     {}
     virtual void ComputeYStartsAndDeltasRight(i32 YDiffRight, i32 RightStartVtx, i32 RightEndVtx)
     {}
-    VL_FINLINE void ComputeYStartsAndDeltas(i32 YDiffLeft, i32 LeftStartVtx, i32 LeftEndVtx, i32 YDiffRight, i32 RightStartVtx, i32 RightEndVtx)
+    VLN_FINLINE void ComputeYStartsAndDeltas(i32 YDiffLeft, i32 LeftStartVtx, i32 LeftEndVtx, i32 YDiffRight, i32 RightStartVtx, i32 RightEndVtx)
     {
         ComputeYStartsAndDeltasLeft(YDiffLeft, LeftStartVtx, LeftEndVtx);
         ComputeYStartsAndDeltasRight(YDiffRight, RightStartVtx, RightEndVtx);
@@ -48,7 +48,7 @@ public:
     {}
     virtual void InterpolateYRight(i32 YRight = 1)
     {}
-    VL_FINLINE void InterpolateY(i32 YLeft = 1, i32 YRight = 1)
+    VLN_FINLINE void InterpolateY(i32 YLeft = 1, i32 YRight = 1)
     {
         InterpolateYLeft(YLeft);
         InterpolateYRight(YRight);

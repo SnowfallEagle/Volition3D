@@ -12,7 +12,7 @@ namespace EAnsiAttr
 }
 
 static constexpr const char LogPath[] = "Log.txt";
-VL_DEFINE_LOG_CHANNEL(hLogDebugLog, "DebugLog");
+VLN_DEFINE_LOG_CHANNEL(hLogDebugLog, "DebugLog");
 
 VDebugLog DebugLog;
 
@@ -23,10 +23,10 @@ void VDebugLog::StartUp()
     {
         // We couldn't use asserts because asserts depend on already working DebugLog
         perror(LogPath);
-        VL_DEBUG_BREAK();
+        VLN_DEBUG_BREAK();
     }
 
-    VL_NOTE(hLogDebugLog, "DebugLog started\n");
+    VLN_NOTE(hLogDebugLog, "DebugLog started\n");
 }
 
 void VDebugLog::ShutDown()

@@ -146,20 +146,20 @@ public:
         MouseState = SDL_GetMouseState(&MousePosX, &MousePosY);
     }
 
-    VL_FINLINE b32 IsKeyDown(u32 Key) const
+    VLN_FINLINE b32 IsKeyDown(u32 Key) const
     {
         return KeyState[SDL_GetScancodeFromKey(Key)];
     }
-    VL_FINLINE b32 IsMouseDown(u32 Button) const
+    VLN_FINLINE b32 IsMouseDown(u32 Button) const
     {
         return MouseState & Button;
     }
 
-    VL_FINLINE i32 GetMouseX() const
+    VLN_FINLINE i32 GetMouseX() const
     {
         return MousePosX;
     }
-    VL_FINLINE i32 GetMouseY() const
+    VLN_FINLINE i32 GetMouseY() const
     {
         return MousePosY;
     }

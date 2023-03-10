@@ -32,7 +32,7 @@ private:
     VSurface BackSurface;
 
     VRenderSpecification RenderSpec;
-    VRenderContext RenderContext;
+    VRenderContext RenderContext; // TODO(sean): Remove RenderContext
 
     TTF_Font* Font;
     i32 FontCharWidth; // In pixels
@@ -53,16 +53,16 @@ public:
     void StartUp(const VRenderSpecification& InRenderSpec);
     void ShutDown();
 
-    VL_FINLINE const VRenderSpecification& GetRenderSpec() const
+    VLN_FINLINE const VRenderSpecification& GetRenderSpec() const
     {
         return RenderSpec;
     }
 
-    VL_FINLINE i32 GetScreenWidth() const
+    VLN_FINLINE i32 GetScreenWidth() const
     {
         return RenderSpec.TargetSize.X;
     }
-    VL_FINLINE i32 GetScreenHeight() const
+    VLN_FINLINE i32 GetScreenHeight() const
     {
         return RenderSpec.TargetSize.Y;
     }
@@ -101,13 +101,13 @@ public:
         }
     }
 
-    VL_FINLINE void PrepareToRender()
+    VLN_FINLINE void PrepareToRender()
     {
         BackSurface.FillRectHW(nullptr, MAP_XRGB32(0x00, 0x00, 0x00));
         RenderContext.PrepareToRender();
     }
 
-    VL_FINLINE void Render()
+    VLN_FINLINE void Render()
     {
         u32* Buffer;
         i32 Pitch;
@@ -118,15 +118,20 @@ public:
         BackSurface.Unlock();
     }
 
+    VLN_FINLINE void RenderUI()
+    {
+        // TODO(sean): Implement
+    }
+
     void Flip();
 
     // Very slow put pixel function to debug draw functions
     void PutPixel(u32* Buffer, i32 Pitch, i32 X, i32 Y, u32 Color) const
     {
-        VL_ASSERT(X >= 0);
-        VL_ASSERT(X < RenderSpec.TargetSize.X);
-        VL_ASSERT(Y >= 0);
-        VL_ASSERT(Y < RenderSpec.TargetSize.Y);
+        VLN_ASSERT(X >= 0);
+        VLN_ASSERT(X < RenderSpec.TargetSize.X);
+        VLN_ASSERT(Y >= 0);
+        VLN_ASSERT(Y < RenderSpec.TargetSize.Y);
 
         Buffer[Y*Pitch + X] = Color;
     }

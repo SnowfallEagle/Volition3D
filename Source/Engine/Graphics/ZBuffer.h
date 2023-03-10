@@ -23,13 +23,13 @@ public:
         Height = InHeight;
     }
 
-    VL_FINLINE void Destroy()
+    VLN_FINLINE void Destroy()
     {
         Surface.Unlock();
         Surface.Destroy();
     }
 
-    VL_FINLINE void Clear()
+    VLN_FINLINE void Clear()
     {
         Memory.MemSetQuad(Buffer, 0, Pitch * Height);
     }

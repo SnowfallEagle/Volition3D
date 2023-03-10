@@ -12,7 +12,7 @@ class VWorld
     VGameState* GameFlow;
 
 public:
-    template <typename GameStateT>
+    template<typename GameStateT>
     void StartUp()
     {
         Camera = new VCamera();
@@ -62,12 +62,12 @@ public:
         }
     }
 
-    VL_FINLINE VCamera* GetCamera()
+    VLN_FINLINE VCamera* GetCamera()
     {
         return Camera;
     }
 
-    template <typename T>
+    template<typename T>
     T* SpawnEntity()
     {
         T* Entity = Entities.EmplaceBack(new T());

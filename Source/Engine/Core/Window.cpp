@@ -10,7 +10,7 @@ void VWindow::Create(const VWindowSpecification& WindowSpec)
     // Init SDL
     {
         i32 Res = SDL_Init(SDL_INIT_VIDEO);
-        VL_ASSERT(Res == 0);
+        VLN_ASSERT(Res == 0);
     }
 
     // Set flags
@@ -34,7 +34,7 @@ void VWindow::Create(const VWindowSpecification& WindowSpec)
             WindowSpec.Size.X, WindowSpec.Size.Y,
             Flags
         );
-        VL_ASSERT(SDLWindow);
+        VLN_ASSERT(SDLWindow);
     }
 }
 

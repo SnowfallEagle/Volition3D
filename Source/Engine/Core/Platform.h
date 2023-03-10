@@ -3,29 +3,29 @@
 #include <intrin.h>
 
 // MSVC
-#define VL_PLATFORM_WIN 1
-#define VL_COMPILER_MSVC 1
+#define VLN_PLATFORM_WIN 1
+#define VLN_COMPILER_MSVC 1
 
-#define VL_DEBUG_BREAK() __debugbreak()
-#define VL_PAUSE() _mm_pause()
+#define VLN_DEBUG_BREAK() __debugbreak()
+#define VLN_PAUSE() _mm_pause()
 
 // Defines
-#define VL_INLINE inline // Compiler decides if it should be inlined
-#define VL_FINLINE __forceinline
+#define VLN_INLINE inline // Compiler decides if it should be inlined
+#define VLN_FINLINE __forceinline
 
-#define VL_LITTLE_ENDIAN 1
-#define VL_BIG_ENDIAN 0
+#define VLN_LITTLE_ENDIAN 1
+#define VLN_BIG_ENDIAN 0
 
-#define VL_ENDIANNESS VL_LITTLE_ENDIAN
+#define VLN_ENDIANNESS VLN_LITTLE_ENDIAN
 
 // Macroses
-#define VL_MIN(A, B) ((A) < (B) ? (A) : (B))
-#define VL_MAX(A, B) ((A) > (B) ? (A) : (B))
-#define VL_SWAP(A, B, T) { T = A; A = B; B = T; }
+#define VLN_MIN(A, B) ((A) < (B) ? (A) : (B))
+#define VLN_MAX(A, B) ((A) > (B) ? (A) : (B))
+#define VLN_SWAP(A, B, T) { T = A; A = B; B = T; }
 
-#define VL_BIT(N) ( 1 << ((N)-1) )
+#define VLN_BIT(N) ( 1 << ((N)-1) )
 
-#define VL_SAFE_DELETE(X) \
+#define VLN_SAFE_DELETE(X) \
     { \
         if ((X)) \
         { \
@@ -34,7 +34,7 @@
         } \
     }
 
-#define VL_SAFE_DELETE_ARRAY(X) \
+#define VLN_SAFE_DELETE_ARRAY(X) \
     { \
         if ((X)) \
         { \

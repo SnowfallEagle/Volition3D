@@ -7,9 +7,9 @@ namespace EWindowSpecificationFlags
 {
     enum Type
     {
-        Fullscreen        = VL_BIT(1),
-        FullscreenDesktop = VL_BIT(2),
-        Windowed          = VL_BIT(3),
+        Fullscreen        = VLN_BIT(1),
+        FullscreenDesktop = VLN_BIT(2),
+        Windowed          = VLN_BIT(3),
     };
 }
 

@@ -6,7 +6,7 @@
 
 VRenderer Renderer;
 
-VL_DEFINE_LOG_CHANNEL(hLogRenderer, "Renderer");
+VLN_DEFINE_LOG_CHANNEL(hLogRenderer, "Renderer");
 
 void VRenderer::StartUp(const VRenderSpecification& InRenderSpec)
 {
@@ -19,7 +19,7 @@ void VRenderer::StartUp(const VRenderSpecification& InRenderSpec)
     SDL_Surface* SDLSurface;
     {
         SDLSurface = SDL_GetWindowSurface(Window.SDLWindow);
-        VL_ASSERT(SDLSurface);
+        VLN_ASSERT(SDLSurface);
 
         RenderSpec.SDLPixelFormat = SDLSurface->format;
         RenderSpec.SDLPixelFormatEnum = RenderSpec.SDLPixelFormat->format;
@@ -47,13 +47,13 @@ void VRenderer::StartUp(const VRenderSpecification& InRenderSpec)
         static constexpr f32 QualityMultiplier = 2.0f;
 
         i32 Res = TTF_Init();
-        VL_ASSERT(Res == 0);
+        VLN_ASSERT(Res == 0);
 
         FontCharWidth = RenderSpec.TargetSize.X / CharsPerLine;
         FontCharHeight = (i32)(FontCharWidth * 1.25f);
 
         Font = TTF_OpenFont("Default.ttf", (i32)( (f32)FontCharWidth * PointDivPixel * QualityMultiplier ));
-        VL_ASSERT(Font);
+        VLN_ASSERT(Font);
     }
 
     // Init render context and renderer stuff
@@ -65,7 +65,7 @@ void VRenderer::StartUp(const VRenderSpecification& InRenderSpec)
     }
 
     // Log
-    VL_NOTE(hLogRenderer, "Initialized with %s pixel format\n", SDL_GetPixelFormatName(RenderSpec.SDLPixelFormatEnum));
+    VLN_NOTE(hLogRenderer, "Initialized with %s pixel format\n", SDL_GetPixelFormatName(RenderSpec.SDLPixelFormatEnum));
 }
 
 void VRenderer::ShutDown()
@@ -172,8 +172,8 @@ void VRenderer::DrawLineSlow(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32
         i32 T;
         if (X1 > X2)
         {
-            VL_SWAP(X1, X2, T);
-            VL_SWAP(Y1, Y2, T);
+            VLN_SWAP(X1, X2, T);
+            VLN_SWAP(Y1, Y2, T);
         }
 
         const f32 M = (f32)(Y2 - Y1) / (f32)(X2 - X1);
@@ -190,8 +190,8 @@ void VRenderer::DrawLineSlow(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32
         i32 T;
         if (Y1 > Y2)
         {
-            VL_SWAP(X1, X2, T);
-            VL_SWAP(Y1, Y2, T);
+            VLN_SWAP(X1, X2, T);
+            VLN_SWAP(Y1, Y2, T);
         }
 
         const f32 M = (f32)(X2 - X1) / (f32)(Y2 - Y1);
@@ -214,10 +214,10 @@ b32 VRenderer::ClipLine(i32& X1, i32& Y1, i32& X2, i32& Y2) const
 
     enum EClipCode
     {
-        CC_N = VL_BIT(1),
-        CC_W = VL_BIT(2),
-        CC_S = VL_BIT(3),
-        CC_E = VL_BIT(4),
+        CC_N = VLN_BIT(1),
+        CC_W = VLN_BIT(2),
+        CC_S = VLN_BIT(3),
+        CC_E = VLN_BIT(4),
 
         CC_NW = CC_N | CC_W,
         CC_NE = CC_N | CC_E,
@@ -493,15 +493,15 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
     i32 TempInt;
     if (InterpolationContext.Vtx[V1].Y < InterpolationContext.Vtx[V0].Y)
     {
-        VL_SWAP(V0, V1, TempInt);
+        VLN_SWAP(V0, V1, TempInt);
     }
     if (InterpolationContext.Vtx[V2].Y < InterpolationContext.Vtx[V0].Y)
     {
-        VL_SWAP(V0, V2, TempInt);
+        VLN_SWAP(V0, V2, TempInt);
     }
     if (InterpolationContext.Vtx[V2].Y < InterpolationContext.Vtx[V1].Y)
     {
-        VL_SWAP(V1, V2, TempInt);
+        VLN_SWAP(V1, V2, TempInt);
     }
 
     // Test if we can't see it
@@ -528,8 +528,8 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
     {
         if (InterpolationContext.Vtx[V1].X < InterpolationContext.Vtx[V0].X)
         {
-            VL_SWAP(V0, V1, TempInt);
-            VL_SWAP(Y0, Y1, TempInt);
+            VLN_SWAP(V0, V1, TempInt);
+            VLN_SWAP(Y0, Y1, TempInt);
         }
         TriangleCase = ETriangleCase::Top;
     }
@@ -537,8 +537,8 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
     {
         if (InterpolationContext.Vtx[V2].X < InterpolationContext.Vtx[V1].X)
         {
-            VL_SWAP(V1, V2, TempInt);
-            VL_SWAP(Y1, Y2, TempInt);
+            VLN_SWAP(V1, V2, TempInt);
+            VLN_SWAP(Y1, Y2, TempInt);
         }
         TriangleCase = ETriangleCase::Bottom;
     }
@@ -918,15 +918,15 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
             */
             if (XDeltaRightByY > XDeltaLeftByY)
             {
-                VL_SWAP(XDeltaLeftByY, XDeltaRightByY, TempInt);
-                VL_SWAP(ZDeltaLeftByY, ZDeltaRightByY, TempInt);
+                VLN_SWAP(XDeltaLeftByY, XDeltaRightByY, TempInt);
+                VLN_SWAP(ZDeltaLeftByY, ZDeltaRightByY, TempInt);
 
-                VL_SWAP(XLeft, XRight, TempInt);
-                VL_SWAP(ZLeft, ZRight, TempInt);
+                VLN_SWAP(XLeft, XRight, TempInt);
+                VLN_SWAP(ZLeft, ZRight, TempInt);
 
-                VL_SWAP(X1, X2, TempInt);
-                VL_SWAP(Y1, Y2, TempInt);
-                VL_SWAP(ZVtx1, ZVtx2, TempInt);
+                VLN_SWAP(X1, X2, TempInt);
+                VLN_SWAP(Y1, Y2, TempInt);
+                VLN_SWAP(ZVtx1, ZVtx2, TempInt);
 
                 for (i32f InterpIndex = 0; InterpIndex < RenderContext.NumInterpolators; ++InterpIndex)
                 {
@@ -970,15 +970,15 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
             */
             if (XDeltaRightByY < XDeltaLeftByY)
             {
-                VL_SWAP(XDeltaLeftByY, XDeltaRightByY, TempInt);
-                VL_SWAP(ZDeltaLeftByY, ZDeltaRightByY, TempInt);
+                VLN_SWAP(XDeltaLeftByY, XDeltaRightByY, TempInt);
+                VLN_SWAP(ZDeltaLeftByY, ZDeltaRightByY, TempInt);
 
-                VL_SWAP(XLeft, XRight, TempInt);
-                VL_SWAP(ZLeft, ZRight, TempInt);
+                VLN_SWAP(XLeft, XRight, TempInt);
+                VLN_SWAP(ZLeft, ZRight, TempInt);
 
-                VL_SWAP(X1, X2, TempInt);
-                VL_SWAP(Y1, Y2, TempInt);
-                VL_SWAP(ZVtx1, ZVtx2, TempInt);
+                VLN_SWAP(X1, X2, TempInt);
+                VLN_SWAP(Y1, Y2, TempInt);
+                VLN_SWAP(ZVtx1, ZVtx2, TempInt);
 
                 for (i32f InterpIndex = 0; InterpIndex < RenderContext.NumInterpolators; ++InterpIndex)
                 {
@@ -1015,15 +1015,15 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
             */
             if (XDeltaRightByY < XDeltaLeftByY)
             {
-                VL_SWAP(XDeltaLeftByY, XDeltaRightByY, TempInt);
-                VL_SWAP(ZDeltaLeftByY, ZDeltaRightByY, TempInt);
+                VLN_SWAP(XDeltaLeftByY, XDeltaRightByY, TempInt);
+                VLN_SWAP(ZDeltaLeftByY, ZDeltaRightByY, TempInt);
 
-                VL_SWAP(XLeft, XRight, TempInt);
-                VL_SWAP(ZLeft, ZRight, TempInt);
+                VLN_SWAP(XLeft, XRight, TempInt);
+                VLN_SWAP(ZLeft, ZRight, TempInt);
 
-                VL_SWAP(X1, X2, TempInt);
-                VL_SWAP(Y1, Y2, TempInt);
-                VL_SWAP(ZVtx1, ZVtx2, TempInt);
+                VLN_SWAP(X1, X2, TempInt);
+                VLN_SWAP(Y1, Y2, TempInt);
+                VLN_SWAP(ZVtx1, ZVtx2, TempInt);
 
                 for (i32f InterpIndex = 0; InterpIndex < RenderContext.NumInterpolators; ++InterpIndex)
                 {
@@ -1329,12 +1329,12 @@ void VRenderer::DrawText(i32 X, i32 Y, VColorARGB Color, const char* Format, ...
 
     // Render text
     SDL_Surface* SDLSurface = TTF_RenderText_Solid(Font, Text, SDLColor);
-    VL_ASSERT(SDLSurface);
+    VLN_ASSERT(SDLSurface);
     SDL_SetColorKey(SDLSurface, SDL_TRUE, static_cast<u32*>(SDLSurface->pixels)[0]);
 
     // Convert surface
     SDL_Surface* SDLConverted = SDL_ConvertSurface(SDLSurface, RenderSpec.SDLPixelFormat, 0);
-    VL_ASSERT(SDLConverted);
+    VLN_ASSERT(SDLConverted);
 
     // Blit
     SDL_Rect Dest = { X, Y, (i32f)strlen(Text) * FontCharWidth, FontCharHeight };

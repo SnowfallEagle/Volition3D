@@ -9,9 +9,9 @@ namespace EMeshState
 {
     enum
     {
-        Active  = VL_BIT(1),
-        Visible = VL_BIT(2),
-        Culled  = VL_BIT(3)
+        Active  = VLN_BIT(1),
+        Visible = VLN_BIT(2),
+        Culled  = VLN_BIT(3)
     };
 }
 
@@ -19,8 +19,8 @@ namespace EMeshAttr
 {
     enum
     {
-        MultiFrame = VL_BIT(1),
-        HasTexture = VL_BIT(2),
+        MultiFrame = VLN_BIT(1),
+        HasTexture = VLN_BIT(2),
     };
 }
 
@@ -28,9 +28,9 @@ namespace ECullType
 {
     enum
     {
-        X = VL_BIT(1),
-        Y = VL_BIT(2),
-        Z = VL_BIT(3),
+        X = VLN_BIT(1),
+        Y = VLN_BIT(2),
+        Z = VLN_BIT(3),
         XYZ = X | Y | Z,
     };
 }
@@ -39,14 +39,14 @@ namespace ECOB
 {
     enum
     {
-        SwapYZ  = VL_BIT(1),
-        SwapUV  = VL_BIT(2),
-        InvertU = VL_BIT(3),
-        InvertV = VL_BIT(4),
+        SwapYZ  = VLN_BIT(1),
+        SwapUV  = VLN_BIT(2),
+        InvertU = VLN_BIT(3),
+        InvertV = VLN_BIT(4),
     };
 }
 
-VL_DEFINE_LOG_CHANNEL(hLogObject, "Object");
+VLN_DEFINE_LOG_CHANNEL(hLogObject, "Object");
 
 class VMesh
 {
@@ -111,12 +111,12 @@ public:
 
     void Destroy()
     {
-        VL_SAFE_DELETE_ARRAY(HeadLocalVtxList);
-        VL_SAFE_DELETE_ARRAY(HeadTransVtxList);
-        VL_SAFE_DELETE_ARRAY(PolyList);
-        VL_SAFE_DELETE_ARRAY(AverageRadiusList);
-        VL_SAFE_DELETE_ARRAY(MaxRadiusList);
-        VL_SAFE_DELETE_ARRAY(TextureCoordsList);
+        VLN_SAFE_DELETE_ARRAY(HeadLocalVtxList);
+        VLN_SAFE_DELETE_ARRAY(HeadTransVtxList);
+        VLN_SAFE_DELETE_ARRAY(PolyList);
+        VLN_SAFE_DELETE_ARRAY(AverageRadiusList);
+        VLN_SAFE_DELETE_ARRAY(MaxRadiusList);
+        VLN_SAFE_DELETE_ARRAY(TextureCoordsList);
     }
 
     void SetFrame(i32 Frame)
@@ -198,15 +198,15 @@ public:
             AverageRadiusList[FrameIndex] = AverageRadius;
             MaxRadiusList[FrameIndex] = MaxRadius;
 
-            VL_NOTE(hLogObject, "\n\tFrame: %d\n\tAverage radius: %.3f\n\tMax radius: %.3f\n", FrameIndex, AverageRadius, MaxRadius);
+            VLN_NOTE(hLogObject, "\n\tFrame: %d\n\tAverage radius: %.3f\n\tMax radius: %.3f\n", FrameIndex, AverageRadius, MaxRadius);
         }
     }
 
-    VL_FINLINE f32 GetAverageRadius()
+    VLN_FINLINE f32 GetAverageRadius()
     {
         return AverageRadiusList[CurrentFrame];
     }
-    VL_FINLINE f32 GetMaxRadius()
+    VLN_FINLINE f32 GetMaxRadius()
     {
         return MaxRadiusList[CurrentFrame];
     }
@@ -224,7 +224,7 @@ public:
 
             PolyList[I].NormalLength = VVector4::GetCross(U, V).GetLength();
 
-            VL_LOG("\tPolygon normal length [%d]: %f\n", I, PolyList[I].NormalLength);
+            VLN_LOG("\tPolygon normal length [%d]: %f\n", I, PolyList[I].NormalLength);
         }
     }
 
@@ -267,9 +267,9 @@ public:
                 LocalVtxList[I].Attr |= EVertexAttr::HasNormal;
                 TransVtxList[I].Attr = LocalVtxList[I].Attr;
 
-                VL_NOTE(hLogObject, "Vertex normal [%d]: ", I);
+                VLN_NOTE(hLogObject, "Vertex normal [%d]: ", I);
                 LocalVtxList[I].Normal.Print();
-                VL_LOG("\n");
+                VLN_LOG("\n");
             }
         }
 

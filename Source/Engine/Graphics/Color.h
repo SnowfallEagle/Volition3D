@@ -14,7 +14,7 @@ public:
         u32 ARGB;
         struct
         {
-#if VL_ENDIANNESS == VL_LITTLE_ENDIAN
+#if VLN_ENDIANNESS == VLN_LITTLE_ENDIAN
             u8 B, G, R, A;
 #else
             u8 A, R, G, B;
@@ -24,15 +24,15 @@ public:
     };
 
 public:
-    VL_FINLINE VColorARGB() = default;
-    VL_FINLINE VColorARGB(u8 A, u8 R, u8 G, u8 B) :
+    VLN_FINLINE VColorARGB() = default;
+    VLN_FINLINE VColorARGB(u8 A, u8 R, u8 G, u8 B) :
         ARGB(MAP_ARGB32(A, R, G, B))
     {}
-    VL_FINLINE VColorARGB(u32 InARGB) :
+    VLN_FINLINE VColorARGB(u32 InARGB) :
         ARGB(InARGB)
     {}
 
-    VL_FINLINE operator u32() const
+    VLN_FINLINE operator u32() const
     {
         return ARGB;
     }

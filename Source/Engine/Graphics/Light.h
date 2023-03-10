@@ -9,7 +9,7 @@ namespace ELightState
 {
     enum
     {
-        Active = VL_BIT(1)
+        Active = VLN_BIT(1)
     };
 }
 
@@ -17,11 +17,11 @@ namespace ELightAttr
 {
     enum
     {
-        Ambient          = VL_BIT(1),
-        Infinite         = VL_BIT(2),
-        Point            = VL_BIT(3),
-        SimpleSpotlight  = VL_BIT(4),
-        ComplexSpotlight = VL_BIT(5)
+        Ambient          = VLN_BIT(1),
+        Infinite         = VLN_BIT(2),
+        Point            = VLN_BIT(3),
+        SimpleSpotlight  = VLN_BIT(4),
+        ComplexSpotlight = VLN_BIT(5)
     };
 }
 

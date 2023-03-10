@@ -6,7 +6,7 @@
 #include "Engine/Graphics/Renderer.h"
 #include "Engine/Graphics/Mesh.h"
 
-VL_DEFINE_LOG_CHANNEL(hLogCOB, "COB Loader");
+VLN_DEFINE_LOG_CHANNEL(hLogCOB, "COB Loader");
 
 char* GetLineCOB(std::FILE* File, char* Buffer, i32 Size)
 {
@@ -79,12 +79,12 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
         char Buffer[BufferSize];
         char* Line;
 
-        VL_NOTE(hLogCOB, "Starting parse object:\n");
+        VLN_NOTE(hLogCOB, "Starting parse object:\n");
 
         // Open file
         if (!(File = std::fopen(Path, "r")))
         {
-            VL_ERROR(hLogCOB, "Can't open %s file: %s\n", Path, strerror(errno));
+            VLN_ERROR(hLogCOB, "Can't open %s file: %s\n", Path, strerror(errno));
             return false;
         }
 
@@ -92,7 +92,7 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
         {
             Line = FindLineCOB("Name", File, Buffer, BufferSize);
             std::sscanf(Line, "Name %s", Name);
-            VL_LOG("\tName: %s\n", Name);
+            VLN_LOG("\tName: %s\n", Name);
         }
 
         // Read local transform matrix
@@ -112,9 +112,9 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
             Line = FindLineCOB("z axis", File, Buffer, BufferSize);
             std::sscanf(Line, "z axis %f %f %f", &MatLocal.C02, &MatLocal.C12, &MatLocal.C22);
 
-            VL_LOG("\tMatLocal: ");
+            VLN_LOG("\tMatLocal: ");
             MatLocal.Print();
-            VL_LOG("\n");
+            VLN_LOG("\n");
         }
 
         // Read world transform matrix
@@ -133,9 +133,9 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
             Line = GetLineCOB(File, Buffer, BufferSize);
             std::sscanf(Line, "%f %f %f", &MatWorld.C02, &MatWorld.C12, &MatWorld.C22);
 
-            VL_LOG("\tMatWorld: ");
+            VLN_LOG("\tMatWorld: ");
             MatWorld.Print();
-            VL_LOG("\n");
+            VLN_LOG("\n");
         }
 
         // Read vertices and make object allocation
@@ -167,7 +167,7 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                 if (Flags & ECOB::SwapYZ)
                 {
                     f32 TempFloat;
-                    VL_SWAP(LocalVtxList[I].Y, LocalVtxList[I].Z, TempFloat);
+                    VLN_SWAP(LocalVtxList[I].Y, LocalVtxList[I].Z, TempFloat);
                     LocalVtxList[I].Z = -LocalVtxList[I].Z;
                 }
 
@@ -177,9 +177,9 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                 LocalVtxList[I].Z *= Scale.Z;
 
                 // Log
-                VL_LOG("\tVertex [%d]: ", I);
+                VLN_LOG("\tVertex [%d]: ", I);
                 LocalVtxList[I].Position.Print();
-                VL_LOG("\n");
+                VLN_LOG("\n");
             }
         }
 
@@ -188,16 +188,16 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
         {
             Line = FindLineCOB("Texture Vertices", File, Buffer, BufferSize);
             std::sscanf(Line, "Texture Vertices %d", &NumTextureVtx);
-            VL_LOG("\tNum texture coords: %d\n", NumTextureVtx);
+            VLN_LOG("\tNum texture coords: %d\n", NumTextureVtx);
 
             for (i32f I = 0; I < NumTextureVtx; ++I)
             {
                 Line = GetLineCOB(File, Buffer, BufferSize);
                 std::sscanf(Line, "%f %f", &TextureCoordsList[I].X, &TextureCoordsList[I].Y);
 
-                VL_LOG("\tTexture coord [%d]: ", I);
+                VLN_LOG("\tTexture coord [%d]: ", I);
                 TextureCoordsList[I].Print();
-                VL_LOG("\n");
+                VLN_LOG("\n");
             }
         }
 
@@ -228,7 +228,7 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                     DoesMaterialAppearFirstTime[MaterialIndex] = false;
                 }
 
-                VL_LOG("\tMaterial index of poly face [%d]: %d\n", I, MaterialIndexByPolyIndex[I]);
+                VLN_LOG("\tMaterial index of poly face [%d]: %d\n", I, MaterialIndexByPolyIndex[I]);
 
                 // Get vertex and texture indices
                 Line = GetLineCOB(File, Buffer, BufferSize);
@@ -238,10 +238,10 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                     &PolyList[I].VtxIndices[0], &PolyList[I].TextureCoordsIndices[0]
                 );
 
-                VL_LOG("\tVertex and texture indices:\n");
+                VLN_LOG("\tVertex and texture indices:\n");
                 for (i32f J = 0; J < 3; ++J)
                 {
-                    VL_LOG("\t<%d, %d>\n", PolyList[I].VtxIndices[J], PolyList[I].TextureCoordsIndices[J]);
+                    VLN_LOG("\t<%d, %d>\n", PolyList[I].VtxIndices[J], PolyList[I].TextureCoordsIndices[J]);
                 }
 
                 // Set default stuff
@@ -249,7 +249,7 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                 PolyList[I].TextureCoordsList = TextureCoordsList;
             }
 
-            VL_LOG("\tNum materials in object: %d\n", NumMaterialsInObject);
+            VLN_LOG("\tNum materials in object: %d\n", NumMaterialsInObject);
         }
 
         // Read materials
@@ -289,10 +289,10 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                     CurrentMaterial.KDiffuse = 1.0f;
 
                     // Log color
-                    VL_LOG("\tMaterial color [%d]: ", I);
+                    VLN_LOG("\tMaterial color [%d]: ", I);
                     VVector4 ColorVector = { R, G, B, A };
                     ColorVector.Print();
-                    VL_LOG("\n");
+                    VLN_LOG("\n");
                 }
 
                 // Check if we have texture
@@ -302,7 +302,7 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
 
                     std::snprintf(Format, FormatSize, "Shader name: \"%%%d[a-z ]\"", ShaderNameSize - 1);
                     std::sscanf(Line, Format, ShaderName);
-                    VL_LOG("\tShader name: %s\n", ShaderName);
+                    VLN_LOG("\tShader name: %s\n", ShaderName);
 
                     if (0 == std::strncmp(ShaderName, "texture map", ShaderNameSize))
                     {
@@ -335,7 +335,7 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                         // Texture in object
                         Attr |= EMeshAttr::HasTexture;
 
-                        VL_LOG("\tMaterial has texture, file path: %s\n", TexturePath);
+                        VLN_LOG("\tMaterial has texture, file path: %s\n", TexturePath);
                     }
                 }
 
@@ -347,7 +347,7 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                     std::snprintf(Format, FormatSize, "Shader name: \"%%%d[a-z ]\"", ShaderNameSize - 1);
                     std::sscanf(Line, Format, ShaderName);
 
-                    VL_LOG("\tTransparency shader name: %s\n", ShaderName);
+                    VLN_LOG("\tTransparency shader name: %s\n", ShaderName);
                     if (0 == std::strncmp(ShaderName, "filter", ShaderNameSize))
                     {
                         i32 AlphaRed, AlphaGreen, AlphaBlue;
@@ -355,10 +355,10 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                         Line = FindLineCOB("colour: color", File, Buffer, BufferSize);
                         std::sscanf(Buffer, "colour: color (%d, %d, %d)", &AlphaRed, &AlphaGreen, &AlphaBlue);
 
-                        CurrentMaterial.Color.A = VL_MAX(AlphaRed, VL_MAX(AlphaGreen, AlphaBlue));
+                        CurrentMaterial.Color.A = VLN_MAX(AlphaRed, VLN_MAX(AlphaGreen, AlphaBlue));
                         CurrentMaterial.Attr |= EMaterialAttr::Transparent;
 
-                        VL_LOG("\tAlpha channel: %d\n", CurrentMaterial.Color.A);
+                        VLN_LOG("\tAlpha channel: %d\n", CurrentMaterial.Color.A);
                     }
                 }
 
@@ -389,7 +389,7 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                         CurrentMaterial.Attr |= EMaterialAttr::ShadeModeEmissive;
                     }
 
-                    VL_LOG("\tShader name: %s\n", ShaderName);
+                    VLN_LOG("\tShader name: %s\n", ShaderName);
 
                     // Try to find diffuse factor
                     i32 NumParams;
@@ -406,7 +406,7 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                         if (0 == std::strncmp(Line, Pattern, PatternLength))
                         {
                             std::sscanf(Line, "diffuse factor: float %f", &CurrentMaterial.KDiffuse);
-                            VL_LOG("\tDiffuse factor found: %f\n", CurrentMaterial.KDiffuse);
+                            VLN_LOG("\tDiffuse factor found: %f\n", CurrentMaterial.KDiffuse);
                             break;
                         }
                     }
@@ -420,13 +420,13 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                     CurrentMaterial.RSpecular.C[RGBIndex] = (u8)(CurrentMaterial.RSpecular * CurrentMaterial.Color.C[RGBIndex]);
 
                     // Log precomputed colors and factors
-                    VL_LOG("\tRa [%d]: %d\n", RGBIndex, CurrentMaterial.RAmbient.C[RGBIndex]);
-                    VL_LOG("\tRd [%d]: %d\n", RGBIndex, CurrentMaterial.RDiffuse.C[RGBIndex]);
-                    VL_LOG("\tRs [%d]: %d\n", RGBIndex, CurrentMaterial.RSpecular.C[RGBIndex]);
+                    VLN_LOG("\tRa [%d]: %d\n", RGBIndex, CurrentMaterial.RAmbient.C[RGBIndex]);
+                    VLN_LOG("\tRd [%d]: %d\n", RGBIndex, CurrentMaterial.RDiffuse.C[RGBIndex]);
+                    VLN_LOG("\tRs [%d]: %d\n", RGBIndex, CurrentMaterial.RSpecular.C[RGBIndex]);
                 }
 
                 // Log factors
-                VL_LOG("\tKa %f Kd %f Ks %f Exp %f\n",
+                VLN_LOG("\tKa %f Kd %f Ks %f Exp %f\n",
                     CurrentMaterial.KAmbient,
                     CurrentMaterial.KDiffuse,
                     CurrentMaterial.KSpecular,
@@ -511,7 +511,7 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                     if (Flags & ECOB::SwapUV)
                     {
                         f32 TempFloat;
-                        VL_SWAP(TextureCoordsList[I].X, TextureCoordsList[I].Y, TempFloat);
+                        VLN_SWAP(TextureCoordsList[I].X, TextureCoordsList[I].Y, TempFloat);
                     }
                 }
             }
@@ -527,7 +527,7 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
     ComputeVertexNormals();
 
     // Log our success
-    VL_NOTE(hLogCOB, "Ended parse object\n");
+    VLN_NOTE(hLogCOB, "Ended parse object\n");
 
     return true;
 }

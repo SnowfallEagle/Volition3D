@@ -16,7 +16,7 @@ class VVolition
     b32 bRunning;
 
 public:
-    template <typename GameStateT>
+    template<typename GameStateT>
     void StartUp(const VWindowSpecification& WindowSpec, const VRenderSpecification& RenderSpec)
     {
         DebugLog.StartUp();
@@ -54,6 +54,7 @@ public:
 
             Renderer.PrepareToRender();
             Renderer.Render();
+            Renderer.RenderUI();
             Renderer.Flip();
 
             Time.SyncFrame();
@@ -62,7 +63,7 @@ public:
         ShutDown();
     }
 
-    VL_FINLINE void Stop()
+    VLN_FINLINE void Stop()
     {
         bRunning = false;
     }

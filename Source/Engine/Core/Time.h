@@ -39,17 +39,17 @@ public:
         {
             while ((i32)GetTicks() - LastTick < MsFrameLimit)
             {
-                VL_PAUSE();
+                VLN_PAUSE();
             }
         }
     }
 
-    VL_FINLINE i32 GetTicks()
+    VLN_FINLINE i32 GetTicks()
     {
         return SDL_GetTicks();
     }
 
-    VL_FINLINE f32 GetDeltaTime()
+    VLN_FINLINE f32 GetDeltaTime()
     {
         return DeltaTime;
     }

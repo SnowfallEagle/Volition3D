@@ -8,8 +8,8 @@ namespace EVertexAttr
 {
 	enum
 	{
-		HasNormal        = VL_BIT(1),
-		HasTextureCoords = VL_BIT(2),
+		HasNormal        = VLN_BIT(1),
+		HasTextureCoords = VLN_BIT(2),
 	};
 }
 

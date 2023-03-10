@@ -26,7 +26,9 @@ public:
     void Acquire()
     {
         while (!TryAcquire())
-            VL_PAUSE();
+        {
+            VLN_PAUSE();
+        }
     }
 
     void Release()
@@ -36,14 +38,17 @@ public:
     }
 };
 
-template <class LOCK>
+template<class LockT>
 class TScopedLock
 {
-    typedef LOCK VLockType;
-    LOCK* Lock;
+public:
+    using VLockType = LockT;
+
+private:
+    VLockType* Lock;
 
 public:
-    TScopedLock(LOCK& InLock) : Lock(&InLock)
+    TScopedLock(VLockType& InLock) : Lock(&InLock)
     {
         Lock->Acquire();
     }
@@ -77,8 +82,7 @@ public:
         {
             std::size_t UnlockValue = 0;
             bAcquired = Owner.compare_exchange_strong(
-                UnlockValue,
-                ThreadID,
+                UnlockValue, ThreadID,
                 std::memory_order_relaxed, // Fence below
                 std::memory_order_relaxed
             );
@@ -102,14 +106,12 @@ public:
         {
             std::size_t UnlockValue = 0;
             while (!Owner.compare_exchange_weak(
-                UnlockValue,
-                ThreadID,
+                UnlockValue, ThreadID,
                 std::memory_order_relaxed, // Fence below
-                std::memory_order_relaxed
-            ))
+                std::memory_order_relaxed))
             {
                 UnlockValue = 0;
-                VL_PAUSE();
+                VLN_PAUSE();
             }
         }
 
@@ -125,7 +127,7 @@ public:
         std::hash<std::thread::id> Hasher;
         std::size_t ThreadID = Hasher(std::this_thread::get_id());
         std::size_t ActualID = Owner.load(std::memory_order_relaxed);
-        VL_ASSERT(ThreadID == ActualID);
+        VLN_ASSERT(ThreadID == ActualID);
 
         --RefCount;
         if (RefCount == 0)
@@ -146,13 +148,11 @@ public:
     {
         u32 CurrentRefCount = RefCount.load(std::memory_order_relaxed);
         while (!RefCount.compare_exchange_weak(
-            CurrentRefCount,
-            CurrentRefCount + 1,
+            CurrentRefCount, CurrentRefCount + 1,
             std::memory_order_acquire,
-            std::memory_order_relaxed
-        ))
+            std::memory_order_relaxed))
         {
-            VL_PAUSE();
+            VLN_PAUSE();
             std::size_t CurrentRefCount = RefCount.load(std::memory_order_relaxed);
         }
     }
@@ -161,37 +161,33 @@ public:
     {
         u32 CurrentRefCount = RefCount.load(std::memory_order_relaxed);
         while (!RefCount.compare_exchange_weak(
-            CurrentRefCount,
-            CurrentRefCount - 1,
+            CurrentRefCount, CurrentRefCount - 1,
             std::memory_order_acquire,
-            std::memory_order_relaxed
-        ))
+            std::memory_order_relaxed))
         {
-            VL_PAUSE();
+            VLN_PAUSE();
             std::size_t CurrentRefCount = RefCount.load(std::memory_order_relaxed);
         }
 
-        VL_ASSERT(CurrentRefCount > 0);
+        VLN_ASSERT(CurrentRefCount > 0);
     }
 
     void AcquireWrite()
     {
         u32 UnlockValue = 0;
         while (!RefCount.compare_exchange_weak(
-            UnlockValue,
-            0xFFFFFFFF,
-            std::memory_order_acquire,
-            std::memory_order_relaxed
-        ))
+               UnlockValue, 0xFFFFFFFF,
+               std::memory_order_acquire,
+               std::memory_order_relaxed))
         {
-            VL_PAUSE();
+            VLN_PAUSE();
             UnlockValue = 0;
         }
     }
 
     void ReleaseWrite()
     {
-        VL_ASSERT(0xFFFFFFFF == RefCount.load(std::memory_order_relaxed))
+        VLN_ASSERT(0xFFFFFFFF == RefCount.load(std::memory_order_relaxed))
         RefCount.store(0, std::memory_order_release);
     }
 };

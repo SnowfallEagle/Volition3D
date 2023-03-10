@@ -11,10 +11,10 @@ namespace EPolyState
 {
 	enum
 	{
-		Active   = VL_BIT(1),
-		Clipped  = VL_BIT(2),
-		BackFace = VL_BIT(3),
-		Lit      = VL_BIT(4)
+		Active   = VLN_BIT(1),
+		Clipped  = VLN_BIT(2),
+		BackFace = VLN_BIT(3),
+		Lit      = VLN_BIT(4)
 	};
 }
 
@@ -22,17 +22,17 @@ namespace EPolyAttr
 {
 	enum
 	{
-		RGB32       = VL_BIT(1),
-		TwoSided    = VL_BIT(2),
-		Transparent = VL_BIT(3),
+		RGB32       = VLN_BIT(1),
+		TwoSided    = VLN_BIT(2),
+		Transparent = VLN_BIT(3),
 
-		ShadeModeEmissive = VL_BIT(4),
-		ShadeModeFlat     = VL_BIT(5),
-		ShadeModeGouraud  = VL_BIT(6),
-		ShadeModePhong    = VL_BIT(7),
-		ShadeModeTexture  = VL_BIT(8),
+		ShadeModeEmissive = VLN_BIT(4),
+		ShadeModeFlat     = VLN_BIT(5),
+		ShadeModeGouraud  = VLN_BIT(6),
+		ShadeModePhong    = VLN_BIT(7),
+		ShadeModeTexture  = VLN_BIT(8),
 
-		UsesMaterial = VL_BIT(9)
+		UsesMaterial = VLN_BIT(9)
 	};
 }
 

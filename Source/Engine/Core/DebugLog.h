@@ -5,12 +5,12 @@
 #include "Engine/Core/Types.h"
 #include "Engine/Core/Platform.h"
 
-#define VL_NOTE(CHANNEL, FORMAT, ...) DebugLog.Output(CHANNEL, "Note", FORMAT, __VA_ARGS__)
-#define VL_WARNING(CHANNEL, FORMAT, ...) DebugLog.Output(CHANNEL, "Warning", FORMAT, __VA_ARGS__)
-#define VL_ERROR(CHANNEL, FORMAT, ...) DebugLog.Output(CHANNEL, "Error", FORMAT, __VA_ARGS__)
-#define VL_LOG(FORMAT, ...) DebugLog.Output("", "", FORMAT, __VA_ARGS__)
+#define VLN_NOTE(CHANNEL, FORMAT, ...) DebugLog.Output(CHANNEL, "Note", FORMAT, __VA_ARGS__)
+#define VLN_WARNING(CHANNEL, FORMAT, ...) DebugLog.Output(CHANNEL, "Warning", FORMAT, __VA_ARGS__)
+#define VLN_ERROR(CHANNEL, FORMAT, ...) DebugLog.Output(CHANNEL, "Error", FORMAT, __VA_ARGS__)
+#define VLN_LOG(FORMAT, ...) DebugLog.Output("", "", FORMAT, __VA_ARGS__)
 
-#define VL_DEFINE_LOG_CHANNEL(VAR, NAME) static constexpr const char VAR[] = NAME
+#define VLN_DEFINE_LOG_CHANNEL(VAR, NAME) static constexpr const char VAR[] = NAME
 
 class VDebugLog
 {

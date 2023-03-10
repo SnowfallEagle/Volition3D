@@ -18,34 +18,34 @@ namespace
 
 static constexpr i32 Fx16RoundUp = 0x00008000;
 
-VL_FINLINE fx16 IntToFx16(i32 I)
+VLN_FINLINE fx16 IntToFx16(i32 I)
 {
     return I << Shift;
 }
 
-VL_FINLINE fx16 FloatToFx16(f32 F)
+VLN_FINLINE fx16 FloatToFx16(f32 F)
 {
     return (fx16)(F * Magnitude + 0.5f);
 }
 
-VL_FINLINE i32 Fx16ToInt(fx16 Fx)
+VLN_FINLINE i32 Fx16ToInt(fx16 Fx)
 {
     return Fx >> Shift;
 }
 
-VL_FINLINE i32 Fx16ToIntRounded(fx16 Fx)
+VLN_FINLINE i32 Fx16ToIntRounded(fx16 Fx)
 {
     return (Fx + Fx16RoundUp) >> Shift;
 }
 
-VL_FINLINE f32 Fx16ToFloat(fx16 Fx)
+VLN_FINLINE f32 Fx16ToFloat(fx16 Fx)
 {
     return (f32)Fx / Magnitude;
 }
 
-VL_FINLINE fx16 MulFx16(fx16 Fx1, fx16 Fx2)
+VLN_FINLINE fx16 MulFx16(fx16 Fx1, fx16 Fx2)
 {
-#if VL_COMPILER_MSVC
+#if VLN_COMPILER_MSVC
     /* NOTE(sean):
         Let X, Y are integers and P, Q are fixed point numbers.
         P = (fx16)X, Q = (fx16)Y.
@@ -72,12 +72,12 @@ VL_FINLINE fx16 MulFx16(fx16 Fx1, fx16 Fx2)
     }
 #else
 # error "There are no implementation"
-#endif // VL_COMPILER_MSVC
+#endif // VLN_COMPILER_MSVC
 }
 
-VL_FINLINE fx16 DivFx16(fx16 Fx1, fx16 Fx2)
+VLN_FINLINE fx16 DivFx16(fx16 Fx1, fx16 Fx2)
 {
-#if VL_COMPILER_MSVC
+#if VLN_COMPILER_MSVC
     /* NOTE(sean):
         Let X, Y are integers and P, Q are fixed point numbers.
         P = (fx16)X, Q = (fx16)Y.
@@ -107,20 +107,20 @@ VL_FINLINE fx16 DivFx16(fx16 Fx1, fx16 Fx2)
     }
 #else
 # error "There are no implementation"
-#endif // VL_COMPILER_MSVC
+#endif // VLN_COMPILER_MSVC
 }
 
-VL_FINLINE i32 GetFx16WholePart(fx16 Fx)
+VLN_FINLINE i32 GetFx16WholePart(fx16 Fx)
 {
     return Fx >> Shift;
 }
 
-VL_FINLINE i32 GetFx16DecimalPart(fx16 Fx)
+VLN_FINLINE i32 GetFx16DecimalPart(fx16 Fx)
 {
     return Fx & DecimalPartMask;
 }
 
-VL_FINLINE void PrintFx16(fx16 Fx, char EndChar = 0)
+VLN_FINLINE void PrintFx16(fx16 Fx, char EndChar = 0)
 {
-    VL_LOG("%f%c", Fx16ToFloat(Fx), EndChar);
+    VLN_LOG("%f%c", Fx16ToFloat(Fx), EndChar);
 }

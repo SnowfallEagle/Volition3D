@@ -29,12 +29,12 @@ public:
     };
 
 public:
-    VL_FINLINE void Zero()
+    VLN_FINLINE void Zero()
     {
         W = X = Y = Z = 0;
     }
 
-    VL_FINLINE void InitVec3(const VVector3* V)
+    VLN_FINLINE void InitVec3(const VVector3* V)
     {
         W = 0;
         X = V->X;
@@ -42,9 +42,9 @@ public:
         Z = V->Z;
     }
 
-    VL_FINLINE void Print()
+    VLN_FINLINE void Print()
     {
-        VL_LOG("<%f, %f, %f, %f>", W, X, Y, Z);
+        VLN_LOG("<%f, %f, %f, %f>", W, X, Y, Z);
     }
 };
 

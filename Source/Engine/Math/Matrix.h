@@ -26,11 +26,11 @@ public:
     };
 
 public:
-    VL_FINLINE void operator=(const VMatrix44& Mat)
+    VLN_FINLINE void operator=(const VMatrix44& Mat)
     {
         Memory.MemCopy(this, &Mat, sizeof(*this));
     }
-    VL_FINLINE void Zero()
+    VLN_FINLINE void Zero()
     {
         Memory.MemSetByte(this, 0, sizeof(*this));
     }
@@ -42,17 +42,17 @@ public:
 
     void Print()
     {
-        VL_LOG("<\n");
+        VLN_LOG("<\n");
         for (i32f Y = 0; Y < 4; ++Y)
         {
-            VL_LOG("\t");
+            VLN_LOG("\t");
             for (i32f X = 0; X < 4; ++X)
             {
-                VL_LOG("%f, ", C[Y][X]);
+                VLN_LOG("%f, ", C[Y][X]);
             }
-            VL_LOG("\n");
+            VLN_LOG("\n");
         }
-        VL_LOG(">\n");
+        VLN_LOG(">\n");
     }
 };
 
@@ -75,12 +75,12 @@ public:
     };
 
 public:
-    VL_FINLINE void operator=(const VMatrix43& Mat)
+    VLN_FINLINE void operator=(const VMatrix43& Mat)
     {
         Memory.MemCopy(this, &Mat, sizeof(*this));
     }
 
-    VL_FINLINE void Zero()
+    VLN_FINLINE void Zero()
     {
         Memory.MemSetByte(this, 0, sizeof(*this));
     }
@@ -102,12 +102,12 @@ public:
     };
 
 public:
-    VL_FINLINE void operator=(const VMatrix14& Mat)
+    VLN_FINLINE void operator=(const VMatrix14& Mat)
     {
         Memory.MemCopy(this, &Mat, sizeof(*this));
     }
 
-    VL_FINLINE void Zero()
+    VLN_FINLINE void Zero()
     {
         Memory.MemSetByte(this, 0, sizeof(*this));
     }
@@ -132,12 +132,12 @@ public:
     };
 
 public:
-    VL_FINLINE void operator=(const VMatrix33& Mat)
+    VLN_FINLINE void operator=(const VMatrix33& Mat)
     {
         Memory.MemCopy(this, &Mat, sizeof(*this));
     }
 
-    VL_FINLINE void Zero()
+    VLN_FINLINE void Zero()
     {
         Memory.MemSetByte(this, 0, sizeof(*this));
     }
@@ -161,12 +161,12 @@ public:
     };
 
 public:
-    VL_FINLINE void operator=(const VMatrix32& Mat)
+    VLN_FINLINE void operator=(const VMatrix32& Mat)
     {
         Memory.MemCopy(this, &Mat, sizeof(*this));
     }
 
-    VL_FINLINE void Zero()
+    VLN_FINLINE void Zero()
     {
         Memory.MemSetByte(this, 0, sizeof(*this));
     }
@@ -188,12 +188,12 @@ public:
     };
 
 public:
-    VL_FINLINE void operator=(const VMatrix13& Mat)
+    VLN_FINLINE void operator=(const VMatrix13& Mat)
     {
         Memory.MemCopy(this, &Mat, sizeof(*this));
     }
 
-    VL_FINLINE void Zero()
+    VLN_FINLINE void Zero()
     {
         Memory.MemSetByte(this, 0, sizeof(*this));
     }
@@ -216,12 +216,12 @@ public:
     };
 
 public:
-    VL_FINLINE void operator=(const VMatrix22& Mat)
+    VLN_FINLINE void operator=(const VMatrix22& Mat)
     {
         Memory.MemCopy(this, &Mat, sizeof(*this));
     }
 
-    VL_FINLINE void Zero()
+    VLN_FINLINE void Zero()
     {
         Memory.MemSetByte(this, 0, sizeof(*this));
     }
@@ -243,12 +243,12 @@ public:
     };
 
 public:
-    VL_FINLINE void operator=(const VMatrix12& Mat)
+    VLN_FINLINE void operator=(const VMatrix12& Mat)
     {
         Memory.MemCopy(this, &Mat, sizeof(*this));
     }
 
-    VL_FINLINE void Zero()
+    VLN_FINLINE void Zero()
     {
         Memory.MemSetByte(this, 0, sizeof(*this));
     }
