@@ -20,14 +20,6 @@
 #include "Engine/Graphics/ZBuffer.h"
 #include "Engine/Graphics/RenderList.h"
 #include "Engine/Graphics/InterpolationContext.h"
-#include "Engine/Graphics/Interpolators/IInterpolator.h" // TODO: Move Interpolators in IntepolationContext
-#include "Engine/Graphics/Interpolators/FlatInterpolator.h"
-#include "Engine/Graphics/Interpolators/GouraudInterpolator.h"
-#include "Engine/Graphics/Interpolators/AffineTextureInterpolator.h"
-#include "Engine/Graphics/Interpolators/LinearPiecewiseTextureInterpolator.h"
-#include "Engine/Graphics/Interpolators/PerspectiveCorrectTextureInterpolator.h"
-#include "Engine/Graphics/Interpolators/BillinearPerspectiveTextureInterpolator.h"
-#include "Engine/Graphics/Interpolators/AlphaInterpolator.h"
 
 namespace Volition
 {
@@ -39,7 +31,6 @@ class VRenderer
 public:
     static constexpr i32f MaxMaterials = 256;
     static constexpr i32f MaxLights = 8;
-    static constexpr i32f MaxInterpolators = 8; // TODO: Move in InterpolationContext
 
 private:
     VSurface VideoSurface;
@@ -50,17 +41,6 @@ private:
 
     VRenderSpecification RenderSpec;
     VInterpolationContext InterpolationContext;
-
-    IInterpolator* Interpolators[MaxInterpolators];
-    i32 NumInterpolators;
-
-    VFlatInterpolator FlatInterpolator;
-    VGouraudInterpolator GouraudInterpolator;
-    VAffineTextureInterpolator AffineTextureInterpolator;
-    VLinearPiecewiseTextureInterpolator LinearPiecewiseTextureInterpolator;
-    VPerspectiveCorrectTextureInterpolator PerspectiveCorrectTextureInterpolator;
-    VBillinearPerspectiveTextureInterpolator BillinearPerspectiveTextureInterpolator;
-    VAlphaInterpolator AlphaInterpolator;
 
     TTF_Font* Font;
     i32 FontCharWidth; // In pixels

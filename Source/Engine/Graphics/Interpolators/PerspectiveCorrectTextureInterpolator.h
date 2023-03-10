@@ -26,105 +26,21 @@ private:
 public:
     virtual ~VPerspectiveCorrectTextureInterpolator() = default;
 
-    virtual void Start() override
-    {
-        const VSurface* Texture = &InterpolationContext->Material->Texture.Get(InterpolationContext->MipMappingLevel);
-        VLN_ASSERT(Texture);
+    virtual void Start() override;
 
-        TextureBuffer = Texture->GetBuffer();
-        TexturePitch = Texture->GetPitch();
-        f32 TextureSize = (f32)Texture->GetWidth();
+    virtual void ComputeYStartsAndDeltasLeft(i32 YDiffLeft, i32 LeftStartVtx, i32 LeftEndVtx) override;
+    virtual void ComputeYStartsAndDeltasRight(i32 YDiffRight, i32 RightStartVtx, i32 RightEndVtx) override;
 
-        for (i32f I = 0; I < 3; ++I)
-        {
-            UVtx[I] =
-                IntToFx22((i32)(InterpolationContext->Vtx[I].U * TextureSize + 0.5f)) /
-                    (i32)(InterpolationContext->Vtx[I].Z + 0.5f);
-            VVtx[I] =
-                IntToFx22((i32)(InterpolationContext->Vtx[I].V * TextureSize + 0.5f)) /
-                    (i32)(InterpolationContext->Vtx[I].Z + 0.5f);
-        }
-    }
+    virtual void SwapLeftRight() override;
 
-    virtual void ComputeYStartsAndDeltasLeft(i32 YDiffLeft, i32 LeftStartVtx, i32 LeftEndVtx) override
-    {
-        ULeft = (UVtx[LeftStartVtx]);
-        VLeft = (VVtx[LeftStartVtx]);
+    virtual void ComputeXStartsAndDeltas(i32 XDiff, fx28 ZLeft, fx28 ZRight) override;
 
-        UDeltaLeftByY = (UVtx[LeftEndVtx] - UVtx[LeftStartVtx]) / YDiffLeft;
-        VDeltaLeftByY = (VVtx[LeftEndVtx] - VVtx[LeftStartVtx]) / YDiffLeft;
-    }
-    virtual void ComputeYStartsAndDeltasRight(i32 YDiffRight, i32 RightStartVtx, i32 RightEndVtx) override
-    {
-        URight = (UVtx[RightStartVtx]);
-        VRight = (VVtx[RightStartVtx]);
+    virtual void ProcessPixel() override;
 
-        UDeltaRightByY = (UVtx[RightEndVtx] - UVtx[RightStartVtx]) / YDiffRight;
-        VDeltaRightByY = (VVtx[RightEndVtx] - VVtx[RightStartVtx]) / YDiffRight;
-    }
+    virtual void InterpolateX(i32 X) override;
 
-    virtual void SwapLeftRight() override
-    {
-        i32 TempInt;
-
-        VLN_SWAP(UDeltaLeftByY, UDeltaRightByY, TempInt);
-        VLN_SWAP(VDeltaLeftByY, VDeltaRightByY, TempInt);
-
-        VLN_SWAP(ULeft, URight, TempInt);
-        VLN_SWAP(VLeft, VRight, TempInt);
-
-        VLN_SWAP(UVtx[InterpolationContext->VtxIndices[1]], UVtx[InterpolationContext->VtxIndices[2]], TempInt);
-        VLN_SWAP(VVtx[InterpolationContext->VtxIndices[1]], VVtx[InterpolationContext->VtxIndices[2]], TempInt);
-    }
-
-    virtual void ComputeXStartsAndDeltas(i32 XDiff, fx28 ZLeft, fx28 ZRight) override
-    {
-        U = ULeft;
-        V = VLeft;
-
-        if (XDiff > 0)
-        {
-            UDeltaByX = (URight - ULeft) / XDiff;
-            VDeltaByX = (VRight - VLeft) / XDiff;
-        }
-        else
-        {
-            UDeltaByX = (URight - ULeft);
-            VDeltaByX = (VRight - VLeft);
-        }
-    }
-
-    virtual void ProcessPixel() override
-    {
-        VColorARGB Pixel = InterpolationContext->Pixel;
-        VColorARGB TextureColor = TextureBuffer[
-            ((V << (Fx28Shift - Fx22Shift)) / InterpolationContext->Z) * TexturePitch +
-            ((U << (Fx28Shift - Fx22Shift)) / InterpolationContext->Z)
-        ];
-
-        InterpolationContext->Pixel = MAP_XRGB32(
-            (TextureColor.R * Pixel.R) >> 8,
-            (TextureColor.G * Pixel.G) >> 8,
-            (TextureColor.B * Pixel.B) >> 8
-        );
-    }
-
-    virtual void InterpolateX(i32 X) override
-    {
-        U += UDeltaByX * X;
-        V += VDeltaByX * X;
-    }
-
-    virtual void InterpolateYLeft(i32 YLeft) override
-    {
-        ULeft += UDeltaLeftByY * YLeft;
-        VLeft += VDeltaLeftByY * YLeft;
-    }
-    virtual void InterpolateYRight(i32 YRight) override
-    {
-        URight += UDeltaRightByY * YRight;
-        VRight += VDeltaRightByY * YRight;
-    }
+    virtual void InterpolateYLeft(i32 YLeft) override;
+    virtual void InterpolateYRight(i32 YRight) override;
 };
 
 }

@@ -239,5 +239,26 @@
     <ClCompile Include="..\..\Source\Engine\Graphics\Texture.cpp">
       <Filter>Engine\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\AffineTextureInterpolator.cpp">
+      <Filter>Engine\Graphics\Interpolators</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\AlphaInterpolator.cpp">
+      <Filter>Engine\Graphics\Interpolators</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\BillinearPerspectiveTextureInterpolator.cpp">
+      <Filter>Engine\Graphics\Interpolators</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\FlatInterpolator.cpp">
+      <Filter>Engine\Graphics\Interpolators</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\GouraudInterpolator.cpp">
+      <Filter>Engine\Graphics\Interpolators</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\LinearPiecewiseTextureInterpolator.cpp">
+      <Filter>Engine\Graphics\Interpolators</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\PerspectiveCorrectTextureInterpolator.cpp">
+      <Filter>Engine\Graphics\Interpolators</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

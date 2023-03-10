@@ -236,7 +236,14 @@
     <ClCompile Include="..\..\Source\Engine\GameFramework\GameState.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Camera.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\InterpolationContext.cpp" />
+    <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\AffineTextureInterpolator.cpp" />
+    <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\AlphaInterpolator.cpp" />
+    <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\BillinearPerspectiveTextureInterpolator.cpp" />
+    <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\FlatInterpolator.cpp" />
+    <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\GouraudInterpolator.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\IInterpolator.cpp" />
+    <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\LinearPiecewiseTextureInterpolator.cpp" />
+    <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\PerspectiveCorrectTextureInterpolator.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Mesh.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Polygon.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Renderer.cpp" />

@@ -5,6 +5,14 @@
 #include "Engine/Graphics/Color.h"
 #include "Engine/Graphics/Polygon.h"
 #include "Engine/Graphics/Material.h"
+#include "Engine/Graphics/Interpolators/IInterpolator.h"
+#include "Engine/Graphics/Interpolators/FlatInterpolator.h"
+#include "Engine/Graphics/Interpolators/GouraudInterpolator.h"
+#include "Engine/Graphics/Interpolators/AffineTextureInterpolator.h"
+#include "Engine/Graphics/Interpolators/LinearPiecewiseTextureInterpolator.h"
+#include "Engine/Graphics/Interpolators/PerspectiveCorrectTextureInterpolator.h"
+#include "Engine/Graphics/Interpolators/BillinearPerspectiveTextureInterpolator.h"
+#include "Engine/Graphics/Interpolators/AlphaInterpolator.h"
 
 namespace Volition
 {
@@ -14,6 +22,9 @@ class IInterpolator;
 
 class VInterpolationContext
 {
+public:
+    static constexpr i32f MaxInterpolators = 8;
+
 public:
     const VRenderSpecification& RenderSpec;
 
@@ -36,6 +47,17 @@ public:
     VColorARGB Pixel;
     i32f X, Y;
     fx28 Z;
+
+    IInterpolator* Interpolators[MaxInterpolators];
+    i32 NumInterpolators;
+
+    VFlatInterpolator FlatInterpolator;
+    VGouraudInterpolator GouraudInterpolator;
+    VAffineTextureInterpolator AffineTextureInterpolator;
+    VLinearPiecewiseTextureInterpolator LinearPiecewiseTextureInterpolator;
+    VPerspectiveCorrectTextureInterpolator PerspectiveCorrectTextureInterpolator;
+    VBillinearPerspectiveTextureInterpolator BillinearPerspectiveTextureInterpolator;
+    VAlphaInterpolator AlphaInterpolator;
 
 public:
     VInterpolationContext(const VRenderSpecification& InRenderSpec) : RenderSpec(InRenderSpec)

@@ -621,10 +621,10 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
 
     SetInterpolators();
 
-    for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+    for (i32f InterpIndex = 0; InterpIndex < InterpolationContext.NumInterpolators; ++InterpIndex)
     {
-        Interpolators[InterpIndex]->SetInterpolationContext(InterpolationContext);
-        Interpolators[InterpIndex]->Start();
+        InterpolationContext.Interpolators[InterpIndex]->SetInterpolationContext(InterpolationContext);
+        InterpolationContext.Interpolators[InterpIndex]->Start();
     }
 
     i32 YStart;
@@ -662,9 +662,9 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
             XDeltaRightByY = IntToFx16(X2 - X1) / YDiff;
             ZDeltaRightByY = (ZVtx2 - ZVtx1) / YDiff;
 
-            for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+            for (i32f InterpIndex = 0; InterpIndex < InterpolationContext.NumInterpolators; ++InterpIndex)
             {
-                Interpolators[InterpIndex]->ComputeYStartsAndDeltas(YDiff, V0, V2, YDiff, V1, V2);
+                InterpolationContext.Interpolators[InterpIndex]->ComputeYStartsAndDeltas(YDiff, V0, V2, YDiff, V1, V2);
             }
 
             // Clipping Y
@@ -679,9 +679,9 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                 XRight = IntToFx16(X1) + YDiff * XDeltaRightByY;
                 ZRight = (ZVtx1) + YDiff * ZDeltaRightByY;
 
-                for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                for (i32f InterpIndex = 0; InterpIndex < InterpolationContext.NumInterpolators; ++InterpIndex)
                 {
-                    Interpolators[InterpIndex]->InterpolateY(YDiff, YDiff);
+                    InterpolationContext.Interpolators[InterpIndex]->InterpolateY(YDiff, YDiff);
                 }
             }
             else
@@ -704,9 +704,9 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
             XDeltaRightByY = IntToFx16(X2 - X0) / YDiff;
             ZDeltaRightByY = (ZVtx2 - ZVtx0) / YDiff;
 
-            for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+            for (i32f InterpIndex = 0; InterpIndex < InterpolationContext.NumInterpolators; ++InterpIndex)
             {
-                Interpolators[InterpIndex]->ComputeYStartsAndDeltas(YDiff, V0, V1, YDiff, V0, V2);
+                InterpolationContext.Interpolators[InterpIndex]->ComputeYStartsAndDeltas(YDiff, V0, V1, YDiff, V0, V2);
             }
 
             // Clipping Y
@@ -721,9 +721,9 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                 XRight = IntToFx16(X0) + YDiff * XDeltaRightByY;
                 ZRight = (ZVtx0) + YDiff * ZDeltaRightByY;
 
-                for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                for (i32f InterpIndex = 0; InterpIndex < InterpolationContext.NumInterpolators; ++InterpIndex)
                 {
-                    Interpolators[InterpIndex]->InterpolateY(YDiff, YDiff);
+                    InterpolationContext.Interpolators[InterpIndex]->InterpolateY(YDiff, YDiff);
                 }
             }
             else
@@ -769,9 +769,9 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                 // Compute deltas for X interpolation
                 i32f XDiff = XEnd - XStart;
 
-                for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                for (i32f InterpIndex = 0; InterpIndex < InterpolationContext.NumInterpolators; ++InterpIndex)
                 {
-                    Interpolators[InterpIndex]->ComputeXStartsAndDeltas(XDiff, ZLeft, ZRight);
+                    InterpolationContext.Interpolators[InterpIndex]->ComputeXStartsAndDeltas(XDiff, ZLeft, ZRight);
                 }
 
                 if (XDiff > 0)
@@ -791,9 +791,9 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
 
                     Z += XDiff * ZDeltaByX;
 
-                    for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                    for (i32f InterpIndex = 0; InterpIndex < InterpolationContext.NumInterpolators; ++InterpIndex)
                     {
-                        Interpolators[InterpIndex]->InterpolateX(XDiff);
+                        InterpolationContext.Interpolators[InterpIndex]->InterpolateX(XDiff);
                     }
                 }
                 if (XEnd > RenderSpec.MaxClip.X)
@@ -810,9 +810,9 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                         InterpolationContext.X = X;
                         InterpolationContext.Z = Z;
 
-                        for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                        for (i32f InterpIndex = 0; InterpIndex < InterpolationContext.NumInterpolators; ++InterpIndex)
                         {
-                            Interpolators[InterpIndex]->ProcessPixel();
+                            InterpolationContext.Interpolators[InterpIndex]->ProcessPixel();
                         }
 
                         Buffer[X] = InterpolationContext.Pixel;
@@ -823,9 +823,9 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                     // Interpolate by X
                     Z += ZDeltaByX;
 
-                    for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                    for (i32f InterpIndex = 0; InterpIndex < InterpolationContext.NumInterpolators; ++InterpIndex)
                     {
-                        Interpolators[InterpIndex]->InterpolateX();
+                        InterpolationContext.Interpolators[InterpIndex]->InterpolateX();
                     }
                 }
 
@@ -836,9 +836,9 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                 XRight += XDeltaRightByY;
                 ZRight += ZDeltaRightByY;
 
-                for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                for (i32f InterpIndex = 0; InterpIndex < InterpolationContext.NumInterpolators; ++InterpIndex)
                 {
-                    Interpolators[InterpIndex]->InterpolateY();
+                    InterpolationContext.Interpolators[InterpIndex]->InterpolateY();
                 }
 
                 Buffer += Pitch;
@@ -864,9 +864,9 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                 // Compute deltas for X interpolation
                 i32f XDiff = XEnd - XStart;
 
-                for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                for (i32f InterpIndex = 0; InterpIndex < InterpolationContext.NumInterpolators; ++InterpIndex)
                 {
-                    Interpolators[InterpIndex]->ComputeXStartsAndDeltas(XDiff, ZLeft, ZRight);
+                    InterpolationContext.Interpolators[InterpIndex]->ComputeXStartsAndDeltas(XDiff, ZLeft, ZRight);
                 }
 
                 if (XDiff > 0)
@@ -887,9 +887,9 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                         InterpolationContext.X = X;
                         InterpolationContext.Z = Z;
 
-                        for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                        for (i32f InterpIndex = 0; InterpIndex < InterpolationContext.NumInterpolators; ++InterpIndex)
                         {
-                            Interpolators[InterpIndex]->ProcessPixel();
+                            InterpolationContext.Interpolators[InterpIndex]->ProcessPixel();
                         }
 
                         Buffer[X] = InterpolationContext.Pixel;
@@ -900,9 +900,9 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                     // Interpolate by X
                     Z += ZDeltaByX;
 
-                    for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                    for (i32f InterpIndex = 0; InterpIndex < InterpolationContext.NumInterpolators; ++InterpIndex)
                     {
-                        Interpolators[InterpIndex]->InterpolateX();
+                        InterpolationContext.Interpolators[InterpIndex]->InterpolateX();
                     }
                 }
 
@@ -913,9 +913,9 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                 XRight += XDeltaRightByY;
                 ZRight += ZDeltaRightByY;
 
-                for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                for (i32f InterpIndex = 0; InterpIndex < InterpolationContext.NumInterpolators; ++InterpIndex)
                 {
-                    Interpolators[InterpIndex]->InterpolateY();
+                    InterpolationContext.Interpolators[InterpIndex]->InterpolateY();
                 }
 
                 Buffer += Pitch;
@@ -960,10 +960,10 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
             ZRight = (ZVtx0) + YOverClipRight * ZDeltaRightByY;
 
             // Do both for interpolators
-            for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+            for (i32f InterpIndex = 0; InterpIndex < InterpolationContext.NumInterpolators; ++InterpIndex)
             {
-                Interpolators[InterpIndex]->ComputeYStartsAndDeltas(YDiffLeft, V1, V2, YDiffRight, V0, V2);
-                Interpolators[InterpIndex]->InterpolateY(YOverClipLeft, YOverClipRight);
+                InterpolationContext.Interpolators[InterpIndex]->ComputeYStartsAndDeltas(YDiffLeft, V1, V2, YDiffRight, V0, V2);
+                InterpolationContext.Interpolators[InterpIndex]->InterpolateY(YOverClipLeft, YOverClipRight);
             }
 
             YStart = RenderSpec.MinClip.Y;
@@ -985,9 +985,9 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                 VLN_SWAP(Y1, Y2, TempInt);
                 VLN_SWAP(ZVtx1, ZVtx2, TempInt);
 
-                for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                for (i32f InterpIndex = 0; InterpIndex < InterpolationContext.NumInterpolators; ++InterpIndex)
                 {
-                    Interpolators[InterpIndex]->SwapLeftRight();
+                    InterpolationContext.Interpolators[InterpIndex]->SwapLeftRight();
                 }
 
                 bRestartInterpolationAtLeftHand = false; // Restart at right hand side
@@ -1012,10 +1012,10 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
             XRight = IntToFx16(X0) + YOverClip * XDeltaRightByY;
             ZRight = (ZVtx0) + YOverClip * ZDeltaRightByY;
 
-            for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+            for (i32f InterpIndex = 0; InterpIndex < InterpolationContext.NumInterpolators; ++InterpIndex)
             {
-                Interpolators[InterpIndex]->ComputeYStartsAndDeltas(YDiffLeft, V0, V1, YDiffRight, V0, V2);
-                Interpolators[InterpIndex]->InterpolateY(YOverClip, YOverClip);
+                InterpolationContext.Interpolators[InterpIndex]->ComputeYStartsAndDeltas(YDiffLeft, V0, V1, YDiffRight, V0, V2);
+                InterpolationContext.Interpolators[InterpIndex]->InterpolateY(YOverClip, YOverClip);
             }
 
             YStart = RenderSpec.MinClip.Y;
@@ -1037,9 +1037,9 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                 VLN_SWAP(Y1, Y2, TempInt);
                 VLN_SWAP(ZVtx1, ZVtx2, TempInt);
 
-                for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                for (i32f InterpIndex = 0; InterpIndex < InterpolationContext.NumInterpolators; ++InterpIndex)
                 {
-                    Interpolators[InterpIndex]->SwapLeftRight();
+                    InterpolationContext.Interpolators[InterpIndex]->SwapLeftRight();
                 }
 
                 bRestartInterpolationAtLeftHand = false; // Restart at right hand side
@@ -1058,9 +1058,9 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
             XRight = XLeft = IntToFx16(X0);
             ZRight = ZLeft = (ZVtx0);
 
-            for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+            for (i32f InterpIndex = 0; InterpIndex < InterpolationContext.NumInterpolators; ++InterpIndex)
             {
-                Interpolators[InterpIndex]->ComputeYStartsAndDeltas(YDiffLeft, V0, V1, YDiffRight, V0, V2);
+                InterpolationContext.Interpolators[InterpIndex]->ComputeYStartsAndDeltas(YDiffLeft, V0, V1, YDiffRight, V0, V2);
             }
 
             YStart = Y0;
@@ -1082,9 +1082,9 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                 VLN_SWAP(Y1, Y2, TempInt);
                 VLN_SWAP(ZVtx1, ZVtx2, TempInt);
 
-                for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                for (i32f InterpIndex = 0; InterpIndex < InterpolationContext.NumInterpolators; ++InterpIndex)
                 {
-                    Interpolators[InterpIndex]->SwapLeftRight();
+                    InterpolationContext.Interpolators[InterpIndex]->SwapLeftRight();
                 }
 
                 bRestartInterpolationAtLeftHand = false; // Restart at right hand side
@@ -1112,9 +1112,9 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                 // Compute deltas for X interpolation
                 i32f XDiff = XEnd - XStart;
 
-                for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                for (i32f InterpIndex = 0; InterpIndex < InterpolationContext.NumInterpolators; ++InterpIndex)
                 {
-                    Interpolators[InterpIndex]->ComputeXStartsAndDeltas(XDiff, ZLeft, ZRight);
+                    InterpolationContext.Interpolators[InterpIndex]->ComputeXStartsAndDeltas(XDiff, ZLeft, ZRight);
                 }
 
                 if (XDiff > 0)
@@ -1134,9 +1134,9 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
 
                     Z += XDiff * ZDeltaByX;
 
-                    for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                    for (i32f InterpIndex = 0; InterpIndex < InterpolationContext.NumInterpolators; ++InterpIndex)
                     {
-                        Interpolators[InterpIndex]->InterpolateX(XDiff);
+                        InterpolationContext.Interpolators[InterpIndex]->InterpolateX(XDiff);
                     }
                 }
                 if (XEnd > RenderSpec.MaxClip.X)
@@ -1153,9 +1153,9 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                         InterpolationContext.X = X;
                         InterpolationContext.Z = Z;
 
-                        for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                        for (i32f InterpIndex = 0; InterpIndex < InterpolationContext.NumInterpolators; ++InterpIndex)
                         {
-                            Interpolators[InterpIndex]->ProcessPixel();
+                            InterpolationContext.Interpolators[InterpIndex]->ProcessPixel();
                         }
 
                         Buffer[X] = InterpolationContext.Pixel;
@@ -1166,9 +1166,9 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                     // Interpolate by X
                     Z += ZDeltaByX;
 
-                    for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                    for (i32f InterpIndex = 0; InterpIndex < InterpolationContext.NumInterpolators; ++InterpIndex)
                     {
-                        Interpolators[InterpIndex]->InterpolateX();
+                        InterpolationContext.Interpolators[InterpIndex]->InterpolateX();
                     }
                 }
 
@@ -1179,9 +1179,9 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                 XRight += XDeltaRightByY;
                 ZRight += ZDeltaRightByY;
 
-                for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                for (i32f InterpIndex = 0; InterpIndex < InterpolationContext.NumInterpolators; ++InterpIndex)
                 {
-                    Interpolators[InterpIndex]->InterpolateY();
+                    InterpolationContext.Interpolators[InterpIndex]->InterpolateY();
                 }
 
                 Buffer += Pitch;
@@ -1206,10 +1206,10 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                         ZLeft += ZDeltaLeftByY;
 
                         // Do both for interpolators
-                        for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                        for (i32f InterpIndex = 0; InterpIndex < InterpolationContext.NumInterpolators; ++InterpIndex)
                         {
-                            Interpolators[InterpIndex]->ComputeYStartsAndDeltasLeft(YDiff, V1, V2);
-                            Interpolators[InterpIndex]->InterpolateYLeft();
+                            InterpolationContext.Interpolators[InterpIndex]->ComputeYStartsAndDeltasLeft(YDiff, V1, V2);
+                            InterpolationContext.Interpolators[InterpIndex]->InterpolateYLeft();
                         }
                     }
                     else
@@ -1228,10 +1228,10 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                         ZRight += ZDeltaRightByY;
 
                         // Do both for interpolators
-                        for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                        for (i32f InterpIndex = 0; InterpIndex < InterpolationContext.NumInterpolators; ++InterpIndex)
                         {
-                            Interpolators[InterpIndex]->ComputeYStartsAndDeltasRight(YDiff, V2, V1);
-                            Interpolators[InterpIndex]->InterpolateYRight();
+                            InterpolationContext.Interpolators[InterpIndex]->ComputeYStartsAndDeltasRight(YDiff, V2, V1);
+                            InterpolationContext.Interpolators[InterpIndex]->InterpolateYRight();
                         }
                     }
                 }
@@ -1256,9 +1256,9 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                 // Compute deltas for X interpolation
                 i32f XDiff = XEnd - XStart;
 
-                for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                for (i32f InterpIndex = 0; InterpIndex < InterpolationContext.NumInterpolators; ++InterpIndex)
                 {
-                    Interpolators[InterpIndex]->ComputeXStartsAndDeltas(XDiff, ZLeft, ZRight);
+                    InterpolationContext.Interpolators[InterpIndex]->ComputeXStartsAndDeltas(XDiff, ZLeft, ZRight);
                 }
 
                 if (XDiff > 0)
@@ -1279,9 +1279,9 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                         InterpolationContext.X = X;
                         InterpolationContext.Z = Z;
 
-                        for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                        for (i32f InterpIndex = 0; InterpIndex < InterpolationContext.NumInterpolators; ++InterpIndex)
                         {
-                            Interpolators[InterpIndex]->ProcessPixel();
+                            InterpolationContext.Interpolators[InterpIndex]->ProcessPixel();
                         }
 
                         Buffer[X] = InterpolationContext.Pixel;
@@ -1292,9 +1292,9 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                     // Interpolate by X
                     Z += ZDeltaByX;
 
-                    for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                    for (i32f InterpIndex = 0; InterpIndex < InterpolationContext.NumInterpolators; ++InterpIndex)
                     {
-                        Interpolators[InterpIndex]->InterpolateX();
+                        InterpolationContext.Interpolators[InterpIndex]->InterpolateX();
                     }
                 }
 
@@ -1305,9 +1305,9 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                 XRight += XDeltaRightByY;
                 ZRight += ZDeltaRightByY;
 
-                for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                for (i32f InterpIndex = 0; InterpIndex < InterpolationContext.NumInterpolators; ++InterpIndex)
                 {
-                    Interpolators[InterpIndex]->InterpolateY();
+                    InterpolationContext.Interpolators[InterpIndex]->InterpolateY();
                 }
 
                 Buffer += Pitch;
@@ -1332,10 +1332,10 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                         ZLeft += ZDeltaLeftByY;
 
                         // Do both for interpolators
-                        for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                        for (i32f InterpIndex = 0; InterpIndex < InterpolationContext.NumInterpolators; ++InterpIndex)
                         {
-                            Interpolators[InterpIndex]->ComputeYStartsAndDeltasLeft(YDiff, V1, V2);
-                            Interpolators[InterpIndex]->InterpolateYLeft();
+                            InterpolationContext.Interpolators[InterpIndex]->ComputeYStartsAndDeltasLeft(YDiff, V1, V2);
+                            InterpolationContext.Interpolators[InterpIndex]->InterpolateYLeft();
                         }
                     }
                     else
@@ -1354,10 +1354,10 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                         ZRight += ZDeltaRightByY;
 
                         // Do both for interpolators
-                        for (i32f InterpIndex = 0; InterpIndex < NumInterpolators; ++InterpIndex)
+                        for (i32f InterpIndex = 0; InterpIndex < InterpolationContext.NumInterpolators; ++InterpIndex)
                         {
-                            Interpolators[InterpIndex]->ComputeYStartsAndDeltasRight(YDiff, V2, V1);
-                            Interpolators[InterpIndex]->InterpolateYRight();
+                            InterpolationContext.Interpolators[InterpIndex]->ComputeYStartsAndDeltasRight(YDiff, V2, V1);
+                            InterpolationContext.Interpolators[InterpIndex]->InterpolateYRight();
                         }
                     }
                 }
@@ -1404,18 +1404,18 @@ void VRenderer::DrawText(i32 X, i32 Y, VColorARGB Color, const char* Format, ...
 
 void VRenderer::SetInterpolators()
 {
-    NumInterpolators = 0;
+    InterpolationContext.NumInterpolators = 0;
 
     if (InterpolationContext.PolyAttr & EPolyAttr::ShadeModeGouraud ||
         InterpolationContext.PolyAttr & EPolyAttr::ShadeModePhong)
     {
-        Interpolators[NumInterpolators] = &GouraudInterpolator;
+        InterpolationContext.Interpolators[InterpolationContext.NumInterpolators] = &InterpolationContext.GouraudInterpolator;
     }
     else
     {
-        Interpolators[NumInterpolators] = &FlatInterpolator;
+        InterpolationContext.Interpolators[InterpolationContext.NumInterpolators] = &InterpolationContext.FlatInterpolator;
     }
-    ++NumInterpolators;
+    ++InterpolationContext.NumInterpolators;
 
     if (InterpolationContext.PolyAttr & EPolyAttr::ShadeModeTexture)
     {
@@ -1431,32 +1431,32 @@ void VRenderer::SetInterpolators()
 
             if (DetailFactor < 0.5f)
             {
-                Interpolators[NumInterpolators] = &BillinearPerspectiveTextureInterpolator;
+                InterpolationContext.Interpolators[InterpolationContext.NumInterpolators] = &InterpolationContext.BillinearPerspectiveTextureInterpolator;
             }
             else if (DetailFactor < 0.75)
             {
-                Interpolators[NumInterpolators] = &PerspectiveCorrectTextureInterpolator;
+                InterpolationContext.Interpolators[InterpolationContext.NumInterpolators] = &InterpolationContext.PerspectiveCorrectTextureInterpolator;
             }
             else if (DetailFactor < 0.90f)
             {
-                Interpolators[NumInterpolators] = &LinearPiecewiseTextureInterpolator;
+                InterpolationContext.Interpolators[InterpolationContext.NumInterpolators] = &InterpolationContext.LinearPiecewiseTextureInterpolator;
             }
             else
             {
-                Interpolators[NumInterpolators] = &AffineTextureInterpolator;
+                InterpolationContext.Interpolators[InterpolationContext.NumInterpolators] = &InterpolationContext.AffineTextureInterpolator;
             }
         }
         else
         {
             InterpolationContext.MipMappingLevel = 0;
-            Interpolators[NumInterpolators] = &BillinearPerspectiveTextureInterpolator;
+            InterpolationContext.Interpolators[InterpolationContext.NumInterpolators] = &InterpolationContext.BillinearPerspectiveTextureInterpolator;
         }
 
-        ++NumInterpolators;
+        ++InterpolationContext.NumInterpolators;
     }
 
-    Interpolators[NumInterpolators] = &AlphaInterpolator;
-    ++NumInterpolators;
+    InterpolationContext.Interpolators[InterpolationContext.NumInterpolators] = &InterpolationContext.AlphaInterpolator;
+    ++InterpolationContext.NumInterpolators;
 }
 
 void VRenderer::RenderSolid()
