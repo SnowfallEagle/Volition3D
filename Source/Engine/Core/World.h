@@ -4,6 +4,9 @@
 #include "Engine/GameFramework/Entity.h"
 #include "Engine/GameFramework/GameState.h"
 
+namespace Volition
+{
+
 class VWorld
 {
     TArray<VEntity*> Entities;
@@ -80,3 +83,5 @@ public:
 };
 
 extern VWorld World;
+
+}

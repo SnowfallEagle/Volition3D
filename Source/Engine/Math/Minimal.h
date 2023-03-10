@@ -6,6 +6,9 @@
 #include "Engine/Math/Vector.h"
 #include "Engine/Math/Matrix.h"
 
+namespace Volition
+{
+
 // *** Quaternion ***
 class VQuat
 {
@@ -87,3 +90,5 @@ public:
     f32 Theta; // X-Y
     f32 Phi; // Z-Y
 };
+
+}

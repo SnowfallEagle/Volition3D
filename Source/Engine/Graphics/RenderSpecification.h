@@ -5,6 +5,9 @@
 
 struct SDL_PixelFormat;
 
+namespace Volition
+{
+
 class VRenderSpecification
 {
 public: // Set by user
@@ -36,3 +39,4 @@ private: // Set by rendering engine
     friend class VSurface;
 };
 
+}

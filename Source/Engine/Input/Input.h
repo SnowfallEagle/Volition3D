@@ -1,10 +1,12 @@
 #pragma once
 
-#include "Engine/Core/Platform.h"
-
 #include "SDL.h"
+#include "Engine/Core/Platform.h"
 #include "Engine/Core/Types.h"
 #include "Engine/Core/Platform.h"
+
+namespace Volition
+{
 
 namespace EKeycode
 {
@@ -166,3 +168,5 @@ public:
 };
 
 extern VInput Input;
+
+}

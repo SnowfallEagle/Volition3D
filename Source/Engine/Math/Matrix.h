@@ -5,6 +5,9 @@
 #include "Engine/Core/Memory.h"
 #include "Engine/Core/DebugLog.h"
 
+namespace Volition
+{
+
 class VVector4;
 
 class VMatrix44
@@ -254,3 +257,4 @@ public:
     }
 };
 
+}

@@ -2,6 +2,9 @@
 
 #include <cstdint>
 
+namespace Volition
+{
+
 using i8 = std::int8_t;
 using b8 = std::int8_t;
 
@@ -24,3 +27,5 @@ using f32 = float;
 using f64 = double;
 
 using VSizeType = u32;
+
+}

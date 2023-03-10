@@ -8,6 +8,9 @@
 #include "Engine/Graphics/Renderer.h"
 #include "Engine/Graphics/Mesh.h"
 
+namespace Volition
+{
+
 namespace EClipFlags
 {
     enum Type
@@ -1270,3 +1273,5 @@ public:
         }
     }
 };
+
+}

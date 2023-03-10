@@ -5,6 +5,9 @@
 #include "Engine/Math/Vector.h"
 #include "Engine/Graphics/Color.h"
 
+namespace Volition
+{
+
 namespace ELightState
 {
     enum
@@ -40,3 +43,5 @@ public:
     f32 SpotInner, SpotOuter;
     f32 Power; // Falloff for spotlights
 };
+
+}

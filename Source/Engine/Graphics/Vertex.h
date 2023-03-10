@@ -4,6 +4,9 @@
 #include "Engine/Core/Types.h"
 #include "Engine/Math/Vector.h"
 
+namespace Volition
+{
+
 namespace EVertexAttr
 {
 	enum
@@ -38,3 +41,4 @@ public:
 	};
 };
 
+}

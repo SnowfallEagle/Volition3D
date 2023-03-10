@@ -48,7 +48,7 @@
     <ClInclude Include="..\..\Source\Engine\Core\Types.h">
       <Filter>Engine\Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Core\Volition.h">
+    <ClInclude Include="..\..\Source\Engine\Core\Engine.h">
       <Filter>Engine\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Core\Window.h">
@@ -185,7 +185,7 @@
     <ClCompile Include="..\..\Source\Engine\Core\Time.cpp">
       <Filter>Engine\Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Engine\Core\Volition.cpp">
+    <ClCompile Include="..\..\Source\Engine\Core\Engine.cpp">
       <Filter>Engine\Core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Core\Window.cpp">

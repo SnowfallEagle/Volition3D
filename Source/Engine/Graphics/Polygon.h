@@ -7,6 +7,9 @@
 #include "Engine/Graphics/Surface.h"
 #include "Engine/Graphics/Material.h"
 
+namespace Volition
+{
+
 namespace EPolyState
 {
 	enum
@@ -71,3 +74,5 @@ public:
 
 	f32 NormalLength;
 };
+
+}

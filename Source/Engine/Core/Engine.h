@@ -11,7 +11,10 @@
 #include "Engine/Core/Time.h"
 #include "Engine/Core/World.h"
 
-class VVolition
+namespace Volition
+{
+
+class VEngine
 {
     b32 bRunning;
 
@@ -76,4 +79,6 @@ private:
     }
 };
 
-extern VVolition Volition;
+extern VEngine Engine;
+
+}

@@ -4,6 +4,9 @@
 #include "Engine/Graphics/Renderer.h"
 #include "Engine/Graphics/RenderList.h"
 
+namespace Volition
+{
+
 VRenderer Renderer;
 
 VLN_DEFINE_LOG_CHANNEL(hLogRenderer, "Renderer");
@@ -1345,3 +1348,4 @@ void VRenderer::DrawText(i32 X, i32 Y, VColorARGB Color, const char* Format, ...
     SDL_FreeSurface(SDLConverted);
 }
 
+}

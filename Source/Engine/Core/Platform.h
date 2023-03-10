@@ -2,6 +2,9 @@
 
 #include <intrin.h>
 
+namespace Volition
+{
+
 // MSVC
 #define VLN_PLATFORM_WIN 1
 #define VLN_COMPILER_MSVC 1
@@ -42,3 +45,5 @@
             X = nullptr; \
         } \
     }
+
+}

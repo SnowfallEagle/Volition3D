@@ -5,6 +5,9 @@
 #include "Engine/Core/Types.h"
 #include "Engine/Core/Platform.h"
 
+namespace Volition
+{
+
 #define VLN_NOTE(CHANNEL, FORMAT, ...) DebugLog.Output(CHANNEL, "Note", FORMAT, __VA_ARGS__)
 #define VLN_WARNING(CHANNEL, FORMAT, ...) DebugLog.Output(CHANNEL, "Warning", FORMAT, __VA_ARGS__)
 #define VLN_ERROR(CHANNEL, FORMAT, ...) DebugLog.Output(CHANNEL, "Error", FORMAT, __VA_ARGS__)
@@ -26,3 +29,5 @@ private:
 };
 
 extern VDebugLog DebugLog;
+
+}

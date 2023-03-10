@@ -1,5 +1,8 @@
 #include "Engine/Core/DebugLog.h"
 
+namespace Volition
+{
+
 namespace EAnsiAttr
 {
     enum
@@ -76,4 +79,6 @@ void VDebugLog::VarOutput(const char* Channel, const char* Priority, const char*
     printf("\x1b[%dm%s\x1b[m", Color, MessageBuffer);
     fprintf(hFile, "%s", MessageBuffer);
     fflush(hFile);
+}
+
 }

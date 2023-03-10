@@ -6,6 +6,9 @@
 #include "Engine/Graphics/Renderer.h"
 #include "Engine/Graphics/Mesh.h"
 
+namespace Volition
+{
+
 VLN_DEFINE_LOG_CHANNEL(hLogCOB, "COB Loader");
 
 char* GetLineCOB(std::FILE* File, char* Buffer, i32 Size)
@@ -530,4 +533,6 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
     VLN_NOTE(hLogCOB, "Ended parse object\n");
 
     return true;
+}
+
 }

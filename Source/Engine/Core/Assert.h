@@ -3,6 +3,9 @@
 #include "Engine/Core/Platform.h"
 #include "Engine/Core/DebugLog.h"
 
+namespace Volition
+{
+
 VLN_DEFINE_LOG_CHANNEL(hLogAssert, "Assert");
 
 #define VLN_ASSERTIONS_ENABLED 1
@@ -75,3 +78,4 @@ VLN_DEFINE_LOG_CHANNEL(hLogAssert, "Assert");
     #define VLN_ASSERT_LOCK_NOT_NECESSARY(J, L)
 #endif // VLN_ASSERTIONS_ENABLED
 
+}

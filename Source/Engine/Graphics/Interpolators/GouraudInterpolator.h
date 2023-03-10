@@ -2,6 +2,9 @@
 
 #include "Engine/Graphics/Interpolators/IInterpolator.h"
 
+namespace Volition
+{
+
 class VGouraudInterpolator final : public IInterpolator
 {
 private:
@@ -119,3 +122,5 @@ public:
         BRight += BDeltaRightByY * YRight;
     }
 };
+
+}

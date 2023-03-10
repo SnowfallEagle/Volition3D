@@ -1,6 +1,9 @@
 #include "Engine/Math/Matrix.h"
 #include "Engine/Math/Vector.h"
 
+namespace Volition
+{
+
 void VVector4::MulMat44(const VVector4& A, const VMatrix44& M, VVector4& R)
 {
     for (i32f X = 0; X < 4; ++X)
@@ -14,4 +17,6 @@ void VVector4::MulMat44(const VVector4& A, const VMatrix44& M, VVector4& R)
 
         R.C[X] = C;
     }
+}
+
 }

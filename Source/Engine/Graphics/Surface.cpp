@@ -1,6 +1,9 @@
 #include "Engine/Graphics/Renderer.h"
 #include "Engine/Graphics/Surface.h"
 
+namespace Volition
+{
+
 void VSurface::Create(SDL_Surface* InSDLSurface)
 {
     VLN_ASSERT(InSDLSurface);
@@ -88,4 +91,6 @@ void VSurface::FillRectHW(VRelRectI* Rect, u32 Color)
 void VSurface::BlitHW(VRelRectI* SourceRect, VSurface* Dest, VRelRectI* DestRect)
 {
     SDL_BlitScaled(SDLSurface, (SDL_Rect*)SourceRect, Dest->SDLSurface, (SDL_Rect*)DestRect);
+}
+
 }

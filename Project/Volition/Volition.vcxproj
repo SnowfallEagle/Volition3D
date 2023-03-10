@@ -186,7 +186,7 @@
     <ClInclude Include="..\..\Source\Engine\Core\Thread\SpinLock.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Time.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Types.h" />
-    <ClInclude Include="..\..\Source\Engine\Core\Volition.h" />
+    <ClInclude Include="..\..\Source\Engine\Core\Engine.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Window.h" />
     <ClInclude Include="..\..\Source\Engine\Core\WindowSpecification.h" />
     <ClInclude Include="..\..\Source\Engine\Core\World.h" />
@@ -230,7 +230,7 @@
     <ClCompile Include="..\..\Source\Engine\Core\DebugLog.cpp" />
     <ClCompile Include="..\..\Source\Engine\Core\Memory.cpp" />
     <ClCompile Include="..\..\Source\Engine\Core\Time.cpp" />
-    <ClCompile Include="..\..\Source\Engine\Core\Volition.cpp" />
+    <ClCompile Include="..\..\Source\Engine\Core\Engine.cpp" />
     <ClCompile Include="..\..\Source\Engine\Core\Window.cpp" />
     <ClCompile Include="..\..\Source\Engine\Core\World.cpp" />
     <ClCompile Include="..\..\Source\Engine\GameFramework\Entity.cpp" />

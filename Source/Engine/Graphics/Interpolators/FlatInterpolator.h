@@ -2,6 +2,9 @@
 
 #include "Engine/Graphics/Interpolators/IInterpolator.h"
 
+namespace Volition
+{
+
 class VFlatInterpolator final : public IInterpolator
 {
 private:
@@ -26,3 +29,5 @@ public:
         );
     }
 };
+
+}

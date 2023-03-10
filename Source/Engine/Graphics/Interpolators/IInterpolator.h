@@ -7,6 +7,9 @@
 #include "Engine/Graphics/Color.h"
 #include "Engine/Graphics/InterpolationContext.h"
 
+namespace Volition
+{
+
 class IInterpolator
 {
 protected:
@@ -54,3 +57,5 @@ public:
         InterpolateYRight(YRight);
     }
 };
+
+}

@@ -4,8 +4,11 @@
 #include "Engine/Core/Platform.h"
 #include "Engine/Core/DebugLog.h"
 
+namespace Volition
+{
+
 // *** Fixed point 16.16 ***
-typedef i32 fx16;
+using fx16 = i32;
 
 namespace
 {
@@ -123,4 +126,6 @@ VLN_FINLINE i32 GetFx16DecimalPart(fx16 Fx)
 VLN_FINLINE void PrintFx16(fx16 Fx, char EndChar = 0)
 {
     VLN_LOG("%f%c", Fx16ToFloat(Fx), EndChar);
+}
+
 }

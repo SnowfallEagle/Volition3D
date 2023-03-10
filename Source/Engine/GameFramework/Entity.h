@@ -3,6 +3,9 @@
 #include "Engine/Core/Containers/String.h"
 #include "Engine/Graphics/Mesh.h"
 
+namespace Volition
+{
+
 class VEntity
 {
 public:
@@ -30,3 +33,5 @@ public:
     virtual void Update(f32 DeltaTime)
     {}
 };
+
+}

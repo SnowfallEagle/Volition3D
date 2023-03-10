@@ -5,6 +5,9 @@
 #include "Engine/Graphics/Color.h"
 #include "Engine/Graphics/Texture.h"
 
+namespace Volition
+{
+
 namespace EMaterialState
 {
     enum
@@ -51,3 +54,5 @@ public:
 public:
     VMaterial() = default;
 };
+
+}

@@ -2,6 +2,9 @@
 
 #include "Engine/Graphics/Interpolators/IInterpolator.h"
 
+namespace Volition
+{
+
 class VBillinearPerspectiveTextureInterpolator final : public IInterpolator
 {
 private:
@@ -179,3 +182,5 @@ public:
         VRight += VDeltaRightByY * YRight;
     }
 };
+
+}

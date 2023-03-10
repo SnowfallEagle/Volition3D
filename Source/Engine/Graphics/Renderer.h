@@ -20,6 +20,9 @@
 #include "Engine/Graphics/ZBuffer.h"
 #include "Engine/Graphics/RenderContext.h"
 
+namespace Volition
+{
+
 class VRenderer
 {
 public:
@@ -157,3 +160,5 @@ public:
 };
 
 extern VRenderer Renderer;
+
+}

@@ -3,6 +3,9 @@
 #include "Engine/Core/Types.h"
 #include "Engine/Math/Minimal.h"
 
+namespace Volition
+{
+
 enum class ERotateSeq
 {
     YXZ = 0,
@@ -315,3 +318,4 @@ public:
     }
 };
 
+}

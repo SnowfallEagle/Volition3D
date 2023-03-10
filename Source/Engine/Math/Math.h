@@ -5,6 +5,9 @@
 #include "Engine/Core/Types.h"
 #include "Engine/Core/Platform.h"
 
+namespace Volition
+{
+
 class VMath
 {
 public:
@@ -166,3 +169,4 @@ public:
 
 extern VMath Math;
 
+}

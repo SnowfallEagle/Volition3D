@@ -4,6 +4,9 @@
 #include "Engine/Core/Platform.h"
 #include "Engine/Core/Types.h"
 
+namespace Volition
+{
+
 class VMemory
 {
 public:
@@ -41,3 +44,5 @@ public:
 };
 
 extern VMemory Memory;
+
+}

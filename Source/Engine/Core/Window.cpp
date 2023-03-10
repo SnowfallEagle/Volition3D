@@ -1,7 +1,10 @@
 #include "SDL.h"
 #include "Engine/Core/Assert.h"
-#include "Engine/Core/Volition.h"
+#include "Engine/Core/Engine.h"
 #include "Engine/Core/Window.h"
+
+namespace Volition
+{
 
 VWindow Window;
 
@@ -54,10 +57,12 @@ void VWindow::HandleEvents()
         {
         case SDL_QUIT:
         {
-            Volition.Stop();
+            Engine.Stop();
         } break;
 
         default: {} break;
         }
     }
+}
+
 }

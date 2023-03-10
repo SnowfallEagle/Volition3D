@@ -1,6 +1,9 @@
 #include "Engine/Graphics/Renderer.h"
 #include "Engine/Graphics/Texture.h"
 
+namespace Volition
+{
+
 void VTexture::LoadBMP(const char* Path)
 {
     Surfaces.Resize(Renderer.GetRenderSpec().MaxMipMappingLevel);
@@ -121,4 +124,6 @@ void VTexture::GenerateMipMaps()
         Surfaces[I - 1].Unlock();
         Surfaces[I].Unlock();
     }
+}
+
 }

@@ -3,6 +3,9 @@
 #include "Engine/Core/Types.h"
 #include "Engine/Core/Containers/Array.h"
 
+namespace Volition
+{
+
 class VGameState
 {
 public:
@@ -15,3 +18,5 @@ public:
     virtual void Update(f32 DeltaTime)
     {}
 };
+
+}

@@ -5,6 +5,9 @@
 #include "Engine/Core/DebugLog.h"
 #include "Engine/Math/Math.h"
 
+namespace Volition
+{
+
 class VMatrix44;
 
 template<class T>
@@ -52,8 +55,11 @@ VLN_FINLINE void TVector2<i32>::Print()
     VLN_LOG("<%d, %d>", X, Y);
 }
 
-typedef TVector2<f32> VVector2, VPoint2;
-typedef TVector2<i32> VVector2I, VPoint2I;
+using VVector2 = TVector2<f32>;
+using VPoint2 = VVector2;
+
+using VVector2I = TVector2<i32>;
+using VPoint2I = VVector2I;
 
 class VVector3
 {
@@ -129,7 +135,7 @@ public:
     }
 };
 
-typedef VVector3 VPoint3;
+using VPoint3 = VVector3;
 
 class VVector4
 {
@@ -292,5 +298,6 @@ public:
     static void MulMat44(const VVector4& A, const VMatrix44& M, VVector4& R);
 };
 
-typedef VVector4 VPoint4;
+using VPoint4 = VVector4;
 
+}

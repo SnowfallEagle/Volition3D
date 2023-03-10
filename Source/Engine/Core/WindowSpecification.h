@@ -3,6 +3,9 @@
 #include "Engine/Core/Containers/String.h"
 #include "Engine/Math/Vector.h"
 
+namespace Volition
+{
+
 namespace EWindowSpecificationFlags
 {
     enum Type
@@ -21,3 +24,5 @@ public:
     VVector2I Size = { 1280, 720 };
     u32 Flags = EWindowSpecificationFlags::Windowed;
 };
+
+}

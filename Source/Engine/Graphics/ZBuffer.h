@@ -4,6 +4,9 @@
 #include "Engine/Math/Fixed28.h"
 #include "Engine/Graphics/Surface.h"
 
+namespace Volition
+{
+
 class VZBuffer
 {
 private:
@@ -34,3 +37,5 @@ public:
         Memory.MemSetQuad(Buffer, 0, Pitch * Height);
     }
 };
+
+}

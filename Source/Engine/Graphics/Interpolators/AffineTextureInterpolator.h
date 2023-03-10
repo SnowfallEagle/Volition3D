@@ -3,6 +3,9 @@
 #include "Engine/Graphics/Interpolators/IInterpolator.h"
 #include "Engine/Math/Fixed16.h"
 
+namespace Volition
+{
+
 class VAffineTextureInterpolator final : public IInterpolator
 {
 private:
@@ -117,3 +120,5 @@ public:
         VRight += VDeltaRightByY * YRight;
     }
 };
+
+}

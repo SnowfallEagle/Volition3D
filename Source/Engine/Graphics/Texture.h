@@ -3,6 +3,9 @@
 #include "Engine/Core/Containers/Array.h"
 #include "Engine/Graphics/Surface.h"
 
+namespace Volition
+{
+
 class VTexture
 {
     TArray<VSurface> Surfaces;
@@ -17,3 +20,5 @@ public:
 private:
     void GenerateMipMaps();
 };
+
+}

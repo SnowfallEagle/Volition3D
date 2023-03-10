@@ -3,6 +3,9 @@
 #include "Engine/Graphics/Interpolators/IInterpolator.h"
 #include "Engine/Math/Fixed22.h"
 
+namespace Volition
+{
+
 class VLinearPiecewiseTextureInterpolator final : public IInterpolator
 {
 private:
@@ -127,3 +130,5 @@ public:
         VRight += VDeltaRightByY * YRight;
     }
 };
+
+}

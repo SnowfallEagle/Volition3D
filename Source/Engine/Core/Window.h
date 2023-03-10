@@ -6,6 +6,9 @@
 
 struct SDL_Window;
 
+namespace Volition
+{
+
 class VWindow
 {
     SDL_Window* SDLWindow;
@@ -19,3 +22,5 @@ public:
 };
 
 extern VWindow Window;
+
+}

@@ -4,6 +4,9 @@
 #include "Engine/Core/Types.h"
 #include "Engine/Core/Platform.h"
 
+namespace Volition
+{
+
 template<typename T>
 class TArray : public std::vector<T>
 {
@@ -41,3 +44,5 @@ public:
         return Super::size();
     }
 };
+
+}

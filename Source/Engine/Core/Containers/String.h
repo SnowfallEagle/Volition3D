@@ -2,6 +2,9 @@
 
 #include <string>
 
+namespace Volition
+{
+
 class VString : std::string
 {
 public:
@@ -16,3 +19,5 @@ public:
         return Super::c_str();
     }
 };
+
+}

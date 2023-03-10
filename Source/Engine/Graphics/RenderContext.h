@@ -11,6 +11,9 @@
 #include "Engine/Graphics/Interpolators/BillinearPerspectiveTextureInterpolator.h"
 #include "Engine/Graphics/Interpolators/AlphaInterpolator.h"
 
+namespace Volition
+{
+
 class VRenderList;
 
 class VRenderContext
@@ -52,3 +55,5 @@ private:
     void RenderSolid();
     void RenderWire();
 };
+
+}

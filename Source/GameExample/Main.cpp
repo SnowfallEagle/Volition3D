@@ -1,5 +1,7 @@
-#include "Engine/Core/Volition.h"
+#include "Engine/Core/Engine.h"
 #include "Engine/Math/Matrix.h"
+
+using namespace Volition;
 
 class GGameState : public VGameState
 {
@@ -112,7 +114,7 @@ public:
     {
         if (Input.IsKeyDown(EKeycode::Escape))
         {
-            Volition.Stop();
+            Engine.Stop();
         }
 
         f32 CamPosSpeed = 0.5f * DeltaTime;
@@ -162,8 +164,8 @@ int main(int Argc, char** Argv)
     VWindowSpecification WindowSpec;
     VRenderSpecification RenderSpec;
 
-    Volition.StartUp<GGameState>(WindowSpec, RenderSpec);
-    Volition.Run();
+    Engine.StartUp<GGameState>(WindowSpec, RenderSpec);
+    Engine.Run();
 
     return 0;
 }

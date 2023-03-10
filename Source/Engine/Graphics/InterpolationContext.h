@@ -6,6 +6,9 @@
 #include "Engine/Graphics/Polygon.h"
 #include "Engine/Graphics/Material.h"
 
+namespace Volition
+{
+
 class VRenderSpecification;
 class IInterpolator;
 
@@ -41,3 +44,5 @@ public:
     VInterpolationContext(const VRenderSpecification& InRenderSpec) : RenderSpec(InRenderSpec)
     {}
 };
+
+}

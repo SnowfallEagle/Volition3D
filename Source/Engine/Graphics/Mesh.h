@@ -5,6 +5,9 @@
 #include "Engine/Graphics/TransformType.h"
 #include "Engine/Graphics/Vertex.h"
 
+namespace Volition
+{
+
 namespace EMeshState
 {
     enum
@@ -409,3 +412,5 @@ public:
         return false;
     }
 };
+
+}

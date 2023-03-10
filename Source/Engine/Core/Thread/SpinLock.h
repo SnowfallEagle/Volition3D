@@ -6,6 +6,9 @@
 #include "Engine/Core/Platform.h"
 #include "Engine/Core/Assert.h"
 
+namespace Volition
+{
+
 class VSpinLock
 {
     std::atomic_flag Atomic;
@@ -192,3 +195,4 @@ public:
     }
 };
 
+}

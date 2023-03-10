@@ -6,6 +6,9 @@
 #include "Engine/Core/Assert.h"
 #include "Engine/Math/Rect.h"
 
+namespace Volition
+{
+
 class VSurface
 {
 protected:
@@ -65,3 +68,5 @@ public:
 
     friend class VRenderer;
 };
+
+}

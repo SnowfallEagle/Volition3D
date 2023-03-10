@@ -2,6 +2,9 @@
 #include "Engine/Math/Vector.h"
 #include "Engine/Math/Matrix.h"
 
+namespace Volition
+{
+
 const VMatrix44 VMatrix44::Identity = {
     1, 0, 0, 0,
     0, 1, 0, 0,
@@ -154,4 +157,6 @@ b32 VMatrix44::Inverse(const VMatrix44& A, VMatrix44& R)
 
     // Success
     return true;
+}
+
 }

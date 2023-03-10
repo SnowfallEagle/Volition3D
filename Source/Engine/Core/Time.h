@@ -5,6 +5,9 @@
 #include "Engine/Core/Types.h"
 #include "Engine/Graphics/RenderSpecification.h"
 
+namespace Volition
+{
+
 class VTime
 {
     i32 MsFrameLimit;
@@ -56,3 +59,5 @@ public:
 };
 
 extern VTime Time;
+
+}

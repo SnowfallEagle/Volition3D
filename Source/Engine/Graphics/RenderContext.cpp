@@ -3,6 +3,9 @@
 #include "Engine/Graphics/RenderList.h"
 #include "Engine/Graphics/RenderContext.h"
 
+namespace Volition
+{
+
 void VRenderContext::Init()
 {
     RenderList = new VRenderList();
@@ -185,4 +188,6 @@ void VRenderContext::RenderWire()
             Poly->LitColor[2]
         );
     }
+}
+
 }
