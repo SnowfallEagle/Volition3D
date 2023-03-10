@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Engine/Core/Containers/Array.h"
-#include "Engine/GameFramework/Entity.h"
-#include "Engine/GameFramework/GameState.h"
+#include "Engine/GameCore/Entity.h"
+#include "Engine/GameCore/GameState.h"
 
 namespace Volition
 {
