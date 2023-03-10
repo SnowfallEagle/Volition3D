@@ -20,15 +20,7 @@ public:
     virtual void Init()
     {}
 
-    virtual void Destroy()
-    {
-        if (Mesh)
-        {
-            Mesh->Destroy();
-            delete Mesh;
-            Mesh = nullptr;
-        }
-    }
+    virtual void Destroy();
 
     virtual void Update(f32 DeltaTime)
     {}

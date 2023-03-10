@@ -24,46 +24,8 @@ public:
         GameFlow->StartUp();
     }
 
-    void ShutDown()
-    {
-        if (GameFlow)
-        {
-            GameFlow->ShutDown();
-            delete GameFlow;
-        }
-
-        for (auto Entity : Entities)
-        {
-            if (Entity)
-            {
-                Entity->Destroy();
-                delete Entity;
-                Entity = nullptr;
-            }
-        }
-
-        if (Camera)
-        {
-            delete Camera;
-            Camera = nullptr;
-        }
-    }
-
-    void Update(f32 DeltaTime)
-    {
-        if (GameFlow)
-        {
-            GameFlow->Update(DeltaTime);
-        }
-
-        for (auto Entity : Entities)
-        {
-            if (Entity)
-            {
-                Entity->Update(DeltaTime);
-            }
-        }
-    }
+    void ShutDown();
+    void Update(f32 DeltaTime);
 
     VLN_FINLINE VCamera* GetCamera()
     {

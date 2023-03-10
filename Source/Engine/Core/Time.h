@@ -17,35 +17,11 @@ class VTime
     b32 bLimitFPS;
 
 public:
-    void StartUp(const VRenderSpecification& RenderSpec)
-    {
-        MsFrameLimit = 1000 / RenderSpec.TargetFPS;
-        bLimitFPS = RenderSpec.bLimitFPS;
+    void StartUp(const VRenderSpecification& RenderSpec);
+    void ShutDown();
 
-        LastTick = 0;
-        DeltaTime = 0.0f;
-    }
-
-    void ShutDown()
-    {}
-
-    void TickFrame()
-    {
-        u32 CurrentTick = GetTicks();
-        DeltaTime = (f32)(CurrentTick - LastTick);
-        LastTick = CurrentTick;
-    }
-
-    void SyncFrame()
-    {
-        if (bLimitFPS)
-        {
-            while ((i32)GetTicks() - LastTick < MsFrameLimit)
-            {
-                VLN_PAUSE();
-            }
-        }
-    }
+    void TickFrame();
+    void SyncFrame();
 
     VLN_FINLINE i32 GetTicks()
     {

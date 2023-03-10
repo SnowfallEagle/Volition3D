@@ -33,38 +33,8 @@ public:
         bRunning = true;
     }
 
-    void ShutDown()
-    {
-        bRunning = false;
-
-        World.ShutDown();
-        Time.ShutDown();
-        Input.ShutDown();
-        Renderer.ShutDown();
-        Math.ShutDown();
-        Window.Destroy();
-        DebugLog.ShutDown();
-    }
-
-    void Run()
-    {
-        while (bRunning)
-        {
-            Time.TickFrame();
-
-            HandleEvents();
-            World.Update(Time.GetDeltaTime());
-
-            Renderer.PrepareToRender();
-            Renderer.Render();
-            Renderer.RenderUI();
-            Renderer.Flip();
-
-            Time.SyncFrame();
-        }
-
-        ShutDown();
-    }
+    void ShutDown();
+    void Run();
 
     VLN_FINLINE void Stop()
     {
@@ -72,11 +42,7 @@ public:
     }
 
 private:
-    void HandleEvents()
-    {
-        Window.HandleEvents();
-        Input.HandleEvents();
-    }
+    void HandleEvents();
 };
 
 extern VEngine Engine;

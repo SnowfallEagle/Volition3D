@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include "Engine/Core/Platform.h"
 
 namespace Volition
 {
@@ -14,7 +15,7 @@ public:
     VString(const std::string& InString = "") : Super(InString)
     {}
 
-    operator const char*() const
+    VLN_FINLINE operator const char*() const
     {
         return Super::c_str();
     }

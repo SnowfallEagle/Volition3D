@@ -23,7 +23,7 @@ public:
         };
         struct
         {
-            /* NOTE(sean):
+            /* NOTE:
                 We can't cast quaternion to 4d
                 vector because of W on first place
             */

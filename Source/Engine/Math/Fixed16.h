@@ -49,7 +49,7 @@ VLN_FINLINE f32 Fx16ToFloat(fx16 Fx)
 VLN_FINLINE fx16 MulFx16(fx16 Fx1, fx16 Fx2)
 {
 #if VLN_COMPILER_MSVC
-    /* NOTE(sean):
+    /* NOTE:
         Let X, Y are integers and P, Q are fixed point numbers.
         P = (fx16)X, Q = (fx16)Y.
         Now P is actually (X * 2^16) and Q is (Y * 2^16).
@@ -81,7 +81,7 @@ VLN_FINLINE fx16 MulFx16(fx16 Fx1, fx16 Fx2)
 VLN_FINLINE fx16 DivFx16(fx16 Fx1, fx16 Fx2)
 {
 #if VLN_COMPILER_MSVC
-    /* NOTE(sean):
+    /* NOTE:
         Let X, Y are integers and P, Q are fixed point numbers.
         P = (fx16)X, Q = (fx16)Y.
         Now P is actually (X * 2^16) and Q is (Y * 2^16).

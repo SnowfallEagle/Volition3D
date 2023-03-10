@@ -49,7 +49,7 @@ private:
     VMaterial Materials[MaxMaterials];
     i32 NumMaterials;
 
-    // TODO(sean): Later we could put light as entity in world
+    // TODO: Later we could put light as entity in world
     VLight Lights[MaxLights];
     i32 NumLights;
 
@@ -118,7 +118,7 @@ public:
 
     VLN_FINLINE void RenderUI()
     {
-        // TODO(sean): Implement
+        // TODO: Implement
     }
 
     void Flip();
