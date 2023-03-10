@@ -13,9 +13,6 @@
     <Filter Include="Engine\Core\Thread">
       <UniqueIdentifier>{a967c48a-8b46-4a48-b699-6d523ce1b71d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\GameFramework">
-      <UniqueIdentifier>{c99d54a6-d6e7-406a-a1bc-341ce5d43989}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\Input">
       <UniqueIdentifier>{69adadf5-5484-4b29-b681-ac65d64a233d}</UniqueIdentifier>
     </Filter>
@@ -27,6 +24,9 @@
     </Filter>
     <Filter Include="Engine\Math">
       <UniqueIdentifier>{4f349201-4916-4d0c-9bc6-6ca54ce8e312}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\GameCore">
+      <UniqueIdentifier>{c99d54a6-d6e7-406a-a1bc-341ce5d43989}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -159,17 +159,17 @@
     <ClInclude Include="..\..\Source\Engine\Core\World.h">
       <Filter>Engine\Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\GameFramework\GameState.h">
-      <Filter>Engine\GameFramework</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\GameFramework\Entity.h">
-      <Filter>Engine\GameFramework</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Graphics\InterpolationContext.h">
       <Filter>Engine\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Graphics\Texture.h">
       <Filter>Engine\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\GameCore\Entity.h">
+      <Filter>Engine\GameCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\GameCore\GameState.h">
+      <Filter>Engine\GameCore</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -227,12 +227,6 @@
     <ClCompile Include="..\..\Source\Engine\Core\World.cpp">
       <Filter>Engine\Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Engine\GameFramework\GameState.cpp">
-      <Filter>Engine\GameFramework</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Engine\GameFramework\Entity.cpp">
-      <Filter>Engine\GameFramework</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Graphics\InterpolationContext.cpp">
       <Filter>Engine\Graphics</Filter>
     </ClCompile>
@@ -259,6 +253,12 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\PerspectiveCorrectTextureInterpolator.cpp">
       <Filter>Engine\Graphics\Interpolators</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\GameCore\Entity.cpp">
+      <Filter>Engine\GameCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\GameCore\GameState.cpp">
+      <Filter>Engine\GameCore</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

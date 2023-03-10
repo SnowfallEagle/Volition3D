@@ -190,8 +190,8 @@
     <ClInclude Include="..\..\Source\Engine\Core\Window.h" />
     <ClInclude Include="..\..\Source\Engine\Core\WindowSpecification.h" />
     <ClInclude Include="..\..\Source\Engine\Core\World.h" />
-    <ClInclude Include="..\..\Source\Engine\GameFramework\Entity.h" />
-    <ClInclude Include="..\..\Source\Engine\GameFramework\GameState.h" />
+    <ClInclude Include="..\..\Source\Engine\GameCore\Entity.h" />
+    <ClInclude Include="..\..\Source\Engine\GameCore\GameState.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\Camera.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\Color.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\InterpolationContext.h" />
@@ -232,8 +232,8 @@
     <ClCompile Include="..\..\Source\Engine\Core\Engine.cpp" />
     <ClCompile Include="..\..\Source\Engine\Core\Window.cpp" />
     <ClCompile Include="..\..\Source\Engine\Core\World.cpp" />
-    <ClCompile Include="..\..\Source\Engine\GameFramework\Entity.cpp" />
-    <ClCompile Include="..\..\Source\Engine\GameFramework\GameState.cpp" />
+    <ClCompile Include="..\..\Source\Engine\GameCore\Entity.cpp" />
+    <ClCompile Include="..\..\Source\Engine\GameCore\GameState.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Camera.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\InterpolationContext.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\AffineTextureInterpolator.cpp" />
