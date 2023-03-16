@@ -163,8 +163,8 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
 
                 // Apply matrix transformations
                 VVector4 TempVector;
-                VVector4::MulMat44(LocalVtxList[I].Position, MatLocal, TempVector);
-                VVector4::MulMat44(TempVector, MatWorld, LocalVtxList[I].Position);
+                VMatrix44::MulVecMat(LocalVtxList[I].Position, MatLocal, TempVector);
+                VMatrix44::MulVecMat(TempVector, MatWorld, LocalVtxList[I].Position);
 
                 // Swap YZ
                 if (Flags & ECOB::SwapYZ)

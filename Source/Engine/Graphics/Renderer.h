@@ -102,8 +102,8 @@ public:
 
         for (i32f LightIndex = 0; LightIndex < NumLights; ++LightIndex)
         {
-            VVector4::MulMat44(Lights[LightIndex].Pos, TransMat, Lights[LightIndex].TransPos);
-            VVector4::MulMat44(Lights[LightIndex].Dir, TransMat, Lights[LightIndex].TransDir);
+            VMatrix44::MulVecMat(Lights[LightIndex].Pos, TransMat, Lights[LightIndex].TransPos);
+            VMatrix44::MulVecMat(Lights[LightIndex].Dir, TransMat, Lights[LightIndex].TransDir);
         }
     }
 

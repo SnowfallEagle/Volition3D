@@ -10,10 +10,7 @@ namespace Volition
 class VMemory
 {
 public:
-#ifdef VLN_COMPILER_MSVC
-    VLN_FINLINE
-#endif
-    static void MemSetQuad(void* Dest, i32 Value, VSizeType Count)
+    VLN_FINLINE static void MemSetQuad(void* Dest, i32 Value, VSizeType Count)
     {
 #ifdef VLN_COMPILER_MSVC
         __asm

@@ -35,7 +35,8 @@ namespace ECameraAttr
     };
 }
 
-class VCamera
+// VMatrix44 is 16 byte aligned
+VLN_DECL_ALIGN(16) class VCamera
 {
 public:
     u32 State;
@@ -93,6 +94,9 @@ public:
 
     void BuildHomogeneousPerspectiveToScreenMat44();
     void BuildNonHomogeneousPerspectiveToScreenMat44();
+
+public:
+    VLN_DEFINE_ALIGN_OPERATORS(16);
 };
 
 }

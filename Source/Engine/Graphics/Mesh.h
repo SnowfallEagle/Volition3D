@@ -51,7 +51,7 @@ namespace ECOB
 
 VLN_DEFINE_LOG_CHANNEL(hLogObject, "Object");
 
-class VMesh
+VLN_DECL_ALIGN_SSE class VMesh
 {
 public:
     static constexpr i32f NameSize = 64;
@@ -296,12 +296,12 @@ public:
         {
             for (i32f I = 0; I < NumVtx; ++I)
             {
-                VVector4::MulMat44(LocalVtxList[I].Position, M, Res);
+                VMatrix44::MulVecMat(LocalVtxList[I].Position, M, Res);
                 LocalVtxList[I].Position = Res;
 
                 if (LocalVtxList[I].Attr & EVertexAttr::HasNormal)
                 {
-                    VVector4::MulMat44(LocalVtxList[I].Normal, M, Res);
+                    VMatrix44::MulVecMat(LocalVtxList[I].Normal, M, Res);
                     LocalVtxList[I].Normal = Res;
                 }
             }
@@ -311,12 +311,12 @@ public:
         {
             for (i32f I = 0; I < NumVtx; ++I)
             {
-                VVector4::MulMat44(TransVtxList[I].Position, M, Res);
+                VMatrix44::MulVecMat(TransVtxList[I].Position, M, Res);
                 TransVtxList[I].Position = Res;
 
                 if (TransVtxList[I].Attr & EVertexAttr::HasNormal)
                 {
-                    VVector4::MulMat44(TransVtxList[I].Normal, M, Res);
+                    VMatrix44::MulVecMat(TransVtxList[I].Normal, M, Res);
                     TransVtxList[I].Normal = Res;
                 }
             }
@@ -326,11 +326,11 @@ public:
         {
             for (i32f I = 0; I < NumVtx; ++I)
             {
-                VVector4::MulMat44(LocalVtxList[I].Position, M, TransVtxList[I].Position);
+                VMatrix44::MulVecMat(LocalVtxList[I].Position, M, TransVtxList[I].Position);
 
                 if (LocalVtxList[I].Attr & EVertexAttr::HasNormal)
                 {
-                    VVector4::MulMat44(LocalVtxList[I].Normal, M, TransVtxList[I].Normal);
+                    VMatrix44::MulVecMat(LocalVtxList[I].Normal, M, TransVtxList[I].Normal);
                 }
             }
         } break;
@@ -338,13 +338,13 @@ public:
 
         if (bTransBasis)
         {
-            VVector4::MulMat44(UX, M, Res);
+            VMatrix44::MulVecMat(UX, M, Res);
             UX = Res;
 
-            VVector4::MulMat44(UY, M, Res);
+            VMatrix44::MulVecMat(UY, M, Res);
             UY = Res;
 
-            VVector4::MulMat44(UZ, M, Res);
+            VMatrix44::MulVecMat(UZ, M, Res);
             UZ = Res;
         }
     }
@@ -372,7 +372,7 @@ public:
     b32 Cull(const VCamera& Cam, u32 CullType = ECullType::XYZ)
     {
         VVector4 SpherePos;
-        VVector4::MulMat44(Position, Cam.MatCamera, SpherePos);
+        VMatrix44::MulVecMat(Position, Cam.MatCamera, SpherePos);
         f32 MaxRadius = GetMaxRadius();
 
         if (CullType & ECullType::X)
@@ -411,6 +411,9 @@ public:
 
         return false;
     }
+
+public:
+    VLN_DEFINE_ALIGN_OPERATORS_SSE
 };
 
 }

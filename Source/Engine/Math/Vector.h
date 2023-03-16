@@ -8,8 +8,6 @@
 namespace Volition
 {
 
-class VMatrix44;
-
 template<class T>
 class TVector2
 {
@@ -143,10 +141,13 @@ public:
     union
     {
         f32 C[4];
+
         struct
         {
             f32 X, Y, Z, W;
         };
+
+        __m128 MC;
     };
 
 public:
@@ -294,8 +295,6 @@ public:
             1.0f
         };
     }
-
-    static void MulMat44(const VVector4& A, const VMatrix44& M, VVector4& R);
 };
 
 using VPoint4 = VVector4;

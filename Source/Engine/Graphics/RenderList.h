@@ -32,7 +32,7 @@ enum class ESortPolygonsMethod
 
 VLN_DEFINE_LOG_CHANNEL(hLogRenderList, "RenderList");
 
-class VRenderList
+VLN_DECL_ALIGN_SSE class VRenderList
 {
 public:
     static constexpr i32f MaxPoly = 32768;
@@ -140,12 +140,12 @@ public:
 
                 for (i32f V = 0; V < 3; ++V)
                 {
-                    VVector4::MulMat44(Poly->LocalVtx[V].Position, M, Res);
+                    VMatrix44::MulVecMat(Poly->LocalVtx[V].Position, M, Res);
                     Poly->LocalVtx[V].Position = Res;
 
                     if (Poly->LocalVtx[V].Attr & EVertexAttr::HasNormal)
                     {
-                        VVector4::MulMat44(Poly->LocalVtx[V].Normal, M, Res);
+                        VMatrix44::MulVecMat(Poly->LocalVtx[V].Normal, M, Res);
                         Poly->LocalVtx[V].Normal = Res;
                     }
                 }
@@ -167,12 +167,12 @@ public:
 
                 for (i32f V = 0; V < 3; ++V)
                 {
-                    VVector4::MulMat44(Poly->TransVtx[V].Position, M, Res);
+                    VMatrix44::MulVecMat(Poly->TransVtx[V].Position, M, Res);
                     Poly->TransVtx[V].Position = Res;
 
                     if (Poly->TransVtx[V].Attr & EVertexAttr::HasNormal)
                     {
-                        VVector4::MulMat44(Poly->TransVtx[V].Normal, M, Res);
+                        VMatrix44::MulVecMat(Poly->TransVtx[V].Normal, M, Res);
                         Poly->TransVtx[V].Normal = Res;
                     }
                 }
@@ -194,11 +194,11 @@ public:
 
                 for (i32f V = 0; V < 3; ++V)
                 {
-                    VVector4::MulMat44(Poly->LocalVtx[V].Position, M, Poly->TransVtx[V].Position);
+                    VMatrix44::MulVecMat(Poly->LocalVtx[V].Position, M, Poly->TransVtx[V].Position);
 
                     if (Poly->LocalVtx[V].Attr & EVertexAttr::HasNormal)
                     {
-                        VVector4::MulMat44(Poly->LocalVtx[V].Normal, M, Poly->TransVtx[V].Normal);
+                        VMatrix44::MulVecMat(Poly->LocalVtx[V].Normal, M, Poly->TransVtx[V].Normal);
                     }
                 }
             }
@@ -736,7 +736,7 @@ public:
             for (i32f V = 0; V < 3; ++V)
             {
                 VVector4 Res;
-                VVector4::MulMat44(Poly->TransVtx[V].Position, Camera.MatCamera, Res);
+                VMatrix44::MulVecMat(Poly->TransVtx[V].Position, Camera.MatCamera, Res);
                 Poly->TransVtx[V].Position = Res;
             }
         }
@@ -1272,6 +1272,9 @@ public:
             }
         }
     }
+
+public:
+    VLN_DEFINE_ALIGN_OPERATORS_SSE
 };
 
 }

@@ -36,16 +36,6 @@ const VMatrix22 VMatrix22::Identity = {
     0, 1,
 };
 
-void VMatrix44::BuildTranslate(const VVector4& V)
-{
-    *this = {
-        1, 0, 0, 0,
-        0, 1, 0, 0,
-        0, 0, 1, 0,
-        V.X, V.Y, V.Z, 1
-    };
-}
-
 void VMatrix44::BuildRotationXYZ(f32 X, f32 Y, f32 Z)
 {
     VMatrix44 MatX, MatY, MatZ, MatTemp;
@@ -96,22 +86,6 @@ void VMatrix44::BuildRotationXYZ(f32 X, f32 Y, f32 Z)
 
     VMatrix44::Mul(MatX, MatY, MatTemp);
     VMatrix44::Mul(MatTemp, MatZ, *this);
-}
-
-void VMatrix44::Mul(const VMatrix44& A, const VMatrix44& B, VMatrix44& R)
-{
-    for (i32f Row = 0; Row < 4; ++Row)
-    {
-        for (i32f Col = 0; Col < 4; ++Col)
-        {
-            f32 C = 0.0f;
-            for (i32f I = 0; I < 4; ++I)
-            {
-                C += A.C[Row][I] * B.C[I][Col];
-            }
-            R.C[Row][Col] = C;
-        }
-    }
 }
 
 b32 VMatrix44::Inverse(const VMatrix44& A, VMatrix44& R)

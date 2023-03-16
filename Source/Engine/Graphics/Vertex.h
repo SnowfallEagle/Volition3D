@@ -16,7 +16,7 @@ namespace EVertexAttr
 	};
 }
 
-class VVertex
+VLN_DECL_ALIGN_SSE class VVertex
 {
 public:
 	u32 Attr;
@@ -39,6 +39,9 @@ public:
 			f32 U, V;
 		};
 	};
+
+public:
+    VLN_DEFINE_ALIGN_OPERATORS_SSE
 };
 
 }
