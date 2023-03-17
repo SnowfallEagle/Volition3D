@@ -182,7 +182,7 @@ public:
     {
         for (i32f FrameIndex = 0; FrameIndex < NumFrames; ++FrameIndex)
         {
-            VVertex* VtxList = &HeadLocalVtxList[FrameIndex * NumVtx];
+            const VVertex* VtxList = &HeadLocalVtxList[FrameIndex * NumVtx];
             f32 AverageRadius = 0.0f;
             f32 MaxRadius = 0.0f;
 
@@ -218,12 +218,12 @@ public:
     {
         for (i32f I = 0; I < NumPoly; ++I)
         {
-            i32f V0 = PolyList[I].VtxIndices[0];
-            i32f V1 = PolyList[I].VtxIndices[1];
-            i32f V2 = PolyList[I].VtxIndices[2];
+            const i32f V0 = PolyList[I].VtxIndices[0];
+            const i32f V1 = PolyList[I].VtxIndices[1];
+            const i32f V2 = PolyList[I].VtxIndices[2];
 
-            VVector4 U = LocalVtxList[V1].Position - LocalVtxList[V0].Position;
-            VVector4 V = LocalVtxList[V2].Position - LocalVtxList[V0].Position;
+            const VVector4 U = LocalVtxList[V1].Position - LocalVtxList[V0].Position;
+            const VVector4 V = LocalVtxList[V2].Position - LocalVtxList[V0].Position;
 
             PolyList[I].NormalLength = VVector4::GetCross(U, V).GetLength();
 
@@ -240,12 +240,12 @@ public:
         {
             if (PolyList[I].Attr & EPolyAttr::ShadeModeGouraud)
             {
-                i32f V0 = PolyList[I].VtxIndices[0];
-                i32f V1 = PolyList[I].VtxIndices[1];
-                i32f V2 = PolyList[I].VtxIndices[2];
+                const i32f V0 = PolyList[I].VtxIndices[0];
+                const i32f V1 = PolyList[I].VtxIndices[1];
+                const i32f V2 = PolyList[I].VtxIndices[2];
 
-                VVector4 U = LocalVtxList[V1].Position - LocalVtxList[V0].Position;
-                VVector4 V = LocalVtxList[V2].Position - LocalVtxList[V0].Position;
+                const VVector4 U = LocalVtxList[V1].Position - LocalVtxList[V0].Position;
+                const VVector4 V = LocalVtxList[V2].Position - LocalVtxList[V0].Position;
 
                 VVector4 Normal;
                 VVector4::Cross(U, V, Normal);
@@ -373,7 +373,7 @@ public:
     {
         VVector4 SpherePos;
         VMatrix44::MulVecMat(Position, Cam.MatCamera, SpherePos);
-        f32 MaxRadius = GetMaxRadius();
+        const f32 MaxRadius = GetMaxRadius();
 
         if (CullType & ECullType::X)
         {

@@ -48,7 +48,7 @@ void VRenderer::StartUp(const VRenderSpecification& InRenderSpec)
         static constexpr f32 PointDivPixel = 0.75f;
         static constexpr f32 QualityMultiplier = 2.0f;
 
-        i32 Res = TTF_Init();
+        const i32 Res = TTF_Init();
         VLN_ASSERT(Res == 0);
 
         FontCharWidth = RenderSpec.TargetSize.X / CharsPerLine;
@@ -542,7 +542,7 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
     };
 
     u32* Buffer = InterpolationContext.Buffer;
-    i32 Pitch = InterpolationContext.BufferPitch;
+    const i32 Pitch = InterpolationContext.BufferPitch;
 
     i32 V0 = 0, V1 = 1, V2 = 2;
 
@@ -767,7 +767,7 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                 fx16 ZDeltaByX;
 
                 // Compute deltas for X interpolation
-                i32f XDiff = XEnd - XStart;
+                const i32f XDiff = XEnd - XStart;
 
                 for (i32f InterpIndex = 0; InterpIndex < InterpolationContext.NumInterpolators; ++InterpIndex)
                 {
@@ -786,7 +786,7 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                 // X clipping
                 if (XStart < RenderSpec.MinClip.X)
                 {
-                    i32 XDiff = RenderSpec.MinClip.X - XStart;
+                    const i32 XDiff = RenderSpec.MinClip.X - XStart;
                     XStart = RenderSpec.MinClip.X;
 
                     Z += XDiff * ZDeltaByX;
@@ -855,14 +855,14 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
             for (InterpolationContext.Y = YStart; InterpolationContext.Y < YEnd; ++InterpolationContext.Y)
             {
                 // Compute starting values
-                i32f XStart = Fx16ToIntRounded(XLeft);
-                i32f XEnd = Fx16ToIntRounded(XRight);
+                const i32f XStart = Fx16ToIntRounded(XLeft);
+                const i32f XEnd = Fx16ToIntRounded(XRight);
 
                 fx16 Z = ZLeft;
                 fx16 ZDeltaByX;
 
                 // Compute deltas for X interpolation
-                i32f XDiff = XEnd - XStart;
+                const i32f XDiff = XEnd - XStart;
 
                 for (i32f InterpIndex = 0; InterpIndex < InterpolationContext.NumInterpolators; ++InterpIndex)
                 {
@@ -942,20 +942,20 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
         if (Y1 < RenderSpec.MinClip.Y)
         {
             // Compute deltas
-            i32 YDiffLeft = (Y2 - Y1);
+            const i32 YDiffLeft = (Y2 - Y1);
             XDeltaLeftByY = IntToFx16(X2 - X1) / YDiffLeft;
             ZDeltaLeftByY = (ZVtx2 - ZVtx1) / YDiffLeft;
 
-            i32 YDiffRight = (Y2 - Y0);
+            const i32 YDiffRight = (Y2 - Y0);
             XDeltaRightByY = IntToFx16(X2 - X0) / YDiffRight;
             ZDeltaRightByY = (ZVtx2 - ZVtx0) / YDiffRight;
 
             // Do clipping
-            i32 YOverClipLeft = (RenderSpec.MinClip.Y - Y1);
+            const i32 YOverClipLeft = (RenderSpec.MinClip.Y - Y1);
             XLeft = IntToFx16(X1) + YOverClipLeft * XDeltaLeftByY;
             ZLeft = (ZVtx1) + YOverClipLeft * ZDeltaLeftByY;
 
-            i32 YOverClipRight = (RenderSpec.MinClip.Y - Y0);
+            const i32 YOverClipRight = (RenderSpec.MinClip.Y - Y0);
             XRight = IntToFx16(X0) + YOverClipRight * XDeltaRightByY;
             ZRight = (ZVtx0) + YOverClipRight * ZDeltaRightByY;
 
@@ -996,16 +996,16 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
         else if (Y0 < RenderSpec.MinClip.Y)
         {
             // Compute deltas
-            i32 YDiffLeft = (Y1 - Y0);
+            const i32 YDiffLeft = (Y1 - Y0);
             XDeltaLeftByY = IntToFx16(X1 - X0) / YDiffLeft;
             ZDeltaLeftByY = (ZVtx1 - ZVtx0) / YDiffLeft;
 
-            i32 YDiffRight = (Y2 - Y0);
+            const i32 YDiffRight = (Y2 - Y0);
             XDeltaRightByY = IntToFx16(X2 - X0) / YDiffRight;
             ZDeltaRightByY = (ZVtx2 - ZVtx0) / YDiffRight;
 
             // Do clipping
-            i32 YOverClip = (RenderSpec.MinClip.Y - Y0);
+            const i32 YOverClip = (RenderSpec.MinClip.Y - Y0);
             XLeft = IntToFx16(X0) + YOverClip * XDeltaLeftByY;
             ZLeft = (ZVtx0) + YOverClip * ZDeltaLeftByY;
 
@@ -1110,7 +1110,7 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                 fx16 ZDeltaByX;
 
                 // Compute deltas for X interpolation
-                i32f XDiff = XEnd - XStart;
+                const i32f XDiff = XEnd - XStart;
 
                 for (i32f InterpIndex = 0; InterpIndex < InterpolationContext.NumInterpolators; ++InterpIndex)
                 {
@@ -1129,7 +1129,7 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                 // X clipping
                 if (XStart < RenderSpec.MinClip.X)
                 {
-                    i32 XDiff = RenderSpec.MinClip.X - XStart;
+                    const i32 XDiff = RenderSpec.MinClip.X - XStart;
                     XStart = RenderSpec.MinClip.X;
 
                     Z += XDiff * ZDeltaByX;
@@ -1193,7 +1193,7 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                     if (bRestartInterpolationAtLeftHand)
                     {
                         // Compute new values to get from Y1 to Y2
-                        i32 YDiff = (Y2 - Y1);
+                        const i32 YDiff = (Y2 - Y1);
 
                         XDeltaLeftByY = IntToFx16(X2 - X1) / YDiff;
                         ZDeltaLeftByY = (ZVtx2 - ZVtx1) / YDiff;
@@ -1215,7 +1215,7 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                     else
                     {
                         // Compute new values to get from Y2 to Y1 because we swapped them
-                        i32 YDiff = (Y1 - Y2);
+                        const i32 YDiff = (Y1 - Y2);
 
                         XDeltaRightByY = IntToFx16(X1 - X2) / YDiff;
                         ZDeltaRightByY = (ZVtx1 - ZVtx2) / YDiff;
@@ -1247,14 +1247,14 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
             for (InterpolationContext.Y = YStart; InterpolationContext.Y < YEnd; ++InterpolationContext.Y)
             {
                 // Compute starting values
-                i32f XStart = Fx16ToIntRounded(XLeft);
-                i32f XEnd = Fx16ToIntRounded(XRight);
+                const i32f XStart = Fx16ToIntRounded(XLeft);
+                const i32f XEnd = Fx16ToIntRounded(XRight);
 
                 fx16 Z = ZLeft;
                 fx16 ZDeltaByX;
 
                 // Compute deltas for X interpolation
-                i32f XDiff = XEnd - XStart;
+                const i32f XDiff = XEnd - XStart;
 
                 for (i32f InterpIndex = 0; InterpIndex < InterpolationContext.NumInterpolators; ++InterpIndex)
                 {
@@ -1319,7 +1319,7 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                     if (bRestartInterpolationAtLeftHand)
                     {
                         // Compute new values to get from Y1 to Y2
-                        i32 YDiff = (Y2 - Y1);
+                        const i32 YDiff = (Y2 - Y1);
 
                         XDeltaLeftByY = IntToFx16(X2 - X1) / YDiff;
                         ZDeltaLeftByY = (ZVtx2 - ZVtx1) / YDiff;
@@ -1341,7 +1341,7 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                     else
                     {
                         // Compute new values to get from Y2 to Y1 because we swapped them
-                        i32 YDiff = (Y1 - Y2);
+                        const i32 YDiff = (Y1 - Y2);
 
                         XDeltaRightByY = IntToFx16(X1 - X2) / YDiff;
                         ZDeltaRightByY = (ZVtx1 - ZVtx2) / YDiff;
@@ -1419,7 +1419,7 @@ void VRenderer::SetInterpolators()
 
     if (InterpolationContext.PolyAttr & EPolyAttr::ShadeModeTexture)
     {
-        i32 MaxMipMappingLevel = Renderer.GetRenderSpec().MaxMipMappingLevel;
+        const i32 MaxMipMappingLevel = Renderer.GetRenderSpec().MaxMipMappingLevel;
 
         if (MaxMipMappingLevel > 0)
         {
@@ -1427,7 +1427,7 @@ void VRenderer::SetInterpolators()
                 InterpolationContext.Distance / (World.Camera->ZFarClip / (f32)MaxMipMappingLevel)
             );
 
-            f32 DetailFactor = (f32)InterpolationContext.MipMappingLevel / (f32)MaxMipMappingLevel;
+            const f32 DetailFactor = (f32)InterpolationContext.MipMappingLevel / (f32)MaxMipMappingLevel;
 
             if (DetailFactor < 0.5f)
             {
@@ -1492,7 +1492,7 @@ void VRenderer::RenderWire()
 {
     for (i32f I = 0; I < RenderList->NumPoly; ++I)
     {
-        VPolyFace* Poly = RenderList->PolyPtrList[I];
+        const VPolyFace* Poly = RenderList->PolyPtrList[I];
         if (!Poly ||
             ~Poly->State & EPolyState::Active ||
             Poly->State & EPolyState::BackFace ||

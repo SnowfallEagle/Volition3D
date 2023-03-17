@@ -11,7 +11,7 @@ void VLinearPiecewiseTextureInterpolator::Start()
 
     TextureBuffer = Texture->GetBuffer();
     TexturePitch = Texture->GetPitch();
-    f32 TextureSize = (f32)Texture->GetWidth();
+    const f32 TextureSize = (f32)Texture->GetWidth();
 
     for (i32f I = 0; I < 3; ++I)
     {
@@ -58,11 +58,11 @@ void VLinearPiecewiseTextureInterpolator::SwapLeftRight()
 
 void VLinearPiecewiseTextureInterpolator::ComputeXStartsAndDeltas(i32 XDiff, fx28 ZLeft, fx28 ZRight)
 {
-    fx22 ULeftDivZ = ((ULeft << (Fx28Shift - Fx22Shift)) / (ZLeft >> 6)) << 16;
-    fx22 URightDivZ = ((URight << (Fx28Shift - Fx22Shift)) / (ZRight >> 6)) << 16;
+    const fx22 ULeftDivZ = ((ULeft << (Fx28Shift - Fx22Shift)) / (ZLeft >> 6)) << 16;
+    const fx22 URightDivZ = ((URight << (Fx28Shift - Fx22Shift)) / (ZRight >> 6)) << 16;
 
-    fx22 VLeftDivZ = ((VLeft << (Fx28Shift - Fx22Shift)) / (ZLeft >> 6)) << 16;
-    fx22 VRightDivZ = ((VRight << (Fx28Shift - Fx22Shift)) / (ZRight >> 6)) << 16;
+    const fx22 VLeftDivZ = ((VLeft << (Fx28Shift - Fx22Shift)) / (ZLeft >> 6)) << 16;
+    const fx22 VRightDivZ = ((VRight << (Fx28Shift - Fx22Shift)) / (ZRight >> 6)) << 16;
 
     U = ULeftDivZ;
     V = VLeftDivZ;
@@ -99,8 +99,8 @@ void VLinearPiecewiseTextureInterpolator::InterpolateYRight(i32 YRight)
 
 void VLinearPiecewiseTextureInterpolator::ProcessPixel()
 {
-    VColorARGB Pixel = InterpolationContext->Pixel;
-    VColorARGB TextureColor = TextureBuffer[Fx22ToInt(V) * TexturePitch + Fx22ToInt(U)];
+    const VColorARGB Pixel = InterpolationContext->Pixel;
+    const VColorARGB TextureColor = TextureBuffer[Fx22ToInt(V) * TexturePitch + Fx22ToInt(U)];
 
     InterpolationContext->Pixel = MAP_XRGB32(
         (TextureColor.R * Pixel.R) >> 8,

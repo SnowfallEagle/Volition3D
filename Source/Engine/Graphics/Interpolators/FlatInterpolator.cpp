@@ -11,7 +11,7 @@ void VFlatInterpolator::Start()
 
 void VFlatInterpolator::ProcessPixel()
 {
-    VColorARGB Pixel = InterpolationContext->Pixel;
+    const VColorARGB Pixel = InterpolationContext->Pixel;
 
     InterpolationContext->Pixel = MAP_XRGB32(
         (Color.R * Pixel.R) >> 8,

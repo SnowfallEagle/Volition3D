@@ -11,7 +11,7 @@ void VAffineTextureInterpolator::Start()
 
     TextureBuffer = Texture->GetBuffer();
     TexturePitch = Texture->GetPitch();
-    f32 TextureSize = (f32)Texture->GetWidth();
+    const f32 TextureSize = (f32)Texture->GetWidth();
 
     for (i32f I = 0; I < 3; ++I)
     {
@@ -71,8 +71,8 @@ void VAffineTextureInterpolator::ComputeXStartsAndDeltas(i32 XDiff, fx28 ZLeft, 
 
 void VAffineTextureInterpolator::ProcessPixel()
 {
-    VColorARGB TextureColor = TextureBuffer[Fx16ToInt(V) * TexturePitch + Fx16ToInt(U)];
-    VColorARGB Pixel = InterpolationContext->Pixel;
+    const VColorARGB TextureColor = TextureBuffer[Fx16ToInt(V) * TexturePitch + Fx16ToInt(U)];
+    const VColorARGB Pixel = InterpolationContext->Pixel;
 
     InterpolationContext->Pixel = MAP_XRGB32(
         (TextureColor.R * Pixel.R) >> 8,

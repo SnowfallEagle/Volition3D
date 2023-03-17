@@ -58,10 +58,10 @@ public:
     VLN_FINLINE static void MulVecMat(const VVector4& A, const VMatrix44& M, VVector4& R)
     {
 #if VLN_SSE
-        __m128 AX = _mm_shuffle_ps(A.MC, A.MC, 0x00);
-        __m128 AY = _mm_shuffle_ps(A.MC, A.MC, 0x55);
-        __m128 AZ = _mm_shuffle_ps(A.MC, A.MC, 0xAA);
-        __m128 AW = _mm_shuffle_ps(A.MC, A.MC, 0xFF);
+        const __m128 AX = _mm_shuffle_ps(A.MC, A.MC, 0x00);
+        const __m128 AY = _mm_shuffle_ps(A.MC, A.MC, 0x55);
+        const __m128 AZ = _mm_shuffle_ps(A.MC, A.MC, 0xAA);
+        const __m128 AW = _mm_shuffle_ps(A.MC, A.MC, 0xFF);
 
         __m128 RM = _mm_mul_ps(AX, M.RowM[0]);
         RM = _mm_add_ps(RM, _mm_mul_ps(AY, M.RowM[1]));

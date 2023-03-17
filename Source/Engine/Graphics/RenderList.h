@@ -98,7 +98,7 @@ public:
 
         for (i32f I = 0; I < Mesh.NumPoly; ++I)
         {
-            VPoly& Poly = Mesh.PolyList[I];
+            const VPoly& Poly = Mesh.PolyList[I];
 
             if (~Poly.State & EPolyState::Active ||
                 Poly.State & EPolyState::Clipped ||
@@ -264,12 +264,13 @@ public:
                 continue;
             }
 
-            VVector4 U, V, N;
-            U = Poly->TransVtx[1].Position - Poly->TransVtx[0].Position;
-            V = Poly->TransVtx[2].Position - Poly->TransVtx[0].Position;
+            const VVector4 U = Poly->TransVtx[1].Position - Poly->TransVtx[0].Position;
+            const VVector4 V = Poly->TransVtx[2].Position - Poly->TransVtx[0].Position;
 
+            VVector4 N;
             VVector4::Cross(U, V, N);
-            VVector4 View = Cam.Pos - Poly->TransVtx[0].Position;
+
+            const VVector4 View = Cam.Pos - Poly->TransVtx[0].Position;
 
             // If > 0 then N watch in the same direction as View vector and visible
             if (VVector4::Dot(View, N) <= 0.0f)
@@ -304,11 +305,11 @@ public:
                 u32 GSum = 0;
                 u32 BSum = 0;
 
-                VVector4 SurfaceNormal = VVector4::GetCross(
+                const VVector4 SurfaceNormal = VVector4::GetCross(
                     Poly->TransVtx[1].Position - Poly->TransVtx[0].Position,
                     Poly->TransVtx[2].Position - Poly->TransVtx[0].Position
                 );
-                f32 SurfaceNormalLength = Poly->NormalLength;
+                const f32 SurfaceNormalLength = Poly->NormalLength;
 
                 for (i32f LightIndex = 0; LightIndex < NumLights; ++LightIndex)
                 {
@@ -325,11 +326,11 @@ public:
                     }
                     else if (Lights[LightIndex].Attr & ELightAttr::Infinite)
                     {
-                        f32 Dot = VVector4::Dot(SurfaceNormal, Lights[LightIndex].TransDir);
+                        const f32 Dot = VVector4::Dot(SurfaceNormal, Lights[LightIndex].TransDir);
                         if (Dot < 0)
                         {
                             // 128 used for fixed point to don't lose accuracy with integers
-                            i32 Intensity = (i32)( 128.0f * (Math.Abs(Dot) / SurfaceNormalLength) );
+                            const i32 Intensity = (i32)( 128.0f * (Math.Abs(Dot) / SurfaceNormalLength) );
                             RSum += (Poly->OriginalColor.R * Lights[LightIndex].CDiffuse.R * Intensity) / (256 * 128);
                             GSum += (Poly->OriginalColor.G * Lights[LightIndex].CDiffuse.G * Intensity) / (256 * 128);
                             BSum += (Poly->OriginalColor.B * Lights[LightIndex].CDiffuse.B * Intensity) / (256 * 128);
@@ -337,18 +338,18 @@ public:
                     }
                     else if (Lights[LightIndex].Attr & ELightAttr::Point)
                     {
-                        VVector4 Direction = Poly->TransVtx[0].Position - Lights[LightIndex].TransPos;
+                        const VVector4 Direction = Poly->TransVtx[0].Position - Lights[LightIndex].TransPos;
 
-                        f32 Dot = VVector4::Dot(SurfaceNormal, Direction);
+                        const f32 Dot = VVector4::Dot(SurfaceNormal, Direction);
                         if (Dot < 0)
                         {
                             // 128 used for fixed point to don't lose accuracy with integers
-                            f32 Distance = Direction.GetLengthFast();
-                            f32 Atten =
+                            const f32 Distance = Direction.GetLengthFast();
+                            const f32 Atten =
                                 Lights[LightIndex].KConst +
                                 Lights[LightIndex].KLinear * Distance +
                                 Lights[LightIndex].KQuad * Distance * Distance;
-                            i32 Intensity = (i32)(
+                            const i32 Intensity = (i32)(
                                 (128.0f * Math.Abs(Dot)) / (SurfaceNormalLength * Distance * Atten)
                             );
 
@@ -359,17 +360,17 @@ public:
                     }
                     else if (Lights[LightIndex].Attr & ELightAttr::SimpleSpotlight)
                     {
-                        f32 Dot = VVector4::Dot(SurfaceNormal, Lights[LightIndex].TransDir);
+                        const f32 Dot = VVector4::Dot(SurfaceNormal, Lights[LightIndex].TransDir);
 
                         if (Dot < 0)
                         {
                             // 128 used for fixed point to don't lose accuracy with integers
-                            f32 Distance = (Poly->TransVtx[0].Position - Lights[LightIndex].TransPos).GetLengthFast();
-                            f32 Atten =
+                            const f32 Distance = (Poly->TransVtx[0].Position - Lights[LightIndex].TransPos).GetLengthFast();
+                            const f32 Atten =
                                 Lights[LightIndex].KConst +
                                 Lights[LightIndex].KLinear * Distance +
                                 Lights[LightIndex].KQuad * Distance * Distance;
-                            i32 Intensity = (i32)(
+                            const i32 Intensity = (i32)(
                                 (128.0f * Math.Abs(Dot)) / (SurfaceNormalLength * Atten)
                             );
 
@@ -380,30 +381,30 @@ public:
                     }
                     else if (Lights[LightIndex].Attr & ELightAttr::ComplexSpotlight)
                     {
-                        f32 DotNormalDirection = VVector4::Dot(SurfaceNormal, Lights[LightIndex].TransDir);
+                        const f32 DotNormalDirection = VVector4::Dot(SurfaceNormal, Lights[LightIndex].TransDir);
 
                         if (DotNormalDirection < 0)
                         {
-                            VVector4 DistanceVector = Poly->TransVtx[0].Position - Lights[LightIndex].TransPos;
-                            f32 Distance = DistanceVector.GetLengthFast();
-                            f32 DotDistanceDirection = VVector4::Dot(DistanceVector, Lights[LightIndex].TransDir) / Distance;
+                            const VVector4 DistanceVector = Poly->TransVtx[0].Position - Lights[LightIndex].TransPos;
+                            const f32 Distance = DistanceVector.GetLengthFast();
+                            const f32 DotDistanceDirection = VVector4::Dot(DistanceVector, Lights[LightIndex].TransDir) / Distance;
 
                             if (DotDistanceDirection > 0)
                             {
                                 f32 DotDistanceDirectionExp = DotDistanceDirection;
                                 // For optimization use integer power
-                                i32f IntegerExp = (i32f)Lights[LightIndex].Power;
+                                const i32f IntegerExp = (i32f)Lights[LightIndex].Power;
                                 for (i32f I = 1; I < IntegerExp; ++I)
                                 {
                                     DotDistanceDirectionExp *= DotDistanceDirection;
                                 }
 
                                 // 128 used for fixed point to don't lose accuracy with integers
-                                f32 Atten =
+                                const f32 Atten =
                                     Lights[LightIndex].KConst +
                                     Lights[LightIndex].KLinear * Distance +
                                     Lights[LightIndex].KQuad * Distance * Distance;
-                                i32 Intensity = (i32)(
+                                const i32 Intensity = (i32)(
                                     (128.0f * Math.Abs(DotNormalDirection) * DotDistanceDirectionExp) /
                                     (SurfaceNormalLength * Atten)
                                 );
@@ -438,11 +439,11 @@ public:
                 u32 BSum1 = 0;
                 u32 BSum2 = 0;
 
-                VVector4 SurfaceNormal = VVector4::GetCross(
+                const VVector4 SurfaceNormal = VVector4::GetCross(
                     Poly->TransVtx[1].Position - Poly->TransVtx[0].Position,
                     Poly->TransVtx[2].Position - Poly->TransVtx[0].Position
                 );
-                f32 SurfaceNormalLength = Poly->NormalLength;
+                const f32 SurfaceNormalLength = Poly->NormalLength;
 
                 for (i32f LightIndex = 0; LightIndex < NumLights; ++LightIndex)
                 {
@@ -453,9 +454,9 @@ public:
 
                     if (Lights[LightIndex].Attr & ELightAttr::Ambient)
                     {
-                        i32 RIntensity = (Poly->OriginalColor.R * Lights[LightIndex].CAmbient.R) / 256;
-                        i32 GIntensity = (Poly->OriginalColor.G * Lights[LightIndex].CAmbient.G) / 256;
-                        i32 BIntensity = (Poly->OriginalColor.B * Lights[LightIndex].CAmbient.B) / 256;
+                        const i32 RIntensity = (Poly->OriginalColor.R * Lights[LightIndex].CAmbient.R) / 256;
+                        const i32 GIntensity = (Poly->OriginalColor.G * Lights[LightIndex].CAmbient.G) / 256;
+                        const i32 BIntensity = (Poly->OriginalColor.B * Lights[LightIndex].CAmbient.B) / 256;
 
                         RSum0 += RIntensity;
                         RSum1 += RIntensity;
@@ -475,7 +476,7 @@ public:
                         if (Dot < 0)
                         {
                             // 128 used for fixed point to don't lose accuracy with integers
-                            i32 Intensity = (i32)( 128.0f * Math.Abs(Dot));
+                            const i32 Intensity = (i32)( 128.0f * Math.Abs(Dot));
                             RSum0 += (Poly->OriginalColor.R * Lights[LightIndex].CDiffuse.R * Intensity) / (256 * 128);
                             GSum0 += (Poly->OriginalColor.G * Lights[LightIndex].CDiffuse.G * Intensity) / (256 * 128);
                             BSum0 += (Poly->OriginalColor.B * Lights[LightIndex].CDiffuse.B * Intensity) / (256 * 128);
@@ -485,7 +486,7 @@ public:
                         if (Dot < 0)
                         {
                             // 128 used for fixed point to don't lose accuracy with integers
-                            i32 Intensity = (i32)( 128.0f * Math.Abs(Dot));
+                            const i32 Intensity = (i32)( 128.0f * Math.Abs(Dot));
                             RSum1 += (Poly->OriginalColor.R * Lights[LightIndex].CDiffuse.R * Intensity) / (256 * 128);
                             GSum1 += (Poly->OriginalColor.G * Lights[LightIndex].CDiffuse.G * Intensity) / (256 * 128);
                             BSum1 += (Poly->OriginalColor.B * Lights[LightIndex].CDiffuse.B * Intensity) / (256 * 128);
@@ -495,7 +496,7 @@ public:
                         if (Dot < 0)
                         {
                             // 128 used for fixed point to don't lose accuracy with integers
-                            i32 Intensity = (i32)( 128.0f * Math.Abs(Dot));
+                            const i32 Intensity = (i32)( 128.0f * Math.Abs(Dot));
                             RSum2 += (Poly->OriginalColor.R * Lights[LightIndex].CDiffuse.R * Intensity) / (256 * 128);
                             GSum2 += (Poly->OriginalColor.G * Lights[LightIndex].CDiffuse.G * Intensity) / (256 * 128);
                             BSum2 += (Poly->OriginalColor.B * Lights[LightIndex].CDiffuse.B * Intensity) / (256 * 128);
@@ -503,9 +504,9 @@ public:
                     }
                     else if (Lights[LightIndex].Attr & ELightAttr::Point)
                     {
-                        VVector4 Direction = Poly->TransVtx[0].Position - Lights[LightIndex].TransPos;
-                        f32 Distance = Direction.GetLengthFast();
-                        f32 Atten =
+                        const VVector4 Direction = Poly->TransVtx[0].Position - Lights[LightIndex].TransPos;
+                        const f32 Distance = Direction.GetLengthFast();
+                        const f32 Atten =
                             Lights[LightIndex].KConst +
                             Lights[LightIndex].KLinear * Distance +
                             Lights[LightIndex].KQuad * Distance * Distance;
@@ -514,7 +515,7 @@ public:
                         if (Dot < 0)
                         {
                             // 128 used for fixed point to don't lose accuracy with integers
-                            i32 Intensity = (i32)(
+                            const i32 Intensity = (i32)(
                                 (128.0f * Math.Abs(Dot)) / (Distance * Atten)
                             );
 
@@ -527,7 +528,7 @@ public:
                         if (Dot < 0)
                         {
                             // 128 used for fixed point to don't lose accuracy with integers
-                            i32 Intensity = (i32)(
+                            const i32 Intensity = (i32)(
                                 (128.0f * Math.Abs(Dot)) / (Distance * Atten)
                             );
 
@@ -540,7 +541,7 @@ public:
                         if (Dot < 0)
                         {
                             // 128 used for fixed point to don't lose accuracy with integers
-                            i32 Intensity = (i32)(
+                            const i32 Intensity = (i32)(
                                 (128.0f * Math.Abs(Dot)) / (Distance * Atten)
                             );
 
@@ -551,8 +552,8 @@ public:
                     }
                     else if (Lights[LightIndex].Attr & ELightAttr::SimpleSpotlight)
                     {
-                        f32 Distance = (Poly->TransVtx[0].Position - Lights[LightIndex].TransPos).GetLengthFast();
-                        f32 Atten =
+                        const f32 Distance = (Poly->TransVtx[0].Position - Lights[LightIndex].TransPos).GetLengthFast();
+                        const f32 Atten =
                             Lights[LightIndex].KConst +
                             Lights[LightIndex].KLinear * Distance +
                             Lights[LightIndex].KQuad * Distance * Distance;
@@ -561,7 +562,7 @@ public:
                         if (Dot < 0)
                         {
                             // 128 used for fixed point to don't lose accuracy with integers
-                            i32 Intensity = (i32)(
+                            const i32 Intensity = (i32)(
                                 (128.0f * Math.Abs(Dot)) / Atten
                             );
 
@@ -574,7 +575,7 @@ public:
                         if (Dot < 0)
                         {
                             // 128 used for fixed point to don't lose accuracy with integers
-                            i32 Intensity = (i32)(
+                            const i32 Intensity = (i32)(
                                 (128.0f * Math.Abs(Dot)) / Atten
                             );
 
@@ -587,7 +588,7 @@ public:
                         if (Dot < 0)
                         {
                             // 128 used for fixed point to don't lose accuracy with integers
-                            i32 Intensity = (i32)(
+                            const i32 Intensity = (i32)(
                                 (128.0f * Math.Abs(Dot)) / Atten
                             );
 
@@ -601,27 +602,27 @@ public:
                         f32 DotNormalDirection = VVector4::Dot(Poly->TransVtx[0].Normal, Lights[LightIndex].TransDir);
                         if (DotNormalDirection < 0)
                         {
-                            VVector4 DistanceVector = Poly->TransVtx[0].Position - Lights[LightIndex].TransPos;
-                            f32 Distance = DistanceVector.GetLengthFast();
-                            f32 DotDistanceDirection = VVector4::Dot(DistanceVector, Lights[LightIndex].TransDir) / Distance;
+                            const VVector4 DistanceVector = Poly->TransVtx[0].Position - Lights[LightIndex].TransPos;
+                            const f32 Distance = DistanceVector.GetLengthFast();
+                            const f32 DotDistanceDirection = VVector4::Dot(DistanceVector, Lights[LightIndex].TransDir) / Distance;
 
                             if (DotDistanceDirection > 0)
                             {
-                                f32 Atten =
+                                const f32 Atten =
                                     Lights[LightIndex].KConst +
                                     Lights[LightIndex].KLinear * Distance +
                                     Lights[LightIndex].KQuad * Distance * Distance;
 
                                 f32 DotDistanceDirectionExp = DotDistanceDirection;
                                 // For optimization use integer power
-                                i32f IntegerExp = (i32f)Lights[LightIndex].Power;
+                                const i32f IntegerExp = (i32f)Lights[LightIndex].Power;
                                 for (i32f I = 1; I < IntegerExp; ++I)
                                 {
                                     DotDistanceDirectionExp *= DotDistanceDirection;
                                 }
 
                                 // 128 used for fixed point to don't lose accuracy with integers
-                                i32 Intensity = (i32)(
+                                const i32 Intensity = (i32)(
                                     (128.0f * Math.Abs(DotNormalDirection) * DotDistanceDirectionExp) / Atten
                                 );
 
@@ -634,27 +635,27 @@ public:
                         DotNormalDirection = VVector4::Dot(Poly->TransVtx[1].Normal, Lights[LightIndex].TransDir);
                         if (DotNormalDirection < 0)
                         {
-                            VVector4 DistanceVector = Poly->TransVtx[1].Position - Lights[LightIndex].TransPos;
-                            f32 Distance = DistanceVector.GetLengthFast();
-                            f32 DotDistanceDirection = VVector4::Dot(DistanceVector, Lights[LightIndex].TransDir) / Distance;
+                            const VVector4 DistanceVector = Poly->TransVtx[1].Position - Lights[LightIndex].TransPos;
+                            const f32 Distance = DistanceVector.GetLengthFast();
+                            const f32 DotDistanceDirection = VVector4::Dot(DistanceVector, Lights[LightIndex].TransDir) / Distance;
 
                             if (DotDistanceDirection > 0)
                             {
-                                f32 Atten =
+                                const f32 Atten =
                                     Lights[LightIndex].KConst +
                                     Lights[LightIndex].KLinear * Distance +
                                     Lights[LightIndex].KQuad * Distance * Distance;
 
                                 f32 DotDistanceDirectionExp = DotDistanceDirection;
                                 // For optimization use integer power
-                                i32f IntegerExp = (i32f)Lights[LightIndex].Power;
+                                const i32f IntegerExp = (i32f)Lights[LightIndex].Power;
                                 for (i32f I = 1; I < IntegerExp; ++I)
                                 {
                                     DotDistanceDirectionExp *= DotDistanceDirection;
                                 }
 
                                 // 128 used for fixed point to don't lose accuracy with integers
-                                i32 Intensity = (i32)(
+                                const i32 Intensity = (i32)(
                                     (128.0f * Math.Abs(DotNormalDirection) * DotDistanceDirectionExp) / Atten
                                 );
 
@@ -667,27 +668,27 @@ public:
                         DotNormalDirection = VVector4::Dot(Poly->TransVtx[2].Normal, Lights[LightIndex].TransDir);
                         if (DotNormalDirection < 0)
                         {
-                            VVector4 DistanceVector = Poly->TransVtx[2].Position - Lights[LightIndex].TransPos;
-                            f32 Distance = DistanceVector.GetLengthFast();
-                            f32 DotDistanceDirection = VVector4::Dot(DistanceVector, Lights[LightIndex].TransDir) / Distance;
+                            const VVector4 DistanceVector = Poly->TransVtx[2].Position - Lights[LightIndex].TransPos;
+                            const f32 Distance = DistanceVector.GetLengthFast();
+                            const f32 DotDistanceDirection = VVector4::Dot(DistanceVector, Lights[LightIndex].TransDir) / Distance;
 
                             if (DotDistanceDirection > 0)
                             {
-                                f32 Atten =
+                                const f32 Atten =
                                     Lights[LightIndex].KConst +
                                     Lights[LightIndex].KLinear * Distance +
                                     Lights[LightIndex].KQuad * Distance * Distance;
 
                                 f32 DotDistanceDirectionExp = DotDistanceDirection;
                                 // For optimization use integer power
-                                i32f IntegerExp = (i32f)Lights[LightIndex].Power;
+                                const i32f IntegerExp = (i32f)Lights[LightIndex].Power;
                                 for (i32f I = 1; I < IntegerExp; ++I)
                                 {
                                     DotDistanceDirectionExp *= DotDistanceDirection;
                                 }
 
                                 // 128 used for fixed point to don't lose accuracy with integers
-                                i32 Intensity = (i32)(
+                                const i32 Intensity = (i32)(
                                     (128.0f * Math.Abs(DotNormalDirection) * DotDistanceDirectionExp) / Atten
                                 );
 
@@ -757,7 +758,7 @@ public:
             ZIn      = VLN_BIT(7),
         };
 
-        i32f SavedNumPoly = NumPoly;
+        const i32f SavedNumPoly = NumPoly;
 
         for (i32f PolyIndex = 0; PolyIndex < SavedNumPoly; ++PolyIndex)
         {
@@ -966,14 +967,14 @@ public:
 
                         // Recompute X and Y for ZNearClip
                         VVector4 Direction = Poly.TransVtx[V1].Position - Poly.TransVtx[V0].Position;
-                        f32 T1 = (Camera.ZNearClip - Poly.TransVtx[V0].Z) / Direction.Z;
+                        const f32 T1 = (Camera.ZNearClip - Poly.TransVtx[V0].Z) / Direction.Z;
 
                         Poly.TransVtx[V1].X = Poly.TransVtx[V0].X + Direction.X * T1;
                         Poly.TransVtx[V1].Y = Poly.TransVtx[V0].Y + Direction.Y * T1;
                         Poly.TransVtx[V1].Z = Camera.ZNearClip;
 
                         Direction = Poly.TransVtx[V2].Position - Poly.TransVtx[V0].Position;
-                        f32 T2 = (Camera.ZNearClip - Poly.TransVtx[V0].Z) / Direction.Z;
+                        const f32 T2 = (Camera.ZNearClip - Poly.TransVtx[V0].Z) / Direction.Z;
 
                         Poly.TransVtx[V2].X = Poly.TransVtx[V0].X + Direction.X * T2;
                         Poly.TransVtx[V2].Y = Poly.TransVtx[V0].Y + Direction.Y * T2;
@@ -994,8 +995,8 @@ public:
                         }
 
                         // Recompute poly normal length
-                        VVector4 Vec1 = Poly.TransVtx[V1].Position - Poly.TransVtx[V0].Position;
-                        VVector4 Vec2 = Poly.TransVtx[V2].Position - Poly.TransVtx[V0].Position;
+                        const VVector4 Vec1 = Poly.TransVtx[V1].Position - Poly.TransVtx[V0].Position;
+                        const VVector4 Vec2 = Poly.TransVtx[V2].Position - Poly.TransVtx[V0].Position;
                         VVector4 VecNormal;
 
                         VVector4::Cross(Vec1, Vec2, VecNormal);
@@ -1028,16 +1029,16 @@ public:
 
                         // Recompute X and Y for ZNearClip
                         VVector4 Direction = Poly.TransVtx[V1].Position - Poly.TransVtx[V0].Position;
-                        f32 T1 = (Camera.ZNearClip - Poly.TransVtx[V0].Z) / Direction.Z;
+                        const f32 T1 = (Camera.ZNearClip - Poly.TransVtx[V0].Z) / Direction.Z;
 
-                        f32 X01 = Poly.TransVtx[V0].X + Direction.X * T1;
-                        f32 Y01 = Poly.TransVtx[V0].Y + Direction.Y * T1;
+                        const f32 X01 = Poly.TransVtx[V0].X + Direction.X * T1;
+                        const f32 Y01 = Poly.TransVtx[V0].Y + Direction.Y * T1;
 
                         Direction = Poly.TransVtx[V2].Position - Poly.TransVtx[V0].Position;
-                        f32 T2 = (Camera.ZNearClip - Poly.TransVtx[V0].Z) / Direction.Z;
+                        const f32 T2 = (Camera.ZNearClip - Poly.TransVtx[V0].Z) / Direction.Z;
 
-                        f32 X02 = Poly.TransVtx[V0].X + Direction.X * T2;
-                        f32 Y02 = Poly.TransVtx[V0].Y + Direction.Y * T2;
+                        const f32 X02 = Poly.TransVtx[V0].X + Direction.X * T2;
+                        const f32 Y02 = Poly.TransVtx[V0].Y + Direction.Y * T2;
 
                         // Put values in polygons
                         Poly.TransVtx[V0].X = X01;
@@ -1057,13 +1058,13 @@ public:
                         {
                             VPoint2 TextureDirection = Poly.TransVtx[V1].TextureCoords - Poly.TransVtx[V0].TextureCoords;
 
-                            f32 U01 = Poly.TransVtx[V0].U + TextureDirection.X * T1;
-                            f32 V01 = Poly.TransVtx[V0].V + TextureDirection.Y * T1;
+                            const f32 U01 = Poly.TransVtx[V0].U + TextureDirection.X * T1;
+                            const f32 V01 = Poly.TransVtx[V0].V + TextureDirection.Y * T1;
 
                             TextureDirection = Poly.TransVtx[V2].TextureCoords - Poly.TransVtx[V0].TextureCoords;
 
-                            f32 U02 = Poly.TransVtx[V0].U + TextureDirection.X * T2;
-                            f32 V02 = Poly.TransVtx[V0].V + TextureDirection.Y * T2;
+                            const f32 U02 = Poly.TransVtx[V0].U + TextureDirection.X * T2;
+                            const f32 V02 = Poly.TransVtx[V0].V + TextureDirection.Y * T2;
 
                             Poly.TransVtx[V0].U = U01;
                             Poly.TransVtx[V0].V = V01;
@@ -1102,8 +1103,8 @@ public:
         const VPolyFace* Poly1 = *(const VPolyFace**)Arg1;
         const VPolyFace* Poly2 = *(const VPolyFace**)Arg2;
 
-        f32 Z1 = 0.33333f * (Poly1->TransVtx[0].Z + Poly1->TransVtx[1].Z + Poly1->TransVtx[2].Z);
-        f32 Z2 = 0.33333f * (Poly2->TransVtx[0].Z + Poly2->TransVtx[1].Z + Poly2->TransVtx[2].Z);
+        const f32 Z1 = 0.33333f * (Poly1->TransVtx[0].Z + Poly1->TransVtx[1].Z + Poly1->TransVtx[2].Z);
+        const f32 Z2 = 0.33333f * (Poly2->TransVtx[0].Z + Poly2->TransVtx[1].Z + Poly2->TransVtx[2].Z);
 
         if (Z1 < Z2)
         {
@@ -1126,8 +1127,8 @@ public:
         const VPolyFace* Poly1 = *(const VPolyFace**)Arg1;
         const VPolyFace* Poly2 = *(const VPolyFace**)Arg2;
 
-        f32 ZMin1 = VLN_MIN(VLN_MIN(Poly1->TransVtx[0].Z, Poly1->TransVtx[1].Z), Poly1->TransVtx[2].Z);
-        f32 ZMin2 = VLN_MIN(VLN_MIN(Poly2->TransVtx[0].Z, Poly2->TransVtx[1].Z), Poly2->TransVtx[2].Z);
+        const f32 ZMin1 = VLN_MIN(VLN_MIN(Poly1->TransVtx[0].Z, Poly1->TransVtx[1].Z), Poly1->TransVtx[2].Z);
+        const f32 ZMin2 = VLN_MIN(VLN_MIN(Poly2->TransVtx[0].Z, Poly2->TransVtx[1].Z), Poly2->TransVtx[2].Z);
 
         if (ZMin1 < ZMin2)
         {
@@ -1150,8 +1151,8 @@ public:
         const VPolyFace* Poly1 = *(const VPolyFace**)Arg1;
         const VPolyFace* Poly2 = *(const VPolyFace**)Arg2;
 
-        f32 ZMax1 = VLN_MAX(VLN_MAX(Poly1->TransVtx[0].Z, Poly1->TransVtx[1].Z), Poly1->TransVtx[2].Z);
-        f32 ZMax2 = VLN_MAX(VLN_MAX(Poly2->TransVtx[0].Z, Poly2->TransVtx[1].Z), Poly2->TransVtx[2].Z);
+        const f32 ZMax1 = VLN_MAX(VLN_MAX(Poly1->TransVtx[0].Z, Poly1->TransVtx[1].Z), Poly1->TransVtx[2].Z);
+        const f32 ZMax2 = VLN_MAX(VLN_MAX(Poly2->TransVtx[0].Z, Poly2->TransVtx[1].Z), Poly2->TransVtx[2].Z);
 
         if (ZMax1 < ZMax2)
         {
@@ -1222,8 +1223,8 @@ public:
 
     void TransformPerspectiveToScreen(const VCamera& Cam)
     {
-        f32 Alpha = Cam.ViewPortSize.X * 0.5f - 0.5f;
-        f32 Beta = Cam.ViewPortSize.Y * 0.5f - 0.5f;
+        const f32 Alpha = Cam.ViewPortSize.X * 0.5f - 0.5f;
+        const f32 Beta = Cam.ViewPortSize.Y * 0.5f - 0.5f;
 
         for (i32f I = 0; I < NumPoly; ++I)
         {
@@ -1246,8 +1247,8 @@ public:
 
     void TransformCameraToScreen(const VCamera& Cam)
     {
-        f32 Alpha = Cam.ViewPortSize.X * 0.5f - 0.5f;
-        f32 Beta = Cam.ViewPortSize.Y * 0.5f - 0.5f;
+        const f32 Alpha = Cam.ViewPortSize.X * 0.5f - 0.5f;
+        const f32 Beta = Cam.ViewPortSize.Y * 0.5f - 0.5f;
 
         for (i32f I = 0; I < NumPoly; ++I)
         {

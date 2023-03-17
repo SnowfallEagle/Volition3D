@@ -45,7 +45,7 @@ public:
         // Build look up tables
         for (i32f I = 0; I < SinCosLookSize; ++I)
         {
-            f32 Rad = DegToRad((f32)I);
+            const f32 Rad = DegToRad((f32)I);
 
             SinLook[I] = std::sinf(Rad);
             CosLook[I] = std::cosf(Rad);
@@ -81,10 +81,10 @@ public:
     static f32 FastDist2D(f32 X, f32 Y) // 3.5% Error
     {
         // Absolute integer values
-        i32 IX = (i32)Abs(X);
-        i32 IY = (i32)Abs(Y);
+        const i32 IX = (i32)Abs(X);
+        const i32 IY = (i32)Abs(Y);
 
-        i32 Min = VLN_MIN(IX, IY);
+        const i32 Min = VLN_MIN(IX, IY);
 
         return (f32)(IX + IY - (Min >> 1) - (Min >> 2) + (Min >> 4));
     }
@@ -114,8 +114,8 @@ public:
             Deg += 360;
         }
 
-        i32f I = (i32f)Deg;
-        f32 Remainder = Deg - (f32)I;
+        const i32f I = (i32f)Deg;
+        const f32 Remainder = Deg - (f32)I;
         return SinLook[I] + Remainder * (SinLook[I+1] - SinLook[I]);
     }
     static f32 FastCos(f32 Deg)
@@ -126,8 +126,8 @@ public:
             Deg += 360;
         }
 
-        i32f I = (i32f)Deg;
-        f32 Remainder = Deg - (f32)I;
+        const i32f I = (i32f)Deg;
+        const f32 Remainder = Deg - (f32)I;
         return CosLook[I] + Remainder * (CosLook[I+1] - CosLook[I]);
     }
 

@@ -20,7 +20,9 @@ char* GetLineCOB(std::FILE* File, char* Buffer, i32 Size)
             return nullptr;
         }
 
-        i32f I, Len = std::strlen(Buffer);
+        const i32f Len = std::strlen(Buffer);
+
+        i32f I;
         for (I = 0;
              I < Len && (Buffer[I] == ' ' || Buffer[I] == '\t' || Buffer[I] == '\r' || Buffer[I] == '\n');
              ++I)
@@ -35,7 +37,7 @@ char* GetLineCOB(std::FILE* File, char* Buffer, i32 Size)
 
 char* FindLineCOB(const char* Pattern, std::FILE* File, char* Buffer, i32 Size)
 {
-    i32f PatternLength = std::strlen(Pattern);
+    const i32f PatternLength = std::strlen(Pattern);
 
     for (;;)
     {
@@ -401,7 +403,7 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                     std::sscanf(Line, "Number of parameters: %d", &NumParams);
 
                     const char Pattern[] = "diffuse";
-                    VSizeType PatternLength = std::strlen(Pattern);
+                    const VSizeType PatternLength = std::strlen(Pattern);
 
                     for (i32f ParamIndex = 0; ParamIndex < NumParams; ++ParamIndex)
                     {
@@ -443,7 +445,7 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
             for (i32f I = 0; I < NumPoly; ++I)
             {
                 VPoly& Poly = PolyList[I];
-                VMaterial& PolyMaterial = Renderer.Materials[Renderer.NumMaterials + MaterialIndexByPolyIndex[I]];
+                const VMaterial& PolyMaterial = Renderer.Materials[Renderer.NumMaterials + MaterialIndexByPolyIndex[I]];
 
                 // Set color
                 if (PolyMaterial.Attr & EMaterialAttr::ShadeModeTexture)

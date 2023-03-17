@@ -59,7 +59,7 @@ void VCamera::Init(u32 InAttr, const VPoint4& InPos, const VVector4& InDir, cons
         VPoint3 Origin;
         Origin.Zero();
 
-        f32 MinusViewPlaneWidthDiv2 = -ViewPlaneSize.X * 0.5f;
+        const f32 MinusViewPlaneWidthDiv2 = -ViewPlaneSize.X * 0.5f;
 
         VVector3 N = { -ViewDist, 0.0f, MinusViewPlaneWidthDiv2 };
         N.Normalize();
@@ -161,7 +161,7 @@ void VCamera::BuildWorldToCameraUVNMat44(EUVNMode Mode)
         // Elevation - Dir.X
         // Heading - Dir.Y
 
-        f32 SinPhi = Math.FastSin(Dir.X);
+        const f32 SinPhi = Math.FastSin(Dir.X);
 
         Target.X = -1 * SinPhi * Math.FastSin(Dir.X);
         Target.Y = 1 * Math.FastCos(Dir.Y);
@@ -208,8 +208,8 @@ void VCamera::BuildHomogeneousPerspectiveToScreenMat44()
         we will perform conversion 4D->3D
     */
 
-    f32 Alpha = ViewPortSize.X * 0.5f - 0.5f;
-    f32 Beta = ViewPortSize.Y * 0.5f - 0.5f;
+    const f32 Alpha = ViewPortSize.X * 0.5f - 0.5f;
+    const f32 Beta = ViewPortSize.Y * 0.5f - 0.5f;
 
     MatScreen = {
         Alpha, 0.0f, 0.0f, 0.0f,
@@ -226,8 +226,8 @@ void VCamera::BuildNonHomogeneousPerspectiveToScreenMat44()
         performed conversion 4D->3D
     */
 
-    f32 Alpha = ViewPortSize.X * 0.5f - 0.5f;
-    f32 Beta = ViewPortSize.Y * 0.5f - 0.5f;
+    const f32 Alpha = ViewPortSize.X * 0.5f - 0.5f;
+    const f32 Beta = ViewPortSize.Y * 0.5f - 0.5f;
 
     MatScreen = {
         Alpha, 0.0f, 0.0f, 0.0f,

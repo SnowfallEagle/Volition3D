@@ -75,7 +75,7 @@ void VGouraudInterpolator::ComputeXStartsAndDeltas(i32 XDiff, fx28 ZLeft, fx28 Z
 
 void VGouraudInterpolator::ProcessPixel()
 {
-    VColorARGB Pixel = InterpolationContext->Pixel;
+    const VColorARGB Pixel = InterpolationContext->Pixel;
 
     InterpolationContext->Pixel = MAP_XRGB32(
         (Fx16ToInt(R) * Pixel.R) >> 8,

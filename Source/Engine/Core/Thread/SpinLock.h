@@ -22,7 +22,7 @@ public:
     b32 TryAcquire()
     {
         // All subsequent reads will be valid
-        bool bAlreadyLocked = Atomic.test_and_set(std::memory_order_acquire);
+        const bool bAlreadyLocked = Atomic.test_and_set(std::memory_order_acquire);
         return !bAlreadyLocked;
     }
 
@@ -72,8 +72,8 @@ public:
 
     b32 TryAcquire()
     {
-        std::hash<std::thread::id> Hasher;
-        std::size_t ThreadID = Hasher(std::this_thread::get_id());
+        const std::hash<std::thread::id> Hasher;
+        const std::size_t ThreadID = Hasher(std::this_thread::get_id());
 
         b32 bAcquired;
 
@@ -102,8 +102,8 @@ public:
 
     void Acquire()
     {
-        std::hash<std::thread::id> Hasher;
-        std::size_t ThreadID = Hasher(std::this_thread::get_id());
+        const std::hash<std::thread::id> Hasher;
+        const std::size_t ThreadID = Hasher(std::this_thread::get_id());
 
         if (ThreadID != Owner.load(std::memory_order_relaxed))
         {
@@ -127,9 +127,9 @@ public:
         // Ensure that we got all writes before we unlock
         std::atomic_thread_fence(std::memory_order_release);
 
-        std::hash<std::thread::id> Hasher;
-        std::size_t ThreadID = Hasher(std::this_thread::get_id());
-        std::size_t ActualID = Owner.load(std::memory_order_relaxed);
+        const std::hash<std::thread::id> Hasher;
+        const std::size_t ThreadID = Hasher(std::this_thread::get_id());
+        const std::size_t ActualID = Owner.load(std::memory_order_relaxed);
         VLN_ASSERT(ThreadID == ActualID);
 
         --RefCount;

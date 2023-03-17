@@ -12,7 +12,7 @@ void VWindow::Create(const VWindowSpecification& WindowSpec)
 {
     // Init SDL
     {
-        i32 Res = SDL_Init(SDL_INIT_VIDEO);
+        const i32 Res = SDL_Init(SDL_INIT_VIDEO);
         VLN_ASSERT(Res == 0);
     }
 

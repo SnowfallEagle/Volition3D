@@ -20,7 +20,7 @@ void VTime::ShutDown()
 
 void VTime::TickFrame()
 {
-    u32 CurrentTick = GetTicks();
+    const u32 CurrentTick = GetTicks();
     DeltaTime = (f32)(CurrentTick - LastTick);
     LastTick = CurrentTick;
 }

@@ -47,13 +47,13 @@ const VSurface& VTexture::Get(i32 MipMapLevel) const
 
 void VTexture::GenerateMipMaps()
 {
-    i32 MaxMipMappingLevel = Renderer.GetRenderSpec().MaxMipMappingLevel;
+    const i32 MaxMipMappingLevel = Renderer.GetRenderSpec().MaxMipMappingLevel;
     NumMipMaps = 1;
 
     for (i32f I = 1; I < MaxMipMappingLevel; ++I, ++NumMipMaps)
     {
-        i32 PrevSize = Surfaces[I - 1].GetWidth();
-        i32 CurrentSize = PrevSize / 2;
+        const i32 PrevSize = Surfaces[I - 1].GetWidth();
+        const i32 CurrentSize = PrevSize / 2;
 
         if (CurrentSize <= 0)
         {
@@ -74,21 +74,21 @@ void VTexture::GenerateMipMaps()
         {
             for (i32f X = 0; X < CurrentSize; ++X)
             {
-                i32 PrevPixelY0 = (Y * 2) * PrevPitch;
+                const i32 PrevPixelY0 = (Y * 2) * PrevPitch;
                 i32 PrevPixelY1 = PrevPixelY0 + PrevPitch;
                 if (PrevPixelY1 > (PrevSize * PrevPitch))
                 {
                     PrevPixelY1 = PrevPixelY0;
                 }
 
-                i32 PrevPixelX0 = (X * 2);
+                const i32 PrevPixelX0 = (X * 2);
                 i32 PrevPixelX1 = PrevPixelX0 + 1;
                 if (PrevPixelX1 > PrevSize)
                 {
                     PrevPixelX1 = PrevPixelX0;
                 }
 
-                VColorARGB PrevPixels[4] = {
+                const VColorARGB PrevPixels[4] = {
                     PrevBuffer[PrevPixelY0 + PrevPixelX0],
                     PrevBuffer[PrevPixelY0 + PrevPixelX1],
                     PrevBuffer[PrevPixelY1 + PrevPixelX0],

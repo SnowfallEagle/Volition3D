@@ -75,8 +75,8 @@ void VBillinearPerspectiveTextureInterpolator::ComputeXStartsAndDeltas(i32 XDiff
 
 void VBillinearPerspectiveTextureInterpolator::ProcessPixel()
 {
-    i32f X0 = ((U << (Fx28Shift - Fx22Shift)) / InterpolationContext->Z);
-    i32f Y0 = ((V << (Fx28Shift - Fx22Shift)) / InterpolationContext->Z) * TexturePitch;
+    const i32f X0 = ((U << (Fx28Shift - Fx22Shift)) / InterpolationContext->Z);
+    const i32f Y0 = ((V << (Fx28Shift - Fx22Shift)) / InterpolationContext->Z) * TexturePitch;
 
     i32f X1 = X0 + 1;
     if (X1 >= TextureSize)
@@ -90,7 +90,7 @@ void VBillinearPerspectiveTextureInterpolator::ProcessPixel()
         Y1 = Y0;
     }
 
-    VColorARGB TextureColors[4] = {
+    const VColorARGB TextureColors[4] = {
         TextureBuffer[Y0 + X0],
         TextureBuffer[Y0 + X1],
         TextureBuffer[Y1 + X0],
@@ -98,18 +98,18 @@ void VBillinearPerspectiveTextureInterpolator::ProcessPixel()
     };
 
     // (fx22 -> fx8) & 0xFF
-    i32 FracU = (U >> 14) & 0xFF;
-    i32 FracV = (V >> 14) & 0xFF;
+    const i32 FracU = (U >> 14) & 0xFF;
+    const i32 FracV = (V >> 14) & 0xFF;
 
     // fx8<1> - fx8<Frac>
-    i32 OneMinusFracU = (1 << 8) - FracU;
-    i32 OneMinusFracV = (1 << 8) - FracV;
+    const i32 OneMinusFracU = (1 << 8) - FracU;
+    const i32 OneMinusFracV = (1 << 8) - FracV;
 
     // fx8 * fx8 = fx16
-    i32 OneMinusFracUMulOneMinusFracV = OneMinusFracU * OneMinusFracV;
-    i32 FracUMulOneMinusFracV         = FracU         * OneMinusFracV;
-    i32 OneMinusFracUMulFracV         = OneMinusFracU * FracV;
-    i32 FracUMulFracV                 = FracU         * FracV;
+    const i32 OneMinusFracUMulOneMinusFracV = OneMinusFracU * OneMinusFracV;
+    const i32 FracUMulOneMinusFracV         = FracU         * OneMinusFracV;
+    const i32 OneMinusFracUMulFracV         = OneMinusFracU * FracV;
+    const i32 FracUMulFracV                 = FracU         * FracV;
 
     // fx16 * fx8 = fx24 -> fx8
     VColorARGB FilteredColor;
@@ -134,7 +134,7 @@ void VBillinearPerspectiveTextureInterpolator::ProcessPixel()
         FracUMulFracV                 * TextureColors[3].B
     ) >> 16;
 
-    VColorARGB Pixel = InterpolationContext->Pixel;
+    const VColorARGB Pixel = InterpolationContext->Pixel;
 
     InterpolationContext->Pixel = MAP_XRGB32(
         (FilteredColor.R * Pixel.R) >> 8,

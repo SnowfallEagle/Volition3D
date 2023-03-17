@@ -88,25 +88,29 @@ public:
 
     void Normalize()
     {
-        f32 Len = GetLength();
+        const f32 Len = GetLength();
 
         // Don't do anything on zero vector
         if (Len < Math.Epsilon5)
+        {
             return;
+        }
 
-        f32 Inv = 1.0f / Len;
+        const f32 Inv = 1.0f / Len;
         X *= Inv;
         Y *= Inv;
         Z *= Inv;
     }
     VVector3 GetNormalized()
     {
-        f32 Len = GetLength();
+        const f32 Len = GetLength();
 
         if (Len < Math.Epsilon5)
+        {
             return { 0.0f, 0.0f, 0.0f };
+        }
 
-        f32 Inv = 1.0f / Len;
+        const f32 Inv = 1.0f / Len;
         return { X * Inv, Y * Inv, Z * Inv };
     }
 
@@ -199,7 +203,7 @@ public:
 
     VLN_FINLINE VVector4 operator/(f32 Scalar) const
     {
-        f32 InvDiv = 1.0f / Scalar;
+        const f32 InvDiv = 1.0f / Scalar;
         return {
             X * Scalar,
             Y * Scalar,
@@ -209,7 +213,7 @@ public:
     }
     VLN_FINLINE VVector4& operator/=(f32 Scalar)
     {
-        f32 InvDiv = 1.0f / Scalar;
+        const f32 InvDiv = 1.0f / Scalar;
         X *= InvDiv;
         Y *= InvDiv;
         Z *= InvDiv;
@@ -245,7 +249,7 @@ public:
 
     void Normalize()
     {
-        f32 Len = GetLength();
+        const f32 Len = GetLength();
 
         // Don't do anything on zero vector
         if (Len < Math.Epsilon5)
@@ -253,7 +257,7 @@ public:
             return;
         }
 
-        f32 Inv = 1.0f / Len;
+        const f32 Inv = 1.0f / Len;
         X *= Inv;
         Y *= Inv;
         Z *= Inv;
@@ -261,14 +265,14 @@ public:
     }
     VVector4 GetNormalized() const
     {
-        f32 Len = GetLength();
+        const f32 Len = GetLength();
 
         if (Len < Math.Epsilon5)
         {
             return { 0.0f, 0.0f, 0.0f, 1.0f };
         }
 
-        f32 Inv = 1.0f / Len;
+        const f32 Inv = 1.0f / Len;
         return { X * Inv, Y * Inv, Z * Inv, 1.0f };
     }
 

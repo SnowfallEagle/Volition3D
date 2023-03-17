@@ -11,8 +11,8 @@ void VAlphaInterpolator::Start()
 
 void VAlphaInterpolator::ProcessPixel()
 {
-    VColorARGB Pixel = InterpolationContext->Pixel;
-    VColorARGB BufferPixel = InterpolationContext->Buffer[
+    const VColorARGB Pixel = InterpolationContext->Pixel;
+    const VColorARGB BufferPixel = InterpolationContext->Buffer[
         InterpolationContext->Y * InterpolationContext->BufferPitch + InterpolationContext->X
     ];
 

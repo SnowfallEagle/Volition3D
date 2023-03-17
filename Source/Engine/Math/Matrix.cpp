@@ -98,16 +98,18 @@ b32 VMatrix44::Inverse(const VMatrix44& A, VMatrix44& R)
      */
 
     // Find 3x3 det
-    f32 Det =
+    const f32 Det =
         A.C00 * (A.C11 * A.C22 - A.C12 * A.C21) -
         A.C01 * (A.C10 * A.C22 - A.C12 * A.C20) +
         A.C02 * (A.C10 * A.C21 - A.C11 * A.C20);
 
     // Test if we can't inverse
     if (Math.Abs(Det) < Math.Epsilon5)
+    {
         return false;
+    }
 
-    f32 InvDet = 1.0f / Det;
+    const f32 InvDet = 1.0f / Det;
 
     R.C00 =  InvDet * (A.C11 * A.C22 - A.C12 * A.C21);
     R.C01 = -InvDet * (A.C01 * A.C22 - A.C02 * A.C21);
