@@ -1,3 +1,4 @@
+#include <cstdarg>
 #include "Engine/Core/Memory.h"
 #include "Engine/Core/Window.h"
 #include "Engine/Core/World.h"
@@ -91,6 +92,14 @@ void VRenderer::ShutDown()
     }
 }
 
+void VRenderer::PreRender()
+{
+    ZBuffer.Clear();
+    RenderList->Reset();
+
+    BackSurface.FillRectHW(nullptr, MAP_XRGB32(0x00, 0x00, 0x00));
+}
+
 void VRenderer::Render()
 {
     u32* Buffer;
@@ -143,10 +152,36 @@ void VRenderer::Render()
     BackSurface.Unlock();
 }
 
-void VRenderer::Flip()
+void VRenderer::RenderUI()
+{
+    for (const auto& TextElement : TextQueue)
+    {
+        // Render text
+        SDL_Surface* SDLSurface = TTF_RenderText_Solid(Font, TextElement.Text, TextElement.Color);
+        VLN_ASSERT(SDLSurface);
+        SDL_SetColorKey(SDLSurface, SDL_TRUE, static_cast<u32*>(SDLSurface->pixels)[0]);
+
+        // Convert surface
+        SDL_Surface* SDLConverted = SDL_ConvertSurface(SDLSurface, RenderSpec.SDLPixelFormat, 0);
+        VLN_ASSERT(SDLConverted);
+
+        // Blit
+        SDL_Rect Dest = { TextElement.Position.X, TextElement.Position.Y, (i32f)strlen(TextElement.Text) * FontCharWidth, FontCharHeight };
+        SDL_BlitScaled(SDLConverted, nullptr, BackSurface.SDLSurface, &Dest);
+
+        // Free memory
+        SDL_FreeSurface(SDLSurface);
+        SDL_FreeSurface(SDLConverted);
+    }
+}
+
+void VRenderer::PostRender()
 {
     SDL_BlitSurface(BackSurface.SDLSurface, nullptr, VideoSurface.SDLSurface, nullptr);
     SDL_UpdateWindowSurface(Window.SDLWindow);
+
+    TextQueue.Clear();
+    DebugTextY = 0;
 }
 
 void VRenderer::DrawLine(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, u32 Color)
@@ -1366,40 +1401,43 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
     }
 }
 
-void VRenderer::DrawText(i32 X, i32 Y, VColorARGB Color, const char* Format, ...)
+void VRenderer::VarDrawText(i32 X, i32 Y, VColorARGB Color, const char* Format, std::va_list VarList)
 {
     // Prepare text
-    static constexpr i32f TextBufferSize = 512;
-    char Text[TextBufferSize];
+    VTextElement TextElement;
+    std::vsnprintf(TextElement.Text, VTextElement::TextSize, Format, VarList);
 
-    va_list VarList;
+    // Convert color
+    TextElement.Color.a = Color.A;
+    TextElement.Color.r = Color.R;
+    TextElement.Color.g = Color.G;
+    TextElement.Color.b = Color.B;
+
+    // Set position
+    TextElement.Position = { X, Y };
+
+    TextQueue.EmplaceBack(std::move(TextElement));
+}
+
+void VRenderer::DrawText(i32 X, i32 Y, VColorARGB Color, const char* Format, ...)
+{
+    std::va_list VarList;
     va_start(VarList, Format);
-    vsnprintf(Text, TextBufferSize, Format, VarList);
+
+    VarDrawText(X, Y, Color, Format, VarList);
+
     va_end(VarList);
+}
 
-    // Convert our color
-    SDL_Color SDLColor;
-    SDLColor.a = Color.A;
-    SDLColor.r = Color.R;
-    SDLColor.g = Color.G;
-    SDLColor.b = Color.B;
+void VRenderer::DrawDebugText(const char* Format, ...)
+{
+    std::va_list VarList;
+    va_start(VarList, Format);
 
-    // Render text
-    SDL_Surface* SDLSurface = TTF_RenderText_Solid(Font, Text, SDLColor);
-    VLN_ASSERT(SDLSurface);
-    SDL_SetColorKey(SDLSurface, SDL_TRUE, static_cast<u32*>(SDLSurface->pixels)[0]);
+    VarDrawText(0, DebugTextY, { 0xFF, 0xFF, 0xFF, 0xFF }, Format, VarList);
+    DebugTextY += FontCharHeight;
 
-    // Convert surface
-    SDL_Surface* SDLConverted = SDL_ConvertSurface(SDLSurface, RenderSpec.SDLPixelFormat, 0);
-    VLN_ASSERT(SDLConverted);
-
-    // Blit
-    SDL_Rect Dest = { X, Y, (i32f)strlen(Text) * FontCharWidth, FontCharHeight };
-    SDL_BlitScaled(SDLConverted, nullptr, BackSurface.SDLSurface, &Dest);
-
-    // Free memory
-    SDL_FreeSurface(SDLSurface);
-    SDL_FreeSurface(SDLConverted);
+    va_end(VarList);
 }
 
 void VRenderer::SetInterpolators()

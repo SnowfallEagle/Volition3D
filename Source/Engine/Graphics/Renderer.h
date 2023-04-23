@@ -33,6 +33,16 @@ public:
     static constexpr i32f MaxLights = 8;
 
 private:
+    struct VTextElement
+    {
+        static constexpr i32f TextSize = 512;
+
+        char Text[TextSize];
+        SDL_Color Color;
+        VVector2I Position;
+    };
+
+private:
     VSurface VideoSurface;
     VSurface BackSurface;
 
@@ -45,6 +55,9 @@ private:
     TTF_Font* Font;
     i32 FontCharWidth; // In pixels
     i32 FontCharHeight;
+
+    i32 DebugTextY;
+    TArray<VTextElement> TextQueue;
 
     VMaterial Materials[MaxMaterials];
     i32 NumMaterials;
@@ -83,7 +96,7 @@ public:
         NumMaterials = 0;
     }
 
-    void ResetLights()
+    VLN_FINLINE void ResetLights()
     {
         Memory.MemSetByte(Lights, 0, sizeof(Lights));
         NumLights = 0;
@@ -107,21 +120,10 @@ public:
         }
     }
 
-    VLN_FINLINE void PrepareToRender()
-    {
-        BackSurface.FillRectHW(nullptr, MAP_XRGB32(0x00, 0x00, 0x00));
-        ZBuffer.Clear();
-        RenderList->Reset();
-    }
-
+    void PreRender();
     void Render();
-
-    VLN_FINLINE void RenderUI()
-    {
-        // TODO: Implement
-    }
-
-    void Flip();
+    void RenderUI();
+    void PostRender();
 
     // Very slow put pixel function to debug draw functions
     VLN_FINLINE void PutPixel(u32* Buffer, i32 Pitch, i32 X, i32 Y, u32 Color) const
@@ -146,9 +148,12 @@ public:
         }
     }
 
+    void DrawText(i32 X, i32 Y, VColorARGB Color, const char* Format, ...);
+    void DrawDebugText(const char* Format, ...);
+
 private:
     void DrawTriangle(VInterpolationContext& InterpolationContext);
-    void DrawText(i32 X, i32 Y, VColorARGB Color, const char* Format, ...);
+    void VarDrawText(i32 X, i32 Y, VColorARGB Color, const char* Format, std::va_list VarList); 
 
     void SetInterpolators();
     void RenderSolid();

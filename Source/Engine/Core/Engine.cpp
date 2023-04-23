@@ -24,24 +24,19 @@ void VEngine::Run()
     {
         Time.TickFrame();
 
-        HandleEvents();
+        Window.HandleEvents();
+        Input.HandleEvents();
         World.Update(Time.GetDeltaTime());
 
-        Renderer.PrepareToRender();
+        Renderer.PreRender();
         Renderer.Render();
         Renderer.RenderUI();
-        Renderer.Flip();
+        Renderer.PostRender();
 
         Time.SyncFrame();
     }
 
     ShutDown();
-}
-
-void VEngine::HandleEvents()
-{
-    Window.HandleEvents();
-    Input.HandleEvents();
 }
 
 }

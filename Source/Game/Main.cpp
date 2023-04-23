@@ -156,6 +156,9 @@ public:
         if (Input.IsKeyDown(EKeycode::Z)) Rot.BuildRotationXYZ(Speed, 0, 0);
         if (Input.IsKeyDown(EKeycode::X)) Rot.BuildRotationXYZ(-Speed, 0, 0);
         Entity->Mesh->Transform(Rot, ETransformType::LocalOnly, true);
+
+        Renderer.DrawDebugText("Hello");
+        Renderer.DrawDebugText("There");
     }
 };
 

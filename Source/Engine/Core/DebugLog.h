@@ -1,7 +1,7 @@
 #pragma once
 
-#include <stdio.h>
-#include <stdarg.h>
+#include <cstdio>
+#include <cstdarg>
 #include "Engine/Core/Types.h"
 #include "Engine/Core/Platform.h"
 
@@ -24,8 +24,9 @@ public:
     void ShutDown();
 
     void Output(const char* Channel, const char* Priority, const char* Format, ...);
+
 private:
-    void VarOutput(const char* Channel, const char* Priority, const char* Format, va_list VarList);
+    void VarOutput(const char* Channel, const char* Priority, const char* Format, std::va_list VarList);
 };
 
 extern VDebugLog DebugLog;

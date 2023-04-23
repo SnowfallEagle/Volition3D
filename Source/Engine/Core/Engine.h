@@ -40,9 +40,6 @@ public:
     {
         bRunning = false;
     }
-
-private:
-    void HandleEvents();
 };
 
 extern VEngine Engine;

@@ -16,10 +16,10 @@ using i64  = std::int64_t;
 using i32f = std::int_fast32_t;
 using i64f = std::int_fast64_t;
 
-using u8 = std::uint8_t;
-using u16 = std::uint16_t;
-using u32 = std::uint32_t;
-using u64 = std::uint64_t;
+using u8   = std::uint8_t;
+using u16  = std::uint16_t;
+using u32  = std::uint32_t;
+using u64  = std::uint64_t;
 using u32f = std::uint_fast32_t;
 using u64f = std::uint_fast64_t;
 

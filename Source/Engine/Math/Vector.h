@@ -81,6 +81,7 @@ public:
     {
         return Math.Sqrt(X*X + Y*Y + Z*Z);
     }
+
     VLN_FINLINE f32 GetLengthFast()
     {
         return Math.FastDist3D(X, Y, Z);
@@ -101,6 +102,7 @@ public:
         Y *= Inv;
         Z *= Inv;
     }
+
     VVector3 GetNormalized()
     {
         const f32 Len = GetLength();

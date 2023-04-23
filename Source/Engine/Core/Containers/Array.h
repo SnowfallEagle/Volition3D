@@ -27,6 +27,11 @@ public:
         Super::resize(Size);
     }
 
+    VLN_FINLINE void Clear()
+    {
+        Super::clear();
+    }
+
     template<typename... ArgsT>
     VLN_FINLINE T& EmplaceBack(ArgsT&&... Args)
     {
