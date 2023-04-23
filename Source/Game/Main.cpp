@@ -28,13 +28,15 @@ public:
         Entity = World.SpawnEntity<VEntity>();
         Entity->Mesh->LoadCOB(
             "rec_gouraud_textured_02.cob",
-            { -500.0f, 0.0f, 250.0f},
+            { -500.0f, 0.0f, 250.0f },
             { 100.0f, 100.0f, 100.0f }
         );
 
         // TODO: Later we should spawn camera as entity and attach it to world
         Camera = World.GetCamera();
         Camera->Init(ECameraAttr::Euler, { 0, 75.0f, 0 }, { 0, 0, 0 }, Entity->Mesh->Position, 90, 50, 7500, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
+
+        World.SetCubemap("cubemap.png");
 
         {
             VLight AmbientLight = {

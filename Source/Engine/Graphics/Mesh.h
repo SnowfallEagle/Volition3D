@@ -22,8 +22,9 @@ namespace EMeshAttr
 {
     enum
     {
-        MultiFrame = VLN_BIT(1),
-        HasTexture = VLN_BIT(2),
+        MultiFrame  = VLN_BIT(1),
+        HasTexture  = VLN_BIT(2),
+        CanBeCulled = VLN_BIT(3),
     };
 }
 
@@ -51,7 +52,7 @@ namespace ECOB
 
 VLN_DEFINE_LOG_CHANNEL(hLogObject, "Object");
 
-VLN_DECL_ALIGN_SSE class VMesh
+VLN_DECL_ALIGN_SSE() class VMesh
 {
 public:
     static constexpr i32f NameSize = 64;
@@ -88,6 +89,20 @@ public:
     VPoint2* TextureCoordsList;
 
 public:
+    VMesh()
+    {
+        Memory.MemSetByte(this, 0, sizeof(*this));
+
+        State = EMeshState::Active | EMeshState::Visible;
+
+        UX = { 1.0f, 0.0f, 0.0f };
+        UY = { 0.0f, 1.0f, 0.0f };
+        UZ = { 0.0f, 0.0f, 1.0f };
+
+        NumFrames = 1;
+        CurrentFrame = 0;
+    }
+
     // Allocates verticies, polygons, radius lists and texture list
     void Allocate(i32 InNumVtx, i32 InNumPoly, i32 InNumFrames)
     {
@@ -122,6 +137,26 @@ public:
         VLN_SAFE_DELETE_ARRAY(TextureCoordsList);
     }
 
+    // Call this function before rendering
+    void ResetRenderState()
+    {
+        // Reset object's state
+        State &= ~EMeshState::Culled;
+
+        // Restore polygons
+        for (i32f I = 0; I < NumPoly; ++I)
+        {
+            VPoly& Poly = PolyList[I];
+            if (~Poly.State & EPolyState::Active)
+            {
+                continue;
+            }
+
+            Poly.State &= ~(EPolyState::Clipped | EPolyState::BackFace | EPolyState::Lit);
+            Poly.LitColor[2] = Poly.LitColor[1] = Poly.LitColor[0] = Poly.OriginalColor;
+        }
+    }
+
     void SetFrame(i32 Frame)
     {
         if (~Attr & EMeshAttr::MultiFrame)
@@ -142,40 +177,6 @@ public:
 
         LocalVtxList = &HeadLocalVtxList[Frame * NumVtx];
         TransVtxList = &HeadTransVtxList[Frame * NumVtx];
-    }
-
-    // Call this function before do rendering
-    void Reset()
-    {
-        // Reset object's state
-        State &= ~EMeshState::Culled;
-
-        // Restore polygons
-        for (i32f I = 0; I < NumPoly; ++I)
-        {
-            VPoly& Poly = PolyList[I];
-            if (~Poly.State & EPolyState::Active)
-            {
-                continue;
-            }
-
-            Poly.State &= ~(EPolyState::Clipped | EPolyState::BackFace | EPolyState::Lit);
-            Poly.LitColor[2] = Poly.LitColor[1] = Poly.LitColor[0] = Poly.OriginalColor;
-        }
-    }
-
-    void Init()
-    {
-        Memory.MemSetByte(this, 0, sizeof(*this));
-
-        State = EMeshState::Active | EMeshState::Visible;
-
-        UX = { 1.0f, 0.0f, 0.0f };
-        UY = { 0.0f, 1.0f, 0.0f };
-        UZ = { 0.0f, 0.0f, 1.0f };
-
-        NumFrames = 1;
-        CurrentFrame = 0;
     }
 
     void ComputeRadius()
@@ -286,6 +287,8 @@ public:
         u32 Flags = 0
     );
 
+    b32 LoadCubemap(const char* Path);
+
     void Transform(const VMatrix44& M, ETransformType Type, b32 bTransBasis)
     {
         VVector4 Res;
@@ -371,6 +374,11 @@ public:
 
     b32 Cull(const VCamera& Cam, u32 CullType = ECullType::XYZ)
     {
+        if (~Attr & EMeshAttr::CanBeCulled)
+        {
+            return false;
+        }
+
         VVector4 SpherePos;
         VMatrix44::MulVecMat(Position, Cam.MatCamera, SpherePos);
         const f32 MaxRadius = GetMaxRadius();
@@ -413,7 +421,7 @@ public:
     }
 
 public:
-    VLN_DEFINE_ALIGN_OPERATORS_SSE
+    VLN_DEFINE_ALIGN_OPERATORS_SSE()
 };
 
 }

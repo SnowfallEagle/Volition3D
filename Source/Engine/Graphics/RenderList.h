@@ -1,6 +1,6 @@
 #pragma once
 
-#include <stdlib.h> // qsort()
+#include <cstdlib>
 #include "Engine/Math/Minimal.h"
 #include "Engine/Graphics/Polygon.h"
 #include "Engine/Graphics/Camera.h"
@@ -32,7 +32,7 @@ enum class ESortPolygonsMethod
 
 VLN_DEFINE_LOG_CHANNEL(hLogRenderList, "RenderList");
 
-VLN_DECL_ALIGN_SSE class VRenderList
+VLN_DECL_ALIGN_SSE() class VRenderList
 {
 public:
     static constexpr i32f MaxPoly = 32768;
@@ -1174,9 +1174,9 @@ public:
     {
         switch (Method)
         {
-        case ESortPolygonsMethod::Average: qsort(PolyPtrList, NumPoly, sizeof(*PolyPtrList), SortPolygonsCompareAverage); break;
-        case ESortPolygonsMethod::Near:    qsort(PolyPtrList, NumPoly, sizeof(*PolyPtrList), SortPolygonsCompareNear); break;
-        case ESortPolygonsMethod::Far:     qsort(PolyPtrList, NumPoly, sizeof(*PolyPtrList), SortPolygonsCompareFar); break;
+        case ESortPolygonsMethod::Average: std::qsort(PolyPtrList, NumPoly, sizeof(*PolyPtrList), SortPolygonsCompareAverage); break;
+        case ESortPolygonsMethod::Near:    std::qsort(PolyPtrList, NumPoly, sizeof(*PolyPtrList), SortPolygonsCompareNear); break;
+        case ESortPolygonsMethod::Far:     std::qsort(PolyPtrList, NumPoly, sizeof(*PolyPtrList), SortPolygonsCompareFar); break;
         }
     }
 
@@ -1275,7 +1275,7 @@ public:
     }
 
 public:
-    VLN_DEFINE_ALIGN_OPERATORS_SSE
+    VLN_DEFINE_ALIGN_OPERATORS_SSE()
 };
 
 }

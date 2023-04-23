@@ -118,7 +118,7 @@ void VRenderer::Render()
             {
                 VMesh* Mesh = Entity->Mesh;
 
-                Mesh->Reset();
+                Mesh->ResetRenderState();
                 Mesh->TransformModelToWorld();
                 Mesh->Cull(Camera);
 
@@ -133,10 +133,13 @@ void VRenderer::Render()
         {
             RenderList->RemoveBackFaces(Camera);
         }
+
         RenderList->TransformWorldToCamera(Camera);
         RenderList->Clip(Camera);
+
         Renderer.TransformLights(Camera);
         RenderList->Light(Camera, Renderer.Lights, Renderer.MaxLights);
+
         RenderList->SortPolygons(ESortPolygonsMethod::Average);
         RenderList->TransformCameraToScreen(Camera);
     }
@@ -1457,9 +1460,9 @@ void VRenderer::SetInterpolators()
 
     if (InterpolationContext.PolyAttr & EPolyAttr::ShadeModeTexture)
     {
-        const i32 MaxMipMappingLevel = Renderer.GetRenderSpec().MaxMipMappingLevel;
+        const i32 MaxMipMappingLevel = RenderSpec.MaxMipMappingLevel;
 
-        if (MaxMipMappingLevel > 0)
+        if (~InterpolationContext.PolyAttr & EPolyAttr::BestTextureQuality && MaxMipMappingLevel > 0)
         {
             InterpolationContext.MipMappingLevel = (i32)(
                 InterpolationContext.Distance / (World.Camera->ZFarClip / (f32)MaxMipMappingLevel)

@@ -26,6 +26,7 @@ void VEngine::Run()
 
         Window.HandleEvents();
         Input.HandleEvents();
+
         World.Update(Time.GetDeltaTime());
 
         Renderer.PreRender();

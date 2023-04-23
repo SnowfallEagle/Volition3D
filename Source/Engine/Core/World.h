@@ -11,8 +11,9 @@ class VWorld
 {
     TArray<VEntity*> Entities;
     VCamera* Camera;
+    VEntity* Cubemap = nullptr;
 
-    VGameState* GameFlow;
+    VGameState* GameState;
 
 public:
     template<typename GameStateT>
@@ -20,8 +21,8 @@ public:
     {
         Camera = new VCamera();
 
-        GameFlow = new GameStateT();
-        GameFlow->StartUp();
+        GameState = new GameStateT();
+        GameState->StartUp();
     }
 
     void ShutDown();
@@ -39,6 +40,8 @@ public:
         Entity->Init();
         return Entity;
     }
+
+    void SetCubemap(const char* Path);
 
     friend class VRenderer;
 };

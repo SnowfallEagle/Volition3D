@@ -161,6 +161,7 @@ private:
 
     friend class VSurface;
     friend class VMesh;
+    friend class VCubemap;
 };
 
 extern VRenderer Renderer;

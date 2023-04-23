@@ -35,7 +35,8 @@ namespace EPolyAttr
 		ShadeModePhong    = VLN_BIT(7),
 		ShadeModeTexture  = VLN_BIT(8),
 
-		UsesMaterial = VLN_BIT(9)
+		UsesMaterial = VLN_BIT(9),
+        BestTextureQuality = VLN_BIT(10),
 	};
 }
 

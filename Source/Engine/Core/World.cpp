@@ -1,3 +1,4 @@
+#include "Engine/Graphics/Renderer.h"
 #include "Engine/Core/World.h"
 
 namespace Volition
@@ -7,43 +8,46 @@ VWorld World;
 
 void VWorld::ShutDown()
 {
-    if (GameFlow)
+    if (GameState)
     {
-        GameFlow->ShutDown();
-        delete GameFlow;
+        GameState->ShutDown();
+        delete GameState;
     }
 
-    for (auto Entity : Entities)
+    for (const auto Entity : Entities)
     {
         if (Entity)
         {
             Entity->Destroy();
             delete Entity;
-            Entity = nullptr;
         }
     }
+    Entities.Clear();
 
-    if (Camera)
-    {
-        delete Camera;
-        Camera = nullptr;
-    }
+    VLN_SAFE_DELETE(Camera);
+    VLN_SAFE_DELETE(Cubemap);
 }
 
 void VWorld::Update(f32 DeltaTime)
 {
-    if (GameFlow)
+    if (GameState)
     {
-        GameFlow->Update(DeltaTime);
+        GameState->Update(DeltaTime);
     }
 
-    for (auto Entity : Entities)
+    for (const auto Entity : Entities)
     {
         if (Entity)
         {
             Entity->Update(DeltaTime);
         }
     }
+}
+
+void VWorld::SetCubemap(const char* Path)
+{
+    const auto Entity = SpawnEntity<VEntity>();
+    Entity->Mesh->LoadCubemap(Path);
 }
 
 }

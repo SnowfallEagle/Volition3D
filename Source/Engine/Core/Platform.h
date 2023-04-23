@@ -44,8 +44,8 @@ namespace Volition
         _mm_free(Ptr); \
     } \
 
-#define VLN_DECL_ALIGN_SSE VLN_DECL_ALIGN(16)
-#define VLN_DEFINE_ALIGN_OPERATORS_SSE VLN_DEFINE_ALIGN_OPERATORS(16)
+#define VLN_DECL_ALIGN_SSE() VLN_DECL_ALIGN(16)
+#define VLN_DEFINE_ALIGN_OPERATORS_SSE() VLN_DEFINE_ALIGN_OPERATORS(16)
 
 #define VLN_MIN(A, B) ((A) < (B) ? (A) : (B))
 #define VLN_MAX(A, B) ((A) > (B) ? (A) : (B))

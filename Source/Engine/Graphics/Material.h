@@ -36,7 +36,6 @@ class VMaterial
 {
 public:
     static constexpr i32f NameSize = 64;
-    static constexpr i32f PathSize = 80;
 
 public:
     i32 ID;
@@ -50,9 +49,6 @@ public:
     VColorARGB RAmbient, RDiffuse, RSpecular; // K * Color
 
     VTexture Texture;
-
-public:
-    VMaterial() = default;
 };
 
 }

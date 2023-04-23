@@ -22,8 +22,8 @@ void VAffineTextureInterpolator::Start()
 
 void VAffineTextureInterpolator::ComputeYStartsAndDeltasLeft(i32 YDiffLeft, i32 LeftStartVtx, i32 LeftEndVtx)
 {
-    ULeft = (UVtx[LeftStartVtx]);
-    VLeft = (VVtx[LeftStartVtx]);
+    ULeft = UVtx[LeftStartVtx];
+    VLeft = VVtx[LeftStartVtx];
 
     UDeltaLeftByY = (UVtx[LeftEndVtx] - UVtx[LeftStartVtx]) / YDiffLeft;
     VDeltaLeftByY = (VVtx[LeftEndVtx] - VVtx[LeftStartVtx]) / YDiffLeft;
@@ -31,8 +31,8 @@ void VAffineTextureInterpolator::ComputeYStartsAndDeltasLeft(i32 YDiffLeft, i32 
 
 void VAffineTextureInterpolator::ComputeYStartsAndDeltasRight(i32 YDiffRight, i32 RightStartVtx, i32 RightEndVtx)
 {
-    URight = (UVtx[RightStartVtx]);
-    VRight = (VVtx[RightStartVtx]);
+    URight = UVtx[RightStartVtx];
+    VRight = VVtx[RightStartVtx];
 
     UDeltaRightByY = (UVtx[RightEndVtx] - UVtx[RightStartVtx]) / YDiffRight;
     VDeltaRightByY = (VVtx[RightEndVtx] - VVtx[RightStartVtx]) / YDiffRight;

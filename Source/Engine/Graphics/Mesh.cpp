@@ -72,10 +72,10 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
     VMatrix44 MatLocal = VMatrix44::Identity;
     VMatrix44 MatWorld = VMatrix44::Identity;
 
-    // Initialize object
+    // Initialization 
     {
-        Init();
         Position = InPosition;
+        Attr |= EMeshAttr::CanBeCulled;
     }
 
     // Load from file
@@ -467,7 +467,7 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                     Poly.Attr |= EPolyAttr::ShadeModeFlat;
                 }
                 else if (PolyMaterial.Attr & EMaterialAttr::ShadeModeGouraud ||
-                         PolyMaterial.Attr & EMaterialAttr::ShadeModePhong)
+                    PolyMaterial.Attr & EMaterialAttr::ShadeModePhong)
                 {
                     Poly.Attr |= EPolyAttr::ShadeModeGouraud;
                 }
@@ -527,12 +527,31 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
     }
 
     // Compute stuff
-    ComputeRadius();
-    ComputePolygonNormalsLength();
-    ComputeVertexNormals();
+    {
+        ComputeRadius();
+        ComputePolygonNormalsLength();
+        ComputeVertexNormals();
+    }
 
-    // Log our success
-    VLN_NOTE(hLogCOB, "Ended parse object\n");
+    VLN_NOTE(hLogCOB, "Object parsing ended\n");
+    return true;
+}
+
+b32 VMesh::LoadCubemap(const char* Path)
+{
+    Allocate(8, 12, 1);
+
+    LocalVtxList[0].Position = { -0.5f, -0.5f, +0.5f };
+    LocalVtxList[1].Position = { -0.5f, +0.5f, +0.5f };
+    LocalVtxList[2].Position = { +0.5f, -0.5f, +0.5f };
+    LocalVtxList[3].Position = { +0.5f, +0.5f, +0.5f };
+
+    LocalVtxList[4].Position = { -0.5f, -0.5f, -0.5f };
+    LocalVtxList[5].Position = { -0.5f, +0.5f, -0.5f };
+    LocalVtxList[6].Position = { +0.5f, -0.5f, -0.5f };
+    LocalVtxList[7].Position = { +0.5f, +0.5f, -0.5f };
+
+    // @INCOMPLETE: Poly vtx and texture indices, texture coords, attrs, state, color
 
     return true;
 }
