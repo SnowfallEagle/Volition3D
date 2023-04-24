@@ -165,6 +165,11 @@ public:
     {
         return From + (std::rand() % (To - From + 1));
     }
+
+    VLN_FINLINE static f32 Mod(f32 Dividend, f32 Divisor)
+    {
+        return std::fmodf(Dividend, Divisor);
+    }
 };
 
 extern VMath Math;

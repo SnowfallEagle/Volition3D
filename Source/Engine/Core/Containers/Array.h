@@ -27,6 +27,16 @@ public:
         Super::resize(Size);
     }
 
+    VLN_FINLINE void Reserve(VSizeType Size)
+    {
+        Super::reserve(Size);
+    }
+
+    VLN_FINLINE void Erase(VSizeType Index)
+    {
+        Super::erase(Index);
+    }
+
     VLN_FINLINE void Clear()
     {
         Super::clear();

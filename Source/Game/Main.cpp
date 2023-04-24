@@ -32,11 +32,10 @@ public:
             { 100.0f, 100.0f, 100.0f }
         );
 
-        // TODO: Later we should spawn camera as entity and attach it to world
         Camera = World.GetCamera();
-        Camera->Init(ECameraAttr::Euler, { 0, 75.0f, 0 }, { 0, 0, 0 }, Entity->Mesh->Position, 90, 50, 7500, { (f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
+        Camera->Init(ECameraAttr::Euler, { 0, 75.0f, 0 }, { 0, 0, 0 }, VVector4(), 90, 50, 7500, {(f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
 
-        World.SetCubemap("cubemap.png");
+        World.SetCubemap("cubemap.bmp");
 
         {
             VLight AmbientLight = {
@@ -157,10 +156,7 @@ public:
         if (Input.IsKeyDown(EKeycode::G)) Rot.BuildRotationXYZ(0, 0, -Speed);
         if (Input.IsKeyDown(EKeycode::Z)) Rot.BuildRotationXYZ(Speed, 0, 0);
         if (Input.IsKeyDown(EKeycode::X)) Rot.BuildRotationXYZ(-Speed, 0, 0);
-        Entity->Mesh->Transform(Rot, ETransformType::LocalOnly, true);
-
-        Renderer.DrawDebugText("Hello");
-        Renderer.DrawDebugText("There");
+        // Entity->Mesh->Transform(Rot, ETransformType::LocalOnly, true);
     }
 };
 
@@ -168,6 +164,9 @@ int main(int Argc, char** Argv)
 {
     VWindowSpecification WindowSpec;
     VRenderSpecification RenderSpec;
+
+    WindowSpec.Size = { 1024, 768 };
+    WindowSpec.Flags |= EWindowSpecificationFlags::Fullscreen;
 
     Engine.StartUp<GGameState>(WindowSpec, RenderSpec);
     Engine.Run();

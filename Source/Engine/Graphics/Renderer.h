@@ -62,7 +62,7 @@ private:
     VMaterial Materials[MaxMaterials];
     i32 NumMaterials;
 
-    // TODO: Later we could put light as entity in world
+    // @TODO: Later we could put light as entity in world
     VLight Lights[MaxLights];
     i32 NumLights;
 

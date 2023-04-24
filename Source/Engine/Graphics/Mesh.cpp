@@ -251,7 +251,6 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
 
                 // Set default stuff
                 PolyList[I].State = EPolyState::Active;
-                PolyList[I].TextureCoordsList = TextureCoordsList;
             }
 
             VLN_LOG("\tNum materials in object: %d\n", NumMaterialsInObject);
@@ -534,25 +533,6 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
     }
 
     VLN_NOTE(hLogCOB, "Object parsing ended\n");
-    return true;
-}
-
-b32 VMesh::LoadCubemap(const char* Path)
-{
-    Allocate(8, 12, 1);
-
-    LocalVtxList[0].Position = { -0.5f, -0.5f, +0.5f };
-    LocalVtxList[1].Position = { -0.5f, +0.5f, +0.5f };
-    LocalVtxList[2].Position = { +0.5f, -0.5f, +0.5f };
-    LocalVtxList[3].Position = { +0.5f, +0.5f, +0.5f };
-
-    LocalVtxList[4].Position = { -0.5f, -0.5f, -0.5f };
-    LocalVtxList[5].Position = { -0.5f, +0.5f, -0.5f };
-    LocalVtxList[6].Position = { +0.5f, -0.5f, -0.5f };
-    LocalVtxList[7].Position = { +0.5f, +0.5f, -0.5f };
-
-    // @INCOMPLETE: Poly vtx and texture indices, texture coords, attrs, state, color
-
     return true;
 }
 

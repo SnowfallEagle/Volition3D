@@ -287,7 +287,7 @@ public:
         u32 Flags = 0
     );
 
-    b32 LoadCubemap(const char* Path);
+    b32 LoadCubemapFace(const char* Path);
 
     void Transform(const VMatrix44& M, ETransformType Type, b32 bTransBasis)
     {

@@ -43,7 +43,7 @@ public:
     VPolyFace PolyList[MaxPoly];
 
 public:
-    b32 InsertPoly(const VPoly& Poly, const VVertex* VtxList)
+    b32 InsertPoly(const VPoly& Poly, const VVertex* VtxList, const VPoint2* TextureCoordsList)
     {
         if (NumPoly >= MaxPoly)
         {
@@ -60,15 +60,12 @@ public:
         for (i32f I = 0; I < 3; ++I)
         {
             PolyList[NumPoly].TransVtx[I] = PolyList[NumPoly].LocalVtx[I] = VtxList[Poly.VtxIndices[I]];
-            PolyList[NumPoly].TransVtx[I].TextureCoords =
-                PolyList[NumPoly].LocalVtx[I].TextureCoords =
-                    Poly.TextureCoordsList[Poly.TextureCoordsIndices[I]];
+            PolyList[NumPoly].TransVtx[I].TextureCoords = PolyList[NumPoly].LocalVtx[I].TextureCoords = TextureCoordsList[Poly.TextureCoordsIndices[I]];
 
             PolyList[NumPoly].LitColor[I] = Poly.LitColor[I];
         }
 
         ++NumPoly;
-
         return true;
     }
 
@@ -107,7 +104,7 @@ public:
                 continue;
             }
 
-            if (!InsertPoly(Poly, bInsertLocal ? Mesh.LocalVtxList : Mesh.TransVtxList))
+            if (!InsertPoly(Poly, bInsertLocal ? Mesh.LocalVtxList : Mesh.TransVtxList, Mesh.TextureCoordsList))
             {
                 return;
             }

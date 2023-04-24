@@ -64,7 +64,7 @@ void VSurface::Lock(u32*& OutBuffer, i32& OutPitch)
 {
     VLN_ASSERT(!bLocked);
 
-    /* NOTE(sean):
+    /* @NOTE:
         We don't have to lock SDL surface
         since we don't use RLE
     */

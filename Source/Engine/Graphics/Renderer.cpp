@@ -102,17 +102,49 @@ void VRenderer::PreRender()
 
 void VRenderer::Render()
 {
-    u32* Buffer;
-    i32 Pitch;
-    BackSurface.Lock(Buffer, Pitch);
-
     // Set up camera
     VCamera& Camera = *World.Camera;
     Camera.BuildWorldToCameraMat44();
 
+    float CameraAngle = Math.Mod(Camera.Dir.Y + World.CubemapMovementEffectAngle, 360.0f);
+
+    // Process our "Cubemap"
+    {
+        VSurface& Cubemap = World.Cubemap;
+
+        // Blit first cubemap
+        VRelRectI Src;
+        Src.X = (i32)((CameraAngle / 360.0f) * (f32)World.Cubemap.Width + 0.5f);
+        Src.Y = 0;
+        Src.W = GetScreenWidth();
+        Src.H = Cubemap.Height;
+
+        Cubemap.BlitHW(&Src, &BackSurface, nullptr);
+
+        // If we have empty space on screen on right - blit this area
+        i32f Remainder = Cubemap.Width - Src.X;
+        if (Remainder < GetScreenWidth())
+        {
+            Src.X = 0;
+
+            VRelRectI Dest;
+
+            Dest.X = Remainder;
+            Dest.Y = 0;
+            Dest.W = GetScreenWidth();
+            Dest.H = GetScreenHeight();
+            Cubemap.BlitHW(&Src, &BackSurface, &Dest);
+        }
+    }
+
+    // Get buffer
+    u32* Buffer;
+    i32 Pitch;
+    BackSurface.Lock(Buffer, Pitch);
+
     // Proccess and insert meshes
     {
-        for (auto Entity : World.Entities)
+        for (const auto Entity : World.Entities)
         {
             if (Entity && Entity->Mesh)
             {
@@ -152,6 +184,7 @@ void VRenderer::Render()
         RenderSpec.bRenderSolid ? RenderSolid() : RenderWire();
     }
 
+    // Unlock buffer
     BackSurface.Unlock();
 }
 
@@ -169,7 +202,7 @@ void VRenderer::RenderUI()
         VLN_ASSERT(SDLConverted);
 
         // Blit
-        SDL_Rect Dest = { TextElement.Position.X, TextElement.Position.Y, (i32f)strlen(TextElement.Text) * FontCharWidth, FontCharHeight };
+        SDL_Rect Dest = { TextElement.Position.X, TextElement.Position.Y, (i32f)std::strlen(TextElement.Text) * FontCharWidth, FontCharHeight };
         SDL_BlitScaled(SDLConverted, nullptr, BackSurface.SDLSurface, &Dest);
 
         // Free memory
@@ -1462,7 +1495,7 @@ void VRenderer::SetInterpolators()
     {
         const i32 MaxMipMappingLevel = RenderSpec.MaxMipMappingLevel;
 
-        if (~InterpolationContext.PolyAttr & EPolyAttr::BestTextureQuality && MaxMipMappingLevel > 0)
+        if (MaxMipMappingLevel > 0)
         {
             InterpolationContext.MipMappingLevel = (i32)(
                 InterpolationContext.Distance / (World.Camera->ZFarClip / (f32)MaxMipMappingLevel)

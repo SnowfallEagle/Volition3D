@@ -36,7 +36,6 @@ namespace EPolyAttr
 		ShadeModeTexture  = VLN_BIT(8),
 
 		UsesMaterial = VLN_BIT(9),
-        BestTextureQuality = VLN_BIT(10),
 	};
 }
 
@@ -52,8 +51,6 @@ public:
 	const VMaterial* Material;
 
 	i32 VtxIndices[3];
-
-	const VPoint2* TextureCoordsList;
 	i32 TextureCoordsIndices[3];
 
 	f32 NormalLength;

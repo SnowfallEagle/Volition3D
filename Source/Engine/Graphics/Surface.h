@@ -36,6 +36,7 @@ public:
         VLN_ASSERT(bLocked);
         return Buffer;
     }
+
     VLN_FINLINE const u32* GetBuffer() const
     {
         VLN_ASSERT(bLocked);
@@ -57,10 +58,12 @@ public:
     {
         return Width;
     }
+
     VLN_FINLINE i32 GetHeight() const
     {
         return Height;
     }
+
     void BlitHW(VRelRectI* SourceRect, VSurface* Dest, VRelRectI* DestRect);
     void FillRectHW(VRelRectI* Rect, u32 Color);
 

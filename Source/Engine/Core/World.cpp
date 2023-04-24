@@ -24,8 +24,9 @@ void VWorld::ShutDown()
     }
     Entities.Clear();
 
+    Cubemap.Destroy();
+
     VLN_SAFE_DELETE(Camera);
-    VLN_SAFE_DELETE(Cubemap);
 }
 
 void VWorld::Update(f32 DeltaTime)
@@ -42,12 +43,43 @@ void VWorld::Update(f32 DeltaTime)
             Entity->Update(DeltaTime);
         }
     }
+
+    Camera->Dir.Y = Math.Mod(Camera->Dir.Y, 360.0f);
+    if (Camera->Dir.Y < 0.0f)
+    {
+        Camera->Dir.Y += 360.0f;
+    }
+
+    static constexpr f32 CubemapMovementEffectSpeed = 0.001f;
+    CubemapMovementEffectAngle = Math.Mod(CubemapMovementEffectAngle + (CubemapMovementEffectSpeed * DeltaTime), 360.0f);
+    if (CubemapMovementEffectAngle < 0.0f)
+    {
+        CubemapMovementEffectAngle += 360.0f;
+    }
+}
+
+void VWorld::DestroyEntity(VEntity* Entity)
+{
+    if (Entity)
+    {
+        Entity->Destroy();
+        delete Entity;
+
+        i32f Length = Entities.GetLength();
+        for (i32f I = 0; I < Length; ++I)
+        {
+            if (Entities[I] == Entity)
+            {
+                Entities[I] = nullptr;
+                return;
+            }
+        }
+    }
 }
 
 void VWorld::SetCubemap(const char* Path)
 {
-    const auto Entity = SpawnEntity<VEntity>();
-    Entity->Mesh->LoadCubemap(Path);
+    Cubemap.Load(Path);
 }
 
 }

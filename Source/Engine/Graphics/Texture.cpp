@@ -4,13 +4,17 @@
 namespace Volition
 {
 
-void VTexture::LoadBMP(const char* Path)
+void VTexture::LoadBMP(const char* Path, i32 MaxMipMaps)
 {
-    Surfaces.Resize(Renderer.GetRenderSpec().MaxMipMappingLevel);
+    if (MaxMipMaps <= 0)
+    {
+        MaxMipMaps = Renderer.GetRenderSpec().MaxMipMappingLevel;
+    }
 
+    Surfaces.Resize(MaxMipMaps);
     Surfaces[0].Load(Path);
 
-    GenerateMipMaps();
+    GenerateMipMaps(MaxMipMaps);
 
     for (i32f I = 0; I < NumMipMaps; ++I)
     {
@@ -30,27 +34,26 @@ void VTexture::Destroy()
     }
 }
 
-const VSurface& VTexture::Get(i32 MipMapLevel) const
+const VSurface& VTexture::Get(i32 MipMaps) const
 {
-    if (MipMapLevel < 0)
+    if (MipMaps < 0)
     {
-        MipMapLevel = 0;
+        MipMaps = 0;
     }
-    else if (MipMapLevel >= NumMipMaps)
+    else if (MipMaps >= NumMipMaps)
     {
-        MipMapLevel = NumMipMaps - 1;
+        MipMaps = NumMipMaps - 1;
     }
 
-    return Surfaces[MipMapLevel];
+    return Surfaces[MipMaps];
 }
 
 
-void VTexture::GenerateMipMaps()
+void VTexture::GenerateMipMaps(i32 MaxMipMaps)
 {
-    const i32 MaxMipMappingLevel = Renderer.GetRenderSpec().MaxMipMappingLevel;
     NumMipMaps = 1;
 
-    for (i32f I = 1; I < MaxMipMappingLevel; ++I, ++NumMipMaps)
+    for (i32f I = 1; I < MaxMipMaps; ++I, ++NumMipMaps)
     {
         const i32 PrevSize = Surfaces[I - 1].GetWidth();
         const i32 CurrentSize = PrevSize / 2;

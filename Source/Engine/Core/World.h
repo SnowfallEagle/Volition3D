@@ -9,16 +9,27 @@ namespace Volition
 
 class VWorld
 {
+    VGameState* GameState;
+
     TArray<VEntity*> Entities;
     VCamera* Camera;
-    VEntity* Cubemap = nullptr;
 
-    VGameState* GameState;
+    VSurface Cubemap;
+    float CubemapMovementEffectAngle = 0.0f;
 
 public:
     template<typename GameStateT>
     void StartUp()
     {
+        static constexpr i32f MinEntitiesCapacity = 128;
+
+        Entities.Resize(MinEntitiesCapacity);
+
+        for (i32f I = 0; I < MinEntitiesCapacity; ++I)
+        {
+            Entities[I] = nullptr;
+        }
+
         Camera = new VCamera();
 
         GameState = new GameStateT();
@@ -33,7 +44,7 @@ public:
         return Camera;
     }
 
-    template<typename T>
+    template<typename T = VEntity>
     T* SpawnEntity()
     {
         T* Entity = Entities.EmplaceBack(new T());
@@ -41,6 +52,7 @@ public:
         return Entity;
     }
 
+    void DestroyEntity(VEntity* Entity);
     void SetCubemap(const char* Path);
 
     friend class VRenderer;
