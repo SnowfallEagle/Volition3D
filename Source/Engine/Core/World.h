@@ -38,6 +38,7 @@ public:
 
     void ShutDown();
     void Update(f32 DeltaTime);
+    void FixedUpdate(f32 FixedDeltaTime);
 
     VLN_FINLINE VCamera* GetCamera()
     {

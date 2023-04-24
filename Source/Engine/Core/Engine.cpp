@@ -29,6 +29,12 @@ void VEngine::Run()
 
         World.Update(Time.GetDeltaTime());
 
+        i32f FixedUpdates = Time.GetNumFixedUpdates();
+        for (i32f I = 0; I < FixedUpdates; ++I)
+        {
+            World.FixedUpdate(Time.GetFixedDeltaTime());
+        }
+
         Renderer.PreRender();
         Renderer.Render();
         Renderer.RenderUI();

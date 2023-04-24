@@ -8,7 +8,7 @@ void VTexture::LoadBMP(const char* Path, i32 MaxMipMaps)
 {
     if (MaxMipMaps <= 0)
     {
-        MaxMipMaps = Renderer.GetRenderSpec().MaxMipMappingLevel;
+        MaxMipMaps = Renderer.GetRenderSpec().MaxMipMaps;
     }
 
     Surfaces.Resize(MaxMipMaps);

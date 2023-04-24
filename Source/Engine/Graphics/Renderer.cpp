@@ -1493,15 +1493,15 @@ void VRenderer::SetInterpolators()
 
     if (InterpolationContext.PolyAttr & EPolyAttr::ShadeModeTexture)
     {
-        const i32 MaxMipMappingLevel = RenderSpec.MaxMipMappingLevel;
+        const i32 MaxMipMaps = RenderSpec.MaxMipMaps;
 
-        if (MaxMipMappingLevel > 0)
+        if (MaxMipMaps > 0)
         {
             InterpolationContext.MipMappingLevel = (i32)(
-                InterpolationContext.Distance / (World.Camera->ZFarClip / (f32)MaxMipMappingLevel)
+                InterpolationContext.Distance / (World.Camera->ZFarClip / (f32)MaxMipMaps)
             );
 
-            const f32 DetailFactor = (f32)InterpolationContext.MipMappingLevel / (f32)MaxMipMappingLevel;
+            const f32 DetailFactor = (f32)InterpolationContext.MipMappingLevel / (f32)MaxMipMaps;
 
             if (DetailFactor < 0.5f)
             {

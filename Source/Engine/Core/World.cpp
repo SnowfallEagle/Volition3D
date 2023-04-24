@@ -49,9 +49,12 @@ void VWorld::Update(f32 DeltaTime)
     {
         Camera->Dir.Y += 360.0f;
     }
+}
 
-    static constexpr f32 CubemapMovementEffectSpeed = 0.001f;
-    CubemapMovementEffectAngle = Math.Mod(CubemapMovementEffectAngle + (CubemapMovementEffectSpeed * DeltaTime), 360.0f);
+void VWorld::FixedUpdate(f32 FixedDeltaTime)
+{
+    static constexpr f32 CubemapMovementEffectSpeed = 0.00175f;
+    CubemapMovementEffectAngle = Math.Mod(CubemapMovementEffectAngle + (CubemapMovementEffectSpeed * FixedDeltaTime), 360.0f);
     if (CubemapMovementEffectAngle < 0.0f)
     {
         CubemapMovementEffectAngle += 360.0f;

@@ -12,28 +12,13 @@ void VTime::StartUp(const VRenderSpecification& RenderSpec)
 
     LastTick = 0;
     DeltaTime = 0.0f;
+
+    FixedDeltaTime = 1000.0f / RenderSpec.TargetFixedFPS;
+    AccumulatedFixedTime = 0.0f;
 }
 
 void VTime::ShutDown()
 {
-}
-
-void VTime::TickFrame()
-{
-    const u32 CurrentTick = GetTicks();
-    DeltaTime = (f32)(CurrentTick - LastTick);
-    LastTick = CurrentTick;
-}
-
-void VTime::SyncFrame()
-{
-    if (bLimitFPS)
-    {
-        while ((i32)GetTicks() - LastTick < MsFrameLimit)
-        {
-            VLN_PAUSE();
-        }
-    }
 }
 
 }
