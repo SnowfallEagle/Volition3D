@@ -108,10 +108,10 @@ void VRenderer::Render()
 
     float CameraAngle = Math.Mod(Camera.Dir.Y + World.CubemapMovementEffectAngle, 360.0f);
 
-    // Process our "Cubemap"
+    // Process cubemap
+    VSurface& Cubemap = World.Cubemap;
+    if (Cubemap.SDLSurface->pixels)
     {
-        VSurface& Cubemap = World.Cubemap;
-
         // Blit first cubemap
         VRelRectI Src;
         Src.X = (i32)((CameraAngle / 360.0f) * (f32)World.Cubemap.Width + 0.5f);
@@ -143,82 +143,94 @@ void VRenderer::Render()
     BackSurface.Lock(Buffer, Pitch);
 
     // Proccess and insert meshes
+    for (const auto Entity : World.Entities)
     {
-        for (const auto Entity : World.Entities)
+        if (Entity && Entity->Mesh)
         {
-            if (Entity && Entity->Mesh)
+            VMesh* Mesh = Entity->Mesh;
+
+            Mesh->ResetRenderState();
+            Mesh->TransformModelToWorld();
+            Mesh->Cull(Camera);
+
+            RenderList->InsertMesh(*Mesh, false);
+
+            // Make shadow
+            if (!OccluderLight)
             {
-                VMesh* Mesh = Entity->Mesh;
+                return;
+            }
 
-                Mesh->ResetRenderState();
-                Mesh->TransformModelToWorld();
-                Mesh->Cull(Camera);
+            VPoly* PolyList = Mesh->PolyList;
 
-                RenderList->InsertMesh(*Mesh, false);
+            // @TODO: Allocate in class
+            VColorARGB OriginalLitColors[VRenderList::MaxPoly][3];
+            VColorARGB OriginalColors[VRenderList::MaxPoly];
+            u32 OriginalAttrs[VRenderList::MaxPoly];
 
-                // Make shadow
-                VPoly* PolyList = Mesh->PolyList;
+            static constexpr VColorARGB ShadowColor = VColorARGB(248, 0, 0, 0);
 
-                VColorARGB OriginalLitColors[VRenderList::MaxPoly][3];
-                VColorARGB OriginalColors[VRenderList::MaxPoly];
-                u32 OriginalAttrs[VRenderList::MaxPoly];
+            // Set new color and attributes for mesh
+            for (i32f I = 0; I < Mesh->NumPoly; ++I)
+            {
+                OriginalLitColors[I][0] = PolyList[I].LitColor[0];
+                OriginalLitColors[I][1] = PolyList[I].LitColor[1];
+                OriginalLitColors[I][2] = PolyList[I].LitColor[2];
 
-                static constexpr VColorARGB ShadowColor = VColorARGB(248, 0, 0, 0);
+                OriginalColors[I] = PolyList[I].OriginalColor;
+                OriginalAttrs[I]  = PolyList[I].Attr;
 
-                // Set new color and attributes for mesh
-                for (i32f I = 0; I < Mesh->NumPoly; ++I)
-                {
-                    OriginalLitColors[I][0] = PolyList[I].LitColor[0];
-                    OriginalLitColors[I][1] = PolyList[I].LitColor[1];
-                    OriginalLitColors[I][2] = PolyList[I].LitColor[2];
+                PolyList[I].LitColor[0] = ShadowColor;
+                PolyList[I].LitColor[1] = ShadowColor;
+                PolyList[I].LitColor[2] = ShadowColor;
 
-                    OriginalColors[I] = PolyList[I].OriginalColor;
-                    OriginalAttrs[I]  = PolyList[I].Attr;
+                PolyList[I].OriginalColor = ShadowColor;
+                PolyList[I].Attr          = EPolyAttr::ShadeModeEmissive | EPolyAttr::Transparent;
+            }
 
-                    PolyList[I].LitColor[0] = ShadowColor;
-                    PolyList[I].LitColor[1] = ShadowColor;
-                    PolyList[I].LitColor[2] = ShadowColor;
+            // Compute shadow vertex positions
+            VVertex* VtxList = Mesh->TransVtxList;
+            for (i32f I = 0; I < Mesh->NumVtx; ++I)
+            {
+                static constexpr f32 YShadowPosition = -400.0f; // @INCOMPLETE: Set about terrain level
 
-                    PolyList[I].OriginalColor = ShadowColor;
-                    PolyList[I].Attr          = EPolyAttr::ShadeModeEmissive;
-                }
+                VVector4 Direction = (VtxList[I].Position - OccluderLight->Pos);
+                float T = (YShadowPosition - OccluderLight->Pos.Y) / Direction.Y;
 
-                // Compute shadow vertex positions
-                VVertex* VtxList = Mesh->TransVtxList;
-                for (i32f I = 0; I < Mesh->NumVtx; ++I)
-                {
-                    VtxList[I].Position.Y = -400.0f; // @INCOMPLETE: Set about terrain level
-                }
+                VtxList[I].X = OccluderLight->Pos.X + (T * Direction.X);
+                VtxList[I].Y = YShadowPosition;
+                VtxList[I].Z = OccluderLight->Pos.Z + (T * Direction.Z);
+            }
 
-                // Insert shadow mesh
-                Mesh->State &= ~EMeshState::Culled;
-                RenderList->InsertMesh(*Mesh, false);
+            // Insert shadow mesh
+            Mesh->State &= ~EMeshState::Culled;
+            RenderList->InsertMesh(*Mesh, false);
 
-                // Restore mesh color and attributes
-                for (i32f I = 0; I < Mesh->NumPoly; ++I)
-                {
-                    PolyList[I].LitColor[0] = OriginalLitColors[I][0];
-                    PolyList[I].LitColor[1] = OriginalLitColors[I][1];
-                    PolyList[I].LitColor[2] = OriginalLitColors[I][2];
+            // Restore mesh color and attributes
+            for (i32f I = 0; I < Mesh->NumPoly; ++I)
+            {
+                PolyList[I].LitColor[0] = OriginalLitColors[I][0];
+                PolyList[I].LitColor[1] = OriginalLitColors[I][1];
+                PolyList[I].LitColor[2] = OriginalLitColors[I][2];
 
-                    PolyList[I].OriginalColor = OriginalColors[I];
-                    PolyList[I].Attr          = OriginalAttrs[I];
-                }
+                PolyList[I].OriginalColor = OriginalColors[I];
+                PolyList[I].Attr          = OriginalAttrs[I];
             }
         }
     }
 
+    TransformLights(Camera);
     // Proccess render list
     {
         if (RenderSpec.bBackfaceRemoval)
         {
-            RenderList->RemoveBackFaces(Camera);
+            RenderList->RemoveBackfaces(Camera);
         }
 
         RenderList->TransformWorldToCamera(Camera);
         RenderList->Clip(Camera);
 
-        Renderer.TransformLights(Camera);
+        TransformLights(Camera);
         RenderList->Light(Camera, Renderer.Lights, Renderer.MaxLights);
 
         RenderList->SortPolygons(ESortPolygonsMethod::Average);

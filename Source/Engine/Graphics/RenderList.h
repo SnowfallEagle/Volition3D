@@ -247,7 +247,7 @@ public:
         }
     }
 
-    void RemoveBackFaces(const VCamera& Cam)
+    void RemoveBackfaces(const VCamera& Cam)
     {
         for (i32f I = 0; I < NumPoly; ++I)
         {

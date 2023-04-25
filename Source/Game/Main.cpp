@@ -70,7 +70,20 @@ public:
                 ELightAttr::Point,
 
                 0, MAP_XRGB32(0x33, 0x00, 0x77), 0,
-                { 1000.0f, 1000.0f, 0, 0 }, { 0, 0, 0, 0 }, VVector4{ 0, 0, 0, 0 }.GetNormalized(), { 0, 0, 0, 0 },
+                { 1000.0f, 1000.0f, 0.0f, 0 }, { 0, 0, 0, 0 }, VVector4{ 0, 0, 0, 0 }.GetNormalized(), { 0, 0, 0, 0 },
+
+                0, 0.0001f, 0,
+                0, 0,
+                0
+            };
+
+            VLight OccluderLight = {
+                2,
+                ELightState::Active,
+                ELightAttr::Point,
+
+                0, MAP_XRGB32(0x00, 0x00, 0xAA), 0,
+                { 0.0f, 1000.0f, 1000.0f, 0 }, { 0, 0, 0, 0 }, VVector4{ 0, 0, 0, 0 }.GetNormalized(), { 0, 0, 0, 0 },
 
                 0, 0.0001f, 0,
                 0, 0,
@@ -107,7 +120,8 @@ public:
             Renderer.AddLight(InfiniteLight);
             Renderer.AddLight(PointLight);
             Renderer.AddLight(ComplexSpotlight);
-            //Renderer.AddLight(SimpleSpotlight);
+            Renderer.AddLight(OccluderLight);
+            Renderer.SetOccluderLight(4);
         }
     }
 
@@ -156,7 +170,7 @@ public:
         if (Input.IsKeyDown(EKeycode::G)) Rot.BuildRotationXYZ(0, 0, -Speed);
         if (Input.IsKeyDown(EKeycode::Z)) Rot.BuildRotationXYZ(Speed, 0, 0);
         if (Input.IsKeyDown(EKeycode::X)) Rot.BuildRotationXYZ(-Speed, 0, 0);
-        // Entity->Mesh->Transform(Rot, ETransformType::LocalOnly, true);
+        Entity->Mesh->Transform(Rot, ETransformType::LocalOnly, true);
     }
 };
 

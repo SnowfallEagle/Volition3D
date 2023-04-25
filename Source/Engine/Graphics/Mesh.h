@@ -66,7 +66,6 @@ public:
     u32 Attr;
 
     VPoint4 Position;
-    VVector4 Direction;
     VVector4 UX, UY, UZ; // Local axes to track full orientation
 
     i32 NumFrames;

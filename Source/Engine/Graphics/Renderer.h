@@ -62,7 +62,7 @@ private:
     VMaterial Materials[MaxMaterials];
     i32 NumMaterials;
 
-    // @TODO: Later we could put light as entity in world
+    VLight* OccluderLight = nullptr;
     VLight Lights[MaxLights];
     i32 NumLights;
 
@@ -106,6 +106,14 @@ public:
     {
         Lights[NumLights] = InLight;
         ++NumLights;
+    }
+
+    VLN_FINLINE void SetOccluderLight(i32 Index)
+    {
+        if (Index >= 0 && Index < NumLights)
+        {
+            OccluderLight = &Lights[Index];
+        }
     }
 
     void TransformLights(const VCamera& Camera)
