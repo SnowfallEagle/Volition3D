@@ -36,6 +36,7 @@ public:
         Camera->Init(ECameraAttr::Euler, { 0, 75.0f, 0 }, { 0, 0, 0 }, VVector4(), 90, 50, 7500, {(f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
 
         World.SetCubemap("cubemap.bmp");
+        World.GetTerrain()->GenerateTerrain("heightmap.bmp", "terraintexture.bmp");
 
         {
             VLight AmbientLight = {
@@ -179,7 +180,7 @@ int main(int Argc, char** Argv)
     VWindowSpecification WindowSpec;
     VRenderSpecification RenderSpec;
 
-    WindowSpec.Size = { 800, 600 };
+    WindowSpec.Size = { 1600, 900 };
 
     Engine.StartUp<GGameState>(WindowSpec, RenderSpec);
     Engine.Run();

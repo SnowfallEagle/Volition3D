@@ -184,6 +184,7 @@
     <ClInclude Include="..\..\Source\Engine\Core\DebugLog.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Memory.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Platform.h" />
+    <ClInclude Include="..\..\Source\Engine\Core\Terrain.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Thread\SpinLock.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Time.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Types.h" />
@@ -229,6 +230,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\Source\Engine\Core\DebugLog.cpp" />
     <ClCompile Include="..\..\Source\Engine\Core\Memory.cpp" />
+    <ClCompile Include="..\..\Source\Engine\Core\Terrain.cpp" />
     <ClCompile Include="..\..\Source\Engine\Core\Time.cpp" />
     <ClCompile Include="..\..\Source\Engine\Core\Engine.cpp" />
     <ClCompile Include="..\..\Source\Engine\Core\Window.cpp" />

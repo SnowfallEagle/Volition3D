@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Engine/Core/Terrain.h"
 #include "Engine/Core/Containers/Array.h"
 #include "Engine/GameCore/Entity.h"
 #include "Engine/GameCore/GameState.h"
@@ -17,6 +18,8 @@ class VWorld
     VSurface Cubemap;
     float CubemapMovementEffectAngle = 0.0f;
 
+    VTerrain* Terrain;
+
 public:
     template<typename GameStateT>
     void StartUp()
@@ -32,6 +35,8 @@ public:
 
         Camera = new VCamera();
 
+        Terrain = SpawnEntity<VTerrain>();
+
         GameState = new GameStateT();
         GameState->StartUp();
     }
@@ -40,21 +45,27 @@ public:
     void Update(f32 DeltaTime);
     void FixedUpdate(f32 FixedDeltaTime);
 
-    VLN_FINLINE VCamera* GetCamera()
+    VLN_FINLINE VCamera* GetCamera() const
     {
         return Camera;
     }
 
+    VLN_FINLINE VTerrain* GetTerrain() const
+    {
+        return Terrain;
+    }
+
+    void SetCubemap(const char* Path);
+
     template<typename T = VEntity>
     T* SpawnEntity()
     {
-        T* Entity = Entities.EmplaceBack(new T());
+        VEntity* Entity = Entities.EmplaceBack(new T());
         Entity->Init();
-        return Entity;
+        return (T*)Entity;
     }
 
     void DestroyEntity(VEntity* Entity);
-    void SetCubemap(const char* Path);
 
     friend class VRenderer;
 };

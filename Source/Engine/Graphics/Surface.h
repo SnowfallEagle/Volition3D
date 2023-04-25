@@ -12,14 +12,14 @@ namespace Volition
 class VSurface
 {
 protected:
-    SDL_Surface* SDLSurface;
+    SDL_Surface* SDLSurface = nullptr;
 
-    u32* Buffer;
-    i32 Pitch; // In pixels
-    b32 bLocked;
+    u32* Buffer = nullptr;
+    i32 Pitch   = 0; // In pixels
+    b32 bLocked = false;
 
-    i32 Width;
-    i32 Height;
+    i32 Width  = 0;
+    i32 Height = 0;
 
 public:
     void Create(i32 InWidth, i32 InHeight);

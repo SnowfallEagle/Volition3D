@@ -286,7 +286,7 @@ public:
         u32 Flags = 0
     );
 
-    b32 LoadCubemapFace(const char* Path);
+    void GenerateTerrain(const char* HeightMap, const char* Texture, f32 Size, f32 Height);
 
     void Transform(const VMatrix44& M, ETransformType Type, b32 bTransBasis)
     {

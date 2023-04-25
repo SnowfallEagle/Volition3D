@@ -171,6 +171,9 @@
     <ClInclude Include="..\..\Source\Engine\GameCore\GameState.h">
       <Filter>Engine\GameCore</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Core\Terrain.h">
+      <Filter>Engine\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Engine\Core\DebugLog.cpp">
@@ -259,6 +262,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\GameCore\GameState.cpp">
       <Filter>Engine\GameCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Core\Terrain.cpp">
+      <Filter>Engine\Core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

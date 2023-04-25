@@ -536,4 +536,43 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
     return true;
 }
 
+void VMesh::GenerateTerrain(const char* HeightMap, const char* Texture, f32 Size, f32 Height)
+{
+    // @INCOMPLETE: Texturing terrain
+    VMaterial& Material = Renderer.Materials[Renderer.NumMaterials];
+    Material.Texture.LoadBMP(Texture, 1);
+
+    VSurface MapSurface;
+    MapSurface.Load(HeightMap);
+    i32 MapSize = MapSurface.GetWidth();
+
+    u32* Buffer;
+    i32 Pitch;
+    MapSurface.Lock(Buffer, Pitch);
+
+    i32f VerticesInRow = MapSize + 1;
+    Allocate(VerticesInRow * VerticesInRow, (MapSize * MapSize) * 2, 1);
+
+    f32 MapStep = MapSize / (Size * VerticesInRow);
+    for (i32f Y = 0; Y < MapSize; ++Y)
+    {
+        for (f32 X = 0.0f; X < (f32)MapSize; X += MapStep)
+        {
+             // @INCOMPLETE
+        }
+    }
+
+    MapSurface.Unlock();
+    MapSurface.Destroy();
+
+    // @INCOMPLETE: Set vertex indices, texture coords, indices, attrs
+
+    // Compute stuff
+    {
+        ComputeRadius();
+        ComputePolygonNormalsLength();
+        ComputeVertexNormals();
+    }
+}
+
 }
