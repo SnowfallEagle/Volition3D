@@ -155,6 +155,55 @@ void VRenderer::Render()
                 Mesh->Cull(Camera);
 
                 RenderList->InsertMesh(*Mesh, false);
+
+                // Make shadow
+                VPoly* PolyList = Mesh->PolyList;
+
+                VColorARGB OriginalLitColors[VRenderList::MaxPoly][3];
+                VColorARGB OriginalColors[VRenderList::MaxPoly];
+                u32 OriginalAttrs[VRenderList::MaxPoly];
+
+                static constexpr VColorARGB ShadowColor = VColorARGB(248, 0, 0, 0);
+
+                // Set new color and attributes for mesh
+                for (i32f I = 0; I < Mesh->NumPoly; ++I)
+                {
+                    OriginalLitColors[I][0] = PolyList[I].LitColor[0];
+                    OriginalLitColors[I][1] = PolyList[I].LitColor[1];
+                    OriginalLitColors[I][2] = PolyList[I].LitColor[2];
+
+                    OriginalColors[I] = PolyList[I].OriginalColor;
+                    OriginalAttrs[I]  = PolyList[I].Attr;
+
+                    PolyList[I].LitColor[0] = ShadowColor;
+                    PolyList[I].LitColor[1] = ShadowColor;
+                    PolyList[I].LitColor[2] = ShadowColor;
+
+                    PolyList[I].OriginalColor = ShadowColor;
+                    PolyList[I].Attr          = EPolyAttr::ShadeModeEmissive;
+                }
+
+                // Compute shadow vertex positions
+                VVertex* VtxList = Mesh->TransVtxList;
+                for (i32f I = 0; I < Mesh->NumVtx; ++I)
+                {
+                    VtxList[I].Position.Y = -400.0f; // @INCOMPLETE: Set about terrain level
+                }
+
+                // Insert shadow mesh
+                Mesh->State &= ~EMeshState::Culled;
+                RenderList->InsertMesh(*Mesh, false);
+
+                // Restore mesh color and attributes
+                for (i32f I = 0; I < Mesh->NumPoly; ++I)
+                {
+                    PolyList[I].LitColor[0] = OriginalLitColors[I][0];
+                    PolyList[I].LitColor[1] = OriginalLitColors[I][1];
+                    PolyList[I].LitColor[2] = OriginalLitColors[I][2];
+
+                    PolyList[I].OriginalColor = OriginalColors[I];
+                    PolyList[I].Attr          = OriginalAttrs[I];
+                }
             }
         }
     }

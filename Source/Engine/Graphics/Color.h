@@ -28,7 +28,7 @@ public:
 
 public:
     VLN_FINLINE VColorARGB() = default;
-    VLN_FINLINE VColorARGB(u8 A, u8 R, u8 G, u8 B) :
+    VLN_FINLINE constexpr VColorARGB(u8 A, u8 R, u8 G, u8 B) noexcept :
         ARGB(MAP_ARGB32(A, R, G, B))
     {}
     VLN_FINLINE VColorARGB(u32 InARGB) :

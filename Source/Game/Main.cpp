@@ -165,8 +165,7 @@ int main(int Argc, char** Argv)
     VWindowSpecification WindowSpec;
     VRenderSpecification RenderSpec;
 
-    WindowSpec.Size = { 1024, 768 };
-    WindowSpec.Flags |= EWindowSpecificationFlags::Fullscreen;
+    WindowSpec.Size = { 800, 600 };
 
     Engine.StartUp<GGameState>(WindowSpec, RenderSpec);
     Engine.Run();
