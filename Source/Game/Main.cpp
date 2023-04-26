@@ -58,7 +58,7 @@ public:
                 ELightAttr::Infinite,
 
                 0, MAP_XRGB32(0x44, 0x44, 0x22), 0,
-                { 0, 1000, 1000, 0 }, { 0, 0, 0, 0 }, VVector4{ -1.0f, -1.0f, 0, 0 }.GetNormalized(), { 0, 0, 0, 0 },
+                { 5000, 5000, 5000, 0 }, { 0, 0, 0, 0 }, VVector4{ -1.0f, -1.0f, 0, 0 }.GetNormalized(), { 0, 0, 0, 0 },
 
                 0, 0, 0,
                 0, 0,
@@ -122,7 +122,7 @@ public:
             Renderer.AddLight(PointLight);
             Renderer.AddLight(ComplexSpotlight);
             Renderer.AddLight(OccluderLight);
-            Renderer.SetOccluderLight(4);
+            Renderer.SetOccluderLight(3);
         }
     }
 

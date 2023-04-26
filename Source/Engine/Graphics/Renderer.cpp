@@ -145,8 +145,8 @@ void VRenderer::Render()
     // Insert terrain
     VMesh* TerrainMesh = World.GetTerrain()->Mesh;
 
+    // We already transformed terrain on VTerrain::Update()
     TerrainMesh->ResetRenderState();
-    TerrainMesh->TransformModelToWorld();
     TerrainMesh->Cull(Camera);
 
     RenderList->InsertMesh(*TerrainMesh, false);
