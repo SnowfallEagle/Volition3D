@@ -24,6 +24,9 @@ void VWorld::ShutDown()
     }
     Entities.Clear();
 
+    Terrain->Destroy();
+    delete Terrain;
+
     Cubemap.Destroy();
 
     VLN_SAFE_DELETE(Camera);
@@ -35,6 +38,8 @@ void VWorld::Update(f32 DeltaTime)
     {
         GameState->Update(DeltaTime);
     }
+
+    Terrain->Update(DeltaTime);
 
     for (const auto Entity : Entities)
     {

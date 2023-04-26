@@ -142,6 +142,15 @@ void VRenderer::Render()
     i32 Pitch;
     BackSurface.Lock(Buffer, Pitch);
 
+    // Insert terrain
+    VMesh* TerrainMesh = World.GetTerrain()->Mesh;
+
+    TerrainMesh->ResetRenderState();
+    TerrainMesh->TransformModelToWorld();
+    TerrainMesh->Cull(Camera);
+
+    RenderList->InsertMesh(*TerrainMesh, false);
+
     // Proccess and insert meshes
     for (const auto Entity : World.Entities)
     {
@@ -158,7 +167,7 @@ void VRenderer::Render()
             // Make shadow
             if (!OccluderLight)
             {
-                return;
+                continue;
             }
 
             VPoly* PolyList = Mesh->PolyList;
@@ -189,11 +198,11 @@ void VRenderer::Render()
             }
 
             // Compute shadow vertex positions
+            float YShadowPosition = TerrainMesh->Position.Y + 10.0f;
+
             VVertex* VtxList = Mesh->TransVtxList;
             for (i32f I = 0; I < Mesh->NumVtx; ++I)
             {
-                static constexpr f32 YShadowPosition = -400.0f; // @INCOMPLETE: Set about terrain level
-
                 VVector4 Direction = (VtxList[I].Position - OccluderLight->Pos);
                 float T = (YShadowPosition - OccluderLight->Pos.Y) / Direction.Y;
 
@@ -219,7 +228,6 @@ void VRenderer::Render()
         }
     }
 
-    TransformLights(Camera);
     // Proccess render list
     {
         if (RenderSpec.bBackfaceRemoval)

@@ -72,7 +72,7 @@ public:
     void StartUp(const VRenderSpecification& InRenderSpec);
     void ShutDown();
 
-    VLN_FINLINE const VRenderSpecification& GetRenderSpec() const
+    VLN_FINLINE VRenderSpecification& GetRenderSpec()
     {
         return RenderSpec;
     }

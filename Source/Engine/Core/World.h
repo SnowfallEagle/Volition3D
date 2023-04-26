@@ -35,7 +35,9 @@ public:
 
         Camera = new VCamera();
 
-        Terrain = SpawnEntity<VTerrain>();
+        Terrain = new VTerrain();
+        Terrain->Init();
+        Terrain->Mesh->Position = { -1000.0f, -425.0f, 1000.0f };
 
         GameState = new GameStateT();
         GameState->StartUp();

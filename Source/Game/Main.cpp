@@ -33,7 +33,7 @@ public:
         );
 
         Camera = World.GetCamera();
-        Camera->Init(ECameraAttr::Euler, { 0, 75.0f, 0 }, { 0, 0, 0 }, VVector4(), 90, 50, 7500, {(f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
+        Camera->Init(ECameraAttr::Euler, { 0, 75.0f, 0 }, { 0, 0, 0 }, VVector4(), 60, 150, 25000, {(f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
 
         World.SetCubemap("cubemap.bmp");
         World.GetTerrain()->GenerateTerrain("heightmap.bmp", "terraintexture.bmp");
@@ -146,22 +146,13 @@ public:
         }
 
         f32 CamDirSpeed = 0.5f * DeltaTime;
-        if (Input.IsKeyDown(EKeycode::Left))
-        {
-            Camera->Dir.Y -= CamDirSpeed;
-        }
-        if (Input.IsKeyDown(EKeycode::Right))
-        {
-            Camera->Dir.Y += CamDirSpeed;
-        }
-        if (Input.IsKeyDown(EKeycode::Up))
-        {
-            Camera->Dir.X -= CamDirSpeed;
-        }
-        if (Input.IsKeyDown(EKeycode::Down))
-        {
-            Camera->Dir.X += CamDirSpeed;
-        }
+        if (Input.IsKeyDown(EKeycode::Left))  Camera->Dir.Y -= CamDirSpeed;
+        if (Input.IsKeyDown(EKeycode::Right)) Camera->Dir.Y += CamDirSpeed;
+        if (Input.IsKeyDown(EKeycode::Up))    Camera->Dir.X -= CamDirSpeed;
+        if (Input.IsKeyDown(EKeycode::Down))  Camera->Dir.X += CamDirSpeed;
+
+        if (Input.IsKeyDown(EKeycode::Space)) Camera->Pos.Y += CamDirSpeed;
+        if (Input.IsKeyDown(EKeycode::C))     Camera->Pos.Y -= CamDirSpeed;
 
         VMatrix44 Rot = VMatrix44::Identity;
         f32 Speed = 0.1f * DeltaTime;
@@ -172,6 +163,11 @@ public:
         if (Input.IsKeyDown(EKeycode::Z)) Rot.BuildRotationXYZ(Speed, 0, 0);
         if (Input.IsKeyDown(EKeycode::X)) Rot.BuildRotationXYZ(-Speed, 0, 0);
         Entity->Mesh->Transform(Rot, ETransformType::LocalOnly, true);
+
+        if (Input.IsKeyDown(EKeycode::Backspace))
+        {
+            Renderer.GetRenderSpec().bRenderSolid ^= true;
+        }
     }
 };
 
@@ -180,7 +176,7 @@ int main(int Argc, char** Argv)
     VWindowSpecification WindowSpec;
     VRenderSpecification RenderSpec;
 
-    WindowSpec.Size = { 1600, 900 };
+    WindowSpec.Size = { 1024, 768 };
 
     Engine.StartUp<GGameState>(WindowSpec, RenderSpec);
     Engine.Run();

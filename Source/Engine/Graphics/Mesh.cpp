@@ -538,41 +538,79 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
 
 void VMesh::GenerateTerrain(const char* HeightMap, const char* Texture, f32 Size, f32 Height)
 {
-    // @INCOMPLETE: Texturing terrain
+    // Load texture in terrain material
     VMaterial& Material = Renderer.Materials[Renderer.NumMaterials];
     Material.Texture.LoadBMP(Texture, 1);
 
+    // Load height map
     VSurface MapSurface;
     MapSurface.Load(HeightMap);
-    i32 MapSize = MapSurface.GetWidth();
+    i32 MapRowSize = MapSurface.GetWidth();
 
+    // Lock height map surface
     u32* Buffer;
     i32 Pitch;
     MapSurface.Lock(Buffer, Pitch);
 
-    i32f VerticesInRow = MapSize + 1;
-    Allocate(VerticesInRow * VerticesInRow, (MapSize * MapSize) * 2, 1);
+    // Allocate mesh
+    i32f VerticesInRow = MapRowSize + 1;
+    Allocate(VerticesInRow * VerticesInRow, (MapRowSize * MapRowSize) * 2, 1);
 
-    f32 MapStep = MapSize / (Size * VerticesInRow);
-    for (i32f Y = 0; Y < MapSize; ++Y)
+    // Set vertex positions
+    f32 MapStep = (f32)MapRowSize / (f32)VerticesInRow;
+    f32 UnitsPerHeight = (f32)Height / 255.0f;
+    f32 TileSize = Size / MapRowSize;
+
+    f32 YMap = 0.5f;
+    for (i32f Y = 0; Y < VerticesInRow; ++Y, YMap += MapStep)
     {
-        for (f32 X = 0.0f; X < (f32)MapSize; X += MapStep)
+        f32 XMap = 0.5f;
+        for (i32f X = 0; X < VerticesInRow; ++X, XMap += MapStep)
         {
-             // @INCOMPLETE
+             LocalVtxList[Y*VerticesInRow + X].Position = {
+                X * TileSize,
+                (f32)VColorARGB(Buffer[(i32f)YMap*Pitch + (i32f)XMap]).R * UnitsPerHeight,
+                -Y * TileSize,
+             };
         }
     }
 
+    // Destroy height map surface
     MapSurface.Unlock();
     MapSurface.Destroy();
 
-    // @INCOMPLETE: Set vertex indices, texture coords, indices, attrs
+    // Set polygon info
+    for (i32f Y = 0; Y < MapRowSize; ++Y)
+    {
+        for (i32f X = 0; X < MapRowSize; ++X)
+        {
+            i32f PolyIndex = (Y * 2)*MapRowSize + X*2;
+
+            VPoly& Poly1 = PolyList[PolyIndex];
+            VPoly& Poly2 = PolyList[PolyIndex + 1];
+
+            Poly2.State         = Poly1.State        |= EPolyState::Active;
+            Poly2.Attr          = Poly1.Attr         |= EPolyAttr::ShadeModeGouraud | EPolyAttr::TwoSided /* @TODO: | EPolyAttr::ShadeModeTexture */;
+            Poly2.OriginalColor = Poly1.OriginalColor = VColorARGB(0xFF, 0xFF, 0xFF, 0xFF);
+
+            Poly1.VtxIndices[0] = Y*VerticesInRow + X;
+            Poly1.VtxIndices[1] = (Y + 1)*VerticesInRow + X + 1;
+            Poly1.VtxIndices[2] = (Y + 1)*VerticesInRow + X;
+
+            Poly2.VtxIndices[0] = Poly1.VtxIndices[0];
+            Poly2.VtxIndices[1] = Y*VerticesInRow + X + 1;
+            Poly2.VtxIndices[2] = Poly1.VtxIndices[1];
+
+            /* @TODO
+                Poly.TextureCoordsIndices;
+            */
+        }
+    }
 
     // Compute stuff
-    {
-        ComputeRadius();
-        ComputePolygonNormalsLength();
-        ComputeVertexNormals();
-    }
+    ComputeRadius();
+    ComputePolygonNormalsLength();
+    ComputeVertexNormals();
 }
 
 }
