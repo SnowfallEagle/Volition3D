@@ -111,17 +111,17 @@ public:
 
     void Print()
     {
-        VLN_LOG("<\n");
+        VLN_LOG_VERBOSE("<\n");
         for (i32f Y = 0; Y < 4; ++Y)
         {
-            VLN_LOG("\t");
+            VLN_LOG_VERBOSE("\t");
             for (i32f X = 0; X < 4; ++X)
             {
-                VLN_LOG("%f, ", C[Y][X]);
+                VLN_LOG_VERBOSE("%f, ", C[Y][X]);
             }
-            VLN_LOG("\n");
+            VLN_LOG_VERBOSE("\n");
         }
-        VLN_LOG(">\n");
+        VLN_LOG_VERBOSE(">\n");
     }
 };
 

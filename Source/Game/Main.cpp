@@ -11,6 +11,7 @@ class GGameState : public VGameState
 public:
     virtual void StartUp() override
     {
+        /*
         for (i32f I = 0; I < 4; ++I)
         {
             VEntity* TempEntity = World.SpawnEntity<VEntity>();
@@ -24,16 +25,17 @@ public:
                 ECOB::SwapYZ | ECOB::InvertV
             );
         }
+        */
 
         Entity = World.SpawnEntity<VEntity>();
         Entity->Mesh->LoadCOB(
-            "rec_gouraud_textured_02.cob",
-            { -500.0f, 0.0f, 250.0f },
-            { 100.0f, 100.0f, 100.0f }
+            "s.cob",
+            { 0.0f, 0.0f, 0.0f },
+            { 1000.0f, 1000.0f, 1000.0f }
         );
 
         Camera = World.GetCamera();
-        Camera->Init(ECameraAttr::Euler, { 0, 75.0f, 0 }, { 0, 0, 0 }, VVector4(), 60, 50, 100000, {(f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
+        Camera->Init(ECameraAttr::Euler, { 0, 75.0f, 0 }, { 0, 0, 0 }, VVector4(), 90, 50, 100000, {(f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
 
         World.SetCubemap("cubemap.bmp");
         World.GetTerrain()->GenerateTerrain("heightmap_big.bmp", "terraintexture.bmp", 10000.0f, 5000.0f);
@@ -133,7 +135,9 @@ public:
             Engine.Stop();
         }
 
-        f32 CamPosSpeed = 0.5f * DeltaTime;
+        f32 ShiftModifier = (Input.IsKeyDown(EKeycode::LShift) ? 4.0f : 1.0f);
+
+        f32 CamPosSpeed = 0.5f * DeltaTime * ShiftModifier;
         if (Input.IsKeyDown(EKeycode::W))
         {
             Camera->Pos.X += Math.FastSin(Camera->Dir.Y) * CamPosSpeed;
@@ -151,18 +155,18 @@ public:
         if (Input.IsKeyDown(EKeycode::Up))    Camera->Dir.X -= CamDirSpeed;
         if (Input.IsKeyDown(EKeycode::Down))  Camera->Dir.X += CamDirSpeed;
 
-        if (Input.IsKeyDown(EKeycode::Space)) Camera->Pos.Y += CamDirSpeed;
-        if (Input.IsKeyDown(EKeycode::C))     Camera->Pos.Y -= CamDirSpeed;
+        if (Input.IsKeyDown(EKeycode::Space)) Camera->Pos.Y += CamDirSpeed * ShiftModifier;
+        if (Input.IsKeyDown(EKeycode::C))     Camera->Pos.Y -= CamDirSpeed * ShiftModifier;
 
         VMatrix44 Rot = VMatrix44::Identity;
-        f32 Speed = 0.1f * DeltaTime;
+        f32 Speed = 0.05f * DeltaTime;
         if (Input.IsKeyDown(EKeycode::Q)) Rot.BuildRotationXYZ(0, Speed, 0);
         if (Input.IsKeyDown(EKeycode::E)) Rot.BuildRotationXYZ(0, -Speed, 0);
         if (Input.IsKeyDown(EKeycode::F)) Rot.BuildRotationXYZ(0, 0, Speed);
         if (Input.IsKeyDown(EKeycode::G)) Rot.BuildRotationXYZ(0, 0, -Speed);
         if (Input.IsKeyDown(EKeycode::Z)) Rot.BuildRotationXYZ(Speed, 0, 0);
         if (Input.IsKeyDown(EKeycode::X)) Rot.BuildRotationXYZ(-Speed, 0, 0);
-        Entity->Mesh->Transform(Rot, ETransformType::LocalOnly, true);
+        // Entity->Mesh->Transform(Rot, ETransformType::LocalOnly, true);
 
         if (Input.IsKeyDown(EKeycode::Backspace))
         {

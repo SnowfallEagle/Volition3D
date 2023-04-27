@@ -37,20 +37,20 @@ public:
 
     VLN_FINLINE void Print()
     {
-        VLN_LOG("<Unknown type>");
+        VLN_LOG_VERBOSE("<Unknown type>");
     }
 };
 
 template<>
 VLN_FINLINE void TVector2<f32>::Print()
 {
-    VLN_LOG("<%f, %f>", X, Y);
+    VLN_LOG_VERBOSE("<%f, %f>", X, Y);
 }
 
 template<>
 VLN_FINLINE void TVector2<i32>::Print()
 {
-    VLN_LOG("<%d, %d>", X, Y);
+    VLN_LOG_VERBOSE("<%d, %d>", X, Y);
 }
 
 using VVector2 = TVector2<f32>;
@@ -135,7 +135,7 @@ public:
 
     VLN_FINLINE void Print()
     {
-        VLN_LOG("<%f, %f, %f>", X, Y, Z);
+        VLN_LOG_VERBOSE("<%f, %f, %f>", X, Y, Z);
     }
 };
 
@@ -230,7 +230,7 @@ public:
 
     VLN_FINLINE void Print()
     {
-        VLN_LOG("<%+f, %+f, %+f, %+f>", X, Y, Z, W);
+        VLN_LOG_VERBOSE("<%+f, %+f, %+f, %+f>", X, Y, Z, W);
     }
 
     VLN_FINLINE void DivByW()
