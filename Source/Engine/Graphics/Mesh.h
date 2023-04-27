@@ -25,6 +25,7 @@ namespace EMeshAttr
         MultiFrame  = VLN_BIT(1),
         HasTexture  = VLN_BIT(2),
         CanBeCulled = VLN_BIT(3),
+        TerrainMesh = VLN_BIT(4)
     };
 }
 
@@ -56,8 +57,8 @@ VLN_DECL_ALIGN_SSE() class VMesh
 {
 public:
     static constexpr i32f NameSize = 64;
-    static constexpr i32f MaxVtx = 4096;
-    static constexpr i32f MaxPoly = 8192;
+    static constexpr i32f MaxDefaultPoly = 32768;
+    static constexpr i32f MaxTerrainPoly = 262144;
 
 public:
     char Name[NameSize];
@@ -201,7 +202,7 @@ public:
             AverageRadiusList[FrameIndex] = AverageRadius;
             MaxRadiusList[FrameIndex] = MaxRadius;
 
-            VLN_NOTE(hLogObject, "\n\tFrame: %d\n\tAverage radius: %.3f\n\tMax radius: %.3f\n", FrameIndex, AverageRadius, MaxRadius);
+            VLN_LOG_VERBOSE("\n\tFrame: %d\n\tAverage radius: %.3f\n\tMax radius: %.3f\n", FrameIndex, AverageRadius, MaxRadius);
         }
     }
 
@@ -227,7 +228,7 @@ public:
 
             PolyList[I].NormalLength = VVector4::GetCross(U, V).GetLength();
 
-            VLN_LOG("\tPolygon normal length [%d]: %f\n", I, PolyList[I].NormalLength);
+            VLN_LOG_VERBOSE("\tPolygon normal length [%d]: %f\n", I, PolyList[I].NormalLength);
         }
     }
 
@@ -270,9 +271,7 @@ public:
                 LocalVtxList[I].Attr |= EVertexAttr::HasNormal;
                 TransVtxList[I].Attr = LocalVtxList[I].Attr;
 
-                VLN_NOTE(hLogObject, "Vertex normal [%d]: ", I);
-                LocalVtxList[I].Normal.Print();
-                VLN_LOG("\n");
+                VLN_LOG_VERBOSE("Vertex normal [%d]: <%.2f %.2f %.2f>\n", I, LocalVtxList[I].Normal.X, LocalVtxList[I].Normal.Y, LocalVtxList[I].Normal.Z);
             }
         }
 
@@ -417,6 +416,11 @@ public:
         }
 
         return false;
+    }
+
+    VLN_FINLINE i32f GetMaxPoly()
+    {
+        return Attr & EMeshAttr::TerrainMesh ? MaxTerrainPoly : MaxDefaultPoly;
     }
 
 public:

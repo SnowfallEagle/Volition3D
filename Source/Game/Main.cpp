@@ -33,10 +33,10 @@ public:
         );
 
         Camera = World.GetCamera();
-        Camera->Init(ECameraAttr::Euler, { 0, 75.0f, 0 }, { 0, 0, 0 }, VVector4(), 60, 150, 25000, {(f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
+        Camera->Init(ECameraAttr::Euler, { 0, 75.0f, 0 }, { 0, 0, 0 }, VVector4(), 60, 50, 100000, {(f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
 
         World.SetCubemap("cubemap.bmp");
-        World.GetTerrain()->GenerateTerrain("heightmap.bmp", "terraintexture.bmp");
+        World.GetTerrain()->GenerateTerrain("heightmap_big.bmp", "terraintexture.bmp", 10000.0f, 5000.0f);
 
         {
             VLight AmbientLight = {
@@ -168,6 +168,8 @@ public:
         {
             Renderer.GetRenderSpec().bRenderSolid ^= true;
         }
+
+        Renderer.DrawDebugText("FPS: %.2f", 1000.0f / DeltaTime);
     }
 };
 
@@ -176,10 +178,8 @@ int main(int Argc, char** Argv)
     VWindowSpecification WindowSpec;
     VRenderSpecification RenderSpec;
 
-    WindowSpec.Size = { 1024, 768 };
+    WindowSpec.Size = { 320, 128 };
+    WindowSpec.Flags = EWindowSpecificationFlags::Fullscreen;
 
-    Engine.StartUp<GGameState>(WindowSpec, RenderSpec);
-    Engine.Run();
-
-    return 0;
+    return Engine.Run<GGameState>(WindowSpec, RenderSpec);
 }

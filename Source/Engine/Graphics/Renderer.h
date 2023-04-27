@@ -66,6 +66,11 @@ private:
     VLight Lights[MaxLights];
     i32 NumLights;
 
+    /** Stuff for rendering */
+    VColorARGB (*OriginalLitColors)[3]; // [MaxPoly][3]
+    VColorARGB* OriginalColors;         // [MaxPoly]
+    u32* OriginalAttrs;                 // [MaxPoly]
+
 public:
     VRenderer() : InterpolationContext(RenderSpec) {}
 

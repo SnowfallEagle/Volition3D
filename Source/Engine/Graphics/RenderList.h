@@ -35,7 +35,7 @@ VLN_DEFINE_LOG_CHANNEL(hLogRenderList, "RenderList");
 VLN_DECL_ALIGN_SSE() class VRenderList
 {
 public:
-    static constexpr i32f MaxPoly = 32768;
+    static constexpr i32f MaxPoly = 262144;
 
 public:
     i32 NumPoly;

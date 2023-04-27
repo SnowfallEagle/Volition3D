@@ -208,11 +208,10 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
 
         // Read polygon faces
         i32 NumMaterialsInObject = 0;
-        b32 DoesMaterialAppearFirstTime[Renderer.MaxMaterials];
-        i32 MaterialIndexByPolyIndex[MaxPoly];
+        // @OPTIMIZATION: We can put this in some static area
+        TArray<b8> DoesMaterialAppearFirstTime(Renderer.MaxMaterials, true);
+        TArray<i32> MaterialIndexByPolyIndex(GetMaxPoly(), 0);
 
-        Memory.MemSetQuad(&MaterialIndexByPolyIndex, 0, MaxPoly);
-        Memory.MemSetQuad(&DoesMaterialAppearFirstTime, (b32)true, Renderer.MaxMaterials);
         {
             Line = FindLineCOB("Faces", File, Buffer, BufferSize);
             std::sscanf(Line, "Faces %d", &NumPoly);
@@ -569,7 +568,7 @@ void VMesh::GenerateTerrain(const char* HeightMap, const char* Texture, f32 Size
         {
              LocalVtxList[Y*VerticesInRow + X].Position = {
                 X * TileSize,
-                (f32)VColorARGB(Buffer[(i32f)YMap*Pitch + (i32f)XMap]).R * UnitsPerHeight,
+                -(f32)VColorARGB(Buffer[(i32f)YMap*Pitch + (i32f)XMap]).R * UnitsPerHeight,
                 -Y * TileSize,
              };
         }
@@ -593,13 +592,14 @@ void VMesh::GenerateTerrain(const char* HeightMap, const char* Texture, f32 Size
             Poly2.Attr          = Poly1.Attr         |= EPolyAttr::ShadeModeGouraud | EPolyAttr::TwoSided /* @TODO: | EPolyAttr::ShadeModeTexture */;
             Poly2.OriginalColor = Poly1.OriginalColor = VColorARGB(0xFF, 0xFF, 0xFF, 0xFF);
 
+            // @FIXME: Figure out vertex indices
             Poly1.VtxIndices[0] = Y*VerticesInRow + X;
-            Poly1.VtxIndices[1] = (Y + 1)*VerticesInRow + X + 1;
-            Poly1.VtxIndices[2] = (Y + 1)*VerticesInRow + X;
+            Poly1.VtxIndices[1] = (Y + 1)*VerticesInRow + X;
+            Poly1.VtxIndices[2] = (Y + 1)*VerticesInRow + X + 1;
 
             Poly2.VtxIndices[0] = Poly1.VtxIndices[0];
-            Poly2.VtxIndices[1] = Y*VerticesInRow + X + 1;
-            Poly2.VtxIndices[2] = Poly1.VtxIndices[1];
+            Poly2.VtxIndices[1] = Poly1.VtxIndices[2];
+            Poly2.VtxIndices[2] = Y*VerticesInRow + X + 1;
 
             /* @TODO
                 Poly.TextureCoordsIndices;

@@ -13,12 +13,12 @@ class VRenderSpecification
 public: // Set by user
     i32 TargetFPS = 60;
     i32 TargetFixedFPS = 60;
-    b32 bLimitFPS = false;
-
-    b32 bRenderSolid = true;
-    b32 bBackfaceRemoval = true;
-
     i32 MaxMipMaps = 8;
+
+    b8 bLimitFPS        = false;
+    b8 bRenderSolid     = true;
+    b8 bBackfaceRemoval = true;
+    b8 bSortPolygons    = false;
 
 private: // Set by rendering engine
     SDL_PixelFormat* SDLPixelFormat = nullptr;

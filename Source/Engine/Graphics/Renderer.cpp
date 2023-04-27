@@ -68,6 +68,13 @@ void VRenderer::StartUp(const VRenderSpecification& InRenderSpec)
         ResetLights();
     }
 
+    // Allocate memory
+    {
+        OriginalLitColors = new VColorARGB[VRenderList::MaxPoly][3];
+        OriginalColors    = new VColorARGB[VRenderList::MaxPoly];
+        OriginalAttrs     = new u32[VRenderList::MaxPoly];
+    }
+
     // Log
     VLN_NOTE(hLogRenderer, "Initialized with %s pixel format\n", SDL_GetPixelFormatName(RenderSpec.SDLPixelFormatEnum));
 }
@@ -89,6 +96,10 @@ void VRenderer::ShutDown()
         delete RenderList;
 
         BackSurface.Destroy();
+
+        delete[] OriginalAttrs;
+        delete[] OriginalColors;
+        delete[] OriginalLitColors;
     }
 }
 
@@ -171,12 +182,6 @@ void VRenderer::Render()
             }
 
             VPoly* PolyList = Mesh->PolyList;
-
-            // @TODO: Allocate in class
-            VColorARGB OriginalLitColors[VRenderList::MaxPoly][3];
-            VColorARGB OriginalColors[VRenderList::MaxPoly];
-            u32 OriginalAttrs[VRenderList::MaxPoly];
-
             static constexpr VColorARGB ShadowColor = VColorARGB(248, 0, 0, 0);
 
             // Set new color and attributes for mesh
@@ -241,7 +246,10 @@ void VRenderer::Render()
         TransformLights(Camera);
         RenderList->Light(Camera, Renderer.Lights, Renderer.MaxLights);
 
-        RenderList->SortPolygons(ESortPolygonsMethod::Average);
+        if (RenderSpec.bSortPolygons)
+        {
+            RenderList->SortPolygons(ESortPolygonsMethod::Average);
+        }
         RenderList->TransformCameraToScreen(Camera);
     }
 
