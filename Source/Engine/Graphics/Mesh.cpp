@@ -558,7 +558,9 @@ void VMesh::GenerateTerrain(const char* HeightMap, const char* Texture, f32 Size
     // Set vertex positions
     f32 MapStep = (f32)MapRowSize / (f32)VerticesInRow;
     f32 UnitsPerHeight = (f32)Height / 255.0f;
+
     f32 TileSize = Size / MapRowSize;
+    f32 TileOffset = -Size / 2.0f;
 
     f32 YMap = 0.5f;
     for (i32f Y = 0; Y < VerticesInRow; ++Y, YMap += MapStep)
@@ -567,9 +569,9 @@ void VMesh::GenerateTerrain(const char* HeightMap, const char* Texture, f32 Size
         for (i32f X = 0; X < VerticesInRow; ++X, XMap += MapStep)
         {
              LocalVtxList[Y*VerticesInRow + X].Position = {
-                X * TileSize,
+                TileOffset + X*TileSize,
                 -(f32)VColorARGB(Buffer[(i32f)YMap*Pitch + (i32f)XMap]).R * UnitsPerHeight,
-                -Y * TileSize,
+                TileOffset + Y*TileSize,
              };
         }
     }
@@ -597,9 +599,9 @@ void VMesh::GenerateTerrain(const char* HeightMap, const char* Texture, f32 Size
             Poly1.VtxIndices[1] = (Y + 1)*VerticesInRow + X;
             Poly1.VtxIndices[2] = (Y + 1)*VerticesInRow + X + 1;
 
-            Poly2.VtxIndices[0] = Poly1.VtxIndices[0];
-            Poly2.VtxIndices[1] = Poly1.VtxIndices[2];
-            Poly2.VtxIndices[2] = Y*VerticesInRow + X + 1;
+            Poly2.VtxIndices[0] = Poly1.VtxIndices[2];
+            Poly2.VtxIndices[1] = Y*VerticesInRow + X + 1;
+            Poly2.VtxIndices[2] = Poly1.VtxIndices[0];
 
             /* @TODO
                 Poly.TextureCoordsIndices;

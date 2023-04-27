@@ -178,8 +178,8 @@ int main(int Argc, char** Argv)
     VWindowSpecification WindowSpec;
     VRenderSpecification RenderSpec;
 
-    WindowSpec.Size = { 320, 128 };
-    WindowSpec.Flags = EWindowSpecificationFlags::Fullscreen;
+    WindowSpec.Size = { 800, 600 };
+    WindowSpec.Flags = EWindowSpecificationFlags::Windowed;
 
     return Engine.Run<GGameState>(WindowSpec, RenderSpec);
 }
