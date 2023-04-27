@@ -35,7 +35,7 @@ VLN_DEFINE_LOG_CHANNEL(hLogRenderList, "RenderList");
 VLN_DECL_ALIGN_SSE() class VRenderList
 {
 public:
-    static constexpr i32f MaxPoly = 262144;
+    static constexpr i32f MaxPoly = 524'288;
 
 public:
     i32 NumPoly;
@@ -303,8 +303,8 @@ public:
                 u32 BSum = 0;
 
                 const VVector4 SurfaceNormal = VVector4::GetCross(
-                    Poly->TransVtx[1].Position - Poly->TransVtx[0].Position,
-                    Poly->TransVtx[2].Position - Poly->TransVtx[0].Position
+                    Poly->TransVtx[0].Position - Poly->TransVtx[1].Position,
+                    Poly->TransVtx[2].Position - Poly->TransVtx[1].Position
                 );
                 const f32 SurfaceNormalLength = Poly->NormalLength;
 

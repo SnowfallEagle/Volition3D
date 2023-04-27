@@ -58,7 +58,7 @@ VLN_DECL_ALIGN_SSE() class VMesh
 public:
     static constexpr i32f NameSize = 64;
     static constexpr i32f MaxDefaultPoly = 32768;
-    static constexpr i32f MaxTerrainPoly = 262144;
+    static constexpr i32f MaxTerrainPoly = 262'144;
 
 public:
     char Name[NameSize];

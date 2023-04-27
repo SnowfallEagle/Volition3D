@@ -1574,21 +1574,21 @@ void VRenderer::SetInterpolators()
 
         if (MaxMipMaps > 0)
         {
+            f32 Distance = InterpolationContext.Distance;
+
             InterpolationContext.MipMappingLevel = (i32)(
-                InterpolationContext.Distance / (World.Camera->ZFarClip / (f32)MaxMipMaps)
+                Distance / (World.Camera->ZFarClip / (f32)MaxMipMaps)
             );
 
-            const f32 DetailFactor = (f32)InterpolationContext.MipMappingLevel / (f32)MaxMipMaps;
-
-            if (DetailFactor < 0.5f)
+            if (Distance < 10000.0f)
             {
                 InterpolationContext.Interpolators[InterpolationContext.NumInterpolators] = &InterpolationContext.BillinearPerspectiveTextureInterpolator;
             }
-            else if (DetailFactor < 0.75)
+            else if (Distance < 15000.0f)
             {
                 InterpolationContext.Interpolators[InterpolationContext.NumInterpolators] = &InterpolationContext.PerspectiveCorrectTextureInterpolator;
             }
-            else if (DetailFactor < 0.90f)
+            else if (Distance < 50000.0f)
             {
                 InterpolationContext.Interpolators[InterpolationContext.NumInterpolators] = &InterpolationContext.LinearPiecewiseTextureInterpolator;
             }

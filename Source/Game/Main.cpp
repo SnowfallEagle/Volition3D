@@ -25,7 +25,6 @@ public:
                 ECOB::SwapYZ | ECOB::InvertV
             );
         }
-        */
 
         Entity = World.SpawnEntity<VEntity>();
         Entity->Mesh->LoadCOB(
@@ -33,12 +32,13 @@ public:
             { 0.0f, 0.0f, 0.0f },
             { 1000.0f, 1000.0f, 1000.0f }
         );
+        */
 
         Camera = World.GetCamera();
         Camera->Init(ECameraAttr::Euler, { 0, 75.0f, 0 }, { 0, 0, 0 }, VVector4(), 90, 50, 100000, {(f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
 
         World.SetCubemap("cubemap.bmp");
-        World.GetTerrain()->GenerateTerrain("heightmap_big.bmp", "terraintexture.bmp", 10000.0f, 5000.0f);
+        World.GetTerrain()->GenerateTerrain("HeightMap_big.bmp", "RockyLand/Texture.bmp", 25000.0f, 30000.0f);
 
         {
             VLight AmbientLight = {
@@ -46,7 +46,7 @@ public:
                 ELightState::Active,
                 ELightAttr::Ambient,
 
-                MAP_XRGB32(0x22, 0x22, 0x22), 0, 0,
+                MAP_XRGB32(0x33, 0x33, 0x22), 0, 0,
                 { 0, 0, 0, 0 }, { 0, 0, 0, 0}, VVector4{0, 0, 0, 0}.GetNormalized(), { 0 , 0, 0, 0 },
 
                 0, 0, 0,
@@ -59,7 +59,7 @@ public:
                 ELightState::Active,
                 ELightAttr::Infinite,
 
-                0, MAP_XRGB32(0x44, 0x44, 0x22), 0,
+                0, MAP_XRGB32(0xAA, 0x99, 0x44), 0,
                 { 5000, 5000, 5000, 0 }, { 0, 0, 0, 0 }, VVector4{ -1.0f, -1.0f, 0, 0 }.GetNormalized(), { 0, 0, 0, 0 },
 
                 0, 0, 0,
@@ -75,7 +75,7 @@ public:
                 0, MAP_XRGB32(0x33, 0x00, 0x77), 0,
                 { 1000.0f, 1000.0f, 0.0f, 0 }, { 0, 0, 0, 0 }, VVector4{ 0, 0, 0, 0 }.GetNormalized(), { 0, 0, 0, 0 },
 
-                0, 0.0001f, 0,
+                0, 0.001f, 0,
                 0, 0,
                 0
             };
