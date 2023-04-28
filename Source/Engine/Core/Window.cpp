@@ -1,6 +1,7 @@
 #include "SDL.h"
 #include "Engine/Core/Assert.h"
 #include "Engine/Core/Engine.h"
+#include "Engine/Core/Config/Config.h"
 #include "Engine/Core/Window.h"
 
 namespace Volition
@@ -8,7 +9,7 @@ namespace Volition
 
 VWindow Window;
 
-void VWindow::Create(const VWindowSpecification& WindowSpec)
+void VWindow::Create()
 {
     // Init SDL
     {
@@ -19,11 +20,11 @@ void VWindow::Create(const VWindowSpecification& WindowSpec)
     // Set flags
     u32 Flags = SDL_WINDOW_SHOWN;
     {
-        if (WindowSpec.Flags & EWindowSpecificationFlags::Fullscreen)
+        if (Config.WindowSpec.Flags & EWindowSpecificationFlags::Fullscreen)
         {
             Flags |= SDL_WINDOW_FULLSCREEN;
         }
-        else if (WindowSpec.Flags & EWindowSpecificationFlags::FullscreenDesktop)
+        else if (Config.WindowSpec.Flags & EWindowSpecificationFlags::FullscreenDesktop)
         {
             Flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
         }
@@ -32,9 +33,9 @@ void VWindow::Create(const VWindowSpecification& WindowSpec)
     // Create window
     {
         SDLWindow = SDL_CreateWindow(
-            WindowSpec.Name,
+            Config.WindowSpec.Name,
             SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-            WindowSpec.Size.X, WindowSpec.Size.Y,
+            Config.WindowSpec.Size.X, Config.WindowSpec.Size.Y,
             Flags
         );
         VLN_ASSERT(SDLWindow);

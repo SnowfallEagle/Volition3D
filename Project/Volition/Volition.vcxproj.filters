@@ -28,6 +28,12 @@
     <Filter Include="Engine\GameCore">
       <UniqueIdentifier>{c99d54a6-d6e7-406a-a1bc-341ce5d43989}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Core\Config">
+      <UniqueIdentifier>{cb8b392b-5286-48f1-9438-e36fdf6ec041}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\Platform">
+      <UniqueIdentifier>{929c1449-dc83-4bb1-b758-f2a9f69785bb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\Engine\Core\Assert.h">
@@ -52,9 +58,6 @@
       <Filter>Engine\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Core\Window.h">
-      <Filter>Engine\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Core\WindowSpecification.h">
       <Filter>Engine\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Core\Containers\Array.h">
@@ -117,9 +120,6 @@
     <ClInclude Include="..\..\Source\Engine\Graphics\RenderList.h">
       <Filter>Engine\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Graphics\RenderSpecification.h">
-      <Filter>Engine\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Graphics\Surface.h">
       <Filter>Engine\Graphics</Filter>
     </ClInclude>
@@ -173,6 +173,15 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Core\Terrain.h">
       <Filter>Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Core\Config\Config.h">
+      <Filter>Engine\Core\Config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Core\Config\RenderSpecification.h">
+      <Filter>Engine\Core\Config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Core\Config\WindowSpecification.h">
+      <Filter>Engine\Core\Config</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -265,6 +274,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Core\Terrain.cpp">
       <Filter>Engine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Core\Config\Config.cpp">
+      <Filter>Engine\Core\Config</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

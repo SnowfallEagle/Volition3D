@@ -3,7 +3,7 @@
 #include "SDL.h"
 #include "Engine/Core/Platform.h"
 #include "Engine/Core/Types.h"
-#include "Engine/Graphics/RenderSpecification.h"
+#include "Engine/Core/Config/RenderSpecification.h"
 
 namespace Volition
 {
@@ -21,7 +21,7 @@ class VTime
     b32 bLimitFPS;
 
 public:
-    void StartUp(const VRenderSpecification& RenderSpec);
+    void StartUp();
     void ShutDown();
 
     VLN_FINLINE void TickFrame()

@@ -6,19 +6,19 @@
 namespace Volition
 {
 
-template<typename T = char>
-class VString : public std::basic_string<T>
+template<typename T>
+class VStringBase : public std::basic_string<T>
 {
 public:
     using Super = std::basic_string<T>;
 
 public:
-    VString() = default;
+    VStringBase() = default;
 
-    VString(const VString<T>& InString) : Super(InString)
+    VStringBase(const VStringBase<T>& InString) : Super(InString)
     {}
 
-    VString(const T* InString) : Super(InString)
+    VStringBase(const T* InString) : Super(InString)
     {}
 
     VLN_FINLINE operator const T*() const
@@ -27,6 +27,7 @@ public:
     }
 };
 
-using VWideString = VString<wchar_t>;
+using VString = VStringBase<char>;
+using VWideString = VStringBase<wchar_t>;
 
 }

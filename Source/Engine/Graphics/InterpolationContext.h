@@ -26,8 +26,6 @@ public:
     static constexpr i32f MaxInterpolators = 8;
 
 public:
-    const VRenderSpecification& RenderSpec;
-
     u32* Buffer;
     i32 BufferPitch;
 
@@ -58,10 +56,6 @@ public:
     VPerspectiveCorrectTextureInterpolator PerspectiveCorrectTextureInterpolator;
     VBillinearPerspectiveTextureInterpolator BillinearPerspectiveTextureInterpolator;
     VAlphaInterpolator AlphaInterpolator;
-
-public:
-    VInterpolationContext(const VRenderSpecification& InRenderSpec) : RenderSpec(InRenderSpec)
-    {}
 };
 
 }

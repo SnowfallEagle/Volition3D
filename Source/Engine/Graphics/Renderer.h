@@ -6,11 +6,11 @@
 #include "Engine/Core/Platform.h"
 #include "Engine/Core/Assert.h"
 #include "Engine/Core/Memory.h"
+#include "Engine/Core/Config/Config.h"
 #include "Engine/Math/Math.h"
 #include "Engine/Math/Rect.h"
 #include "Engine/Math/Vector.h"
 #include "Engine/Math/Fixed16.h"
-#include "Engine/Graphics/RenderSpecification.h"
 #include "Engine/Graphics/Surface.h"
 #include "Engine/Graphics/Color.h"
 #include "Engine/Graphics/Material.h"
@@ -49,7 +49,6 @@ private:
     VRenderList* RenderList;
     VZBuffer ZBuffer;
 
-    VRenderSpecification RenderSpec;
     VInterpolationContext InterpolationContext;
 
     TTF_Font* Font;
@@ -72,23 +71,16 @@ private:
     u32* OriginalAttrs;                 // [MaxPoly]
 
 public:
-    VRenderer() : InterpolationContext(RenderSpec) {}
-
-    void StartUp(const VRenderSpecification& InRenderSpec);
+    void StartUp();
     void ShutDown();
-
-    VLN_FINLINE VRenderSpecification& GetRenderSpec()
-    {
-        return RenderSpec;
-    }
 
     VLN_FINLINE i32 GetScreenWidth() const
     {
-        return RenderSpec.TargetSize.X;
+        return Config.RenderSpec.TargetSize.X;
     }
     VLN_FINLINE i32 GetScreenHeight() const
     {
-        return RenderSpec.TargetSize.Y;
+        return Config.RenderSpec.TargetSize.Y;
     }
 
     void ResetMaterials()
@@ -142,9 +134,9 @@ public:
     VLN_FINLINE void PutPixel(u32* Buffer, i32 Pitch, i32 X, i32 Y, u32 Color) const
     {
         VLN_ASSERT(X >= 0);
-        VLN_ASSERT(X < RenderSpec.TargetSize.X);
+        VLN_ASSERT(X < Config.RenderSpec.TargetSize.X);
         VLN_ASSERT(Y >= 0);
-        VLN_ASSERT(Y < RenderSpec.TargetSize.Y);
+        VLN_ASSERT(Y < Config.RenderSpec.TargetSize.Y);
 
         Buffer[Y*Pitch + X] = Color;
     }

@@ -112,6 +112,7 @@
       <FloatingPointModel>Precise</FloatingPointModel>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PreprocessToFile>false</PreprocessToFile>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -133,6 +134,7 @@
       <FloatingPointModel>Fast</FloatingPointModel>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <PreprocessToFile>false</PreprocessToFile>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -152,6 +154,7 @@
       <FloatingPointModel>Precise</FloatingPointModel>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PreprocessToFile>false</PreprocessToFile>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -172,6 +175,7 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FloatingPointModel>Fast</FloatingPointModel>
       <PreprocessToFile>false</PreprocessToFile>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -183,6 +187,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\Engine\Core\Assert.h" />
+    <ClInclude Include="..\..\Source\Engine\Core\Config\Config.h" />
+    <ClInclude Include="..\..\Source\Engine\Core\Config\RenderSpecification.h" />
+    <ClInclude Include="..\..\Source\Engine\Core\Config\WindowSpecification.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Containers\Array.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Containers\String.h" />
     <ClInclude Include="..\..\Source\Engine\Core\DebugLog.h" />
@@ -194,7 +201,6 @@
     <ClInclude Include="..\..\Source\Engine\Core\Types.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Engine.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Window.h" />
-    <ClInclude Include="..\..\Source\Engine\Core\WindowSpecification.h" />
     <ClInclude Include="..\..\Source\Engine\Core\World.h" />
     <ClInclude Include="..\..\Source\Engine\GameCore\Entity.h" />
     <ClInclude Include="..\..\Source\Engine\GameCore\GameState.h" />
@@ -215,7 +221,6 @@
     <ClInclude Include="..\..\Source\Engine\Graphics\Polygon.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\Renderer.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\RenderList.h" />
-    <ClInclude Include="..\..\Source\Engine\Graphics\RenderSpecification.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\Surface.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\Texture.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\TransformType.h" />
@@ -232,6 +237,7 @@
     <ClInclude Include="..\..\Source\Engine\Math\Vector.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Source\Engine\Core\Config\Config.cpp" />
     <ClCompile Include="..\..\Source\Engine\Core\DebugLog.cpp" />
     <ClCompile Include="..\..\Source\Engine\Core\Memory.cpp" />
     <ClCompile Include="..\..\Source\Engine\Core\Terrain.cpp" />

@@ -3,6 +3,9 @@
 
 using namespace Volition;
 
+namespace Game
+{
+
 class GGameState : public VGameState
 {
     VEntity* Entity;
@@ -170,20 +173,16 @@ public:
 
         if (Input.IsKeyDown(EKeycode::Backspace))
         {
-            Renderer.GetRenderSpec().bRenderSolid ^= true;
+            Config.RenderSpec.bRenderSolid ^= true;
         }
 
         Renderer.DrawDebugText("FPS: %.2f", 1000.0f / DeltaTime);
     }
 };
 
+}
+
 int main(int Argc, char** Argv)
 {
-    VWindowSpecification WindowSpec;
-    VRenderSpecification RenderSpec;
-
-    WindowSpec.Size = { 800, 600 };
-    WindowSpec.Flags = EWindowSpecificationFlags::Windowed;
-
-    return Engine.Run<GGameState>(WindowSpec, RenderSpec);
+    return Engine.Run<Game::GGameState>(Argc, Argv);
 }

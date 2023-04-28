@@ -20,13 +20,13 @@ class VEngine
 
 public:
     template<typename GameStateT>
-    i32 Run(const VWindowSpecification& WindowSpec, const VRenderSpecification& RenderSpec);
+    i32 Run(i32 Argc, char** Argv);
 
     void Stop();
 
 private:
     template<typename GameStateT>
-    void StartUp(const VWindowSpecification& WindowSpec, const VRenderSpecification& RenderSpec);
+    void StartUp();
 
     void ShutDown();
 };
@@ -34,23 +34,23 @@ private:
 extern VEngine Engine;
 
 template<typename GameStateT>
-inline void VEngine::StartUp(const VWindowSpecification& WindowSpec, const VRenderSpecification& RenderSpec)
+inline void VEngine::StartUp()
 {
     DebugLog.StartUp();
-    Window.Create(WindowSpec);
+    Window.Create();
     Math.StartUp();
-    Renderer.StartUp(RenderSpec);
+    Renderer.StartUp();
     Input.StartUp();
-    Time.StartUp(RenderSpec);
+    Time.StartUp();
     World.StartUp<GameStateT>();
 
     bRunning = true;
 }
 
 template<typename GameStateT>
-inline i32 VEngine::Run(const VWindowSpecification& WindowSpec, const VRenderSpecification& RenderSpec)
+inline i32 VEngine::Run(i32 Argc, char** Argv)
 {
-    StartUp<GameStateT>(WindowSpec, RenderSpec);
+    StartUp<GameStateT>();
 
     while (bRunning)
     {
