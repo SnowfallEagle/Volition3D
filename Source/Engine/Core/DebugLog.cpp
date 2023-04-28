@@ -21,11 +21,11 @@ VDebugLog DebugLog;
 
 void VDebugLog::StartUp()
 {
-    hFile = fopen(LogPath, "w");
+    hFile = std::fopen(LogPath, "w");
     if (!hFile)
     {
         // We couldn't use asserts because asserts depend on already working DebugLog
-        perror(LogPath);
+        std::perror(LogPath);
         VLN_DEBUG_BREAK();
     }
 
@@ -34,7 +34,7 @@ void VDebugLog::StartUp()
 
 void VDebugLog::ShutDown()
 {
-    fclose(hFile);
+    std::fclose(hFile);
 }
 
 void VDebugLog::Output(const char* Channel, const char* Priority, const char* Format, ...)
@@ -58,12 +58,12 @@ void VDebugLog::VarOutput(const char* Channel, const char* Priority, const char*
 
     if (Channel[0] == 0)
     {
-        vsnprintf(MessageBuffer, MessageBufferSize, Format, VarList);
+        std::vsnprintf(MessageBuffer, MessageBufferSize, Format, VarList);
     }
     else
     {
-        vsnprintf(TempBuffer, TempBufferSize, Format, VarList);
-        snprintf(MessageBuffer, MessageBufferSize, "<%s> %s: %s", Channel, Priority, TempBuffer);
+        std::vsnprintf(TempBuffer, TempBufferSize, Format, VarList);
+        std::snprintf(MessageBuffer, MessageBufferSize, "<%s> %s: %s", Channel, Priority, TempBuffer);
     }
 
     // Set color
@@ -76,9 +76,9 @@ void VDebugLog::VarOutput(const char* Channel, const char* Priority, const char*
     }
 
     // Output
-    printf("\x1b[%dm%s\x1b[m", Color, MessageBuffer);
-    fprintf(hFile, "%s", MessageBuffer);
-    fflush(hFile);
+    std::printf("\x1b[%dm%s\x1b[m", Color, MessageBuffer);
+    std::fprintf(hFile, "%s", MessageBuffer);
+    std::fflush(hFile);
 }
 
 }
