@@ -151,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Source\Launcher\Launcher.cpp" />
     <ClCompile Include="..\..\Source\Launcher\Main.cpp" />
     <ClCompile Include="..\..\ThirdParty\imgui\backends\imgui_impl_dx11.cpp" />
     <ClCompile Include="..\..\ThirdParty\imgui\backends\imgui_impl_win32.cpp" />
@@ -161,6 +162,7 @@
     <ClCompile Include="..\..\ThirdParty\imgui\imgui_widgets.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Source\Launcher\Launcher.h" />
     <ClInclude Include="..\..\ThirdParty\imgui\backends\imgui_impl_dx11.h" />
     <ClInclude Include="..\..\ThirdParty\imgui\backends\imgui_impl_win32.h" />
     <ClInclude Include="..\..\ThirdParty\imgui\imconfig.h" />

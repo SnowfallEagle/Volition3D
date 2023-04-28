@@ -1,23 +1,39 @@
 #pragma once
 
+#ifndef VLN_ASSERTIONS_ENABLED
+    #define VLN_ASSERTIONS_ENABLED 1
+#endif
+
+#ifndef VLN_ASSERTIONS_LOG_ENGINE
+    #define VLN_ASSERTIONS_ENGINE_LOGGING 1
+#endif
+
 #include "Engine/Core/Platform.h"
-#include "Engine/Core/DebugLog.h"
+
+#if VLN_ASSERTIONS_ENGINE_LOGGING
+    #include "Engine/Core/DebugLog.h"
+
+    VLN_DEFINE_LOG_CHANNEL(hLogAssert, "Assert");
+#else
+    #include <cstdio>
+#endif
 
 namespace Volition
 {
-
-VLN_DEFINE_LOG_CHANNEL(hLogAssert, "Assert");
-
-#define VLN_ASSERTIONS_ENABLED 1
-
 #if VLN_ASSERTIONS_ENABLED
+    #if VLN_ASSERTIONS_ENGINE_LOGGING
+        #define VLN_ASSERTION_LOG_ERROR(EXPR) VLN_ERROR(hLogAssert, "Assertion failed at %s:%d: %s\n", __FILE__, __LINE__, #EXPR)
+    #else
+        #define VLN_ASSERTION_LOG_ERROR(EXPR) std::fprintf(stderr, "<Assert> Assertion failed at %s:%d: %s\n", __FILE__, __LINE__, #EXPR);
+    #endif
+
     // Assert
     #define VLN_ASSERT(EXPR) \
         if ((EXPR)) \
         {} \
         else \
         { \
-            VLN_ERROR(hLogAssert, "Assertion failed at %s:%d: %s\n", __FILE__, __LINE__, #EXPR); \
+            VLN_ASSERTION_LOG_ERROR(EXPR); \
             VLN_DEBUG_BREAK(); \
         }
 

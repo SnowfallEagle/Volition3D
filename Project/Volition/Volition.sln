@@ -28,6 +28,25 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SDL2_ttf", "..\..\ThirdPart
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Launcher", "..\Launcher\Launcher.vcxproj", "{62C9733B-A929-4A0D-9AE0-19C4F3634D0C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ImGui", "ImGui", "{5902A196-8BCB-455C-8A98-E864D6729C4F}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\ThirdParty\imgui\imconfig.h = ..\..\ThirdParty\imgui\imconfig.h
+		..\..\ThirdParty\imgui\imgui.cpp = ..\..\ThirdParty\imgui\imgui.cpp
+		..\..\ThirdParty\imgui\imgui.h = ..\..\ThirdParty\imgui\imgui.h
+		..\..\ThirdParty\imgui\imgui_demo.cpp = ..\..\ThirdParty\imgui\imgui_demo.cpp
+		..\..\ThirdParty\imgui\imgui_draw.cpp = ..\..\ThirdParty\imgui\imgui_draw.cpp
+		..\..\ThirdParty\imgui\backends\imgui_impl_dx11.cpp = ..\..\ThirdParty\imgui\backends\imgui_impl_dx11.cpp
+		..\..\ThirdParty\imgui\backends\imgui_impl_dx11.h = ..\..\ThirdParty\imgui\backends\imgui_impl_dx11.h
+		..\..\ThirdParty\imgui\backends\imgui_impl_win32.cpp = ..\..\ThirdParty\imgui\backends\imgui_impl_win32.cpp
+		..\..\ThirdParty\imgui\backends\imgui_impl_win32.h = ..\..\ThirdParty\imgui\backends\imgui_impl_win32.h
+		..\..\ThirdParty\imgui\imgui_internal.h = ..\..\ThirdParty\imgui\imgui_internal.h
+		..\..\ThirdParty\imgui\imgui_tables.cpp = ..\..\ThirdParty\imgui\imgui_tables.cpp
+		..\..\ThirdParty\imgui\imgui_widgets.cpp = ..\..\ThirdParty\imgui\imgui_widgets.cpp
+		..\..\ThirdParty\imgui\imstb_rectpack.h = ..\..\ThirdParty\imgui\imstb_rectpack.h
+		..\..\ThirdParty\imgui\imstb_textedit.h = ..\..\ThirdParty\imgui\imstb_textedit.h
+		..\..\ThirdParty\imgui\imstb_truetype.h = ..\..\ThirdParty\imgui\imstb_truetype.h
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -248,6 +267,7 @@ Global
 		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68} = {2F428E89-9EF5-4EE1-85F9-53DE113F0AF6}
 		{DA956FD3-E142-46F2-9DD5-C78BEBB56B7A} = {2F428E89-9EF5-4EE1-85F9-53DE113F0AF6}
 		{DDDBD07D-DC76-4AF6-8D02-3E2DEB6EE255} = {2F428E89-9EF5-4EE1-85F9-53DE113F0AF6}
+		{5902A196-8BCB-455C-8A98-E864D6729C4F} = {2F428E89-9EF5-4EE1-85F9-53DE113F0AF6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {24BBE2BD-0CE6-436F-BC91-1A731F61FA83}

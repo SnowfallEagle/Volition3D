@@ -2,12 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="..\..\Source\Launcher\Main.cpp" />
-    <ClCompile Include="..\..\ThirdParty\imgui\backends\imgui_impl_win32.cpp">
-      <Filter>ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ThirdParty\imgui\backends\imgui_impl_dx11.cpp">
-      <Filter>ImGui</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\ThirdParty\imgui\imgui.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
@@ -17,24 +11,36 @@
     <ClCompile Include="..\..\ThirdParty\imgui\imgui_draw.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\imgui\backends\imgui_impl_dx11.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\imgui\backends\imgui_impl_win32.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\ThirdParty\imgui\imgui_tables.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ThirdParty\imgui\imgui_widgets.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\Launcher\Launcher.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\ThirdParty\imgui\backends\imgui_impl_win32.h">
+    <Filter Include="ImGui">
+      <UniqueIdentifier>{88169518-8b08-46cc-a45d-400530b1f77b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\ThirdParty\imgui\imconfig.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\imgui\imgui.h">
       <Filter>ImGui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ThirdParty\imgui\backends\imgui_impl_dx11.h">
       <Filter>ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\ThirdParty\imgui\imconfig.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ThirdParty\imgui\imgui.h">
+    <ClInclude Include="..\..\ThirdParty\imgui\backends\imgui_impl_win32.h">
       <Filter>ImGui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ThirdParty\imgui\imgui_internal.h">
@@ -49,10 +55,6 @@
     <ClInclude Include="..\..\ThirdParty\imgui\imstb_truetype.h">
       <Filter>ImGui</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Filter Include="ImGui">
-      <UniqueIdentifier>{d5526608-630f-40bd-87dd-68a1f36e8cb3}</UniqueIdentifier>
-    </Filter>
+    <ClInclude Include="..\..\Source\Launcher\Launcher.h" />
   </ItemGroup>
 </Project>
