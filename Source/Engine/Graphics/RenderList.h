@@ -935,11 +935,11 @@ public:
                     if (NumVertsIn == 1)
                     {
                         /*
-                            ZNearClip = Z0 + (Z1 - Z0) * t?
+                            ZNearClip = Z0 + (Z1 - Z0) * t
 
-                            t! = (ZNearClip - Z0) / (Z1 - Z0)
-                            NewX = X0 + (X1 - X0) * t!
-                            NewY = Y0 + (Y1 - Y0) * t!
+                            t = (ZNearClip - Z0) / (Z1 - Z0)
+                            NewX = X0 + (X1 - X0) * t
+                            NewY = Y0 + (Y1 - Y0) * !
                         */
 
                         // Get vertex indices
