@@ -29,6 +29,9 @@
     <Filter Include="ImGui">
       <UniqueIdentifier>{88169518-8b08-46cc-a45d-400530b1f77b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{1964ade9-c03f-44fa-8742-b66795032ebe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\ThirdParty\imgui\imconfig.h">
@@ -56,5 +59,20 @@
       <Filter>ImGui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Launcher\Launcher.h" />
+    <ClInclude Include="resource.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\Images\VolitionIcon.ico">
+      <Filter>Resources</Filter>
+    </Image>
+    <Image Include="Resources\VolitionIcon.ico" />
+    <Image Include="..\Images\Volition.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Launcher.rc">
+      <Filter>Resources</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

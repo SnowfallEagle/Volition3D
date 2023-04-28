@@ -17,10 +17,10 @@ void VBillinearPerspectiveTextureInterpolator::Start()
     {
         UVtx[I] =
             IntToFx22((i32)(InterpolationContext->Vtx[I].U * (f32)TextureSize + 0.5f)) /
-                (i32)(InterpolationContext->Vtx[I].Z + 0.5f);
+            (i32)(InterpolationContext->Vtx[I].Z + 0.5f);
         VVtx[I] =
             IntToFx22((i32)(InterpolationContext->Vtx[I].V * (f32)TextureSize + 0.5f)) /
-                (i32)(InterpolationContext->Vtx[I].Z + 0.5f);
+            (i32)(InterpolationContext->Vtx[I].Z + 0.5f);
     }
 }
 

@@ -38,7 +38,7 @@ public:
         Camera->Init(ECameraAttr::Euler, { 0, 75.0f, 0 }, { 0, 0, 0 }, VVector4(), 90, 50, 100000, {(f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
 
         World.SetCubemap("cubemap.bmp");
-        World.GetTerrain()->GenerateTerrain("RockyLand/HeightMap.bmp", "RockyLand/Texture.bmp", 25000.0f, 10000.0f);
+        World.GetTerrain()->GenerateTerrain("HeightMap_big.bmp", "RockyLand/Texture.bmp", 50000.0f, 25000.0f);
 
         {
             VLight AmbientLight = {

@@ -71,20 +71,24 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\..\Source;$(SolutionDir)..\..\ThirdParty\imgui;$(SolutionDir)..\..\ThirdParty\imgui\backends</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\..\Source;$(SolutionDir)..\..\ThirdParty\imgui;$(SolutionDir)..\..\ThirdParty\imgui\backends;$(ProjectDir).</IncludePath>
     <SourcePath>$(VC_SourcePath);$(SolutionDir)..\..\Source;$(SolutionDir)..\..\ThirdParty\imgui;$(SolutionDir)..\..\ThirdParty\imgui\backends</SourcePath>
+    <OutDir>$(SolutionDir)..\..\Bin\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\..\Source;$(SolutionDir)..\..\ThirdParty\imgui;$(SolutionDir)..\..\ThirdParty\imgui\backends</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\..\Source;$(SolutionDir)..\..\ThirdParty\imgui;$(SolutionDir)..\..\ThirdParty\imgui\backends;$(ProjectDir).</IncludePath>
     <SourcePath>$(VC_SourcePath);$(SolutionDir)..\..\Source;$(SolutionDir)..\..\ThirdParty\imgui;$(SolutionDir)..\..\ThirdParty\imgui\backends</SourcePath>
+    <OutDir>$(SolutionDir)..\..\Bin\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\..\Source;$(SolutionDir)..\..\ThirdParty\imgui;$(SolutionDir)..\..\ThirdParty\imgui\backends</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\..\Source;$(SolutionDir)..\..\ThirdParty\imgui;$(SolutionDir)..\..\ThirdParty\imgui\backends;$(ProjectDir).</IncludePath>
     <SourcePath>$(VC_SourcePath);$(SolutionDir)..\..\Source;$(SolutionDir)..\..\ThirdParty\imgui;$(SolutionDir)..\..\ThirdParty\imgui\backends</SourcePath>
+    <OutDir>$(SolutionDir)..\..\Bin\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\..\Source;$(SolutionDir)..\..\ThirdParty\imgui;$(SolutionDir)..\..\ThirdParty\imgui\backends</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\..\Source;$(SolutionDir)..\..\ThirdParty\imgui;$(SolutionDir)..\..\ThirdParty\imgui\backends;$(ProjectDir).</IncludePath>
     <SourcePath>$(VC_SourcePath);$(SolutionDir)..\..\Source;$(SolutionDir)..\..\ThirdParty\imgui;$(SolutionDir)..\..\ThirdParty\imgui\backends</SourcePath>
+    <OutDir>$(SolutionDir)..\..\Bin\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -95,7 +99,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);d3d11.lib;d3dcompiler.lib</AdditionalDependencies>
     </Link>
@@ -111,7 +115,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -127,7 +131,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);d3d11.lib;d3dcompiler.lib</AdditionalDependencies>
     </Link>
@@ -143,7 +147,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -171,6 +175,15 @@
     <ClInclude Include="..\..\ThirdParty\imgui\imstb_rectpack.h" />
     <ClInclude Include="..\..\ThirdParty\imgui\imstb_textedit.h" />
     <ClInclude Include="..\..\ThirdParty\imgui\imstb_truetype.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Launcher.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\Images\Volition.ico" />
+    <Image Include="..\Images\VolitionIcon.ico" />
+    <Image Include="Resources\VolitionIcon.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

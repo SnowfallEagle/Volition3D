@@ -1,24 +1,32 @@
 #pragma once
 
-#include <string>
+#include <xstring>
 #include "Engine/Core/Platform.h"
 
 namespace Volition
 {
 
-class VString : std::string
+template<typename T = char>
+class VString : public std::basic_string<T>
 {
 public:
-    using Super = std::string;
+    using Super = std::basic_string<T>;
 
 public:
-    VString(const std::string& InString = "") : Super(InString)
+    VString() = default;
+
+    VString(const VString<T>& InString) : Super(InString)
     {}
 
-    VLN_FINLINE operator const char*() const
+    VString(const T* InString) : Super(InString)
+    {}
+
+    VLN_FINLINE operator const T*() const
     {
         return Super::c_str();
     }
 };
+
+using VWideString = VString<wchar_t>;
 
 }

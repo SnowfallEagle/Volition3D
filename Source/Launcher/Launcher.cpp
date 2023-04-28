@@ -1,8 +1,8 @@
 #include <tchar.h>
 #include <d3d11.h>
-#include "imgui.h"
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
+#include "resource.h"
 #include "Launcher/Launcher.h"
 
 LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -32,9 +32,13 @@ EReturnCode::Type VLauncher::Run()
 
 b32 VLauncher::StartUp()
 {
-    WindowClass = { sizeof(WindowClass), CS_CLASSDC, WndProc, 0L, 0L, GetModuleHandle(nullptr), nullptr, nullptr, nullptr, nullptr, L"ImGui Example", nullptr };
+    WindowClass = { sizeof(WindowClass), CS_CLASSDC, WndProc, 0L, 0L, GetModuleHandle(nullptr), nullptr, nullptr, nullptr, nullptr, L"Launcher Window", nullptr};
     RegisterClassExW(&WindowClass);
-    hWnd = CreateWindowW(WindowClass.lpszClassName, L"Dear ImGui DirectX11 Example", WS_OVERLAPPEDWINDOW, 100, 100, 1280, 800, nullptr, nullptr, WindowClass.hInstance, nullptr);
+    hWnd = CreateWindowW(WindowClass.lpszClassName, WindowTitle, WS_OVERLAPPEDWINDOW, 100, 100, WindowSize.X, WindowSize.Y, nullptr, nullptr, WindowClass.hInstance, nullptr);
+
+    HICON Icon = (HICON)LoadImage(GetModuleHandle(nullptr), MAKEINTRESOURCE(IDI_ICON1), IMAGE_ICON, 192, 192, 0);
+    SendMessage(hWnd, WM_SETICON, ICON_SMALL, (LPARAM)Icon);
+    SendMessage(hWnd, WM_SETICON, ICON_BIG, (LPARAM)Icon);
 
     if (!StartUpD3D(hWnd))
     {
@@ -50,7 +54,7 @@ b32 VLauncher::StartUp()
     ImGui::CreateContext();
     ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_NavEnableGamepad;
 
-    ImGui::StyleColorsDark();
+    ImGui::StyleColorsLight();
 
     ImGui_ImplWin32_Init(hWnd);
     ImGui_ImplDX11_Init(D3DDevice, D3DDeviceContext);
