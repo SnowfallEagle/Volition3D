@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Engine/Core/Platform.h"
-#include "Engine/Core/Types.h"
+#include "Engine/Core/Platform/Platform.h"
+#include "Engine/Core/Types/Common.h"
 #include "Engine/Graphics/Color.h"
 #include "Engine/Graphics/Texture.h"
 

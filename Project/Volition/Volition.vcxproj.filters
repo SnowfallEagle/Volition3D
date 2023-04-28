@@ -34,24 +34,15 @@
     <Filter Include="Engine\Core\Platform">
       <UniqueIdentifier>{929c1449-dc83-4bb1-b758-f2a9f69785bb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Core\Types">
+      <UniqueIdentifier>{06fae969-3949-4844-863e-d3d8759dd12f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Source\Engine\Core\Assert.h">
-      <Filter>Engine\Core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Core\DebugLog.h">
       <Filter>Engine\Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Core\Memory.h">
-      <Filter>Engine\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Core\Platform.h">
-      <Filter>Engine\Core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Core\Time.h">
-      <Filter>Engine\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Core\Types.h">
       <Filter>Engine\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Core\Engine.h">
@@ -183,12 +174,21 @@
     <ClInclude Include="..\..\Source\Engine\Core\Config\WindowSpecification.h">
       <Filter>Engine\Core\Config</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Core\Platform\Assert.h">
+      <Filter>Engine\Core\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Core\Platform\Memory.h">
+      <Filter>Engine\Core\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Core\Platform\Platform.h">
+      <Filter>Engine\Core\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Core\Types\Common.h">
+      <Filter>Engine\Core\Types</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Engine\Core\DebugLog.cpp">
-      <Filter>Engine\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Engine\Core\Memory.cpp">
       <Filter>Engine\Core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Core\Time.cpp">
@@ -277,6 +277,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Core\Config\Config.cpp">
       <Filter>Engine\Core\Config</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Core\Platform\Memory.cpp">
+      <Filter>Engine\Core\Platform</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

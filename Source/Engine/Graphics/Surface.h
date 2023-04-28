@@ -1,9 +1,9 @@
 #pragma once
 
 #include "SDL.h"
-#include "Engine/Core/Types.h"
-#include "Engine/Core/Platform.h"
-#include "Engine/Core/Assert.h"
+#include "Engine/Core/Types/Common.h"
+#include "Engine/Core/Platform/Platform.h"
+#include "Engine/Core/Platform/Assert.h"
 #include "Engine/Math/Rect.h"
 
 namespace Volition

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Engine/Core/Types.h"
+#include "Engine/Core/Types/Common.h"
 #include "Engine/Math/Fixed28.h"
 #include "Engine/Graphics/Color.h"
 #include "Engine/Graphics/Polygon.h"

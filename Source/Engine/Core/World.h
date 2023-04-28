@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Engine/Core/Terrain.h"
-#include "Engine/Core/Containers/Array.h"
+#include "Engine/Core/Types/Array.h"
 #include "Engine/GameCore/Entity.h"
 #include "Engine/GameCore/GameState.h"
 

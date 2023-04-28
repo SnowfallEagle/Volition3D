@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Engine/Core/Containers/String.h"
+#include "Engine/Core/Types/String.h"
 #include "Engine/Graphics/Mesh.h"
 
 namespace Volition

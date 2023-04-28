@@ -186,20 +186,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Source\Engine\Core\Assert.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Config\Config.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Config\RenderSpecification.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Config\WindowSpecification.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Containers\Array.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Containers\String.h" />
     <ClInclude Include="..\..\Source\Engine\Core\DebugLog.h" />
-    <ClInclude Include="..\..\Source\Engine\Core\Memory.h" />
-    <ClInclude Include="..\..\Source\Engine\Core\Platform.h" />
+    <ClInclude Include="..\..\Source\Engine\Core\Platform\Assert.h" />
+    <ClInclude Include="..\..\Source\Engine\Core\Platform\Memory.h" />
+    <ClInclude Include="..\..\Source\Engine\Core\Platform\Platform.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Terrain.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Thread\SpinLock.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Time.h" />
-    <ClInclude Include="..\..\Source\Engine\Core\Types.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Engine.h" />
+    <ClInclude Include="..\..\Source\Engine\Core\Types\Common.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Window.h" />
     <ClInclude Include="..\..\Source\Engine\Core\World.h" />
     <ClInclude Include="..\..\Source\Engine\GameCore\Entity.h" />
@@ -239,7 +239,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\Source\Engine\Core\Config\Config.cpp" />
     <ClCompile Include="..\..\Source\Engine\Core\DebugLog.cpp" />
-    <ClCompile Include="..\..\Source\Engine\Core\Memory.cpp" />
+    <ClCompile Include="..\..\Source\Engine\Core\Platform\Memory.cpp" />
     <ClCompile Include="..\..\Source\Engine\Core\Terrain.cpp" />
     <ClCompile Include="..\..\Source\Engine\Core\Time.cpp" />
     <ClCompile Include="..\..\Source\Engine\Core\Engine.cpp" />

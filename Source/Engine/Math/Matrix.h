@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Engine/Core/Types.h"
-#include "Engine/Core/Platform.h"
-#include "Engine/Core/Memory.h"
+#include "Engine/Core/Types/Common.h"
+#include "Engine/Core/Platform/Platform.h"
+#include "Engine/Core/Platform/Memory.h"
 #include "Engine/Core/DebugLog.h"
 #include "Engine/Math/Vector.h"
 

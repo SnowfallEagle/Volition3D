@@ -8,7 +8,7 @@
     #define VLN_ASSERTIONS_ENGINE_LOGGING 1
 #endif
 
-#include "Engine/Core/Platform.h"
+#include "Engine/Core/Platform/Platform.h"
 
 #if VLN_ASSERTIONS_ENGINE_LOGGING
     #include "Engine/Core/DebugLog.h"

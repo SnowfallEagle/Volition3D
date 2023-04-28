@@ -2,8 +2,8 @@
 
 #include <cmath>
 #include <ctime>
-#include "Engine/Core/Types.h"
-#include "Engine/Core/Platform.h"
+#include "Engine/Core/Types/Common.h"
+#include "Engine/Core/Platform/Platform.h"
 
 namespace Volition
 {

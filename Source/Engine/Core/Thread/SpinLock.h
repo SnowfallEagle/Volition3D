@@ -2,9 +2,9 @@
 
 #include <atomic>
 #include <thread>
-#include "Engine/Core/Types.h"
-#include "Engine/Core/Platform.h"
-#include "Engine/Core/Assert.h"
+#include "Engine/Core/Types/Common.h"
+#include "Engine/Core/Platform/Platform.h"
+#include "Engine/Core/Platform/Assert.h"
 
 namespace Volition
 {

@@ -1,7 +1,7 @@
 #include <cstdio>
 #include <cerrno>
-#include "Engine/Core/Types.h"
-#include "Engine/Core/Memory.h"
+#include "Engine/Core/Types/Common.h"
+#include "Engine/Core/Platform/Memory.h"
 #include "Engine/Math/Vector.h"
 #include "Engine/Graphics/Renderer.h"
 #include "Engine/Graphics/Mesh.h"

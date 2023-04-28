@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Engine/Core/Containers/Array.h"
+#include "Engine/Core/Types/Array.h"
 #include "Engine/Graphics/Surface.h"
 
 namespace Volition

@@ -6,9 +6,9 @@
 #include "imgui.h"
 
 #define VLN_ASSERTIONS_LOG_ENGINE 0
-#include "Engine/Core/Assert.h"
-#include "Engine/Core/Types.h"
-#include "Engine/Core/Containers/String.h"
+#include "Engine/Core/Platform/Assert.h"
+#include "Engine/Core/Types/Common.h"
+#include "Engine/Core/Types/String.h"
 #include "Engine/Math/Vector.h"
 
 namespace Volition
