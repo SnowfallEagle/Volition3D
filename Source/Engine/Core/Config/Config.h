@@ -12,8 +12,12 @@ public:
     VWindowSpecification WindowSpec;
     VRenderSpecification RenderSpec;
 
+private:
+    b32 bExecutedWithLauncher = false;
+
 public:
     void StartUp(i32 Args, char** Argv);
+    void ShutDown();
 };
 
 inline VConfig Config;

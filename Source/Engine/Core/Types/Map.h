@@ -16,7 +16,6 @@ public:
 
     TMap(std::initializer_list<typename Super::value_type> InitList) : Super(InitList)
     {}
-
 };
 
 }

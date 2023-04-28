@@ -43,8 +43,8 @@ void VConfig::StartUp(i32 Argc, char** Argv)
             continue;
         }
 
-        const auto It = ArgHandlers.find(Argv[Cursor]); // @CLEANUP: Find
-        if (It == ArgHandlers.end()) // @CLEANUP: End
+        const auto It = ArgHandlers.find(Argv[Cursor]);
+        if (It == ArgHandlers.end())
         {
             VLN_WARNING(hLogConfig, "Unknown argument <%s>!\n", Argv[Cursor]);
             ++Cursor;
@@ -68,6 +68,15 @@ void VConfig::StartUp(i32 Argc, char** Argv)
             }
             Handler.Function(Argv, Cursor);
         }
+    }
+}
+
+void VConfig::ShutDown()
+{
+    if (bExecutedWithLauncher)
+    {
+        // @INCOMPLETE
+        // System.CreateProcess("Launcher.exe")
     }
 }
 

@@ -37,15 +37,7 @@ template<typename GameStateT>
 inline void VEngine::StartUp(i32 Argc, char** Argv)
 {
     DebugLog.StartUp();
-    // Config.StartUp(Argc, Argv);
-
-    VString S1 = "g";
-    VString S2 = "/l";
-    VString S3 = "/s";
-    VString S4 = "1280";
-    const char* Array[4] = { S1, S2, S3, S4 };
-    Config.StartUp(4, (char**)Array);
-
+    Config.StartUp(Argc, Argv);
     Window.StartUp();
     Math.StartUp();
     Renderer.StartUp();

@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{26306f1f-a9e7-4183-a4a9-497dc72e5b5c}</ProjectGuid>
-    <RootNamespace>GameExample</RootNamespace>
+    <ProjectGuid>{0AC109BC-201E-4D23-B377-795010539B89}</ProjectGuid>
+    <RootNamespace>Game</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>Game</ProjectName>
   </PropertyGroup>
@@ -76,7 +76,7 @@
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\..\Source;$(SolutionDir)..\..\ThirdParty\SDL\include\;$(SolutionDir)..\..\ThirdParty\SDL_ttf\</IncludePath>
     <SourcePath>$(VC_SourcePath);$(SolutionDir)..\..\Source</SourcePath>
     <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(SolutionDir)..\..\ThirdParty\SDL\Libs</LibraryPath>
-    <OutDir>$(SolutionDir)..\..\Bin</OutDir>
+    <OutDir>$(SolutionDir)..\..\Bin\</OutDir>
     <TargetName>$(ProjectName)</TargetName>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
@@ -85,7 +85,7 @@
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\..\Source;$(SolutionDir)..\..\ThirdParty\SDL\include\;$(SolutionDir)..\..\ThirdParty\SDL_ttf\</IncludePath>
     <SourcePath>$(VC_SourcePath);$(SolutionDir)..\..\Source</SourcePath>
     <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(SolutionDir)..\..\ThirdParty\SDL\Libs</LibraryPath>
-    <OutDir>$(SolutionDir)..\..\Bin</OutDir>
+    <OutDir>$(SolutionDir)..\..\Bin\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)</TargetName>
   </PropertyGroup>
@@ -94,7 +94,7 @@
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\..\Source;$(SolutionDir)..\..\ThirdParty\SDL\include\;$(SolutionDir)..\..\ThirdParty\SDL_ttf\</IncludePath>
     <SourcePath>$(VC_SourcePath);$(SolutionDir)..\..\Source</SourcePath>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(SolutionDir)..\..\ThirdParty\SDL\Libs</LibraryPath>
-    <OutDir>$(SolutionDir)..\..\Bin</OutDir>
+    <OutDir>$(SolutionDir)..\..\Bin\</OutDir>
     <TargetName>$(ProjectName)</TargetName>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
@@ -103,7 +103,7 @@
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\..\Source;$(SolutionDir)..\..\ThirdParty\SDL\include\;$(SolutionDir)..\..\ThirdParty\SDL_ttf\</IncludePath>
     <SourcePath>$(VC_SourcePath);$(SolutionDir)..\..\Source</SourcePath>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(SolutionDir)..\..\ThirdParty\SDL\Libs</LibraryPath>
-    <OutDir>$(SolutionDir)..\..\Bin</OutDir>
+    <OutDir>$(SolutionDir)..\..\Bin\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)</TargetName>
   </PropertyGroup>
@@ -149,7 +149,8 @@
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(Platform)\$(Configuration)\$(TargetName)$(TargetExt) ..\..\Bin\</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -194,7 +195,8 @@
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(Platform)\$(Configuration)\$(TargetName)$(TargetExt) ..\..\Bin\</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

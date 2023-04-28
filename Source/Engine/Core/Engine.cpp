@@ -15,6 +15,7 @@ void VEngine::ShutDown()
     Renderer.ShutDown();
     Math.ShutDown();
     Window.ShutDown();
+    Config.ShutDown();
     DebugLog.ShutDown();
 }
 
