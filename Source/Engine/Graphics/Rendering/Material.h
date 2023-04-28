@@ -2,8 +2,8 @@
 
 #include "Engine/Core/Platform/Platform.h"
 #include "Engine/Core/Types/Common.h"
-#include "Engine/Graphics/Color.h"
-#include "Engine/Graphics/Texture.h"
+#include "Engine/Graphics/Types/Color.h"
+#include "Engine/Graphics/Rendering/Texture.h"
 
 namespace Volition
 {

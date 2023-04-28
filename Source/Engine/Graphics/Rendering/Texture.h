@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Engine/Core/Types/Array.h"
-#include "Engine/Graphics/Surface.h"
+#include "Engine/Graphics/Rendering/Surface.h"
 
 namespace Volition
 {

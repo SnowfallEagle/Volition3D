@@ -1,4 +1,4 @@
-#include "Engine/Graphics/Camera.h"
+#include "Engine/Graphics/Scene/Camera.h"
 
 namespace Volition
 {

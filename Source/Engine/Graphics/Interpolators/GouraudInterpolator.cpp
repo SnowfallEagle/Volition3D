@@ -1,4 +1,4 @@
-#include "Engine/Graphics/InterpolationContext.h"
+#include "Engine/Graphics/Rendering/InterpolationContext.h"
 #include "Engine/Graphics/Interpolators/GouraudInterpolator.h"
 
 namespace Volition

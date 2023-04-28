@@ -41,12 +41,12 @@ private:
     HWND hWnd;
 
     VWideString WindowTitle;
-    VVector2I WindowSize;
+    VVector2i WindowSize;
 
     b32 bRunning;
 
 public:
-    VLauncher(const VWideString& Title = L"Launcher", const VVector2I& Size = { 1280, 720 })
+    VLauncher(const VWideString& Title = L"Launcher", const VVector2i& Size = { 1280, 720 })
     {
         VLN_ASSERT(!Instance);
         Instance = this;

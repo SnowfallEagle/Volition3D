@@ -2,10 +2,10 @@
 
 #include "Engine/Core/Types/Common.h"
 #include "Engine/Math/Vector.h"
-#include "Engine/Graphics/Color.h"
-#include "Engine/Graphics/Vertex.h"
-#include "Engine/Graphics/Surface.h"
-#include "Engine/Graphics/Material.h"
+#include "Engine/Graphics/Types/Color.h"
+#include "Engine/Graphics/Types/Vertex.h"
+#include "Engine/Graphics/Rendering/Surface.h"
+#include "Engine/Graphics/Rendering/Material.h"
 
 namespace Volition
 {

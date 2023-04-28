@@ -1,4 +1,4 @@
-#include "Engine/Graphics/Renderer.h"
+#include "Engine/Graphics/Rendering/Renderer.h"
 #include "Engine/World/World.h"
 
 namespace Volition

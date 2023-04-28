@@ -9,7 +9,7 @@
 #include "Engine/World/World.h"
 #include "Engine/Input/Input.h"
 #include "Engine/Math/Math.h"
-#include "Engine/Graphics/Renderer.h"
+#include "Engine/Graphics/Rendering/Renderer.h"
 
 namespace Volition
 {

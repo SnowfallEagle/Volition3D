@@ -56,8 +56,8 @@ VLN_FINLINE void TVector2<i32>::Print()
 using VVector2 = TVector2<f32>;
 using VPoint2 = VVector2;
 
-using VVector2I = TVector2<i32>;
-using VPoint2I = VVector2I;
+using VVector2i = TVector2<i32>;
+using VPoint2i = VVector2i;
 
 class VVector3
 {

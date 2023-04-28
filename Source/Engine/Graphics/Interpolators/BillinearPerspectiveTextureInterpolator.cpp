@@ -1,4 +1,4 @@
-#include "Engine/Graphics/InterpolationContext.h"
+#include "Engine/Graphics/Rendering/InterpolationContext.h"
 #include "Engine/Graphics/Interpolators/BillinearPerspectiveTextureInterpolator.h"
 
 namespace Volition

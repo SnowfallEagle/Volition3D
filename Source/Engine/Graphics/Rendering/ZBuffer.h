@@ -2,7 +2,7 @@
 
 #include "Engine/Core/Platform/Memory.h"
 #include "Engine/Math/Fixed28.h"
-#include "Engine/Graphics/Surface.h"
+#include "Engine/Graphics/Rendering/Surface.h"
 
 namespace Volition
 {

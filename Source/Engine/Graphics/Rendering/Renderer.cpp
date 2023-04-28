@@ -2,7 +2,7 @@
 #include "Engine/Core/Platform/Memory.h"
 #include "Engine/Core/Window.h"
 #include "Engine/World/World.h"
-#include "Engine/Graphics/Renderer.h"
+#include "Engine/Graphics/Rendering/Renderer.h"
 
 namespace Volition
 {

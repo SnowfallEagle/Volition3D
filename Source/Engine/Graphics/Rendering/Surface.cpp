@@ -1,5 +1,5 @@
-#include "Engine/Graphics/Renderer.h"
-#include "Engine/Graphics/Surface.h"
+#include "Engine/Graphics/Rendering/Renderer.h"
+#include "Engine/Graphics/Rendering/Surface.h"
 
 namespace Volition
 {

@@ -21,7 +21,7 @@ class VWindowSpecification
 public:
     VString Name = "Volition";
     VString IconPath = "";
-    VVector2I Size = { 1280, 720 };
+    VVector2i Size = { 1280, 720 };
     u32 Flags = EWindowSpecificationFlags::Windowed;
 };
 

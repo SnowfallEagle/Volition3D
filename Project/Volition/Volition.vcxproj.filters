@@ -34,6 +34,15 @@
     <Filter Include="Engine\World">
       <UniqueIdentifier>{c99d54a6-d6e7-406a-a1bc-341ce5d43989}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Graphics\Types">
+      <UniqueIdentifier>{a96df322-4887-4400-8ff1-e7f80981bafb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Graphics\Scene">
+      <UniqueIdentifier>{fba79876-d15e-4cfa-97d0-4498a3bc3589}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Graphics\Rendering">
+      <UniqueIdentifier>{d174c067-2237-46a4-a64e-f1f90baea050}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\Engine\Core\DebugLog.h">
@@ -78,42 +87,6 @@
     <ClInclude Include="..\..\Source\Engine\Math\Vector.h">
       <Filter>Engine\Math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Graphics\Camera.h">
-      <Filter>Engine\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Graphics\Color.h">
-      <Filter>Engine\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Graphics\Light.h">
-      <Filter>Engine\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Graphics\Material.h">
-      <Filter>Engine\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Graphics\Mesh.h">
-      <Filter>Engine\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Graphics\Polygon.h">
-      <Filter>Engine\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Graphics\Renderer.h">
-      <Filter>Engine\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Graphics\RenderList.h">
-      <Filter>Engine\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Graphics\Surface.h">
-      <Filter>Engine\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Graphics\TransformType.h">
-      <Filter>Engine\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Graphics\Vertex.h">
-      <Filter>Engine\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Graphics\ZBuffer.h">
-      <Filter>Engine\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Graphics\Interpolators\AlphaInterpolator.h">
       <Filter>Engine\Graphics\Interpolators</Filter>
     </ClInclude>
@@ -137,12 +110,6 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Graphics\Interpolators\AffineTextureInterpolator.h">
       <Filter>Engine\Graphics\Interpolators</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Graphics\InterpolationContext.h">
-      <Filter>Engine\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Graphics\Texture.h">
-      <Filter>Engine\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Core\Config\Config.h">
       <Filter>Engine\Core\Config</Filter>
@@ -183,6 +150,48 @@
     <ClInclude Include="..\..\Source\Engine\World\World.h">
       <Filter>Engine\World</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Graphics\Types\Color.h">
+      <Filter>Engine\Graphics\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Graphics\Types\Polygon.h">
+      <Filter>Engine\Graphics\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Graphics\Types\Vertex.h">
+      <Filter>Engine\Graphics\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Graphics\Rendering\InterpolationContext.h">
+      <Filter>Engine\Graphics\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Graphics\Rendering\Renderer.h">
+      <Filter>Engine\Graphics\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Graphics\Rendering\RenderList.h">
+      <Filter>Engine\Graphics\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Graphics\Rendering\Surface.h">
+      <Filter>Engine\Graphics\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Graphics\Rendering\Texture.h">
+      <Filter>Engine\Graphics\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Graphics\Rendering\ZBuffer.h">
+      <Filter>Engine\Graphics\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Graphics\Scene\Camera.h">
+      <Filter>Engine\Graphics\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Graphics\Scene\Light.h">
+      <Filter>Engine\Graphics\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Graphics\Scene\Mesh.h">
+      <Filter>Engine\Graphics\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Graphics\Scene\TransformType.h">
+      <Filter>Engine\Graphics\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Graphics\Rendering\Material.h">
+      <Filter>Engine\Graphics\Rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Engine\Core\DebugLog.cpp">
@@ -209,35 +218,8 @@
     <ClCompile Include="..\..\Source\Engine\Math\Vector.cpp">
       <Filter>Engine\Math</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Engine\Graphics\Camera.cpp">
-      <Filter>Engine\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Engine\Graphics\Mesh.cpp">
-      <Filter>Engine\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Engine\Graphics\Polygon.cpp">
-      <Filter>Engine\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Engine\Graphics\Renderer.cpp">
-      <Filter>Engine\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Engine\Graphics\RenderList.cpp">
-      <Filter>Engine\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Engine\Graphics\Surface.cpp">
-      <Filter>Engine\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Engine\Graphics\Vertex.cpp">
-      <Filter>Engine\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\IInterpolator.cpp">
       <Filter>Engine\Graphics\Interpolators</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Engine\Graphics\InterpolationContext.cpp">
-      <Filter>Engine\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Engine\Graphics\Texture.cpp">
-      <Filter>Engine\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\AffineTextureInterpolator.cpp">
       <Filter>Engine\Graphics\Interpolators</Filter>
@@ -277,6 +259,33 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\World\World.cpp">
       <Filter>Engine\World</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Graphics\Types\Polygon.cpp">
+      <Filter>Engine\Graphics\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Graphics\Types\Vertex.cpp">
+      <Filter>Engine\Graphics\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Graphics\Rendering\InterpolationContext.cpp">
+      <Filter>Engine\Graphics\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Graphics\Rendering\Renderer.cpp">
+      <Filter>Engine\Graphics\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Graphics\Rendering\RenderList.cpp">
+      <Filter>Engine\Graphics\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Graphics\Rendering\Surface.cpp">
+      <Filter>Engine\Graphics\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Graphics\Rendering\Texture.cpp">
+      <Filter>Engine\Graphics\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Graphics\Scene\Camera.cpp">
+      <Filter>Engine\Graphics\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Graphics\Scene\Mesh.cpp">
+      <Filter>Engine\Graphics\Scene</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Engine/Graphics/Polygon.h"
-#include "Engine/Graphics/Camera.h"
-#include "Engine/Graphics/TransformType.h"
-#include "Engine/Graphics/Vertex.h"
+#include "Engine/Graphics/Types/Vertex.h"
+#include "Engine/Graphics/Types/Polygon.h"
+#include "Engine/Graphics/Scene/Camera.h"
+#include "Engine/Graphics/Scene/TransformType.h"
 
 namespace Volition
 {

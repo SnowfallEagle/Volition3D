@@ -3,8 +3,8 @@
 #include "Engine/Core/Types/Common.h"
 #include "Engine/Core/Platform/Memory.h"
 #include "Engine/Math/Vector.h"
-#include "Engine/Graphics/Renderer.h"
-#include "Engine/Graphics/Mesh.h"
+#include "Engine/Graphics/Rendering/Renderer.h"
+#include "Engine/Graphics/Scene/Mesh.h"
 
 namespace Volition
 {

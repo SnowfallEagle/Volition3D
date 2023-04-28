@@ -27,10 +27,10 @@ private: // Set by rendering engine
     i32 BitsPerPixel = 32;
     i32 BytesPerPixel = 4;
 
-    VVector2I TargetSize = { 0, 0 };
+    VVector2i TargetSize = { 0, 0 };
 
-    VVector2I MinClip = { 0, 0 };
-    VVector2I MaxClip = { 0, 0 };
+    VVector2i MinClip = { 0, 0 };
+    VVector2i MaxClip = { 0, 0 };
 
     VVector2 MinClipFloat = { 0.0f, 0.0f };
     VVector2 MaxClipFloat = { 0.0f, 0.0f };

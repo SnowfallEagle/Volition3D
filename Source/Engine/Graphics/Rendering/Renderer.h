@@ -11,15 +11,15 @@
 #include "Engine/Math/Rect.h"
 #include "Engine/Math/Vector.h"
 #include "Engine/Math/Fixed16.h"
-#include "Engine/Graphics/Surface.h"
-#include "Engine/Graphics/Color.h"
-#include "Engine/Graphics/Material.h"
-#include "Engine/Graphics/Light.h"
-#include "Engine/Graphics/Polygon.h"
-#include "Engine/Graphics/Camera.h"
-#include "Engine/Graphics/ZBuffer.h"
-#include "Engine/Graphics/RenderList.h"
-#include "Engine/Graphics/InterpolationContext.h"
+#include "Engine/Graphics/Rendering/Surface.h"
+#include "Engine/Graphics/Types/Color.h"
+#include "Engine/Graphics/Rendering/Material.h"
+#include "Engine/Graphics/Scene/Light.h"
+#include "Engine/Graphics/Types/Polygon.h"
+#include "Engine/Graphics/Scene/Camera.h"
+#include "Engine/Graphics/Rendering/ZBuffer.h"
+#include "Engine/Graphics/Rendering/RenderList.h"
+#include "Engine/Graphics/Rendering/InterpolationContext.h"
 
 namespace Volition
 {
@@ -39,7 +39,7 @@ private:
 
         char Text[TextSize];
         SDL_Color Color;
-        VVector2I Position;
+        VVector2i Position;
     };
 
 private:
