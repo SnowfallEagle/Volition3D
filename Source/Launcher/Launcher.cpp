@@ -52,7 +52,9 @@ b32 VLauncher::StartUp()
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_NavEnableGamepad;
+    ImGuiIO IO = ImGui::GetIO();
+    IO.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_NavEnableGamepad;
+    IO.IniFilename = nullptr;
 
     ImGui::StyleColorsLight();
 

@@ -139,11 +139,11 @@ public:
     {
         KeyState = SDL_GetKeyboardState(nullptr);
     }
-    void ShutDown()
-    {
-    }
 
-    void HandleEvents()
+    void ShutDown()
+    {}
+
+    VLN_FINLINE void ProcessEvents()
     {
         MouseState = SDL_GetMouseState(&MousePosX, &MousePosY);
     }

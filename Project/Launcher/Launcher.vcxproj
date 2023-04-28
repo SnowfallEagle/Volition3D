@@ -181,9 +181,7 @@
     <ResourceCompile Include="Launcher.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\Images\Volition.ico" />
     <Image Include="..\Images\VolitionIcon.ico" />
-    <Image Include="Resources\VolitionIcon.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

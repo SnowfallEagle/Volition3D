@@ -198,7 +198,9 @@
     <ClInclude Include="..\..\Source\Engine\Core\Engine.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Types\Array.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Types\Common.h" />
+    <ClInclude Include="..\..\Source\Engine\Core\Types\Map.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Types\String.h" />
+    <ClInclude Include="..\..\Source\Engine\Core\Types\UnorderedMap.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Window.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\Interpolators\AlphaInterpolator.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\Interpolators\BillinearPerspectiveTextureInterpolator.h" />

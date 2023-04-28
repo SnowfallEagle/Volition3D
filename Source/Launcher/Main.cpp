@@ -1,5 +1,4 @@
 #include <cstdlib>
-#include <future>
 #include "Launcher/Launcher.h"
 
 using namespace Volition;
@@ -30,7 +29,8 @@ class GLauncher : public VLauncher
             ZeroMemory(&ProcessInformation, sizeof(ProcessInformation));
 
             // @TODO: Put this in Volition System class, open launcher after exiting game if was opened through it
-            CreateProcessA(nullptr, (LPSTR)"Game.exe /l /s 1280 720", nullptr, nullptr, false, 0, nullptr, nullptr, &StartUpInfo, &ProcessInformation);
+            // @TODO: UI
+            CreateProcessA(nullptr, (LPSTR)"Game.exe /l /s 720", nullptr, nullptr, false, 0, nullptr, nullptr, &StartUpInfo, &ProcessInformation);
 
             Stop();
         }

@@ -9,7 +9,7 @@ namespace Volition
 
 VWindow Window;
 
-void VWindow::Create()
+void VWindow::StartUp()
 {
     // Init SDL
     {
@@ -42,13 +42,13 @@ void VWindow::Create()
     }
 }
 
-void VWindow::Destroy()
+void VWindow::ShutDown()
 {
     SDL_DestroyWindow(SDLWindow);
     SDL_Quit();
 }
 
-void VWindow::HandleEvents()
+void VWindow::ProcessEvents()
 {
     SDL_Event Event;
 

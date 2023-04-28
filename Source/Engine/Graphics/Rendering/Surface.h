@@ -64,10 +64,10 @@ public:
         return Height;
     }
 
-    void BlitHW(VRelRectI* SourceRect, VSurface* Dest, VRelRectI* DestRect);
-    void FillRectHW(VRelRectI* Rect, u32 Color);
+    void BlitHW(VRelativeRectInt* SourceRect, VSurface* Dest, VRelativeRectInt* DestRect);
+    void FillRectHW(VRelativeRectInt* Rect, u32 Color);
 
-    void DrawBlended(const VRelRectI* SrcRect, VSurface* Dest, const VRelRectI* DestRect);
+    void DrawBlended(const VRelativeRectInt* SrcRect, VSurface* Dest, const VRelativeRectInt* DestRect);
 
     friend class VRenderer;
 };

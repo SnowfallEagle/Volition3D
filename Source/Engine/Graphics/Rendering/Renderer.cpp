@@ -119,7 +119,7 @@ void VRenderer::Render()
     if (Cubemap.SDLSurface->pixels)
     {
         // Blit first cubemap
-        VRelRectI Src;
+        VRelativeRectInt Src;
         Src.X = (i32)((CameraAngle / 360.0f) * (f32)World.Cubemap.Width + 0.5f);
         Src.Y = 0;
         Src.W = GetScreenWidth();
@@ -133,7 +133,7 @@ void VRenderer::Render()
         {
             Src.X = 0;
 
-            VRelRectI Dest;
+            VRelativeRectInt Dest;
 
             Dest.X = Remainder;
             Dest.Y = 0;

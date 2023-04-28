@@ -192,6 +192,12 @@
     <ClInclude Include="..\..\Source\Engine\Graphics\Rendering\Material.h">
       <Filter>Engine\Graphics\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Core\Types\Map.h">
+      <Filter>Engine\Core\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Core\Types\UnorderedMap.h">
+      <Filter>Engine\Core\Types</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Engine\Core\DebugLog.cpp">

@@ -67,8 +67,6 @@
     <Image Include="..\Images\VolitionIcon.ico">
       <Filter>Resources</Filter>
     </Image>
-    <Image Include="Resources\VolitionIcon.ico" />
-    <Image Include="..\Images\Volition.ico" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Launcher.rc">

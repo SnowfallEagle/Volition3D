@@ -12,17 +12,17 @@ public:
     T X1, Y1, X2, Y2;
 };
 
-using VRectI = TRect<i32>;
-using VRectF = TRect<f32>;
+using VRectInt = TRect<i32>;
+using VRect = TRect<f32>;
 
 template<class T>
-class TRelRect // Relative rectangle
+class TRelativeRect
 {
 public:
     T X, Y, W, H;
 };
 
-using VRelRectI = TRelRect<i32>;
-using VRelRectF = TRelRect<f32>;
+using VRelativeRectInt = TRelativeRect<i32>;
+using VRelativeRect = TRelativeRect<f32>;
 
 }

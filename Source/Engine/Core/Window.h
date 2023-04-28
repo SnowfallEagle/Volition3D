@@ -14,9 +14,9 @@ class VWindow
     SDL_Window* SDLWindow;
 
 public:
-    void Create();
-    void Destroy();
-    void HandleEvents();
+    void StartUp();
+    void ShutDown();
+    void ProcessEvents();
 
     friend class VRenderer;
 };

@@ -26,7 +26,7 @@ public:
 
 private:
     template<typename GameStateT>
-    void StartUp();
+    void StartUp(i32 Argc, char** Argv);
 
     void ShutDown();
 };
@@ -34,10 +34,19 @@ private:
 extern VEngine Engine;
 
 template<typename GameStateT>
-inline void VEngine::StartUp()
+inline void VEngine::StartUp(i32 Argc, char** Argv)
 {
     DebugLog.StartUp();
-    Window.Create();
+    // Config.StartUp(Argc, Argv);
+
+    VString S1 = "g";
+    VString S2 = "/l";
+    VString S3 = "/s";
+    VString S4 = "1280";
+    const char* Array[4] = { S1, S2, S3, S4 };
+    Config.StartUp(4, (char**)Array);
+
+    Window.StartUp();
     Math.StartUp();
     Renderer.StartUp();
     Input.StartUp();
@@ -50,14 +59,14 @@ inline void VEngine::StartUp()
 template<typename GameStateT>
 inline i32 VEngine::Run(i32 Argc, char** Argv)
 {
-    StartUp<GameStateT>();
+    StartUp<GameStateT>(Argc, Argv);
 
     while (bRunning)
     {
         Time.TickFrame();
 
-        Window.HandleEvents();
-        Input.HandleEvents();
+        Window.ProcessEvents();
+        Input.ProcessEvents();
 
         World.Update(Time.GetDeltaTime());
 
