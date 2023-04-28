@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Engine/Core/Terrain.h"
+#include "Engine/World/Terrain.h"
 #include "Engine/Core/Types/Array.h"
-#include "Engine/GameCore/Entity.h"
-#include "Engine/GameCore/GameState.h"
+#include "Engine/World/Entity.h"
+#include "Engine/World/GameState.h"
 
 namespace Volition
 {

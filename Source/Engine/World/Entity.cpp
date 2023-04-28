@@ -1,4 +1,4 @@
-#include "Engine/GameCore/Entity.h"
+#include "Engine/World/Entity.h"
 
 namespace Volition
 {

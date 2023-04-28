@@ -189,21 +189,17 @@
     <ClInclude Include="..\..\Source\Engine\Core\Config\Config.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Config\RenderSpecification.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Config\WindowSpecification.h" />
-    <ClInclude Include="..\..\Source\Engine\Core\Containers\Array.h" />
-    <ClInclude Include="..\..\Source\Engine\Core\Containers\String.h" />
     <ClInclude Include="..\..\Source\Engine\Core\DebugLog.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Platform\Assert.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Platform\Memory.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Platform\Platform.h" />
-    <ClInclude Include="..\..\Source\Engine\Core\Terrain.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Thread\SpinLock.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Time.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Engine.h" />
+    <ClInclude Include="..\..\Source\Engine\Core\Types\Array.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Types\Common.h" />
+    <ClInclude Include="..\..\Source\Engine\Core\Types\String.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Window.h" />
-    <ClInclude Include="..\..\Source\Engine\Core\World.h" />
-    <ClInclude Include="..\..\Source\Engine\GameCore\Entity.h" />
-    <ClInclude Include="..\..\Source\Engine\GameCore\GameState.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\Camera.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\Color.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\InterpolationContext.h" />
@@ -235,18 +231,18 @@
     <ClInclude Include="..\..\Source\Engine\Math\Minimal.h" />
     <ClInclude Include="..\..\Source\Engine\Math\Rect.h" />
     <ClInclude Include="..\..\Source\Engine\Math\Vector.h" />
+    <ClInclude Include="..\..\Source\Engine\World\Entity.h" />
+    <ClInclude Include="..\..\Source\Engine\World\GameState.h" />
+    <ClInclude Include="..\..\Source\Engine\World\Terrain.h" />
+    <ClInclude Include="..\..\Source\Engine\World\World.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Engine\Core\Config\Config.cpp" />
     <ClCompile Include="..\..\Source\Engine\Core\DebugLog.cpp" />
     <ClCompile Include="..\..\Source\Engine\Core\Platform\Memory.cpp" />
-    <ClCompile Include="..\..\Source\Engine\Core\Terrain.cpp" />
     <ClCompile Include="..\..\Source\Engine\Core\Time.cpp" />
     <ClCompile Include="..\..\Source\Engine\Core\Engine.cpp" />
     <ClCompile Include="..\..\Source\Engine\Core\Window.cpp" />
-    <ClCompile Include="..\..\Source\Engine\Core\World.cpp" />
-    <ClCompile Include="..\..\Source\Engine\GameCore\Entity.cpp" />
-    <ClCompile Include="..\..\Source\Engine\GameCore\GameState.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Camera.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\InterpolationContext.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\AffineTextureInterpolator.cpp" />
@@ -268,6 +264,10 @@
     <ClCompile Include="..\..\Source\Engine\Math\Math.cpp" />
     <ClCompile Include="..\..\Source\Engine\Math\Matrix.cpp" />
     <ClCompile Include="..\..\Source\Engine\Math\Vector.cpp" />
+    <ClCompile Include="..\..\Source\Engine\World\Entity.cpp" />
+    <ClCompile Include="..\..\Source\Engine\World\GameState.cpp" />
+    <ClCompile Include="..\..\Source\Engine\World\Terrain.cpp" />
+    <ClCompile Include="..\..\Source\Engine\World\World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\ThirdParty\SDL\VisualC\SDLmain\SDLmain.vcxproj">

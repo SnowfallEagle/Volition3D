@@ -6,7 +6,7 @@
 #include "Engine/Core/DebugLog.h"
 #include "Engine/Core/Window.h"
 #include "Engine/Core/Time.h"
-#include "Engine/Core/World.h"
+#include "Engine/World/World.h"
 #include "Engine/Input/Input.h"
 #include "Engine/Math/Math.h"
 #include "Engine/Graphics/Renderer.h"

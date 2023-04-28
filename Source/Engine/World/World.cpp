@@ -1,5 +1,5 @@
 #include "Engine/Graphics/Renderer.h"
-#include "Engine/Core/World.h"
+#include "Engine/World/World.h"
 
 namespace Volition
 {

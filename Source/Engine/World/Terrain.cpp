@@ -1,5 +1,5 @@
 #include "Engine/Core/Time.h"
-#include "Engine/Core/Terrain.h"
+#include "Engine/World/Terrain.h"
 
 namespace Volition
 {

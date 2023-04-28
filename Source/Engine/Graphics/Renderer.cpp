@@ -1,7 +1,7 @@
 #include <cstdarg>
 #include "Engine/Core/Platform/Memory.h"
 #include "Engine/Core/Window.h"
-#include "Engine/Core/World.h"
+#include "Engine/World/World.h"
 #include "Engine/Graphics/Renderer.h"
 
 namespace Volition
