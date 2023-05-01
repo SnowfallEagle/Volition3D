@@ -1,8 +1,8 @@
 #include <cstdio>
 #include <cerrno>
-#include "Engine/Core/Types/Common.h"
-#include "Engine/Core/Platform/Memory.h"
-#include "Engine/Math/Vector.h"
+#include "Common/Types/Common.h"
+#include "Common/Platform/Memory.h"
+#include "Common/Math/Vector.h"
 #include "Engine/Graphics/Rendering/Renderer.h"
 #include "Engine/Graphics/Scene/Mesh.h"
 

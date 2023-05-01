@@ -1,9 +1,9 @@
 #pragma once
 
 #include "SDL.h"
-#include "Engine/Core/Platform/Platform.h"
-#include "Engine/Core/Types/Common.h"
-#include "Engine/Core/Platform/Platform.h"
+#include "Common/Platform/Platform.h"
+#include "Common/Types/Common.h"
+#include "Common/Platform/Platform.h"
 
 namespace Volition
 {

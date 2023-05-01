@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Engine/Core/Types/Common.h"
-#include "Engine/Math/Vector.h"
+#include "Common/Types/Common.h"
+#include "Common/Math/Vector.h"
 
 struct SDL_PixelFormat;
 

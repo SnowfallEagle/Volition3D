@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Engine/Core/Types/String.h"
-#include "Engine/Math/Vector.h"
+#include "Common/Types/String.h"
+#include "Common/Math/Vector.h"
 
 namespace Volition
 {

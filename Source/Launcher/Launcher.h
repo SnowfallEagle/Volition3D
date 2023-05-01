@@ -6,10 +6,10 @@
 #include "imgui.h"
 
 #define VLN_ASSERTIONS_LOG_ENGINE 0
-#include "Engine/Core/Platform/Assert.h"
-#include "Engine/Core/Types/Common.h"
-#include "Engine/Core/Types/String.h"
-#include "Engine/Math/Vector.h"
+#include "Common/Platform/Assert.h"
+#include "Common/Types/Common.h"
+#include "Common/Types/String.h"
+#include "Common/Math/Vector.h"
 
 namespace Volition
 {

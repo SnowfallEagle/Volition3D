@@ -1,14 +1,14 @@
 #pragma once
 
 #include "SDL.h"
-#include "Engine/Core/Types/Common.h"
-#include "Engine/Core/Platform/Platform.h"
+#include "Common/Types/Common.h"
+#include "Common/Platform/Platform.h"
 #include "Engine/Core/DebugLog.h"
 #include "Engine/Core/Window.h"
 #include "Engine/Core/Time.h"
 #include "Engine/World/World.h"
 #include "Engine/Input/Input.h"
-#include "Engine/Math/Math.h"
+#include "Common/Math/Math.h"
 #include "Engine/Graphics/Rendering/Renderer.h"
 
 namespace Volition

@@ -1,5 +1,5 @@
 #include "SDL.h"
-#include "Engine/Core/Platform/Assert.h"
+#include "Common/Platform/Assert.h"
 #include "Engine/Core/Engine.h"
 #include "Engine/Core/Config/Config.h"
 #include "Engine/Core/Window.h"

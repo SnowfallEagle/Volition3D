@@ -1,7 +1,7 @@
 #pragma once
 
 #include <cstdlib>
-#include "Engine/Math/Minimal.h"
+#include "Common/Math/Minimal.h"
 #include "Engine/Graphics/Types/Polygon.h"
 #include "Engine/Graphics/Scene/Camera.h"
 #include "Engine/Graphics/Scene/TransformType.h"

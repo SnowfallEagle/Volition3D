@@ -52,6 +52,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Common", "..\Common\Common.vcxproj", "{E1A226C3-FF1E-4E50-B6DA-47FFB8C4127E}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Game", "..\Game\Game.vcxproj", "{0AC109BC-201E-4D23-B377-795010539B89}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E1A226C3-FF1E-4E50-B6DA-47FFB8C4127E} = {E1A226C3-FF1E-4E50-B6DA-47FFB8C4127E}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

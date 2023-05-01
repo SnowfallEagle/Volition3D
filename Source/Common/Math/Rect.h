@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Engine/Core/Types/Common.h"
+#include "Common/Types/Common.h"
 
 namespace Volition
 {

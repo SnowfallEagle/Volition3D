@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Engine/Math/Math.h"
-#include "Engine/Math/Fixed16.h"
-#include "Engine/Math/Rect.h"
-#include "Engine/Math/Vector.h"
-#include "Engine/Math/Matrix.h"
+#include "Common/Math/Math.h"
+#include "Common/Math/Fixed16.h"
+#include "Common/Math/Rect.h"
+#include "Common/Math/Vector.h"
+#include "Common/Math/Matrix.h"
 
 namespace Volition
 {

@@ -7,9 +7,6 @@
     <Filter Include="Engine\Core">
       <UniqueIdentifier>{b58576f9-0117-4e89-b462-34d35a8c9cc5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Core\Thread">
-      <UniqueIdentifier>{a967c48a-8b46-4a48-b699-6d523ce1b71d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\Input">
       <UniqueIdentifier>{69adadf5-5484-4b29-b681-ac65d64a233d}</UniqueIdentifier>
     </Filter>
@@ -19,17 +16,8 @@
     <Filter Include="Engine\Graphics\Interpolators">
       <UniqueIdentifier>{601c1456-e621-40a1-b270-7c0afea9dd7f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Math">
-      <UniqueIdentifier>{4f349201-4916-4d0c-9bc6-6ca54ce8e312}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\Core\Config">
       <UniqueIdentifier>{cb8b392b-5286-48f1-9438-e36fdf6ec041}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\Core\Platform">
-      <UniqueIdentifier>{929c1449-dc83-4bb1-b758-f2a9f69785bb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\Core\Types">
-      <UniqueIdentifier>{06fae969-3949-4844-863e-d3d8759dd12f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine\World">
       <UniqueIdentifier>{c99d54a6-d6e7-406a-a1bc-341ce5d43989}</UniqueIdentifier>
@@ -57,35 +45,8 @@
     <ClInclude Include="..\..\Source\Engine\Core\Window.h">
       <Filter>Engine\Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Core\Thread\SpinLock.h">
-      <Filter>Engine\Core\Thread</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Input\Input.h">
       <Filter>Engine\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Math\Fixed16.h">
-      <Filter>Engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Math\Fixed22.h">
-      <Filter>Engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Math\Fixed28.h">
-      <Filter>Engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Math\Math.h">
-      <Filter>Engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Math\Matrix.h">
-      <Filter>Engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Math\Minimal.h">
-      <Filter>Engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Math\Rect.h">
-      <Filter>Engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Math\Vector.h">
-      <Filter>Engine\Math</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Graphics\Interpolators\AlphaInterpolator.h">
       <Filter>Engine\Graphics\Interpolators</Filter>
@@ -119,24 +80,6 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Core\Config\WindowSpecification.h">
       <Filter>Engine\Core\Config</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Core\Platform\Assert.h">
-      <Filter>Engine\Core\Platform</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Core\Platform\Memory.h">
-      <Filter>Engine\Core\Platform</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Core\Platform\Platform.h">
-      <Filter>Engine\Core\Platform</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Core\Types\Common.h">
-      <Filter>Engine\Core\Types</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Core\Types\Array.h">
-      <Filter>Engine\Core\Types</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Core\Types\String.h">
-      <Filter>Engine\Core\Types</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\World\Entity.h">
       <Filter>Engine\World</Filter>
@@ -192,12 +135,6 @@
     <ClInclude Include="..\..\Source\Engine\Graphics\Rendering\Material.h">
       <Filter>Engine\Graphics\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Core\Types\Map.h">
-      <Filter>Engine\Core\Types</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Core\Types\UnorderedMap.h">
-      <Filter>Engine\Core\Types</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Engine\Core\DebugLog.cpp">
@@ -214,15 +151,6 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Input\Input.cpp">
       <Filter>Engine\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Engine\Math\Math.cpp">
-      <Filter>Engine\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Engine\Math\Matrix.cpp">
-      <Filter>Engine\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Engine\Math\Vector.cpp">
-      <Filter>Engine\Math</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\IInterpolator.cpp">
       <Filter>Engine\Graphics\Interpolators</Filter>
@@ -250,9 +178,6 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Core\Config\Config.cpp">
       <Filter>Engine\Core\Config</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Engine\Core\Platform\Memory.cpp">
-      <Filter>Engine\Core\Platform</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\World\Entity.cpp">
       <Filter>Engine\World</Filter>

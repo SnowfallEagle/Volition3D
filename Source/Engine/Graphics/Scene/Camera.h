@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Engine/Core/Types/Common.h"
-#include "Engine/Math/Minimal.h"
+#include "Common/Types/Common.h"
+#include "Common/Math/Minimal.h"
 
 namespace Volition
 {

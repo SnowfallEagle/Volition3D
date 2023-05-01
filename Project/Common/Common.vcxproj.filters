@@ -1,33 +1,88 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{a083c36d-deff-41ac-9abe-1a93f43013dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Math">
+      <UniqueIdentifier>{2582d8ed-6fcb-4e53-8db8-b61f505a7f7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Thread">
+      <UniqueIdentifier>{3e8c21d7-72ca-415f-a4d5-bfe04e3bdfa2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Types">
+      <UniqueIdentifier>{a119a2d0-69c2-421c-9f3c-bfbad7c63605}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Platform">
+      <UniqueIdentifier>{abfb16bc-7219-45df-a83f-2cf060b6596e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="framework.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\..\Source\Common\Math\Fixed16.h">
+      <Filter>Common\Math</Filter>
     </ClInclude>
-    <ClInclude Include="pch.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\..\Source\Common\Math\Fixed22.h">
+      <Filter>Common\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Common\Math\Fixed28.h">
+      <Filter>Common\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Common\Math\Math.h">
+      <Filter>Common\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Common\Math\Matrix.h">
+      <Filter>Common\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Common\Math\Minimal.h">
+      <Filter>Common\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Common\Math\Rect.h">
+      <Filter>Common\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Common\Math\Vector.h">
+      <Filter>Common\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Common\pch.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Common\Platform\Assert.h">
+      <Filter>Common\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Common\Platform\Memory.h">
+      <Filter>Common\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Common\Platform\Platform.h">
+      <Filter>Common\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Common\Types\Array.h">
+      <Filter>Common\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Common\Types\Common.h">
+      <Filter>Common\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Common\Types\Map.h">
+      <Filter>Common\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Common\Types\String.h">
+      <Filter>Common\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Common\Types\UnorderedMap.h">
+      <Filter>Common\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Common\Thread\SpinLock.h">
+      <Filter>Common\Thread</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Common.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\..\Source\Common\Common.h">
+      <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="pch.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\..\Source\Common\pch.cpp">
+      <Filter>Common</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

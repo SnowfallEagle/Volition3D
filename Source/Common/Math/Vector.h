@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Engine/Core/Types/Common.h"
-#include "Engine/Core/Platform/Platform.h"
 #include "Engine/Core/DebugLog.h"
-#include "Engine/Math/Math.h"
+#include "Common/Types/Common.h"
+#include "Common/Platform/Platform.h"
+#include "Common/Math/Math.h"
 
 namespace Volition
 {

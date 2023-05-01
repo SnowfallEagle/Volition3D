@@ -1,8 +1,8 @@
 #pragma once
 
 #include <cstring>
-#include "Engine/Core/Platform/Platform.h"
-#include "Engine/Core/Types/Common.h"
+#include "Common/Platform/Platform.h"
+#include "Common/Types/Common.h"
 
 namespace Volition
 {
@@ -40,6 +40,6 @@ public:
 	}
 };
 
-extern VMemory Memory;
+inline VMemory Memory;
 
 }

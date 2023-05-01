@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Engine/Core/Types/Common.h"
-#include "Engine/Core/Platform/Platform.h"
-#include "Engine/Core/Platform/Memory.h"
 #include "Engine/Core/DebugLog.h"
-#include "Engine/Math/Vector.h"
+#include "Common/Types/Common.h"
+#include "Common/Platform/Platform.h"
+#include "Common/Platform/Memory.h"
+#include "Common/Math/Vector.h"
 
 namespace Volition
 {
@@ -53,7 +53,57 @@ public:
         };
     }
 
-    void BuildRotationXYZ(f32 X, f32 Y, f32 Z);
+    void BuildRotationXYZ(f32 X, f32 Y, f32 Z)
+    {
+        VMatrix44 MatX, MatY, MatZ, MatTemp;
+        f32 SinAngle, CosAngle;
+
+        MatX = Identity;
+        MatY = Identity;
+        MatZ = Identity;
+
+        if (Math.Abs(X) > Math.Epsilon5)
+        {
+            SinAngle = Math.FastSin(X);
+            CosAngle = Math.FastCos(X);
+
+            MatX = {
+                1, 0, 0, 0,
+                0, CosAngle, SinAngle, 0,
+                0, -SinAngle, CosAngle, 0,
+                0, 0, 0, 1
+            };
+        }
+
+        if (Math.Abs(Y) > Math.Epsilon5)
+        {
+            SinAngle = Math.FastSin(Y);
+            CosAngle = Math.FastCos(Y);
+
+            MatY = {
+                CosAngle, 0, -SinAngle, 0,
+                0,        1, 0,         0,
+                SinAngle, 0, CosAngle,  0,
+                0,        0, 0,         1
+            };
+        }
+
+        if (Math.Abs(Z) > Math.Epsilon5)
+        {
+            SinAngle = Math.FastSin(Z);
+            CosAngle = Math.FastCos(Z);
+
+            MatZ = {
+                CosAngle,  SinAngle, 0, 0,
+                -SinAngle, CosAngle, 0, 0,
+                0,         0,        1, 0,
+                0,         0,        0, 1
+            };
+        }
+
+        VMatrix44::Mul(MatX, MatY, MatTemp);
+        VMatrix44::Mul(MatTemp, MatZ, *this);
+    }
 
     VLN_FINLINE static void MulVecMat(const VVector4& A, const VMatrix44& M, VVector4& R)
     {
@@ -107,7 +157,52 @@ public:
 #endif // VLN_SSE
     }
 
-    static b32 Inverse(const VMatrix44& A, VMatrix44& R);
+    static b32 Inverse(const VMatrix44& A, VMatrix44& R)
+    {
+        /* Assumes that the last column is
+            [ 0 ]
+            [ 0 ]
+            [ 0 ]
+            [ 1 ]
+         */
+
+        // Find 3x3 det
+        const f32 Det =
+            A.C00 * (A.C11 * A.C22 - A.C12 * A.C21) -
+            A.C01 * (A.C10 * A.C22 - A.C12 * A.C20) +
+            A.C02 * (A.C10 * A.C21 - A.C11 * A.C20);
+
+        // Test if we can't inverse
+        if (Math.Abs(Det) < Math.Epsilon5)
+        {
+            return false;
+        }
+
+        const f32 InvDet = 1.0f / Det;
+
+        R.C00 =  InvDet * (A.C11 * A.C22 - A.C12 * A.C21);
+        R.C01 = -InvDet * (A.C01 * A.C22 - A.C02 * A.C21);
+        R.C02 =  InvDet * (A.C01 * A.C12 - A.C02 * A.C11);
+        R.C03 = 0.0f;
+
+        R.C10 = -InvDet * (A.C10 * A.C22 - A.C12 * A.C20);
+        R.C11 =  InvDet * (A.C00 * A.C22 - A.C02 * A.C20);
+        R.C12 = -InvDet * (A.C00 * A.C12 - A.C02 * A.C10);
+        R.C13 = 0.0f;
+
+        R.C20 =  InvDet * (A.C10 * A.C21 - A.C11 * A.C20);
+        R.C21 = -InvDet * (A.C00 * A.C21 - A.C01 * A.C20);
+        R.C22 =  InvDet * (A.C00 * A.C11 - A.C01 * A.C10);
+        R.C23 = 0.0f;
+
+        R.C30 = -(A.C30 * R.C00 + A.C31 * R.C10 + A.C32 * R.C20);
+        R.C31 = -(A.C30 * R.C01 + A.C31 * R.C11 + A.C32 * R.C21);
+        R.C32 = -(A.C30 * R.C02 + A.C31 * R.C12 + A.C32 * R.C22);
+        R.C33 = 1.0f;
+
+        // Success
+        return true;
+    }
 
     void Print()
     {
@@ -123,6 +218,13 @@ public:
         }
         VLN_LOG_VERBOSE(">\n");
     }
+};
+
+inline const VMatrix44 VMatrix44::Identity = {
+    1, 0, 0, 0,
+    0, 1, 0, 0,
+    0, 0, 1, 0,
+    0, 0, 0, 1,
 };
 
 class VMatrix43
@@ -155,6 +257,13 @@ public:
     }
 };
 
+inline const VMatrix43 VMatrix43::Identity = {
+    1, 0, 0,
+    0, 1, 0,
+    0, 0, 1,
+    0, 0, 0,
+};
+
 class VMatrix14
 {
 public:
@@ -180,6 +289,10 @@ public:
     {
         Memory.MemSetByte(this, 0, sizeof(*this));
     }
+};
+
+inline const VMatrix14 VMatrix14::Identity = {
+    1, 0, 0, 0
 };
 
 // 3x3
@@ -212,6 +325,12 @@ public:
     }
 };
 
+inline const VMatrix33 VMatrix33::Identity = {
+    1, 0, 0,
+    0, 1, 0,
+    0, 0, 1,
+};
+
 class VMatrix32
 {
 public:
@@ -241,6 +360,12 @@ public:
     }
 };
 
+inline const VMatrix32 VMatrix32::Identity = {
+    1, 0,
+    0, 1,
+    0, 0,
+};
+
 class VMatrix13
 {
 public:
@@ -266,6 +391,10 @@ public:
     {
         Memory.MemSetByte(this, 0, sizeof(*this));
     }
+};
+
+inline const VMatrix13 VMatrix13::Identity = {
+    1, 0, 0
 };
 
 class VMatrix22
@@ -296,6 +425,11 @@ public:
     }
 };
 
+inline const VMatrix22 VMatrix22::Identity = {
+    1, 0,
+    0, 1,
+};
+
 class VMatrix12
 {
 public:
@@ -322,5 +456,10 @@ public:
         Memory.MemSetByte(this, 0, sizeof(*this));
     }
 };
+
+inline const VMatrix12 VMatrix12::Identity = {
+    1, 0,
+};
+
 
 }

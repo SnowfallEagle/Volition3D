@@ -2,8 +2,8 @@
 
 #include <cmath>
 #include <ctime>
-#include "Engine/Core/Types/Common.h"
-#include "Engine/Core/Platform/Platform.h"
+#include "Common/Types/Common.h"
+#include "Common/Platform/Platform.h"
 
 namespace Volition
 {
@@ -33,8 +33,8 @@ public:
         have static FastSin/Cos funcs and don't
         pass extra argument (this) when we call them
     */
-    static f32 SinLook[SinCosLookSize]; // 0-360
-    static f32 CosLook[SinCosLookSize]; // 0-360
+    inline static f32 SinLook[SinCosLookSize]; // 0-360
+    inline static f32 CosLook[SinCosLookSize]; // 0-360
 
 public:
     void StartUp()
@@ -172,6 +172,6 @@ public:
     }
 };
 
-extern VMath Math;
+inline VMath Math;
 
 }

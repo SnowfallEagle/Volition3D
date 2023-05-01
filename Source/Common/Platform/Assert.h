@@ -8,7 +8,7 @@
     #define VLN_ASSERTIONS_ENGINE_LOGGING 1
 #endif
 
-#include "Engine/Core/Platform/Platform.h"
+#include "Common/Platform/Platform.h"
 
 #if VLN_ASSERTIONS_ENGINE_LOGGING
     #include "Engine/Core/DebugLog.h"
@@ -20,6 +20,7 @@
 
 namespace Volition
 {
+
 #if VLN_ASSERTIONS_ENABLED
     #if VLN_ASSERTIONS_ENGINE_LOGGING
         #define VLN_ASSERTION_LOG_ERROR(EXPR) VLN_ERROR(hLogAssert, "Assertion failed at %s:%d: %s\n", __FILE__, __LINE__, #EXPR)
@@ -92,6 +93,6 @@ namespace Volition
     #define VLN_BEGIN_ASSERT_LOCK_NOT_NECESSARY(L)
     #define VLN_END_ASSERT_LOCK_NOT_NECESSARY(L)
     #define VLN_ASSERT_LOCK_NOT_NECESSARY(J, L)
-#endif // VLN_ASSERTIONS_ENABLED
+#endif
 
 }

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Engine/Core/Types/Common.h"
-#include "Engine/Core/Platform/Platform.h"
+#include "Common/Types/Common.h"
+#include "Common/Platform/Platform.h"
 #include "Engine/Core/DebugLog.h"
 
 namespace Volition
@@ -74,7 +74,7 @@ VLN_FINLINE fx16 MulFx16(fx16 Fx1, fx16 Fx2)
         // Result in eax
     }
 #else
-# error "There are no implementation"
+    #error "There are no implementation"
 #endif // VLN_COMPILER_MSVC
 }
 

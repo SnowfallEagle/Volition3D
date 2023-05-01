@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Engine/Core/Types/Common.h"
-#include "Engine/Math/Fixed28.h"
+#include "Common/Types/Common.h"
+#include "Common/Math/Fixed28.h"
 #include "Engine/Graphics/Types/Color.h"
 #include "Engine/Graphics/Types/Polygon.h"
 #include "Engine/Graphics/Rendering/Material.h"

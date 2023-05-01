@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Engine/Core/Platform/Memory.h"
-#include "Engine/Math/Fixed28.h"
+#include "Common/Platform/Memory.h"
+#include "Common/Math/Fixed28.h"
 #include "Engine/Graphics/Rendering/Surface.h"
 
 namespace Volition

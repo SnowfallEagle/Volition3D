@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Engine/Core/Types/Common.h"
-#include "Engine/Core/Types/Array.h"
+#include "Common/Types/Common.h"
+#include "Common/Types/Array.h"
 
 namespace Volition
 {

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <xstring>
-#include "Engine/Core/Platform/Platform.h"
+#include "Common/Platform/Platform.h"
 
 namespace Volition
 {

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Engine/Core/Types/Common.h"
-#include "Engine/Math/Vector.h"
+#include "Common/Types/Common.h"
+#include "Common/Math/Vector.h"
 #include "Engine/Graphics/Types/Color.h"
 #include "Engine/Graphics/Types/Vertex.h"
 #include "Engine/Graphics/Rendering/Surface.h"
