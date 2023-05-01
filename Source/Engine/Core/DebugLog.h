@@ -23,7 +23,7 @@ namespace Volition
 
 class VDebugLog
 {
-    FILE* hFile = nullptr;
+    std::FILE* hFile = nullptr;
 
 public:
     void StartUp();

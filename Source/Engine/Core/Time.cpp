@@ -9,7 +9,6 @@ VTime Time;
 void VTime::StartUp()
 {
     MsFrameLimit = 1000 / Config.RenderSpec.TargetFPS;
-    bLimitFPS = Config.RenderSpec.bLimitFPS;
 
     LastTick = 0;
     DeltaTime = 0.0f;

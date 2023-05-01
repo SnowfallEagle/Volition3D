@@ -3,7 +3,7 @@
 #include "SDL.h"
 #include "Common/Platform/Platform.h"
 #include "Common/Types/Common.h"
-#include "Engine/Core/Config/RenderSpecification.h"
+#include "Engine/Core/Config/Config.h"
 
 namespace Volition
 {
@@ -17,8 +17,6 @@ class VTime
     f32 FixedDeltaTime;
     i32f NumFixedUpdates;
     f32 AccumulatedFixedTime;
-
-    b32 bLimitFPS;
 
 public:
     void StartUp();
@@ -37,7 +35,7 @@ public:
 
     VLN_FINLINE void SyncFrame()
     {
-        if (bLimitFPS)
+        if (Config.RenderSpec.bLimitFPS)
         {
             while ((i32)GetTicks() - LastTick < MsFrameLimit)
             {
