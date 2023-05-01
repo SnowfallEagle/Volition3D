@@ -46,9 +46,6 @@
     <ClInclude Include="..\..\Source\Common\Math\Vector.h">
       <Filter>Common\Math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Common\pch.h">
-      <Filter>Common</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Common\Platform\Assert.h">
       <Filter>Common\Platform</Filter>
     </ClInclude>
@@ -76,13 +73,5 @@
     <ClInclude Include="..\..\Source\Common\Thread\SpinLock.h">
       <Filter>Common\Thread</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\Source\Common\Common.h">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Common\pch.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>
