@@ -10,9 +10,9 @@ void VTerrain::Update(f32 DeltaTime)
 
     if (bBreathingEffect)
     {
-        for (i32f I = 0; I < Mesh->NumVtx; ++I)
+        for (i32f i = 0; i < Mesh->NumVtx; ++i)
         {
-            Mesh->TransVtxList[I].Y += Amplitude * Math.Sin((f32)Time.GetTicks() * Frequency * (f32)I * IndexMultiplier);
+            Mesh->TransVtxList[i].Y += Amplitude * Math.Sin((f32)Time.GetTicks() * Frequency * (f32)i * IndexMultiplier);
         }
     }
 }

@@ -33,8 +33,8 @@ public:
         have static FastSin/Cos funcs and don't
         pass extra argument (this) when we call them
     */
-    inline static f32 SinLook[SinCosLookSize]; // 0-360
-    inline static f32 CosLook[SinCosLookSize]; // 0-360
+    inline static f32 SinLook[SinCosLookSize]; /** 0 - 360 */
+    inline static f32 CosLook[SinCosLookSize]; /** 0 - 360 */
 
 public:
     void StartUp()
@@ -43,12 +43,12 @@ public:
         std::srand((u32)std::time(nullptr));
 
         // Build look up tables
-        for (i32f I = 0; I < SinCosLookSize; ++I)
+        for (i32f i = 0; i < SinCosLookSize; ++i)
         {
-            const f32 Rad = DegToRad((f32)I);
+            const f32 Rad = DegToRad((f32)i);
 
-            SinLook[I] = std::sinf(Rad);
-            CosLook[I] = std::cosf(Rad);
+            SinLook[i] = std::sinf(Rad);
+            CosLook[i] = std::cosf(Rad);
         }
     }
 
@@ -78,7 +78,8 @@ public:
         return Abs(A - B) < Epsilon3;
     }
 
-    static f32 FastDist2D(f32 X, f32 Y) // 3.5% Error
+    /** 3.5% Error */
+    VLN_FINLINE static f32 FastDist2D(f32 X, f32 Y)
     {
         // Absolute integer values
         const i32 IX = (i32)Abs(X);
@@ -88,7 +89,9 @@ public:
 
         return (f32)(IX + IY - (Min >> 1) - (Min >> 2) + (Min >> 4));
     }
-    static f32 FastDist3D(f32 X, f32 Y, f32 Z) // 8% Error
+
+    /** 8% Error */
+    VLN_FINLINE static f32 FastDist3D(f32 X, f32 Y, f32 Z)
     {
         // Absolute integer values
         i32 IX = (i32)(Abs(X)) << 10;
@@ -106,7 +109,7 @@ public:
         );
     }
 
-    static f32 FastSin(f32 Deg)
+    VLN_FINLINE static f32 FastSin(f32 Deg)
     {
         Deg = std::fmodf(Deg, 360);
         if (Deg < 0)
@@ -114,11 +117,12 @@ public:
             Deg += 360;
         }
 
-        const i32f I = (i32f)Deg;
-        const f32 Remainder = Deg - (f32)I;
-        return SinLook[I] + Remainder * (SinLook[I+1] - SinLook[I]);
+        const i32f i = (i32f)Deg;
+        const f32 Remainder = Deg - (f32)i;
+        return SinLook[i] + Remainder * (SinLook[i+1] - SinLook[i]);
     }
-    static f32 FastCos(f32 Deg)
+
+    VLN_FINLINE static f32 FastCos(f32 Deg)
     {
         Deg = std::fmodf(Deg, 360);
         if (Deg < 0)
@@ -126,23 +130,26 @@ public:
             Deg += 360;
         }
 
-        const i32f I = (i32f)Deg;
-        const f32 Remainder = Deg - (f32)I;
-        return CosLook[I] + Remainder * (CosLook[I+1] - CosLook[I]);
+        const i32f i = (i32f)Deg;
+        const f32 Remainder = Deg - (f32)i;
+        return CosLook[i] + Remainder * (CosLook[i+1] - CosLook[i]);
     }
 
     VLN_FINLINE static f32 Sqrt(f32 X)
     {
         return std::sqrtf(X);
     }
+
     VLN_FINLINE static f32 Sin(f32 Deg)
     {
         return std::sinf(Deg * DegToRadConversion);
     }
+
     VLN_FINLINE static f32 Cos(f32 Deg)
     {
         return std::cosf(Deg * DegToRadConversion);
     }
+
     VLN_FINLINE static f32 Tan(f32 Deg)
     {
         return std::tanf(Deg * DegToRadConversion);
@@ -152,16 +159,20 @@ public:
     {
         return Deg * DegToRadConversion;
     }
+
     VLN_FINLINE static f32 RadToDeg(f32 Rad)
     {
         return Rad * RadToDegConversion;
     }
 
-    VLN_FINLINE static i32 Random(i32 Range) // From 0 to "Range"-1
+    /** From 0 to "Range"-1 */
+    VLN_FINLINE static i32 Random(i32 Range)
     {
         return std::rand() % Range;
     }
-    VLN_FINLINE static i32 Random(i32 From, i32 To) // From "From" to "To"
+
+    /** From "From" to "To" */
+    VLN_FINLINE static i32 Random(i32 From, i32 To)
     {
         return From + (std::rand() % (To - From + 1));
     }

@@ -57,12 +57,12 @@ public:
         PolyList[NumPoly].NormalLength = Poly.NormalLength;
         PolyList[NumPoly].Material = Poly.Material;
 
-        for (i32f I = 0; I < 3; ++I)
+        for (i32f i = 0; i < 3; ++i)
         {
-            PolyList[NumPoly].TransVtx[I] = PolyList[NumPoly].LocalVtx[I] = VtxList[Poly.VtxIndices[I]];
-            PolyList[NumPoly].TransVtx[I].TextureCoords = PolyList[NumPoly].LocalVtx[I].TextureCoords = TextureCoordsList[Poly.TextureCoordsIndices[I]];
+            PolyList[NumPoly].TransVtx[i] = PolyList[NumPoly].LocalVtx[i] = VtxList[Poly.VtxIndices[i]];
+            PolyList[NumPoly].TransVtx[i].TextureCoords = PolyList[NumPoly].LocalVtx[i].TextureCoords = TextureCoordsList[Poly.TextureCoordsIndices[i]];
 
-            PolyList[NumPoly].LitColor[I] = Poly.LitColor[I];
+            PolyList[NumPoly].LitColor[i] = Poly.LitColor[i];
         }
 
         ++NumPoly;
@@ -93,9 +93,9 @@ public:
             return;
         }
 
-        for (i32f I = 0; I < Mesh.NumPoly; ++I)
+        for (i32f i = 0; i < Mesh.NumPoly; ++i)
         {
-            const VPoly& Poly = Mesh.PolyList[I];
+            const VPoly& Poly = Mesh.PolyList[i];
 
             if (~Poly.State & EPolyState::Active ||
                 Poly.State & EPolyState::Clipped ||
@@ -124,9 +124,9 @@ public:
         {
         case ETransformType::LocalOnly:
         {
-            for (i32f I = 0; I < NumPoly; ++I)
+            for (i32f i = 0; i < NumPoly; ++i)
             {
-                VPolyFace* Poly = PolyPtrList[I];
+                VPolyFace* Poly = PolyPtrList[i];
                 if (!Poly ||
                     ~Poly->State & EPolyState::Active ||
                     Poly->State & EPolyState::Clipped ||
@@ -151,9 +151,9 @@ public:
 
         case ETransformType::TransOnly:
         {
-            for (i32f I = 0; I < NumPoly; ++I)
+            for (i32f i = 0; i < NumPoly; ++i)
             {
-                VPolyFace* Poly = PolyPtrList[I];
+                VPolyFace* Poly = PolyPtrList[i];
                 if (!Poly ||
                     ~Poly->State & EPolyState::Active ||
                     Poly->State & EPolyState::Clipped ||
@@ -178,9 +178,9 @@ public:
 
         case ETransformType::LocalToTrans:
         {
-            for (i32f I = 0; I < NumPoly; ++I)
+            for (i32f i = 0; i < NumPoly; ++i)
             {
-                VPolyFace* Poly = PolyPtrList[I];
+                VPolyFace* Poly = PolyPtrList[i];
                 if (!Poly ||
                     ~Poly->State & EPolyState::Active ||
                     Poly->State & EPolyState::Clipped ||
@@ -208,9 +208,9 @@ public:
     {
         if (Type == ETransformType::LocalToTrans)
         {
-            for (i32f I = 0; I < NumPoly; ++I)
+            for (i32f i = 0; i < NumPoly; ++i)
             {
-                VPolyFace* Poly = PolyPtrList[I];
+                VPolyFace* Poly = PolyPtrList[i];
                 if (!Poly ||
                     ~Poly->State & EPolyState::Active ||
                     Poly->State & EPolyState::Clipped ||
@@ -228,9 +228,9 @@ public:
         }
         else // TransOnly
         {
-            for (i32f I = 0; I < NumPoly; ++I)
+            for (i32f i = 0; i < NumPoly; ++i)
             {
-                VPolyFace* Poly = PolyPtrList[I];
+                VPolyFace* Poly = PolyPtrList[i];
                 if (!Poly ||
                     ~Poly->State & EPolyState::Active ||
                     Poly->State & EPolyState::Clipped ||
@@ -249,9 +249,9 @@ public:
 
     void RemoveBackfaces(const VCamera& Cam)
     {
-        for (i32f I = 0; I < NumPoly; ++I)
+        for (i32f i = 0; i < NumPoly; ++i)
         {
-            VPolyFace* Poly = PolyPtrList[I];
+            VPolyFace* Poly = PolyPtrList[i];
 
             if (~Poly->State & EPolyState::Active ||
                 Poly->State & EPolyState::Clipped ||
@@ -391,7 +391,7 @@ public:
                                 f32 DotDistanceDirectionExp = DotDistanceDirection;
                                 // For optimization use integer power
                                 const i32f IntegerExp = (i32f)Lights[LightIndex].Power;
-                                for (i32f I = 1; I < IntegerExp; ++I)
+                                for (i32f i = 1; i < IntegerExp; ++i)
                                 {
                                     DotDistanceDirectionExp *= DotDistanceDirection;
                                 }
@@ -613,7 +613,7 @@ public:
                                 f32 DotDistanceDirectionExp = DotDistanceDirection;
                                 // For optimization use integer power
                                 const i32f IntegerExp = (i32f)Lights[LightIndex].Power;
-                                for (i32f I = 1; I < IntegerExp; ++I)
+                                for (i32f i = 1; i < IntegerExp; ++i)
                                 {
                                     DotDistanceDirectionExp *= DotDistanceDirection;
                                 }
@@ -646,7 +646,7 @@ public:
                                 f32 DotDistanceDirectionExp = DotDistanceDirection;
                                 // For optimization use integer power
                                 const i32f IntegerExp = (i32f)Lights[LightIndex].Power;
-                                for (i32f I = 1; I < IntegerExp; ++I)
+                                for (i32f i = 1; i < IntegerExp; ++i)
                                 {
                                     DotDistanceDirectionExp *= DotDistanceDirection;
                                 }
@@ -679,7 +679,7 @@ public:
                                 f32 DotDistanceDirectionExp = DotDistanceDirection;
                                 // For optimization use integer power
                                 const i32f IntegerExp = (i32f)Lights[LightIndex].Power;
-                                for (i32f I = 1; I < IntegerExp; ++I)
+                                for (i32f i = 1; i < IntegerExp; ++i)
                                 {
                                     DotDistanceDirectionExp *= DotDistanceDirection;
                                 }
@@ -720,9 +720,9 @@ public:
 
     void TransformWorldToCamera(const VCamera& Camera)
     {
-        for (i32f I = 0; I < NumPoly; ++I)
+        for (i32f i = 0; i < NumPoly; ++i)
         {
-            VPolyFace* Poly = PolyPtrList[I];
+            VPolyFace* Poly = PolyPtrList[i];
             if (!Poly ||
                 ~Poly->State & EPolyState::Active ||
                 Poly->State & EPolyState::Clipped ||
@@ -1179,9 +1179,9 @@ public:
 
     void TransformCameraToPerspective(const VCamera& Cam)
     {
-        for (i32f I = 0; I < NumPoly; ++I)
+        for (i32f i = 0; i < NumPoly; ++i)
         {
-            VPolyFace* Poly = PolyPtrList[I];
+            VPolyFace* Poly = PolyPtrList[i];
             if (!Poly ||
                 ~Poly->State & EPolyState::Active ||
                 Poly->State & EPolyState::Clipped ||
@@ -1200,9 +1200,9 @@ public:
 
     void ConvertFromHomogeneous()
     {
-        for (i32f I = 0; I < NumPoly; ++I)
+        for (i32f i = 0; i < NumPoly; ++i)
         {
-            VPolyFace* Poly = PolyPtrList[I];
+            VPolyFace* Poly = PolyPtrList[i];
             if (!Poly ||
                 ~Poly->State & EPolyState::Active ||
                 Poly->State & EPolyState::Clipped ||
@@ -1223,9 +1223,9 @@ public:
         const f32 Alpha = Cam.ViewPortSize.X * 0.5f - 0.5f;
         const f32 Beta = Cam.ViewPortSize.Y * 0.5f - 0.5f;
 
-        for (i32f I = 0; I < NumPoly; ++I)
+        for (i32f i = 0; i < NumPoly; ++i)
         {
-            VPolyFace* Poly = PolyPtrList[I];
+            VPolyFace* Poly = PolyPtrList[i];
             if (!Poly ||
                 ~Poly->State & EPolyState::Active ||
                 Poly->State & EPolyState::Clipped ||
@@ -1247,9 +1247,9 @@ public:
         const f32 Alpha = Cam.ViewPortSize.X * 0.5f - 0.5f;
         const f32 Beta = Cam.ViewPortSize.Y * 0.5f - 0.5f;
 
-        for (i32f I = 0; I < NumPoly; ++I)
+        for (i32f i = 0; i < NumPoly; ++i)
         {
-            VPolyFace* Poly = PolyPtrList[I];
+            VPolyFace* Poly = PolyPtrList[i];
             if (!Poly ||
                 ~Poly->State & EPolyState::Active ||
                 Poly->State & EPolyState::Clipped ||

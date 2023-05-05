@@ -147,9 +147,9 @@ public:
             for (i32f Col = 0; Col < 4; ++Col)
             {
                 f32 C = 0.0f;
-                for (i32f I = 0; I < 4; ++I)
+                for (i32f i = 0; i < 4; ++i)
                 {
-                    C += A.C[Row][I] * B.C[I][Col];
+                    C += A.C[Row][i] * B.C[i][Col];
                 }
                 R.C[Row][Col] = C;
             }

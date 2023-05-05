@@ -20,9 +20,9 @@ namespace
 
 static constexpr i32 Fx16RoundUp = 0x00008000;
 
-VLN_FINLINE fx16 IntToFx16(i32 I)
+VLN_FINLINE fx16 IntToFx16(i32 Int)
 {
-    return I << Shift;
+    return Int << Shift;
 }
 
 VLN_FINLINE fx16 FloatToFx16(f32 F)

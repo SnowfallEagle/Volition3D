@@ -16,21 +16,21 @@ void VTexture::LoadBMP(const char* Path, i32 MaxMipMaps)
 
     GenerateMipMaps(MaxMipMaps);
 
-    for (i32f I = 0; I < NumMipMaps; ++I)
+    for (i32f i = 0; i < NumMipMaps; ++i)
     {
         u32* DummyBuffer;
         i32 DummyPitch;
 
-        Surfaces[I].Lock(DummyBuffer, DummyPitch);
+        Surfaces[i].Lock(DummyBuffer, DummyPitch);
     }
 }
 
 void VTexture::Destroy()
 {
-    for (i32f I = 0; I < NumMipMaps; ++I)
+    for (i32f i = 0; i < NumMipMaps; ++i)
     {
-        Surfaces[I].Unlock();
-        Surfaces[I].Destroy();
+        Surfaces[i].Unlock();
+        Surfaces[i].Destroy();
     }
 }
 
@@ -53,9 +53,9 @@ void VTexture::GenerateMipMaps(i32 MaxMipMaps)
 {
     NumMipMaps = 1;
 
-    for (i32f I = 1; I < MaxMipMaps; ++I, ++NumMipMaps)
+    for (i32f i = 1; i < MaxMipMaps; ++i, ++NumMipMaps)
     {
-        const i32 PrevSize = Surfaces[I - 1].GetWidth();
+        const i32 PrevSize = Surfaces[i - 1].GetWidth();
         const i32 CurrentSize = PrevSize / 2;
 
         if (CurrentSize <= 0)
@@ -63,15 +63,15 @@ void VTexture::GenerateMipMaps(i32 MaxMipMaps)
             break;
         }
 
-        Surfaces[I].Create(CurrentSize, CurrentSize);
+        Surfaces[i].Create(CurrentSize, CurrentSize);
 
         u32* CurrentBuffer;
         i32 CurrentPitch;
-        Surfaces[I].Lock(CurrentBuffer, CurrentPitch);
+        Surfaces[i].Lock(CurrentBuffer, CurrentPitch);
 
         u32* PrevBuffer;
         i32 PrevPitch;
-        Surfaces[I - 1].Lock(PrevBuffer, PrevPitch);
+        Surfaces[i - 1].Lock(PrevBuffer, PrevPitch);
 
         for (i32f Y = 0; Y < CurrentSize; ++Y)
         {
@@ -124,8 +124,8 @@ void VTexture::GenerateMipMaps(i32 MaxMipMaps)
             }
         }
 
-        Surfaces[I - 1].Unlock();
-        Surfaces[I].Unlock();
+        Surfaces[i - 1].Unlock();
+        Surfaces[i].Unlock();
     }
 }
 

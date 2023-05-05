@@ -13,14 +13,14 @@ void VBillinearPerspectiveTextureInterpolator::Start()
     TexturePitch = Texture->GetPitch();
     TextureSize = Texture->GetWidth();
 
-    for (i32f I = 0; I < 3; ++I)
+    for (i32f i = 0; i < 3; ++i)
     {
-        UVtx[I] =
-            IntToFx22((i32)(InterpolationContext->Vtx[I].U * (f32)TextureSize + 0.5f)) /
-            (i32)(InterpolationContext->Vtx[I].Z + 0.5f);
-        VVtx[I] =
-            IntToFx22((i32)(InterpolationContext->Vtx[I].V * (f32)TextureSize + 0.5f)) /
-            (i32)(InterpolationContext->Vtx[I].Z + 0.5f);
+        UVtx[i] =
+            IntToFx22((i32)(InterpolationContext->Vtx[i].U * (f32)TextureSize + 0.5f)) /
+            (i32)(InterpolationContext->Vtx[i].Z + 0.5f);
+        VVtx[i] =
+            IntToFx22((i32)(InterpolationContext->Vtx[i].V * (f32)TextureSize + 0.5f)) /
+            (i32)(InterpolationContext->Vtx[i].Z + 0.5f);
     }
 }
 

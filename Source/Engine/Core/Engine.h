@@ -63,7 +63,7 @@ inline i32 VEngine::Run(i32 Argc, char** Argv)
         World.Update(Time.GetDeltaTime());
 
         i32f FixedUpdates = Time.GetNumFixedUpdates();
-        for (i32f I = 0; I < FixedUpdates; ++I)
+        for (i32f i = 0; i < FixedUpdates; ++i)
         {
             World.FixedUpdate(Time.GetFixedDeltaTime());
         }

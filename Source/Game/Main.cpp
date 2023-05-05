@@ -15,7 +15,7 @@ public:
     virtual void StartUp() override
     {
         /*
-        for (i32f I = 0; I < 4; ++I)
+        for (i32f i = 0; i < 4; ++i)
         {
             VEntity* TempEntity = World.SpawnEntity<VEntity>();
             TempEntity->Mesh->LoadCOB(

@@ -22,15 +22,15 @@ char* GetLineCOB(std::FILE* File, char* Buffer, i32 Size)
 
         const i32f Len = std::strlen(Buffer);
 
-        i32f I;
-        for (I = 0;
-             I < Len && (Buffer[I] == ' ' || Buffer[I] == '\t' || Buffer[I] == '\r' || Buffer[I] == '\n');
-             ++I)
+        i32f i;
+        for (i = 0;
+             i < Len && (Buffer[i] == ' ' || Buffer[i] == '\t' || Buffer[i] == '\r' || Buffer[i] == '\n');
+             ++i)
             {}
 
-        if (I < Len)
+        if (i < Len)
         {
-            return &Buffer[I];
+            return &Buffer[i];
         }
     }
 }
@@ -49,9 +49,9 @@ char* FindLineCOB(const char* Pattern, std::FILE* File, char* Buffer, i32 Size)
 
         b32 bFound = true;
 
-        for (i32f I = 0; I < PatternLength; ++I)
+        for (i32f i = 0; i < PatternLength; ++i)
         {
-            if (Pattern[I] != Line[I])
+            if (Pattern[i] != Line[i])
             {
                 bFound = false;
                 break;
@@ -156,34 +156,34 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                 NumFrames
             );
 
-            for (i32f I = 0; I < NumWorldVertices; ++I)
+            for (i32f i = 0; i < NumWorldVertices; ++i)
             {
                 // Parse
                 Line = GetLineCOB(File, Buffer, BufferSize);
-                std::sscanf(Line, "%f %f %f", &LocalVtxList[I].X, &LocalVtxList[I].Y, &LocalVtxList[I].Z);
-                LocalVtxList[I].W = 1.0f;
+                std::sscanf(Line, "%f %f %f", &LocalVtxList[i].X, &LocalVtxList[i].Y, &LocalVtxList[i].Z);
+                LocalVtxList[i].W = 1.0f;
 
                 // Apply matrix transformations
                 VVector4 TempVector;
-                VMatrix44::MulVecMat(LocalVtxList[I].Position, MatLocal, TempVector);
-                VMatrix44::MulVecMat(TempVector, MatWorld, LocalVtxList[I].Position);
+                VMatrix44::MulVecMat(LocalVtxList[i].Position, MatLocal, TempVector);
+                VMatrix44::MulVecMat(TempVector, MatWorld, LocalVtxList[i].Position);
 
                 // Swap YZ
                 if (Flags & ECOB::SwapYZ)
                 {
                     f32 TempFloat;
-                    VLN_SWAP(LocalVtxList[I].Y, LocalVtxList[I].Z, TempFloat);
-                    LocalVtxList[I].Z = -LocalVtxList[I].Z;
+                    VLN_SWAP(LocalVtxList[i].Y, LocalVtxList[i].Z, TempFloat);
+                    LocalVtxList[i].Z = -LocalVtxList[i].Z;
                 }
 
                 // Scale
-                LocalVtxList[I].X *= Scale.X;
-                LocalVtxList[I].Y *= Scale.Y;
-                LocalVtxList[I].Z *= Scale.Z;
+                LocalVtxList[i].X *= Scale.X;
+                LocalVtxList[i].Y *= Scale.Y;
+                LocalVtxList[i].Z *= Scale.Z;
 
                 // Log
                 VLN_LOG_VERBOSE("\tVertex [%d]: ", I);
-                LocalVtxList[I].Position.Print();
+                LocalVtxList[i].Position.Print();
                 VLN_LOG_VERBOSE("\n");
             }
         }
@@ -195,13 +195,13 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
             std::sscanf(Line, "Texture Vertices %d", &NumTextureVtx);
             VLN_LOG_VERBOSE("\tNum texture coords: %d\n", NumTextureVtx);
 
-            for (i32f I = 0; I < NumTextureVtx; ++I)
+            for (i32f i = 0; i < NumTextureVtx; ++i)
             {
                 Line = GetLineCOB(File, Buffer, BufferSize);
-                std::sscanf(Line, "%f %f", &TextureCoordsList[I].X, &TextureCoordsList[I].Y);
+                std::sscanf(Line, "%f %f", &TextureCoordsList[i].X, &TextureCoordsList[i].Y);
 
                 VLN_LOG_VERBOSE("\tTexture coord [%d]: ", I);
-                TextureCoordsList[I].Print();
+                TextureCoordsList[i].Print();
                 VLN_LOG_VERBOSE("\n");
             }
         }
@@ -215,7 +215,7 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
             Line = FindLineCOB("Faces", File, Buffer, BufferSize);
             std::sscanf(Line, "Faces %d", &NumPoly);
 
-            for (i32f I = 0; I < NumPoly; ++I)
+            for (i32f i = 0; i < NumPoly; ++i)
             {
                 i32 DummyInt;
                 i32 MaterialIndex;
@@ -224,31 +224,31 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                 Line = GetLineCOB(File, Buffer, BufferSize);
                 std::sscanf(Line, "Face verts %d flags %d mat %d", &DummyInt, &DummyInt, &MaterialIndex);
 
-                MaterialIndexByPolyIndex[I] = MaterialIndex;
+                MaterialIndexByPolyIndex[i] = MaterialIndex;
                 if (DoesMaterialAppearFirstTime[MaterialIndex])
                 {
                     ++NumMaterialsInObject;
                     DoesMaterialAppearFirstTime[MaterialIndex] = false;
                 }
 
-                VLN_LOG_VERBOSE("\tMaterial index of poly face [%d]: %d\n", I, MaterialIndexByPolyIndex[I]);
+                VLN_LOG_VERBOSE("\tMaterial index of poly face [%d]: %d\n", I, MaterialIndexByPolyIndex[i]);
 
                 // Get vertex and texture indices
                 Line = GetLineCOB(File, Buffer, BufferSize);
                 std::sscanf(Line, "<%d,%d> <%d,%d> <%d,%d>",
-                    &PolyList[I].VtxIndices[2], &PolyList[I].TextureCoordsIndices[2],
-                    &PolyList[I].VtxIndices[1], &PolyList[I].TextureCoordsIndices[1],
-                    &PolyList[I].VtxIndices[0], &PolyList[I].TextureCoordsIndices[0]
+                    &PolyList[i].VtxIndices[2], &PolyList[i].TextureCoordsIndices[2],
+                    &PolyList[i].VtxIndices[1], &PolyList[i].TextureCoordsIndices[1],
+                    &PolyList[i].VtxIndices[0], &PolyList[i].TextureCoordsIndices[0]
                 );
 
                 VLN_LOG_VERBOSE("\tVertex and texture indices:\n");
-                for (i32f J = 0; J < 3; ++J)
+                for (i32f j = 0; j < 3; ++j)
                 {
-                    VLN_LOG_VERBOSE("\t<%d, %d>\n", PolyList[I].VtxIndices[J], PolyList[I].TextureCoordsIndices[J]);
+                    VLN_LOG_VERBOSE("\t<%d, %d>\n", PolyList[i].VtxIndices[J], PolyList[i].TextureCoordsIndices[J]);
                 }
 
                 // Set default stuff
-                PolyList[I].State = EPolyState::Active;
+                PolyList[i].State = EPolyState::Active;
             }
 
             VLN_LOG_VERBOSE("\tNum materials in object: %d\n", NumMaterialsInObject);
@@ -256,9 +256,9 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
 
         // Read materials
         {
-            for (i32f I = 0; I < NumMaterialsInObject; ++I)
+            for (i32f i = 0; i < NumMaterialsInObject; ++i)
             {
-                VMaterial& CurrentMaterial = Renderer.Materials[Renderer.NumMaterials + I];
+                VMaterial& CurrentMaterial = Renderer.Materials[Renderer.NumMaterials + i];
 
                 static constexpr i32f FormatSize = 256;
                 char Format[FormatSize];
@@ -439,10 +439,10 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
 
         // Apply materials for polygons
         {
-            for (i32f I = 0; I < NumPoly; ++I)
+            for (i32f i = 0; i < NumPoly; ++i)
             {
-                VPoly& Poly = PolyList[I];
-                const VMaterial& PolyMaterial = Renderer.Materials[Renderer.NumMaterials + MaterialIndexByPolyIndex[I]];
+                VPoly& Poly = PolyList[i];
+                const VMaterial& PolyMaterial = Renderer.Materials[Renderer.NumMaterials + MaterialIndexByPolyIndex[i]];
 
                 // Set color
                 if (PolyMaterial.Attr & EMaterialAttr::ShadeModeTexture)
@@ -500,20 +500,20 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
         {
             if (Attr & EMeshAttr::HasTexture)
             {
-                for (i32f I = 0; I < NumTextureVtx; ++I)
+                for (i32f i = 0; i < NumTextureVtx; ++i)
                 {
                     if (Flags & ECOB::InvertU)
                     {
-                        TextureCoordsList[I].X = 1 - TextureCoordsList[I].X;
+                        TextureCoordsList[i].X = 1 - TextureCoordsList[i].X;
                     }
                     if (Flags & ECOB::InvertV)
                     {
-                        TextureCoordsList[I].Y = 1 - TextureCoordsList[I].Y;
+                        TextureCoordsList[i].Y = 1 - TextureCoordsList[i].Y;
                     }
                     if (Flags & ECOB::SwapUV)
                     {
                         f32 TempFloat;
-                        VLN_SWAP(TextureCoordsList[I].X, TextureCoordsList[I].Y, TempFloat);
+                        VLN_SWAP(TextureCoordsList[i].X, TextureCoordsList[i].Y, TempFloat);
                     }
                 }
             }

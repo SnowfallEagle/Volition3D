@@ -84,9 +84,9 @@ public:
 
     void ResetMaterials()
     {
-        for (i32f I = 0; I < MaxMaterials; ++I)
+        for (i32f i = 0; i < MaxMaterials; ++i)
         {
-            Materials[I].Texture.Destroy();
+            Materials[i].Texture.Destroy();
         }
         Memory.MemSetByte(Materials, 0, sizeof(Materials));
 

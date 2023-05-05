@@ -144,9 +144,9 @@ public:
         State &= ~EMeshState::Culled;
 
         // Restore polygons
-        for (i32f I = 0; I < NumPoly; ++I)
+        for (i32f i = 0; i < NumPoly; ++i)
         {
-            VPoly& Poly = PolyList[I];
+            VPoly& Poly = PolyList[i];
             if (~Poly.State & EPolyState::Active)
             {
                 continue;
@@ -217,18 +217,18 @@ public:
 
     void ComputePolygonNormalsLength()
     {
-        for (i32f I = 0; I < NumPoly; ++I)
+        for (i32f i = 0; i < NumPoly; ++i)
         {
-            const i32f V0 = PolyList[I].VtxIndices[0];
-            const i32f V1 = PolyList[I].VtxIndices[1];
-            const i32f V2 = PolyList[I].VtxIndices[2];
+            const i32f V0 = PolyList[i].VtxIndices[0];
+            const i32f V1 = PolyList[i].VtxIndices[1];
+            const i32f V2 = PolyList[i].VtxIndices[2];
 
             const VVector4 U = LocalVtxList[V1].Position - LocalVtxList[V0].Position;
             const VVector4 V = LocalVtxList[V2].Position - LocalVtxList[V0].Position;
 
-            PolyList[I].NormalLength = VVector4::GetCross(U, V).GetLength();
+            PolyList[i].NormalLength = VVector4::GetCross(U, V).GetLength();
 
-            VLN_LOG_VERBOSE("\tPolygon normal length [%d]: %f\n", I, PolyList[I].NormalLength);
+            VLN_LOG_VERBOSE("\tPolygon normal length [%d]: %f\n", I, PolyList[i].NormalLength);
         }
     }
 
@@ -237,13 +237,13 @@ public:
         i32* NumPolyTouchVtx = new i32[NumVtx];
         Memory.MemSetQuad(NumPolyTouchVtx, 0, NumVtx);
 
-        for (i32f I = 0; I < NumPoly; ++I)
+        for (i32f i = 0; i < NumPoly; ++i)
         {
-            if (PolyList[I].Attr & EPolyAttr::ShadeModeGouraud)
+            if (PolyList[i].Attr & EPolyAttr::ShadeModeGouraud)
             {
-                const i32f V0 = PolyList[I].VtxIndices[0];
-                const i32f V1 = PolyList[I].VtxIndices[1];
-                const i32f V2 = PolyList[I].VtxIndices[2];
+                const i32f V0 = PolyList[i].VtxIndices[0];
+                const i32f V1 = PolyList[i].VtxIndices[1];
+                const i32f V2 = PolyList[i].VtxIndices[2];
 
                 const VVector4 U = LocalVtxList[V1].Position - LocalVtxList[V0].Position;
                 const VVector4 V = LocalVtxList[V2].Position - LocalVtxList[V0].Position;
@@ -261,17 +261,17 @@ public:
             }
         }
 
-        for (i32f I = 0; I < NumVtx; ++I)
+        for (i32f i = 0; i < NumVtx; ++i)
         {
-            if (NumPolyTouchVtx[I] > 0)
+            if (NumPolyTouchVtx[i] > 0)
             {
-                LocalVtxList[I].Normal /= (f32)NumPolyTouchVtx[I];
-                LocalVtxList[I].Normal.Normalize();
+                LocalVtxList[i].Normal /= (f32)NumPolyTouchVtx[i];
+                LocalVtxList[i].Normal.Normalize();
 
-                LocalVtxList[I].Attr |= EVertexAttr::HasNormal;
-                TransVtxList[I].Attr = LocalVtxList[I].Attr;
+                LocalVtxList[i].Attr |= EVertexAttr::HasNormal;
+                TransVtxList[i].Attr = LocalVtxList[i].Attr;
 
-                VLN_LOG_VERBOSE("Vertex normal [%d]: <%.2f %.2f %.2f>\n", I, LocalVtxList[I].Normal.X, LocalVtxList[I].Normal.Y, LocalVtxList[I].Normal.Z);
+                VLN_LOG_VERBOSE("Vertex normal [%d]: <%.2f %.2f %.2f>\n", I, LocalVtxList[i].Normal.X, LocalVtxList[i].Normal.Y, LocalVtxList[i].Normal.Z);
             }
         }
 
@@ -295,43 +295,43 @@ public:
         {
         case ETransformType::LocalOnly:
         {
-            for (i32f I = 0; I < NumVtx; ++I)
+            for (i32f i = 0; i < NumVtx; ++i)
             {
-                VMatrix44::MulVecMat(LocalVtxList[I].Position, M, Res);
-                LocalVtxList[I].Position = Res;
+                VMatrix44::MulVecMat(LocalVtxList[i].Position, M, Res);
+                LocalVtxList[i].Position = Res;
 
-                if (LocalVtxList[I].Attr & EVertexAttr::HasNormal)
+                if (LocalVtxList[i].Attr & EVertexAttr::HasNormal)
                 {
-                    VMatrix44::MulVecMat(LocalVtxList[I].Normal, M, Res);
-                    LocalVtxList[I].Normal = Res;
+                    VMatrix44::MulVecMat(LocalVtxList[i].Normal, M, Res);
+                    LocalVtxList[i].Normal = Res;
                 }
             }
         } break;
 
         case ETransformType::TransOnly:
         {
-            for (i32f I = 0; I < NumVtx; ++I)
+            for (i32f i = 0; i < NumVtx; ++i)
             {
-                VMatrix44::MulVecMat(TransVtxList[I].Position, M, Res);
-                TransVtxList[I].Position = Res;
+                VMatrix44::MulVecMat(TransVtxList[i].Position, M, Res);
+                TransVtxList[i].Position = Res;
 
-                if (TransVtxList[I].Attr & EVertexAttr::HasNormal)
+                if (TransVtxList[i].Attr & EVertexAttr::HasNormal)
                 {
-                    VMatrix44::MulVecMat(TransVtxList[I].Normal, M, Res);
-                    TransVtxList[I].Normal = Res;
+                    VMatrix44::MulVecMat(TransVtxList[i].Normal, M, Res);
+                    TransVtxList[i].Normal = Res;
                 }
             }
         } break;
 
         case ETransformType::LocalToTrans:
         {
-            for (i32f I = 0; I < NumVtx; ++I)
+            for (i32f i = 0; i < NumVtx; ++i)
             {
-                VMatrix44::MulVecMat(LocalVtxList[I].Position, M, TransVtxList[I].Position);
+                VMatrix44::MulVecMat(LocalVtxList[i].Position, M, TransVtxList[i].Position);
 
-                if (LocalVtxList[I].Attr & EVertexAttr::HasNormal)
+                if (LocalVtxList[i].Attr & EVertexAttr::HasNormal)
                 {
-                    VMatrix44::MulVecMat(LocalVtxList[I].Normal, M, TransVtxList[I].Normal);
+                    VMatrix44::MulVecMat(LocalVtxList[i].Normal, M, TransVtxList[i].Normal);
                 }
             }
         } break;
@@ -355,17 +355,17 @@ public:
     {
         if (Type == ETransformType::LocalToTrans)
         {
-            for (i32f I = 0; I < NumVtx; ++I)
+            for (i32f i = 0; i < NumVtx; ++i)
             {
-                TransVtxList[I] = LocalVtxList[I];
-                TransVtxList[I].Position = LocalVtxList[I].Position + Position;
+                TransVtxList[i] = LocalVtxList[i];
+                TransVtxList[i].Position = LocalVtxList[i].Position + Position;
             }
         }
         else // TransOnly
         {
-            for (i32f I = 0; I < NumVtx; ++I)
+            for (i32f i = 0; i < NumVtx; ++i)
             {
-                TransVtxList[I].Position += Position;
+                TransVtxList[i].Position += Position;
             }
         }
     }

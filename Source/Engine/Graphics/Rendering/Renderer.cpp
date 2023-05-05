@@ -178,35 +178,35 @@ void VRenderer::Render()
             static constexpr VColorARGB ShadowColor = VColorARGB(248, 0, 0, 0);
 
             // Set new color and attributes for mesh
-            for (i32f I = 0; I < Mesh->NumPoly; ++I)
+            for (i32f i = 0; i < Mesh->NumPoly; ++i)
             {
-                OriginalLitColors[I][0] = PolyList[I].LitColor[0];
-                OriginalLitColors[I][1] = PolyList[I].LitColor[1];
-                OriginalLitColors[I][2] = PolyList[I].LitColor[2];
+                OriginalLitColors[i][0] = PolyList[i].LitColor[0];
+                OriginalLitColors[i][1] = PolyList[i].LitColor[1];
+                OriginalLitColors[i][2] = PolyList[i].LitColor[2];
 
-                OriginalColors[I] = PolyList[I].OriginalColor;
-                OriginalAttrs[I]  = PolyList[I].Attr;
+                OriginalColors[i] = PolyList[i].OriginalColor;
+                OriginalAttrs[i]  = PolyList[i].Attr;
 
-                PolyList[I].LitColor[0] = ShadowColor;
-                PolyList[I].LitColor[1] = ShadowColor;
-                PolyList[I].LitColor[2] = ShadowColor;
+                PolyList[i].LitColor[0] = ShadowColor;
+                PolyList[i].LitColor[1] = ShadowColor;
+                PolyList[i].LitColor[2] = ShadowColor;
 
-                PolyList[I].OriginalColor = ShadowColor;
-                PolyList[I].Attr          = EPolyAttr::ShadeModeEmissive | EPolyAttr::Transparent;
+                PolyList[i].OriginalColor = ShadowColor;
+                PolyList[i].Attr          = EPolyAttr::ShadeModeEmissive | EPolyAttr::Transparent;
             }
 
             // Compute shadow vertex positions
             float YShadowPosition = TerrainMesh->Position.Y + 10.0f;
 
             VVertex* VtxList = Mesh->TransVtxList;
-            for (i32f I = 0; I < Mesh->NumVtx; ++I)
+            for (i32f i = 0; i < Mesh->NumVtx; ++i)
             {
-                VVector4 Direction = (VtxList[I].Position - OccluderLight->Pos);
+                VVector4 Direction = (VtxList[i].Position - OccluderLight->Pos);
                 float T = (YShadowPosition - OccluderLight->Pos.Y) / Direction.Y;
 
-                VtxList[I].X = OccluderLight->Pos.X + (T * Direction.X);
-                VtxList[I].Y = YShadowPosition;
-                VtxList[I].Z = OccluderLight->Pos.Z + (T * Direction.Z);
+                VtxList[i].X = OccluderLight->Pos.X + (T * Direction.X);
+                VtxList[i].Y = YShadowPosition;
+                VtxList[i].Z = OccluderLight->Pos.Z + (T * Direction.Z);
             }
 
             // Insert shadow mesh
@@ -214,14 +214,14 @@ void VRenderer::Render()
             RenderList->InsertMesh(*Mesh, false);
 
             // Restore mesh color and attributes
-            for (i32f I = 0; I < Mesh->NumPoly; ++I)
+            for (i32f i = 0; i < Mesh->NumPoly; ++i)
             {
-                PolyList[I].LitColor[0] = OriginalLitColors[I][0];
-                PolyList[I].LitColor[1] = OriginalLitColors[I][1];
-                PolyList[I].LitColor[2] = OriginalLitColors[I][2];
+                PolyList[i].LitColor[0] = OriginalLitColors[i][0];
+                PolyList[i].LitColor[1] = OriginalLitColors[i][1];
+                PolyList[i].LitColor[2] = OriginalLitColors[i][2];
 
-                PolyList[I].OriginalColor = OriginalColors[I];
-                PolyList[I].Attr          = OriginalAttrs[I];
+                PolyList[i].OriginalColor = OriginalColors[i];
+                PolyList[i].Attr          = OriginalAttrs[i];
             }
         }
     }
@@ -329,7 +329,7 @@ void VRenderer::DrawLine(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2,
     {
         Error = DY2 - DX;
 
-        for (i32f I = 0; I < DX; ++I)
+        for (i32f i = 0; i < DX; ++i)
         {
             *Buffer = Color;
 
@@ -347,7 +347,7 @@ void VRenderer::DrawLine(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2,
     {
         Error = DX2 - DY;
 
-        for (i32f I = 0; I < DY; ++I)
+        for (i32f i = 0; i < DY; ++i)
         {
             *Buffer = Color;
 
@@ -1605,9 +1605,9 @@ void VRenderer::SetInterpolators()
 
 void VRenderer::RenderSolid()
 {
-    for (i32f I = 0; I < RenderList->NumPoly; ++I)
+    for (i32f i = 0; i < RenderList->NumPoly; ++i)
     {
-        VPolyFace* Poly = RenderList->PolyPtrList[I];
+        VPolyFace* Poly = RenderList->PolyPtrList[i];
         if (!Poly ||
             ~Poly->State & EPolyState::Active ||
             Poly->State & EPolyState::BackFace ||
@@ -1634,9 +1634,9 @@ void VRenderer::RenderSolid()
 
 void VRenderer::RenderWire()
 {
-    for (i32f I = 0; I < RenderList->NumPoly; ++I)
+    for (i32f i = 0; i < RenderList->NumPoly; ++i)
     {
-        const VPolyFace* Poly = RenderList->PolyPtrList[I];
+        const VPolyFace* Poly = RenderList->PolyPtrList[i];
         if (!Poly ||
             ~Poly->State & EPolyState::Active ||
             Poly->State & EPolyState::BackFace ||

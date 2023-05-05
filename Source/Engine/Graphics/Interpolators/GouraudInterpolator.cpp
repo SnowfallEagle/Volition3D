@@ -6,11 +6,11 @@ namespace Volition
 
 void VGouraudInterpolator::Start()
 {
-    for (i32f I = 0; I < 3; ++I)
+    for (i32f i = 0; i < 3; ++i)
     {
-        RVtx[I] = IntToFx16(InterpolationContext->LitColor[I].R);
-        GVtx[I] = IntToFx16(InterpolationContext->LitColor[I].G);
-        BVtx[I] = IntToFx16(InterpolationContext->LitColor[I].B);
+        RVtx[i] = IntToFx16(InterpolationContext->LitColor[i].R);
+        GVtx[i] = IntToFx16(InterpolationContext->LitColor[i].G);
+        BVtx[i] = IntToFx16(InterpolationContext->LitColor[i].B);
     }
 }
 

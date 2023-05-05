@@ -69,11 +69,11 @@ void VWorld::DestroyEntity(VEntity* Entity)
     if (Entity)
     {
         i32f Length = Entities.GetLength();
-        for (i32f I = 0; I < Length; ++I)
+        for (i32f i = 0; i < Length; ++i)
         {
-            if (Entities[I] == Entity)
+            if (Entities[i] == Entity)
             {
-                Entities[I] = nullptr;
+                Entities[i] = nullptr;
                 return;
             }
         }

@@ -28,9 +28,9 @@ public:
 
         Entities.Resize(MinEntitiesCapacity);
 
-        for (i32f I = 0; I < MinEntitiesCapacity; ++I)
+        for (i32f i = 0; i < MinEntitiesCapacity; ++i)
         {
-            Entities[I] = nullptr;
+            Entities[i] = nullptr;
         }
 
         Camera = new VCamera();
