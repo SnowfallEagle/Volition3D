@@ -192,7 +192,7 @@ void VRenderer::Render()
             RenderList->InsertMesh(*Mesh, false);
 
             // Make shadow
-            if (!OccluderLight)
+            if (~Mesh->Attr & EMeshAttr::CastShadow || !OccluderLight)
             {
                 continue;
             }

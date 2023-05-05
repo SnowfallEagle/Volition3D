@@ -381,7 +381,7 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
     // Initialization 
     {
         Position = InPosition;
-        Attr |= EMeshAttr::CanBeCulled;
+        Attr |= EMeshAttr::CanBeCulled | EMeshAttr::CastShadow;
     }
 
     // Load from file

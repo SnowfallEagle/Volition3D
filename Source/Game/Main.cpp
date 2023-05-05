@@ -34,8 +34,10 @@ public:
         Entity->Mesh->LoadCOB(
             "Assets/Models/jetski05.cob",
             { 0.0f, 0.0f, 0.0f },
-            { 1000.0f, 1000.0f, 1000.0f }
+            { 1000.0f, 1000.0f, 1000.0f },
+            ECOB::SwapYZ | ECOB::InvertV
         );
+        Entity->Mesh->Attr &= ~EMeshAttr::CastShadow;
 
         Camera = World.GetCamera();
         Camera->Init(ECameraAttr::Euler, { 0, 75.0f, 0 }, { 0, 0, 0 }, VVector4(), 90, 50, 100000, {(f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
