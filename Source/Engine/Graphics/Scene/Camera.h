@@ -55,6 +55,7 @@ public:
     VPlane3 BottomClipPlane;
 
     VMatrix44 MatCamera;      /** World->Camera */
+    VMatrix44 MatCameraRotationOnly; /** World->Camera but only for Normals or Directions */
     VMatrix44 MatPerspective; /** Camera->Perspective */
     VMatrix44 MatScreen;      /** Perspective->Screen */
 
@@ -70,9 +71,12 @@ public:
         const VVector2& InViewPortSize
     );
 
-    VLN_FINLINE void BuildWorldToCameraMat44()
+    // @TODO: Put in cpp
+    void BuildWorldToCameraMat44()
     {
         Attr & ECameraAttr::Euler ? BuildWorldToCameraEulerMat44() : BuildWorldToCameraUVNMat44(EUVNMode::Spherical);
+        MatCameraRotationOnly = MatCamera;
+        MatCameraRotationOnly.C32 = MatCameraRotationOnly.C31 = MatCameraRotationOnly.C30 = 0.0f;
     }
 
     void BuildWorldToCameraEulerMat44(ERotateSeq Seq = ERotateSeq::YXZ);

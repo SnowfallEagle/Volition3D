@@ -70,7 +70,7 @@ void VMesh::ResetRenderState()
             continue;
         }
 
-        Poly.State &= ~(EPolyState::Clipped | EPolyState::BackFace | EPolyState::Lit);
+        Poly.State &= ~(EPolyState::Clipped | EPolyState::Backface | EPolyState::Lit);
         Poly.LitColor[2] = Poly.LitColor[1] = Poly.LitColor[0] = Poly.OriginalColor;
     }
 }

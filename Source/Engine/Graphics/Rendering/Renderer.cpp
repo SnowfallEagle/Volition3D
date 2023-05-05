@@ -121,13 +121,10 @@ void VRenderer::ResetMaterials()
 
 void VRenderer::TransformLights(const VCamera& Camera)
 {
-    VMatrix44 TransMat = Camera.MatCamera;
-    TransMat.C30 = TransMat.C31 = TransMat.C32 = 0.0f;
-
     for (i32f LightIndex = 0; LightIndex < NumLights; ++LightIndex)
     {
-        VMatrix44::MulVecMat(Lights[LightIndex].Pos, TransMat, Lights[LightIndex].TransPos);
-        VMatrix44::MulVecMat(Lights[LightIndex].Dir, TransMat, Lights[LightIndex].TransDir);
+        VMatrix44::MulVecMat(Lights[LightIndex].Pos, Camera.MatCamera, Lights[LightIndex].TransPos);
+        VMatrix44::MulVecMat(Lights[LightIndex].Dir, Camera.MatCameraRotationOnly, Lights[LightIndex].TransDir);
     }
 }
 
@@ -1640,7 +1637,7 @@ void VRenderer::RenderSolid()
         VPolyFace* Poly = RenderList->PolyPtrList[i];
         if (!Poly ||
             ~Poly->State & EPolyState::Active ||
-            Poly->State & EPolyState::BackFace ||
+            Poly->State & EPolyState::Backface ||
             Poly->State & EPolyState::Clipped)
         {
             continue;
@@ -1669,7 +1666,7 @@ void VRenderer::RenderWire()
         const VPolyFace* Poly = RenderList->PolyPtrList[i];
         if (!Poly ||
             ~Poly->State & EPolyState::Active ||
-            Poly->State & EPolyState::BackFace ||
+            Poly->State & EPolyState::Backface ||
             Poly->State & EPolyState::Clipped)
         {
             continue;

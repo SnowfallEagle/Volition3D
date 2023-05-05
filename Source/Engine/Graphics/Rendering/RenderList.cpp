@@ -59,7 +59,7 @@ void VRenderList::InsertMesh(VMesh& Mesh, b32 bInsertLocal)
 
         if (~Poly.State & EPolyState::Active ||
             Poly.State & EPolyState::Clipped ||
-            Poly.State & EPolyState::BackFace)
+            Poly.State & EPolyState::Backface)
         {
             continue;
         }
@@ -85,7 +85,7 @@ void VRenderList::Transform(const VMatrix44& M, ETransformType Type)
             if (!Poly ||
                 ~Poly->State & EPolyState::Active ||
                 Poly->State & EPolyState::Clipped ||
-                Poly->State & EPolyState::BackFace)
+                Poly->State & EPolyState::Backface)
             {
                 continue;
             }
@@ -112,7 +112,7 @@ void VRenderList::Transform(const VMatrix44& M, ETransformType Type)
             if (!Poly ||
                 ~Poly->State & EPolyState::Active ||
                 Poly->State & EPolyState::Clipped ||
-                Poly->State & EPolyState::BackFace)
+                Poly->State & EPolyState::Backface)
             {
                 continue;
             }
@@ -139,7 +139,7 @@ void VRenderList::Transform(const VMatrix44& M, ETransformType Type)
             if (!Poly ||
                 ~Poly->State & EPolyState::Active ||
                 Poly->State & EPolyState::Clipped ||
-                Poly->State & EPolyState::BackFace)
+                Poly->State & EPolyState::Backface)
             {
                 continue;
             }
@@ -169,7 +169,7 @@ void VRenderList::TransformModelToWorld(const VPoint4& WorldPos, ETransformType 
             if (!Poly ||
                 ~Poly->State & EPolyState::Active ||
                 Poly->State & EPolyState::Clipped ||
-                Poly->State & EPolyState::BackFace)
+                Poly->State & EPolyState::Backface)
             {
                 continue;
             }
@@ -177,7 +177,7 @@ void VRenderList::TransformModelToWorld(const VPoint4& WorldPos, ETransformType 
             for (i32f V = 0; V < 3; ++V)
             {
                 Poly->TransVtx[V].Position = Poly->LocalVtx[V].Position + WorldPos;
-                Poly->TransVtx[V].Normal = Poly->LocalVtx[V].Normal;
+                Poly->TransVtx[V].Normal = Poly->LocalVtx[V].Normal; // @TODO: Do we need it?
             }
         }
     }
@@ -189,7 +189,7 @@ void VRenderList::TransformModelToWorld(const VPoint4& WorldPos, ETransformType 
             if (!Poly ||
                 ~Poly->State & EPolyState::Active ||
                 Poly->State & EPolyState::Clipped ||
-                Poly->State & EPolyState::BackFace)
+                Poly->State & EPolyState::Backface)
             {
                 continue;
             }
@@ -211,7 +211,7 @@ void VRenderList::RemoveBackfaces(const VCamera& Cam)
         if (~Poly->State & EPolyState::Active ||
             Poly->State & EPolyState::Clipped ||
             Poly->Attr & EPolyAttr::TwoSided ||
-            Poly->State & EPolyState::BackFace)
+            Poly->State & EPolyState::Backface)
         {
             continue;
         }
@@ -225,9 +225,9 @@ void VRenderList::RemoveBackfaces(const VCamera& Cam)
         const VVector4 View = Cam.Pos - Poly->TransVtx[0].Position;
 
         // If > 0 then N watch in the same direction as View vector and visible
-        if (VVector4::Dot(View, N) <= 0.0f)
+        if (VVector4::Dot(View, N) < 0.0f)
         {
-            Poly->State |= EPolyState::BackFace;
+            Poly->State |= EPolyState::Backface;
         }
     }
 }
@@ -239,10 +239,8 @@ void VRenderList::Light(const VCamera& Cam, const VLight* Lights, i32 NumLights)
         // Check if we need to draw this poly
         VPolyFace* Poly = PolyPtrList[PolyIndex];
 
-        if (~Poly->State & EPolyState::Active  ||
-            Poly->State & EPolyState::Clipped  ||
-            Poly->State & EPolyState::BackFace ||
-            Poly->State & EPolyState::Lit)
+        if (~Poly->State & EPolyState::Active ||
+            Poly->State & EPolyState::NotLightTest)
         {
             continue;
         }
@@ -258,8 +256,8 @@ void VRenderList::Light(const VCamera& Cam, const VLight* Lights, i32 NumLights)
             u32 BSum = 0;
 
             const VVector4 SurfaceNormal = VVector4::GetCross(
-                Poly->TransVtx[0].Position - Poly->TransVtx[1].Position,
-                Poly->TransVtx[2].Position - Poly->TransVtx[1].Position
+                Poly->TransVtx[1].Position - Poly->TransVtx[0].Position,
+                Poly->TransVtx[2].Position - Poly->TransVtx[0].Position
             );
             const f32 SurfaceNormalLength = Poly->NormalLength;
 
@@ -424,6 +422,8 @@ void VRenderList::Light(const VCamera& Cam, const VLight* Lights, i32 NumLights)
                 }
                 else if (Lights[LightIndex].Attr & ELightAttr::Infinite)
                 {
+                    // @FIXME: Normals aren't transformed!!!
+
                     f32 Dot = VVector4::Dot(Poly->TransVtx[0].Normal, Lights[LightIndex].TransDir);
                     if (Dot < 0)
                     {
@@ -681,7 +681,7 @@ void VRenderList::TransformWorldToCamera(const VCamera& Camera)
         if (!Poly ||
             ~Poly->State & EPolyState::Active ||
             Poly->State & EPolyState::Clipped ||
-            Poly->State & EPolyState::BackFace)
+            Poly->State & EPolyState::Backface)
         {
             continue;
         }
@@ -691,6 +691,12 @@ void VRenderList::TransformWorldToCamera(const VCamera& Camera)
             VVector4 Res;
             VMatrix44::MulVecMat(Poly->TransVtx[V].Position, Camera.MatCamera, Res);
             Poly->TransVtx[V].Position = Res;
+
+            if (Poly->TransVtx[V].Attr & EVertexAttr::HasNormal)
+            {
+                VMatrix44::MulVecMat(Poly->TransVtx[V].Normal, Camera.MatCameraRotationOnly, Res);
+                Poly->TransVtx[V].Normal = Res;
+            }
         }
     }
 }
@@ -717,7 +723,7 @@ void VRenderList::Clip(const VCamera& Camera, EClipFlags::Type Flags)
         VPolyFace& Poly = *PolyPtrList[PolyIndex];
 
         if (~Poly.State & EPolyState::Active  ||
-            Poly.State & EPolyState::BackFace ||
+            Poly.State & EPolyState::Backface ||
             Poly.State & EPolyState::Clipped)
         {
             continue;
@@ -778,6 +784,7 @@ void VRenderList::Clip(const VCamera& Camera, EClipFlags::Type Flags)
 
         if (Flags & EClipFlags::Y)
         {
+            // @FIXME: Maybe bug with clipping here?
             ZFactor = (0.5f * Camera.ViewPlaneSize.Y) / Camera.ViewDist;
             ZTest = ZFactor * Poly.TransVtx[0].Z;
 
@@ -1140,7 +1147,7 @@ void VRenderList::TransformCameraToPerspective(const VCamera& Cam)
         if (!Poly ||
             ~Poly->State & EPolyState::Active ||
             Poly->State & EPolyState::Clipped ||
-            Poly->State & EPolyState::BackFace)
+            Poly->State & EPolyState::Backface)
         {
             continue;
         }
@@ -1161,7 +1168,7 @@ void VRenderList::ConvertFromHomogeneous()
         if (!Poly ||
             ~Poly->State & EPolyState::Active ||
             Poly->State & EPolyState::Clipped ||
-            Poly->State & EPolyState::BackFace)
+            Poly->State & EPolyState::Backface)
         {
             continue;
         }
@@ -1184,7 +1191,7 @@ void VRenderList::TransformPerspectiveToScreen(const VCamera& Cam)
         if (!Poly ||
             ~Poly->State & EPolyState::Active ||
             Poly->State & EPolyState::Clipped ||
-            Poly->State & EPolyState::BackFace)
+            Poly->State & EPolyState::Backface)
         {
             continue;
         }
@@ -1208,7 +1215,7 @@ void VRenderList::TransformCameraToScreen(const VCamera& Cam)
         if (!Poly ||
             ~Poly->State & EPolyState::Active ||
             Poly->State & EPolyState::Clipped ||
-            Poly->State & EPolyState::BackFace)
+            Poly->State & EPolyState::Backface)
         {
             continue;
         }
