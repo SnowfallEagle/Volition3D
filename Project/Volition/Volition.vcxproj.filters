@@ -135,6 +135,9 @@
     <ClInclude Include="..\..\Source\Engine\Graphics\Rendering\Material.h">
       <Filter>Engine\Graphics\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Core\Config\Arguments.h">
+      <Filter>Engine\Core\Config</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Engine\Core\DebugLog.cpp">

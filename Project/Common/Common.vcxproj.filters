@@ -73,5 +73,8 @@
     <ClInclude Include="..\..\Source\Common\Thread\SpinLock.h">
       <Filter>Common\Thread</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Common\Platform\System.h">
+      <Filter>Common\Platform</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

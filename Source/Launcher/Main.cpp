@@ -1,5 +1,7 @@
 #include <cstdlib>
 #include "Common/Platform/Platform.h"
+#include "Common/Platform/System.h"
+#include "Engine/Core/Config/Arguments.h"
 #include "Launcher/Launcher.h"
 
 using namespace Volition;
@@ -35,17 +37,17 @@ class GLauncher : public VLauncher
     };
 
     static constexpr const char* WindowTypeItemsToArgs[] = {
-        "/wtf",
-        "/wtb",
-        "/wtw",
+        WindowTypeFullscreenArgShort,
+        WindowTypeBorderlessArgShort,
+        WindowTypeWindowedArgShort,
     };
 
 private:
     int Width = 800;
     int Height = 600;
 
-    int WindowSizeCurrent = 4;
-    int WindowTypeCurrent = 0;
+    int WindowSizeCurrent = 3;
+    int WindowTypeCurrent = 2;
 
     int FPSLimit = 60;
     int TargetFixedFPS = 60;
@@ -107,30 +109,23 @@ private:
                 char Buffer[BufferSize];
 
                 std::snprintf(Buffer, BufferSize,
-                    "Game.exe /l "
-                    "/s %s %s "
-                    "/tfps %d /ffps %d /mmm %d "
-                    "/lfps %d /bfr %d /sp %d ",
-                    WindowSizeItems[WindowSizeCurrent], WindowTypeItemsToArgs[WindowTypeCurrent],
-                    FPSLimit, TargetFixedFPS, MaxMipMaps,
-                    bLimitFPS, bBackfaceRemoval, bSortPolygons
+                    "Game.exe %s "
+                    "%s %s %s "
+                    "%s %d %s %d %s %d "
+                    "%s %d %s %d %s %d ",
+                    LauncherArgShort,
+                    SizeArgShort, WindowSizeItems[WindowSizeCurrent], WindowTypeItemsToArgs[WindowTypeCurrent],
+
+                    TargetFPSArgShort,  FPSLimit,
+                    FixedFPSArgShort,   TargetFixedFPS,
+                    MaxMipMapsArgShort, MaxMipMaps,
+
+                    LimitFPSArgShort,        bLimitFPS,
+                    BackfaceRemovalArgShort, bBackfaceRemoval,
+                    SortPolygonsArgShort,    bSortPolygons
                 );
 
-                {
-                    // @TODO: Put this in Volition System class
-                    // @TODO: Open launcher after exiting game if was opened through it
-                    // @TODO: Put all commands in separate header in engine
-
-                    STARTUPINFOA StartUpInfo;
-                    ZeroMemory(&StartUpInfo, sizeof(StartUpInfo));
-                    StartUpInfo.cb = sizeof(StartUpInfo);
-
-                    PROCESS_INFORMATION ProcessInformation;
-                    ZeroMemory(&ProcessInformation, sizeof(ProcessInformation));
-
-                    CreateProcessA(nullptr, (LPSTR)Buffer, nullptr, nullptr, false, 0, nullptr, nullptr, &StartUpInfo, &ProcessInformation);
-                }
-
+                System.OpenProcess(Buffer);
                 Stop();
             }
         }

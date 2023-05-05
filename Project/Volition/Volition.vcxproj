@@ -186,6 +186,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Source\Engine\Core\Config\Arguments.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Config\Config.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Config\RenderSpecification.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Config\WindowSpecification.h" />

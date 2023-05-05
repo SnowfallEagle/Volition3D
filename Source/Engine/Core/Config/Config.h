@@ -12,7 +12,6 @@ public:
     VWindowSpecification WindowSpec;
     VRenderSpecification RenderSpec;
 
-private:
     b32 bExecutedWithLauncher = false;
 
 public:

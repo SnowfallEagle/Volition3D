@@ -1,5 +1,7 @@
 #include "Common/Types/Map.h"
+#include "Common/Platform/System.h"
 #include "Engine/Core/DebugLog.h"
+#include "Engine/Core/Config/Arguments.h"
 #include "Engine/Core/Config/Config.h"
 
 namespace Volition
@@ -17,7 +19,7 @@ struct ArgHandler
 
 static void LauncherArg(char** Argv, i32& Cursor)
 {
-    // @INCOMPLETE: Mark that we have to execute launcher on ShutDown
+    Config.bExecutedWithLauncher = true;
 }
 
 static void SizeArg(char** Argv, i32& Cursor)
@@ -81,33 +83,39 @@ static void SortPolygonsArg(char** Argv, i32& Cursor)
 }
 
 static TMap<VString, ArgHandler> ArgHandlers = {
-    { "/l",        { LauncherArg } },
-    { "/Launcher", { LauncherArg } },
+    { LauncherArgShort, { LauncherArg } },
+    { LauncherArgLong,  { LauncherArg } },
 
-    { "/s",    { SizeArg, 2  } },
-    { "/Size", { SizeArg, 2  } },
+    { SizeArgShort, { SizeArg, 2  } },
+    { SizeArgLong,  { SizeArg, 2  } },
 
-    { "/wtf", { WindowTypeFullscreenArg }},
-    { "/wtb", { WindowTypeBorderlessArg }},
-    { "/wtw", { WindowTypeWindowedArg }},
-    { "/WindowTypeFullscreen", { WindowTypeFullscreenArg }},
-    { "/WindowTypeBorderless", { WindowTypeBorderlessArg }},
-    { "/WindowTypeWindowed",   { WindowTypeWindowedArg }},
+    { WindowTypeFullscreenArgShort, { WindowTypeFullscreenArg }},
+    { WindowTypeFullscreenArgLong,  { WindowTypeFullscreenArg }},
 
-    { "/tfps", { TargetFPSArg, 1 }},
-    { "/ffps", { FixedFPSArg, 1 }},
-    { "/TargetFPS", { TargetFPSArg, 1 }}, // Works only with /LimitFPS 1
-    { "/FixedFPS",  { FixedFPSArg, 1 }},
+    { WindowTypeBorderlessArgShort, { WindowTypeBorderlessArg }},
+    { WindowTypeBorderlessArgLong,  { WindowTypeBorderlessArg }},
 
-    { "/mmm",        { MaxMipMaps, 1 }},
-    { "/MaxMipMaps", { MaxMipMaps, 1 }},
+    { WindowTypeWindowedArgShort, { WindowTypeWindowedArg }},
+    { WindowTypeWindowedArgLong,  { WindowTypeWindowedArg }},
 
-    { "/lfps", { LimitFPSArg, 1 }},
-    { "/bfr",  { BackfaceRemovalArg, 1 }},
-    { "/sp",   { SortPolygonsArg, 1 }},
-    { "/LimitFPS",        { LimitFPSArg, 1 }},
-    { "/BackfaceRemoval", { BackfaceRemovalArg, 1 }},
-    { "/SortPolygons",    { SortPolygonsArg, 1 }},
+    // Works only with /LimitFPS 1
+    { TargetFPSArgShort, { TargetFPSArg, 1 }},
+    { TargetFPSArgLong,  { TargetFPSArg, 1 }},
+
+    { FixedFPSArgShort, { FixedFPSArg, 1 }},
+    { FixedFPSArgLong,  { FixedFPSArg, 1 }},
+
+    { MaxMipMapsArgShort, { MaxMipMaps, 1 }},
+    { MaxMipMapsArgLong,  { MaxMipMaps, 1 }},
+
+    { LimitFPSArgShort, { LimitFPSArg, 1 }},
+    { LimitFPSArgLong,  { LimitFPSArg, 1 }},
+
+    { BackfaceRemovalArgShort, { BackfaceRemovalArg, 1 }},
+    { BackfaceRemovalArgLong,  { BackfaceRemovalArg, 1 }},
+
+    { SortPolygonsArgShort, { SortPolygonsArg, 1 }},
+    { SortPolygonsArgLong,  { SortPolygonsArg, 1 }},
 };
 
 void VConfig::StartUp(i32 Argc, char** Argv)
@@ -154,8 +162,7 @@ void VConfig::ShutDown()
 {
     if (bExecutedWithLauncher)
     {
-        // @INCOMPLETE
-        // System.CreateProcess("Launcher.exe")
+        System.OpenProcess("Launcher.exe");
     }
 }
 

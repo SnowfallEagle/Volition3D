@@ -30,6 +30,7 @@
     <ClInclude Include="..\..\Source\Common\Platform\Assert.h" />
     <ClInclude Include="..\..\Source\Common\Platform\Memory.h" />
     <ClInclude Include="..\..\Source\Common\Platform\Platform.h" />
+    <ClInclude Include="..\..\Source\Common\Platform\System.h" />
     <ClInclude Include="..\..\Source\Common\Thread\SpinLock.h" />
     <ClInclude Include="..\..\Source\Common\Types\Array.h" />
     <ClInclude Include="..\..\Source\Common\Types\Common.h" />
