@@ -90,6 +90,7 @@ public:
             Materials[I].Texture.Destroy();
         }
         Memory.MemSetByte(Materials, 0, sizeof(Materials));
+
         NumMaterials = 0;
     }
 

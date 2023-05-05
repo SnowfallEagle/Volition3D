@@ -24,7 +24,7 @@ void VWindow::StartUp()
         {
             Flags |= SDL_WINDOW_FULLSCREEN;
         }
-        else if (Config.WindowSpec.Flags & EWindowSpecificationFlags::FullscreenDesktop)
+        else if (Config.WindowSpec.Flags & EWindowSpecificationFlags::Borderless)
         {
             Flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
         }

@@ -55,6 +55,8 @@ public:
         WindowSize = Size;
     }
 
+    virtual ~VLauncher() = default;
+
     EReturnCode::Type Run();
 
 protected:

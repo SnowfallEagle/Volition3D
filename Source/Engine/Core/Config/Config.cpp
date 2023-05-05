@@ -26,9 +26,30 @@ static void SizeArg(char** Argv, i32& Cursor)
     Cursor += 2;
 }
 
+static void WindowTypeFullscreenArg(char** Argv, i32& Cursor)
+{
+    Config.WindowSpec.Flags &= ~(EWindowSpecificationFlags::Fullscreen | EWindowSpecificationFlags::Borderless | EWindowSpecificationFlags::Windowed);
+    Config.WindowSpec.Flags |= EWindowSpecificationFlags::Fullscreen;
+}
+
+static void WindowTypeBorderlessArg(char** Argv, i32& Cursor)
+{
+    Config.WindowSpec.Flags &= ~(EWindowSpecificationFlags::Fullscreen | EWindowSpecificationFlags::Borderless | EWindowSpecificationFlags::Windowed);
+    Config.WindowSpec.Flags |= EWindowSpecificationFlags::Borderless;
+}
+
+static void WindowTypeWindowedArg(char** Argv, i32& Cursor)
+{
+    Config.WindowSpec.Flags &= ~(EWindowSpecificationFlags::Fullscreen | EWindowSpecificationFlags::Borderless | EWindowSpecificationFlags::Windowed);
+    Config.WindowSpec.Flags |= EWindowSpecificationFlags::Windowed;
+}
+
 static TMap<VString, ArgHandler> ArgHandlers = {
     { "/l", { LauncherArg } },
-    { "/s", { SizeArg, 2  } }
+    { "/s", { SizeArg, 2  } },
+    { "/wtf", { WindowTypeFullscreenArg }},
+    { "/wtb", { WindowTypeBorderlessArg }},
+    { "/wtw", { WindowTypeWindowedArg }}
 };
 
 void VConfig::StartUp(i32 Argc, char** Argv)

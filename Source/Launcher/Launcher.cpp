@@ -56,7 +56,7 @@ b32 VLauncher::StartUp()
     IO.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_NavEnableGamepad;
     IO.IniFilename = nullptr;
 
-    ImGui::StyleColorsLight();
+    ImGui::StyleColorsDark();
 
     ImGui_ImplWin32_Init(hWnd);
     ImGui_ImplDX11_Init(D3DDevice, D3DDeviceContext);

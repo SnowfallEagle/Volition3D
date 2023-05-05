@@ -53,6 +53,8 @@ namespace Volition
 
 #define VLN_BIT(N) ( 1 << ((N)-1) )
 
+#define VLN_ARRAY_SIZE(A) (sizeof(A) / sizeof(A[0]))
+
 #define VLN_SAFE_DELETE(X) \
     { \
         if ((X)) \
