@@ -5,7 +5,6 @@ namespace Volition
 
 void VCamera::Init(u32 InAttr, const VPoint4& InPos, const VVector4& InDir, const VPoint4& InTarget, f32 InFOV, f32 InZNearClip, f32 InZFarClip, const VVector2& InViewPortSize)
 {
-    State = 0;
     Attr = InAttr;
 
     Pos = InPos;

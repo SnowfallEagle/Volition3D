@@ -331,9 +331,7 @@ char* GetLineCOB(std::FILE* File, char* Buffer, i32 Size)
         const i32f Len = std::strlen(Buffer);
 
         i32f i;
-        for (i = 0;
-             i < Len && (Buffer[i] == ' ' || Buffer[i] == '\t' || Buffer[i] == '\r' || Buffer[i] == '\n');
-             ++i)
+        for (i = 0; i < Len && (Buffer[i] == ' ' || Buffer[i] == '\t' || Buffer[i] == '\r' || Buffer[i] == '\n'); ++i)
             {}
 
         if (i < Len)
@@ -627,18 +625,27 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                         std::sscanf(Line, Format, TexturePathRaw);
 
                         // Cut stuff
-                        i32f CharIndex;
-                        for (CharIndex = std::strlen(TexturePathRaw) - 1; CharIndex >= 0; --CharIndex)
+                        i32f TextureSlashIndex;
+                        for (TextureSlashIndex = std::strlen(TexturePathRaw) - 1; TextureSlashIndex >= 0; --TextureSlashIndex)
                         {
-                            if (TexturePathRaw[CharIndex] == '\\' || TexturePathRaw[CharIndex] == '/')
+                            if (TexturePathRaw[TextureSlashIndex] == '\\' || TexturePathRaw[TextureSlashIndex] == '/')
                             {
                                 break;
                             }
                         }
-                        std::strncpy(TexturePath, TexturePathRaw + (CharIndex + 1), TexturePathSize);
+
+                        i32f PathSlashIndex;
+                        for (PathSlashIndex = std::strlen(Path) - 1; PathSlashIndex >= 0; --PathSlashIndex)
+                        {
+                            if (Path[PathSlashIndex] == '\\' || Path[PathSlashIndex] == '/')
+                            {
+                                break;
+                            }
+                        }
+
+                        std::snprintf(TexturePath, TexturePathSize, "%.*s%s", PathSlashIndex + 1, Path, TexturePathRaw + (TextureSlashIndex + 1));
 
                         // Load texture in material
-                        std::strncpy(CurrentMaterial.Name, TexturePath, CurrentMaterial.NameSize);
                         CurrentMaterial.Texture.LoadBMP(TexturePath);
                         CurrentMaterial.Attr |= EMaterialAttr::ShadeModeTexture;
 

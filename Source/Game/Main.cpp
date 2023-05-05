@@ -28,24 +28,23 @@ public:
                 ECOB::SwapYZ | ECOB::InvertV
             );
         }
+        */
 
         Entity = World.SpawnEntity<VEntity>();
         Entity->Mesh->LoadCOB(
-            "s.cob",
+            "Assets/Models/jetski05.cob",
             { 0.0f, 0.0f, 0.0f },
             { 1000.0f, 1000.0f, 1000.0f }
         );
-        */
 
         Camera = World.GetCamera();
         Camera->Init(ECameraAttr::Euler, { 0, 75.0f, 0 }, { 0, 0, 0 }, VVector4(), 90, 50, 100000, {(f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
 
-        World.SetCubemap("cubemap.bmp");
-        World.GetTerrain()->GenerateTerrain("HeightMap_big.bmp", "RockyLand/Texture.bmp", 50000.0f, 25000.0f);
+        World.SetCubemap("Assets/Cubemaps/Cubemap.bmp");
+        World.GetTerrain()->GenerateTerrain("Assets/Terrains/Large/Heightmap.bmp", "Assets/Terrains/RockyLand/Texture.bmp", 50000.0f, 25000.0f);
 
         {
             VLight AmbientLight = {
-                0,
                 ELightState::Active,
                 ELightAttr::Ambient,
 
@@ -58,7 +57,6 @@ public:
             };
 
             VLight InfiniteLight = {
-                1,
                 ELightState::Active,
                 ELightAttr::Infinite,
 
@@ -71,7 +69,6 @@ public:
             };
 
             VLight PointLight = {
-                2,
                 ELightState::Active,
                 ELightAttr::Point,
 
@@ -84,7 +81,6 @@ public:
             };
 
             VLight OccluderLight = {
-                2,
                 ELightState::Active,
                 ELightAttr::Point,
 
@@ -97,7 +93,6 @@ public:
             };
 
             VLight SimpleSpotlight = {
-                3,
                 ELightState::Active,
                 ELightAttr::SimpleSpotlight,
 
@@ -110,7 +105,6 @@ public:
             };
 
             VLight ComplexSpotlight = {
-                3,
                 ELightState::Active,
                 ELightAttr::ComplexSpotlight,
 

@@ -48,7 +48,7 @@ void VRenderer::StartUp()
         FontCharWidth = Config.RenderSpec.TargetSize.X / CharsPerLine;
         FontCharHeight = (i32)(FontCharWidth * 1.25f);
 
-        Font = TTF_OpenFont("Default.ttf", (i32)( (f32)FontCharWidth * PointDivPixel * QualityMultiplier ));
+        Font = TTF_OpenFont("Assets/Fonts/Default.ttf", (i32)( (f32)FontCharWidth * PointDivPixel * QualityMultiplier ));
         VLN_ASSERT(Font);
     }
 
