@@ -4,7 +4,7 @@
 namespace Volition
 {
 
-void VTexture::LoadBMP(const char* Path, i32 MaxMipMaps)
+void VTexture::Load(const char* Path, i32 MaxMipMaps)
 {
     if (MaxMipMaps <= 0)
     {

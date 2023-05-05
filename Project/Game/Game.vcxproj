@@ -75,7 +75,7 @@
     <ExecutablePath>$(SolutionDir)..\..\Bin\;$(VC_ExecutablePath_x86);$(CommonExecutablePath)</ExecutablePath>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\..\Source;$(SolutionDir)..\..\ThirdParty\SDL\include\;$(SolutionDir)..\..\ThirdParty\SDL_ttf\</IncludePath>
     <SourcePath>$(VC_SourcePath);$(SolutionDir)..\..\Source</SourcePath>
-    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(SolutionDir)..\..\ThirdParty\SDL\Libs</LibraryPath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(SolutionDir)..\..\ThirdParty\SDL\Libs;$(SolutionDir)$(Platform)\$(Configuration)</LibraryPath>
     <OutDir>$(SolutionDir)..\..\Bin\</OutDir>
     <TargetName>$(ProjectName)</TargetName>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
@@ -84,7 +84,7 @@
     <ExecutablePath>$(SolutionDir)..\..\Bin\;$(VC_ExecutablePath_x86);$(CommonExecutablePath)</ExecutablePath>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\..\Source;$(SolutionDir)..\..\ThirdParty\SDL\include\;$(SolutionDir)..\..\ThirdParty\SDL_ttf\</IncludePath>
     <SourcePath>$(VC_SourcePath);$(SolutionDir)..\..\Source</SourcePath>
-    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(SolutionDir)..\..\ThirdParty\SDL\Libs</LibraryPath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(SolutionDir)..\..\ThirdParty\SDL\Libs;$(SolutionDir)$(Platform)\$(Configuration)</LibraryPath>
     <OutDir>$(SolutionDir)..\..\Bin\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)</TargetName>
@@ -119,7 +119,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>winmm.lib;Setupapi.lib;Version.lib;Imm32.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>winmm.lib;Setupapi.lib;Version.lib;Imm32.lib;SDL2_image.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
     </Link>
     <PostBuildEvent>
@@ -145,7 +145,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>winmm.lib;Setupapi.lib;Version.lib;Imm32.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>winmm.lib;Setupapi.lib;Version.lib;Imm32.lib;SDL2_image.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
     </Link>
     <PostBuildEvent>
@@ -157,7 +157,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);/NODEFAULTLIB:library</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
@@ -179,7 +179,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);/NODEFAULTLIB:library</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>

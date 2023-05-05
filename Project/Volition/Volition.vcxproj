@@ -74,7 +74,7 @@
     <OutDir>$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
     <ExecutablePath>$(SolutionDir)..\..\Bin;$(ExecutablePath)</ExecutablePath>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\..\Source;$(SolutionDir)..\..\ThirdParty\SDL\include\;$(SolutionDir)..\..\ThirdParty\SDL_ttf\</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\..\Source;$(SolutionDir)..\..\ThirdParty\SDL\include\;$(SolutionDir)..\..\ThirdParty\SDL_ttf\;$(SolutionDir)..\..\ThirdParty\SDL_image\</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(SolutionDir)..\..\ThirdParty\SDL\Libs</LibraryPath>
     <SourcePath>$(VC_SourcePath);$(SolutionDir)..\..\Source</SourcePath>
   </PropertyGroup>
@@ -82,7 +82,7 @@
     <OutDir>$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
     <ExecutablePath>$(SolutionDir)..\..\Bin;$(ExecutablePath)</ExecutablePath>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\..\Source;$(SolutionDir)..\..\ThirdParty\SDL\include\;$(SolutionDir)..\..\ThirdParty\SDL_ttf\</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\..\Source;$(SolutionDir)..\..\ThirdParty\SDL\include\;$(SolutionDir)..\..\ThirdParty\SDL_ttf\;$(SolutionDir)..\..\ThirdParty\SDL_image\</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(SolutionDir)..\..\ThirdParty\SDL\Libs</LibraryPath>
     <SourcePath>$(VC_SourcePath);$(SolutionDir)..\..\Source</SourcePath>
   </PropertyGroup>
@@ -90,7 +90,7 @@
     <OutDir>$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
     <ExecutablePath>$(SolutionDir)..\..\Bin;$(ExecutablePath)</ExecutablePath>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\..\Source;$(SolutionDir)..\..\ThirdParty\SDL\include\;$(SolutionDir)..\..\ThirdParty\SDL_ttf\</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\..\Source;$(SolutionDir)..\..\ThirdParty\SDL\include\;$(SolutionDir)..\..\ThirdParty\SDL_ttf\;$(SolutionDir)..\..\ThirdParty\SDL_image\</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(SolutionDir)..\..\ThirdParty\SDL\Libs</LibraryPath>
     <SourcePath>$(VC_SourcePath);$(SolutionDir)..\..\Source</SourcePath>
   </PropertyGroup>
@@ -98,7 +98,7 @@
     <OutDir>$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
     <ExecutablePath>$(SolutionDir)..\..\Bin;$(ExecutablePath)</ExecutablePath>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\..\Source;$(SolutionDir)..\..\ThirdParty\SDL\include\;$(SolutionDir)..\..\ThirdParty\SDL_ttf\</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\..\Source;$(SolutionDir)..\..\ThirdParty\SDL\include\;$(SolutionDir)..\..\ThirdParty\SDL_ttf\;$(SolutionDir)..\..\ThirdParty\SDL_image\</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(SolutionDir)..\..\ThirdParty\SDL\Libs</LibraryPath>
     <SourcePath>$(VC_SourcePath);$(SolutionDir)..\..\Source</SourcePath>
   </PropertyGroup>

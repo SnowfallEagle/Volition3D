@@ -12,7 +12,7 @@ class VTexture
     i32 NumMipMaps;
 
 public:
-    void LoadBMP(const char* Path, i32 MaxMipMaps = -1);
+    void Load(const char* Path, i32 MaxMipMaps = -1);
     void Destroy();
 
     const VSurface& Get(i32 MipMaps) const;

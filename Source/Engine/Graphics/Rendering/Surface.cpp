@@ -1,3 +1,4 @@
+#include "SDL_image.h"
 #include "Engine/Graphics/Rendering/Renderer.h"
 #include "Engine/Graphics/Rendering/Surface.h"
 
@@ -33,7 +34,7 @@ void VSurface::Load(const char* Path)
 {
     Destroy();
 
-    SDL_Surface* Temp = SDL_LoadBMP(Path);
+    SDL_Surface* Temp = IMG_Load(Path);
     VLN_ASSERT(Temp);
 
     SDL_Surface* Converted = SDL_ConvertSurface(

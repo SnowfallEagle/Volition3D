@@ -1,4 +1,5 @@
 #include <cstdarg>
+#include "SDL_image.h"
 #include "Common/Platform/Memory.h"
 #include "Engine/Core/Window.h"
 #include "Engine/World/World.h"
@@ -34,6 +35,12 @@ void VRenderer::StartUp()
         Config.RenderSpec.MaxClipFloat = { (f32)Config.RenderSpec.MaxClip.X, (f32)Config.RenderSpec.MaxClip.Y };
 
         BackSurface.Create(Config.RenderSpec.TargetSize.X, Config.RenderSpec.TargetSize.Y);
+    }
+
+    // Initialize IMG library
+    {
+        i32 Res = IMG_Init(0xFFFFFFFF);
+        VLN_ASSERT(Res != 0);
     }
 
     // Initialize TTF
@@ -78,6 +85,11 @@ void VRenderer::ShutDown()
     {
         TTF_CloseFont(Font);
         TTF_Quit();
+    }
+
+    // Shut down IMG
+    {
+        IMG_Quit();
     }
 
     // Free renderer stuff

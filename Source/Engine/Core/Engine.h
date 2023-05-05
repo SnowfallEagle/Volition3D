@@ -1,6 +1,5 @@
 #pragma once
 
-#include "SDL.h"
 #include "Common/Types/Common.h"
 #include "Common/Platform/Platform.h"
 #include "Common/Math/Math.h"

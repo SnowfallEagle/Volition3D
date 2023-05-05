@@ -646,7 +646,7 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                         std::snprintf(TexturePath, TexturePathSize, "%.*s%s", PathSlashIndex + 1, Path, TexturePathRaw + (TextureSlashIndex + 1));
 
                         // Load texture in material
-                        CurrentMaterial.Texture.LoadBMP(TexturePath);
+                        CurrentMaterial.Texture.Load(TexturePath);
                         CurrentMaterial.Attr |= EMaterialAttr::ShadeModeTexture;
 
                         // Texture in object
@@ -853,7 +853,7 @@ void VMesh::GenerateTerrain(const char* HeightMap, const char* Texture, f32 Size
 {
     // Load texture in terrain material
     VMaterial& Material = Renderer.Materials[Renderer.NumMaterials];
-    Material.Texture.LoadBMP(Texture, 1);
+    Material.Texture.Load(Texture, 1);
 
     // Load height map
     VSurface MapSurface;
