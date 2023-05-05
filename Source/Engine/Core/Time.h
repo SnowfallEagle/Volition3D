@@ -22,27 +22,8 @@ public:
     void StartUp();
     void ShutDown() {}
 
-    VLN_FINLINE void TickFrame()
-    {
-        const u32 CurrentTick = GetTicks();
-        DeltaTime = (f32)(CurrentTick - LastTick);
-        LastTick = CurrentTick;
-
-        AccumulatedFixedTime += DeltaTime;
-        NumFixedUpdates = (i32f)(AccumulatedFixedTime / FixedDeltaTime);
-        AccumulatedFixedTime -= NumFixedUpdates * FixedDeltaTime;
-    }
-
-    VLN_FINLINE void SyncFrame()
-    {
-        if (Config.RenderSpec.bLimitFPS)
-        {
-            while ((i32)GetTicks() - LastTick < MsFrameLimit)
-            {
-                VLN_PAUSE();
-            }
-        }
-    }
+    void TickFrame();
+    void SyncFrame();
 
     VLN_FINLINE i32 GetTicks() const
     {
@@ -66,5 +47,27 @@ public:
 };
 
 inline VTime Time;
+
+VLN_FINLINE void VTime::TickFrame()
+{
+    const u32 CurrentTick = GetTicks();
+    DeltaTime = (f32)(CurrentTick - LastTick);
+    LastTick = CurrentTick;
+
+    AccumulatedFixedTime += DeltaTime;
+    NumFixedUpdates = (i32f)(AccumulatedFixedTime / FixedDeltaTime);
+    AccumulatedFixedTime -= NumFixedUpdates * FixedDeltaTime;
+}
+
+VLN_FINLINE void VTime::SyncFrame()
+{
+    if (Config.RenderSpec.bLimitFPS)
+    {
+        while ((i32)GetTicks() - LastTick < MsFrameLimit)
+        {
+            VLN_PAUSE();
+        }
+    }
+}
 
 }

@@ -236,16 +236,13 @@
     <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\IInterpolator.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\LinearPiecewiseTextureInterpolator.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\PerspectiveCorrectTextureInterpolator.cpp" />
-    <ClCompile Include="..\..\Source\Engine\Graphics\Rendering\InterpolationContext.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Rendering\Renderer.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Rendering\RenderList.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Rendering\Surface.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Rendering\Texture.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Scene\Camera.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Scene\Mesh.cpp" />
-    <ClCompile Include="..\..\Source\Engine\Input\Input.cpp" />
     <ClCompile Include="..\..\Source\Engine\World\Entity.cpp" />
-    <ClCompile Include="..\..\Source\Engine\World\GameState.cpp" />
     <ClCompile Include="..\..\Source\Engine\World\Terrain.cpp" />
     <ClCompile Include="..\..\Source\Engine\World\World.cpp" />
   </ItemGroup>

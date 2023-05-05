@@ -19,15 +19,13 @@ class VEngine
     b32 bRunning;
 
 public:
-    template<typename GameStateT>
+    template<typename GameStateT = VGameState>
     i32 Run(i32 Argc, char** Argv);
-
     void Stop();
 
 private:
-    template<typename GameStateT>
+    template<typename GameStateT = VGameState>
     void StartUp(i32 Argc, char** Argv);
-
     void ShutDown();
 };
 
@@ -80,7 +78,7 @@ inline i32 VEngine::Run(i32 Argc, char** Argv)
     return 0;
 }
 
-inline void VEngine::Stop()
+VLN_FINLINE void VEngine::Stop()
 {
     bRunning = false;
 }

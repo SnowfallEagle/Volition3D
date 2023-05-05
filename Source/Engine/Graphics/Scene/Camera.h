@@ -34,7 +34,7 @@ namespace ECameraAttr
     };
 }
 
-VLN_DECL_ALIGN(16) class VCamera
+VLN_DECL_ALIGN_SSE() class VCamera
 {
 public:
     u32 State;

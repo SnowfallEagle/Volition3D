@@ -73,57 +73,15 @@ public:
     void StartUp();
     void ShutDown();
 
-    VLN_FINLINE i32 GetScreenWidth() const
-    {
-        return Config.RenderSpec.TargetSize.X;
-    }
-    VLN_FINLINE i32 GetScreenHeight() const
-    {
-        return Config.RenderSpec.TargetSize.Y;
-    }
+    i32 GetScreenWidth() const;
+    i32 GetScreenHeight() const;
 
-    void ResetMaterials()
-    {
-        for (i32f i = 0; i < MaxMaterials; ++i)
-        {
-            Materials[i].Texture.Destroy();
-        }
-        Memory.MemSetByte(Materials, 0, sizeof(Materials));
+    void ResetMaterials();
+    void ResetLights();
 
-        NumMaterials = 0;
-    }
-
-    VLN_FINLINE void ResetLights()
-    {
-        Memory.MemSetByte(Lights, 0, sizeof(Lights));
-        NumLights = 0;
-    }
-
-    VLN_FINLINE void AddLight(const VLight& InLight)
-    {
-        Lights[NumLights] = InLight;
-        ++NumLights;
-    }
-
-    VLN_FINLINE void SetOccluderLight(i32 Index)
-    {
-        if (Index >= 0 && Index < NumLights)
-        {
-            OccluderLight = &Lights[Index];
-        }
-    }
-
-    void TransformLights(const VCamera& Camera)
-    {
-        VMatrix44 TransMat = Camera.MatCamera;
-        TransMat.C30 = TransMat.C31 = TransMat.C32 = 0.0f;
-
-        for (i32f LightIndex = 0; LightIndex < NumLights; ++LightIndex)
-        {
-            VMatrix44::MulVecMat(Lights[LightIndex].Pos, TransMat, Lights[LightIndex].TransPos);
-            VMatrix44::MulVecMat(Lights[LightIndex].Dir, TransMat, Lights[LightIndex].TransDir);
-        }
-    }
+    void AddLight(const VLight& InLight);
+    void SetOccluderLight(i32 Index);
+    void TransformLights(const VCamera& Camera);
 
     void PreRender();
     void Render();
@@ -131,27 +89,13 @@ public:
     void PostRender();
 
     /** Very slow put pixel function to debug draw functions */
-    VLN_FINLINE void PutPixel(u32* Buffer, i32 Pitch, i32 X, i32 Y, u32 Color) const
-    {
-        VLN_ASSERT(X >= 0);
-        VLN_ASSERT(X < Config.RenderSpec.TargetSize.X);
-        VLN_ASSERT(Y >= 0);
-        VLN_ASSERT(Y < Config.RenderSpec.TargetSize.Y);
-
-        Buffer[Y*Pitch + X] = Color;
-    }
+    void PutPixel(u32* Buffer, i32 Pitch, i32 X, i32 Y, u32 Color) const;
 
     static void DrawLine(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, u32 Color);
     static void DrawLineSlow(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, u32 Color);
 
     b32 ClipLine(i32& X1, i32& Y1, i32& X2, i32& Y2) const;
-    VLN_FINLINE void DrawClippedLine(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, u32 Color) const
-    {
-        if (ClipLine(X1, Y1, X2, Y2))
-        {
-            DrawLine(Buffer, Pitch, X1, Y1, X2, Y2, Color);
-        }
-    }
+    void DrawClippedLine(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, u32 Color) const;
 
     void DrawText(i32 X, i32 Y, VColorARGB Color, const char* Format, ...);
     void DrawDebugText(const char* Format, ...);
@@ -170,5 +114,54 @@ private:
 };
 
 inline VRenderer Renderer;
+
+VLN_FINLINE void VRenderer::ResetLights()
+{
+    Memory.MemSetByte(Lights, 0, sizeof(Lights));
+    NumLights = 0;
+}
+
+VLN_FINLINE void VRenderer::AddLight(const VLight& InLight)
+{
+    Lights[NumLights] = InLight;
+    ++NumLights;
+}
+
+VLN_FINLINE void VRenderer::SetOccluderLight(i32 Index)
+{
+    if (Index >= 0 && Index < NumLights)
+    {
+        OccluderLight = &Lights[Index];
+    }
+}
+
+VLN_FINLINE void VRenderer::PutPixel(u32* Buffer, i32 Pitch, i32 X, i32 Y, u32 Color) const
+
+{
+    VLN_ASSERT(X >= 0);
+    VLN_ASSERT(X < Config.RenderSpec.TargetSize.X);
+    VLN_ASSERT(Y >= 0);
+    VLN_ASSERT(Y < Config.RenderSpec.TargetSize.Y);
+
+    Buffer[Y*Pitch + X] = Color;
+}
+
+VLN_FINLINE void VRenderer::DrawClippedLine(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, u32 Color) const
+{
+    if (ClipLine(X1, Y1, X2, Y2))
+    {
+        DrawLine(Buffer, Pitch, X1, Y1, X2, Y2, Color);
+    }
+}
+
+VLN_FINLINE i32 VRenderer::GetScreenWidth() const
+{
+    return Config.RenderSpec.TargetSize.X;
+}
+
+VLN_FINLINE i32 VRenderer::GetScreenHeight() const
+{
+    return Config.RenderSpec.TargetSize.Y;
+}
 
 }

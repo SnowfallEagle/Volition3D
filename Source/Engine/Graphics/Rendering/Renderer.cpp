@@ -96,6 +96,29 @@ void VRenderer::ShutDown()
     }
 }
 
+void VRenderer::ResetMaterials()
+{
+    for (i32f i = 0; i < MaxMaterials; ++i)
+    {
+        Materials[i].Texture.Destroy();
+    }
+    Memory.MemSetByte(Materials, 0, sizeof(Materials));
+
+    NumMaterials = 0;
+}
+
+void VRenderer::TransformLights(const VCamera& Camera)
+{
+    VMatrix44 TransMat = Camera.MatCamera;
+    TransMat.C30 = TransMat.C31 = TransMat.C32 = 0.0f;
+
+    for (i32f LightIndex = 0; LightIndex < NumLights; ++LightIndex)
+    {
+        VMatrix44::MulVecMat(Lights[LightIndex].Pos, TransMat, Lights[LightIndex].TransPos);
+        VMatrix44::MulVecMat(Lights[LightIndex].Dir, TransMat, Lights[LightIndex].TransDir);
+    }
+}
+
 void VRenderer::PreRender()
 {
     ZBuffer.Clear();
