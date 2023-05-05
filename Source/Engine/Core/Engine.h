@@ -3,12 +3,12 @@
 #include "SDL.h"
 #include "Common/Types/Common.h"
 #include "Common/Platform/Platform.h"
+#include "Common/Math/Math.h"
 #include "Engine/Core/DebugLog.h"
 #include "Engine/Core/Window.h"
 #include "Engine/Core/Time.h"
 #include "Engine/World/World.h"
 #include "Engine/Input/Input.h"
-#include "Common/Math/Math.h"
 #include "Engine/Graphics/Rendering/Renderer.h"
 
 namespace Volition
@@ -31,7 +31,7 @@ private:
     void ShutDown();
 };
 
-extern VEngine Engine;
+inline VEngine Engine;
 
 template<typename GameStateT>
 inline void VEngine::StartUp(i32 Argc, char** Argv)

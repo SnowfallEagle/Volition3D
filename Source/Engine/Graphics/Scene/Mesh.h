@@ -67,7 +67,7 @@ public:
     u32 Attr;
 
     VPoint4 Position;
-    VVector4 UX, UY, UZ; // Local axes to track full orientation
+    VVector4 UX, UY, UZ; /** Local axes to track full orientation */
 
     i32 NumFrames;
     i32 CurrentFrame;
@@ -103,7 +103,7 @@ public:
         CurrentFrame = 0;
     }
 
-    // Allocates verticies, polygons, radius lists and texture list
+    /** Allocates verticies, polygons, radius lists and texture list */
     void Allocate(i32 InNumVtx, i32 InNumPoly, i32 InNumFrames)
     {
         HeadLocalVtxList = LocalVtxList = new VVertex[InNumVtx * InNumFrames];
@@ -137,7 +137,7 @@ public:
         VLN_SAFE_DELETE_ARRAY(TextureCoordsList);
     }
 
-    // Call this function before rendering
+    /** Called every time before rendering */
     void ResetRenderState()
     {
         // Reset object's state
@@ -350,7 +350,7 @@ public:
         }
     }
 
-    // LocalToTrans or TransOnly
+    /** LocalToTrans or TransOnly */
     void TransformModelToWorld(ETransformType Type = ETransformType::LocalToTrans)
     {
         if (Type == ETransformType::LocalToTrans)

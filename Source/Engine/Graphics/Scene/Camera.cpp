@@ -203,7 +203,7 @@ void VCamera::BuildCameraToPerspectiveMat44()
 
 void VCamera::BuildHomogeneousPerspectiveToScreenMat44()
 {
-    /* NOTE:
+    /*
         This function assumes that later in code
         we will perform conversion 4D->3D
     */
@@ -221,7 +221,7 @@ void VCamera::BuildHomogeneousPerspectiveToScreenMat44()
 
 void VCamera::BuildNonHomogeneousPerspectiveToScreenMat44()
 {
-    /* NOTE:
+    /*
         This function assumes that we are already
         performed conversion 4D->3D
     */

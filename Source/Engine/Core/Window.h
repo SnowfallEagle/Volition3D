@@ -21,6 +21,6 @@ public:
     friend class VRenderer;
 };
 
-extern VWindow Window;
+inline VWindow Window;
 
 }

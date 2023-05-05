@@ -7,7 +7,6 @@
 namespace Volition
 {
 
-// *** Fixed point 16.16 ***
 using fx16 = i32;
 
 namespace
@@ -75,13 +74,13 @@ VLN_FINLINE fx16 MulFx16(fx16 Fx1, fx16 Fx2)
     }
 #else
     #error "There are no implementation"
-#endif // VLN_COMPILER_MSVC
+#endif
 }
 
 VLN_FINLINE fx16 DivFx16(fx16 Fx1, fx16 Fx2)
 {
 #if VLN_COMPILER_MSVC
-    /* NOTE:
+    /* @NOTE:
         Let X, Y are integers and P, Q are fixed point numbers.
         P = (fx16)X, Q = (fx16)Y.
         Now P is actually (X * 2^16) and Q is (Y * 2^16).
@@ -109,8 +108,8 @@ VLN_FINLINE fx16 DivFx16(fx16 Fx1, fx16 Fx2)
         // Result in eax
     }
 #else
-# error "There are no implementation"
-#endif // VLN_COMPILER_MSVC
+    #error "There are no implementation"
+#endif
 }
 
 VLN_FINLINE i32 GetFx16WholePart(fx16 Fx)

@@ -5,7 +5,7 @@
 namespace Volition
 {
 
-template<class T>
+template<typename T>
 class TRect
 {
 public:
@@ -15,7 +15,7 @@ public:
 using VRectInt = TRect<i32>;
 using VRect = TRect<f32>;
 
-template<class T>
+template<typename T>
 class TRelativeRect
 {
 public:

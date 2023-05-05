@@ -7,8 +7,6 @@
 namespace Volition
 {
 
-VWindow Window;
-
 void VWindow::StartUp()
 {
     // Init SDL

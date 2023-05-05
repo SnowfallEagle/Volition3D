@@ -41,7 +41,7 @@ public:
 
     f32 KConst, KLinear, KQuad;
     f32 SpotInner, SpotOuter;
-    f32 Power; // Falloff for spotlights
+    f32 Power; /** Falloff for spotlights */
 };
 
 }

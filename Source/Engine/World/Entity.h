@@ -14,16 +14,11 @@ public:
     VMesh* Mesh = new VMesh();
 
 public:
-    virtual ~VEntity()
-    {}
+    virtual ~VEntity() {}
 
-    virtual void Init()
-    {}
-
+    virtual void Init() {}
     virtual void Destroy();
-
-    virtual void Update(f32 DeltaTime)
-    {}
+    virtual void Update(f32 DeltaTime) {}
 };
 
 }

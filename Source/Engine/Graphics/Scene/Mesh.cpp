@@ -208,7 +208,6 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
 
         // Read polygon faces
         i32 NumMaterialsInObject = 0;
-        // @OPTIMIZATION: We can put this in some static area
         TArray<b8> DoesMaterialAppearFirstTime(Renderer.MaxMaterials, true);
         TArray<i32> MaterialIndexByPolyIndex(GetMaxPoly(), 0);
 

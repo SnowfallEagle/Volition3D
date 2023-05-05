@@ -131,7 +131,7 @@ public:
 
             R.C[X] = C;
         }
-#endif // VLN_SSE
+#endif
     }
 
     VLN_FINLINE static void Mul(const VMatrix44& A, const VMatrix44& B, VMatrix44& R)
@@ -154,17 +154,18 @@ public:
                 R.C[Row][Col] = C;
             }
         }
-#endif // VLN_SSE
+#endif
     }
 
     static b32 Inverse(const VMatrix44& A, VMatrix44& R)
     {
-        /* Assumes that the last column is
+        /*
+            Assumes that the last column is
             [ 0 ]
             [ 0 ]
             [ 0 ]
             [ 1 ]
-         */
+        */
 
         // Find 3x3 det
         const f32 Det =
@@ -295,7 +296,6 @@ inline const VMatrix14 VMatrix14::Identity = {
     1, 0, 0, 0
 };
 
-// 3x3
 class VMatrix33
 {
 public:

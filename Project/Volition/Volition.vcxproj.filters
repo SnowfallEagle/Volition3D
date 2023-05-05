@@ -194,12 +194,6 @@
     <ClCompile Include="..\..\Source\Engine\World\World.cpp">
       <Filter>Engine\World</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Engine\Graphics\Types\Polygon.cpp">
-      <Filter>Engine\Graphics\Types</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Engine\Graphics\Types\Vertex.cpp">
-      <Filter>Engine\Graphics\Types</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Graphics\Rendering\InterpolationContext.cpp">
       <Filter>Engine\Graphics\Rendering</Filter>
     </ClCompile>

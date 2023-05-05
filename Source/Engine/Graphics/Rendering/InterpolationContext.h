@@ -17,9 +17,6 @@
 namespace Volition
 {
 
-class VRenderSpecification;
-class IInterpolator;
-
 class VInterpolationContext
 {
 public:

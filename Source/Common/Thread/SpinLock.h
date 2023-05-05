@@ -41,7 +41,7 @@ public:
     }
 };
 
-template<class LockT>
+template<typename LockT>
 class TScopedLock
 {
 public:

@@ -8,7 +8,7 @@
 namespace Volition
 {
 
-template<class T>
+template<typename T>
 class TVector2
 {
 public:
@@ -160,8 +160,7 @@ public:
     VVector4() = default;
     VVector4(f32 InX, f32 InY, f32 InZ, f32 InW = 1.0f)
         : X(InX), Y(InY), Z(InZ), W(InW)
-    {
-    }
+    {}
 
     VLN_FINLINE VVector4 operator+(const VVector4& V) const
     {
@@ -169,6 +168,7 @@ public:
             X + V.X, Y + V.Y, Z + V.Z, 1.0f
         };
     }
+
     VLN_FINLINE VVector4& operator+=(const VVector4& V)
     {
         X += V.X;
@@ -184,6 +184,7 @@ public:
             X - V.X, Y - V.Y, Z - V.Z, 1.0f
         };
     }
+
     VLN_FINLINE VVector4& operator-=(const VVector4& V)
     {
         X -= V.X;
@@ -213,6 +214,7 @@ public:
             1.0f
         };
     }
+
     VLN_FINLINE VVector4& operator/=(f32 Scalar)
     {
         const f32 InvDiv = 1.0f / Scalar;
@@ -244,6 +246,7 @@ public:
     {
         return Math.Sqrt(X*X + Y*Y + Z*Z);
     }
+
     VLN_FINLINE f32 GetLengthFast() const
     {
         return Math.FastDist3D(X, Y, Z);
@@ -265,6 +268,7 @@ public:
         Z *= Inv;
         W = 1.0f;
     }
+
     VVector4 GetNormalized() const
     {
         const f32 Len = GetLength();
@@ -292,6 +296,7 @@ public:
             1.0f
         };
     }
+
     VLN_FINLINE static void Cross(const VVector4& A, const VVector4& B, VVector4& R)
     {
         R = {

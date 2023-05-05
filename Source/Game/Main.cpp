@@ -8,7 +8,7 @@ namespace Game
 
 class GGameState : public VGameState
 {
-    VEntity* Entity;
+    VEntity* Entity = nullptr;
     VCamera* Camera;
 
 public:
@@ -169,7 +169,11 @@ public:
         if (Input.IsKeyDown(EKeycode::G)) Rot.BuildRotationXYZ(0, 0, -Speed);
         if (Input.IsKeyDown(EKeycode::Z)) Rot.BuildRotationXYZ(Speed, 0, 0);
         if (Input.IsKeyDown(EKeycode::X)) Rot.BuildRotationXYZ(-Speed, 0, 0);
-        // Entity->Mesh->Transform(Rot, ETransformType::LocalOnly, true);
+
+        if (Entity)
+        {
+            Entity->Mesh->Transform(Rot, ETransformType::LocalOnly, true);
+        }
 
         if (Input.IsKeyDown(EKeycode::Backspace))
         {

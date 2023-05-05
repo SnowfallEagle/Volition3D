@@ -28,7 +28,7 @@ public:
     static constexpr i32f SinCosLookSize = 361;
 
 public:
-    /* NOTE:
+    /**
         Tables are static because we want to
         have static FastSin/Cos funcs and don't
         pass extra argument (this) when we call them
@@ -51,9 +51,9 @@ public:
             CosLook[I] = std::cosf(Rad);
         }
     }
+
     void ShutDown()
-    {
-    }
+    {}
 
     VLN_FINLINE static f32 Abs(f32 X)
     {

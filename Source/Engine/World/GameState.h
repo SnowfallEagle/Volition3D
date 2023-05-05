@@ -9,14 +9,9 @@ namespace Volition
 class VGameState
 {
 public:
-    virtual void StartUp()
-    {}
-
-    virtual void ShutDown()
-    {}
-
-    virtual void Update(f32 DeltaTime)
-    {}
+    virtual void StartUp() {}
+    virtual void ShutDown() {}
+    virtual void Update(f32 DeltaTime) {}
 };
 
 }

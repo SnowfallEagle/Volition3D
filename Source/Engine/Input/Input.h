@@ -3,7 +3,6 @@
 #include "SDL.h"
 #include "Common/Platform/Platform.h"
 #include "Common/Types/Common.h"
-#include "Common/Platform/Platform.h"
 
 namespace Volition
 {
@@ -152,6 +151,7 @@ public:
     {
         return KeyState[SDL_GetScancodeFromKey(Key)];
     }
+
     VLN_FINLINE b32 IsMouseDown(u32 Button) const
     {
         return MouseState & Button;
@@ -161,12 +161,13 @@ public:
     {
         return MousePosX;
     }
+
     VLN_FINLINE i32 GetMouseY() const
     {
         return MousePosY;
     }
 };
 
-extern VInput Input;
+inline VInput Input;
 
 }

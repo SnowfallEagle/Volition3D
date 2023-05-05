@@ -22,7 +22,6 @@ namespace ECameraState
 {
     enum
     {
-
     };
 }
 
@@ -35,7 +34,6 @@ namespace ECameraAttr
     };
 }
 
-// VMatrix44 is 16 byte aligned
 VLN_DECL_ALIGN(16) class VCamera
 {
 public:
@@ -43,7 +41,7 @@ public:
     u32 Attr;
 
     VPoint4 Pos;
-    VVector4 Dir; // Euler angles or look at direction
+    VVector4 Dir; /** Euler angles or look at direction */
 
     VVector4 U, V, N;
     VPoint4 Target;
@@ -64,9 +62,9 @@ public:
     VPlane3 TopClipPlane;
     VPlane3 BottomClipPlane;
 
-    VMatrix44 MatCamera;      // World->Camera
-    VMatrix44 MatPerspective; // Camera->Perspective
-    VMatrix44 MatScreen;      // Perspective->Screen
+    VMatrix44 MatCamera;      /** World->Camera */
+    VMatrix44 MatPerspective; /** Camera->Perspective */
+    VMatrix44 MatScreen;      /** Perspective->Screen */
 
 public:
     void Init(
@@ -86,8 +84,6 @@ public:
     }
 
     void BuildWorldToCameraEulerMat44(ERotateSeq Seq = ERotateSeq::YXZ);
-
-    // On Spherical mode Dir.X - elevation, Dir.Y - heading
     void BuildWorldToCameraUVNMat44(EUVNMode Mode);
 
     void BuildCameraToPerspectiveMat44();

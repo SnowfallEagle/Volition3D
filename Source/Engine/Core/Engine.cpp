@@ -3,8 +3,6 @@
 namespace Volition
 {
 
-VEngine Engine;
-
 void VEngine::ShutDown()
 {
     bRunning = false;

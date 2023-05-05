@@ -10,7 +10,7 @@ namespace Volition
 
 class VRenderSpecification
 {
-public: // Set by user
+public: /** Set by user */
     i32 TargetFPS = 60;
     i32 TargetFixedFPS = 60;
     i32 MaxMipMaps = 8;
@@ -20,7 +20,7 @@ public: // Set by user
     b8 bBackfaceRemoval = true;
     b8 bSortPolygons    = false;
 
-private: // Set by rendering engine
+private: /** Set by rendering engine */
     SDL_PixelFormat* SDLPixelFormat = nullptr;
     u32 SDLPixelFormatEnum = 0;
 

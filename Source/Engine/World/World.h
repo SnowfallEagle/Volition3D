@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Engine/World/Terrain.h"
 #include "Common/Types/Array.h"
+#include "Engine/World/Terrain.h"
 #include "Engine/World/Entity.h"
 #include "Engine/World/GameState.h"
 
@@ -72,6 +72,6 @@ public:
     friend class VRenderer;
 };
 
-extern VWorld World;
+inline VWorld World;
 
 }

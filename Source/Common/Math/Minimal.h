@@ -9,7 +9,6 @@
 namespace Volition
 {
 
-// *** Quaternion ***
 class VQuat
 {
 public:
@@ -23,7 +22,7 @@ public:
         };
         struct
         {
-            /* NOTE:
+            /**
                 We can't cast quaternion to 4d
                 vector because of W on first place
             */
@@ -51,23 +50,20 @@ public:
     }
 };
 
-// *** Parametric Line ***
 class VParamLine3
 {
 public:
     VPoint3 P0, P1;
-    VVector3 V; // P1 - P0 direction vector
+    VVector3 V;
 };
 
-// *** Plane ***
 class VPlane3
 {
 public:
-    VPoint3 P0; // Point to the plane
-    VVector3 N; // It's normal vector
+    VPoint3 P0;
+    VVector3 N;
 };
 
-// *** Coordinates ***
 class VPolar2
 {
 public:

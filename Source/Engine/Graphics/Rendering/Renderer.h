@@ -6,17 +6,17 @@
 #include "Common/Platform/Platform.h"
 #include "Common/Platform/Assert.h"
 #include "Common/Platform/Memory.h"
-#include "Engine/Core/Config/Config.h"
 #include "Common/Math/Math.h"
 #include "Common/Math/Rect.h"
 #include "Common/Math/Vector.h"
 #include "Common/Math/Fixed16.h"
-#include "Engine/Graphics/Rendering/Surface.h"
+#include "Engine/Core/Config/Config.h"
 #include "Engine/Graphics/Types/Color.h"
-#include "Engine/Graphics/Rendering/Material.h"
-#include "Engine/Graphics/Scene/Light.h"
 #include "Engine/Graphics/Types/Polygon.h"
+#include "Engine/Graphics/Scene/Light.h"
 #include "Engine/Graphics/Scene/Camera.h"
+#include "Engine/Graphics/Rendering/Surface.h"
+#include "Engine/Graphics/Rendering/Material.h"
 #include "Engine/Graphics/Rendering/ZBuffer.h"
 #include "Engine/Graphics/Rendering/RenderList.h"
 #include "Engine/Graphics/Rendering/InterpolationContext.h"
@@ -52,7 +52,7 @@ private:
     VInterpolationContext InterpolationContext;
 
     TTF_Font* Font;
-    i32 FontCharWidth; // In pixels
+    i32 FontCharWidth; /** In pixels */
     i32 FontCharHeight;
 
     i32 DebugTextY;
@@ -65,10 +65,9 @@ private:
     VLight Lights[MaxLights];
     i32 NumLights;
 
-    /** Stuff for rendering */
-    VColorARGB (*OriginalLitColors)[3]; // [MaxPoly][3]
-    VColorARGB* OriginalColors;         // [MaxPoly]
-    u32* OriginalAttrs;                 // [MaxPoly]
+    VColorARGB (*OriginalLitColors)[3]; /** [MaxPoly][3] */
+    VColorARGB* OriginalColors;         /** [MaxPoly] */
+    u32* OriginalAttrs;                 /** [MaxPoly] */
 
 public:
     void StartUp();
@@ -131,7 +130,7 @@ public:
     void RenderUI();
     void PostRender();
 
-    // Very slow put pixel function to debug draw functions
+    /** Very slow put pixel function to debug draw functions */
     VLN_FINLINE void PutPixel(u32* Buffer, i32 Pitch, i32 X, i32 Y, u32 Color) const
     {
         VLN_ASSERT(X >= 0);
@@ -170,6 +169,6 @@ private:
     friend class VCubemap;
 };
 
-extern VRenderer Renderer;
+inline VRenderer Renderer;
 
 }

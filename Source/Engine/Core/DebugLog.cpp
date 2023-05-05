@@ -7,17 +7,15 @@ namespace EAnsiAttr
 {
     enum
     {
-        None = 0,
+        None   = 0,
         FgGrey = 90,
-        BgRed = 41,
+        BgRed  = 41,
         BgBlue = 44,
     };
 }
 
 static constexpr const char LogPath[] = "Log.txt";
 VLN_DEFINE_LOG_CHANNEL(hLogDebugLog, "DebugLog");
-
-VDebugLog DebugLog;
 
 void VDebugLog::StartUp()
 {

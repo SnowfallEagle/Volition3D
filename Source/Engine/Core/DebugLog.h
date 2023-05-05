@@ -35,6 +35,6 @@ private:
     void VarOutput(const char* Channel, const char* Priority, const char* Format, std::va_list VarList);
 };
 
-extern VDebugLog DebugLog;
+inline VDebugLog DebugLog;
 
 }

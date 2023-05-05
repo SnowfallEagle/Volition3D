@@ -243,8 +243,6 @@
     <ClCompile Include="..\..\Source\Engine\Graphics\Rendering\Texture.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Scene\Camera.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Scene\Mesh.cpp" />
-    <ClCompile Include="..\..\Source\Engine\Graphics\Types\Polygon.cpp" />
-    <ClCompile Include="..\..\Source\Engine\Graphics\Types\Vertex.cpp" />
     <ClCompile Include="..\..\Source\Engine\Input\Input.cpp" />
     <ClCompile Include="..\..\Source\Engine\World\Entity.cpp" />
     <ClCompile Include="..\..\Source\Engine\World\GameState.cpp" />

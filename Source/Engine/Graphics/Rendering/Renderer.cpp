@@ -7,8 +7,6 @@
 namespace Volition
 {
 
-VRenderer Renderer;
-
 VLN_DEFINE_LOG_CHANNEL(hLogRenderer, "Renderer");
 
 void VRenderer::StartUp()

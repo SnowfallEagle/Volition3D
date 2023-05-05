@@ -2,8 +2,8 @@
 #include <d3d11.h>
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
-#include "resource.h"
 #include "Launcher/Launcher.h"
+#include "resource.h"
 
 LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 

@@ -20,7 +20,7 @@ class VTime
 
 public:
     void StartUp();
-    void ShutDown();
+    void ShutDown() {}
 
     VLN_FINLINE void TickFrame()
     {
@@ -65,6 +65,6 @@ public:
     }
 };
 
-extern VTime Time;
+inline VTime Time;
 
 }

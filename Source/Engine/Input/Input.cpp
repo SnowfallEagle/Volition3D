@@ -3,6 +3,4 @@
 namespace Volition
 {
 
-VInput Input;
-
 }

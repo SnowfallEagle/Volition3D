@@ -4,6 +4,9 @@
     <Filter Include="Game">
       <UniqueIdentifier>{cb498e0a-6a94-46c2-911b-f238691a4c3c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{17c7d51b-02c1-4d48-8f76-3e1eaba94ea6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Game\Main.cpp">
@@ -11,9 +14,13 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="resource.h" />
+    <ClInclude Include="resource.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Game.rc" />
+    <ResourceCompile Include="Game.rc">
+      <Filter>Resources</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

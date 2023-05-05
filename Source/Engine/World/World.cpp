@@ -4,8 +4,6 @@
 namespace Volition
 {
 
-VWorld World;
-
 void VWorld::ShutDown()
 {
     if (GameState)
@@ -70,9 +68,6 @@ void VWorld::DestroyEntity(VEntity* Entity)
 {
     if (Entity)
     {
-        Entity->Destroy();
-        delete Entity;
-
         i32f Length = Entities.GetLength();
         for (i32f I = 0; I < Length; ++I)
         {
@@ -82,6 +77,9 @@ void VWorld::DestroyEntity(VEntity* Entity)
                 return;
             }
         }
+
+        Entity->Destroy();
+        delete Entity;
     }
 }
 
