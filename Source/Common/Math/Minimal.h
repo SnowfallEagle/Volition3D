@@ -67,24 +67,24 @@ public:
 class VPolar2
 {
 public:
-    f32 R; // Radius
-    f32 Theta; // Angle in radians
+    f32 R;     /** Radius */
+    f32 Theta; /** Angle in radians */
 };
 
 class VCylindrical3
 {
 public:
-    f32 R; // Radius
-    f32 Theta; // Angle about z-axis
-    f32 Z; // z-height
+    f32 R;     /** Radius */
+    f32 Theta; /** Angle about z-axis */
+    f32 Z;     /** Z height */
 };
 
 class VSpherical3
 {
 public:
-    f32 P; // Distance to the point from the origin
-    f32 Theta; // X-Y
-    f32 Phi; // Z-Y
+    f32 P;     /** Distance to the point from the origin */
+    f32 Theta; /** X-Y */
+    f32 Phi;   /** Z-Y */
 };
 
 }

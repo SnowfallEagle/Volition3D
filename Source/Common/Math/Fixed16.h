@@ -48,7 +48,7 @@ VLN_FINLINE f32 Fx16ToFloat(fx16 Fx)
 VLN_FINLINE fx16 MulFx16(fx16 Fx1, fx16 Fx2)
 {
 #if VLN_COMPILER_MSVC
-    /* NOTE:
+    /* @NOTE:
         Let X, Y are integers and P, Q are fixed point numbers.
         P = (fx16)X, Q = (fx16)Y.
         Now P is actually (X * 2^16) and Q is (Y * 2^16).
@@ -68,8 +68,7 @@ VLN_FINLINE fx16 MulFx16(fx16 Fx1, fx16 Fx2)
         mov     eax, Fx1            // Fx1->eax
         imul    Fx2                 // eax *= Fx2, result in edx:eax
         shrd    eax, edx, 16        // shift eax right by 2^16,
-                                    // move low 16 bytes from edx to
-                                    //  eax high 16 bytes
+                                    // move low 16 bytes from edx to eax high 16 bytes
         // Result in eax
     }
 #else
