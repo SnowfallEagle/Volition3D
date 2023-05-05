@@ -14,7 +14,7 @@ namespace EMeshState
     {
         Active  = VLN_BIT(1),
         Visible = VLN_BIT(2),
-        Culled  = VLN_BIT(3)
+        Culled  = VLN_BIT(3),
     };
 }
 

@@ -31,7 +31,6 @@ namespace ELightAttr
 class VLight
 {
 public:
-    i32 ID;
     u32 State;
     u32 Attr;
 

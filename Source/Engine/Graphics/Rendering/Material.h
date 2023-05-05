@@ -38,9 +38,6 @@ public:
     static constexpr i32f NameSize = 64;
 
 public:
-    i32 ID;
-    char Name[NameSize];
-
     i32 State;
     i32 Attr;
 

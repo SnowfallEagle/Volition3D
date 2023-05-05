@@ -201,7 +201,6 @@ public:
         R.C32 = -(A.C30 * R.C02 + A.C31 * R.C12 + A.C32 * R.C22);
         R.C33 = 1.0f;
 
-        // Success
         return true;
     }
 

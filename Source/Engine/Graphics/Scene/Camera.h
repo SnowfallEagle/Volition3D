@@ -18,13 +18,6 @@ enum class EUVNMode
     Spherical
 };
 
-namespace ECameraState
-{
-    enum
-    {
-    };
-}
-
 namespace ECameraAttr
 {
     enum
@@ -37,7 +30,6 @@ namespace ECameraAttr
 VLN_DECL_ALIGN_SSE() class VCamera
 {
 public:
-    u32 State;
     u32 Attr;
 
     VPoint4 Pos;

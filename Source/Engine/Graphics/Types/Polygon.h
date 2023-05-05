@@ -46,7 +46,7 @@ public:
 	u32 Attr;
 
 	VColorARGB OriginalColor;
-	VColorARGB LitColor[3]; // For each vertex, 0 for flat shading
+	VColorARGB LitColor[3]; /** For each vertex, 0 for flat shading */
 
 	const VMaterial* Material;
 
