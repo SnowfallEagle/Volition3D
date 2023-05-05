@@ -64,16 +64,17 @@ public:
 private:
     virtual void Update() override
     {
-        const ImGuiStyle& Style = ImGui::GetStyle();
-
         ImGui::Begin("Main Window", nullptr,
             ImGuiWindowFlags_NoMove |
             ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration
         );
 
+        ImGui::SetWindowSize({ (f32)Width, (f32)Height });
+        ImGui::SetWindowPos({ 0, 0 });
+
         const ImVec2 WindowSize = ImGui::GetWindowSize();
-        const ImVec2 WorkSize = { WindowSize.x / 4, WindowSize.y / 2 };
-        ImGui::SetCursorPos({ (WindowSize.x - WorkSize.x) / 4, (WindowSize.y - WorkSize.y) / 2 });
+        const ImVec2 WorkSize = { WindowSize.x / 2, WindowSize.y / 2 };
+        ImGui::SetCursorPos({ (WindowSize.x - WorkSize.x) / 2, (WindowSize.y - WorkSize.y) / 2 });
 
         ImGui::BeginChild("Work", WorkSize);
         {
@@ -99,7 +100,7 @@ private:
             ImGui::EndGroup();
 
             static constexpr const char* RunButtonText = "Run";
-            const f32 Size = ImGui::CalcTextSize(RunButtonText).x + Style.FramePadding.x * 2.0f;
+            const f32 Size = ImGui::CalcTextSize(RunButtonText).x + ImGui::GetStyle().FramePadding.x * 2.0f;
             const f32 Available = ImGui::GetContentRegionAvail().x;
 
             ImGui::SetCursorPos({ (Available - Size) / 2, ImGui::GetCursorPosY() + 10.0f });

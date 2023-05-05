@@ -70,7 +70,7 @@ private:
     void ShutDown();
 
     void ProcessEvents();
-    virtual void Update();
+    virtual void Update() {}
     void Render();
 
     b32 StartUpD3D(HWND hWnd);
