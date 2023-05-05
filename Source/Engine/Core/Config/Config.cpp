@@ -44,12 +44,70 @@ static void WindowTypeWindowedArg(char** Argv, i32& Cursor)
     Config.WindowSpec.Flags |= EWindowSpecificationFlags::Windowed;
 }
 
+static void TargetFPSArg(char** Argv, i32& Cursor)
+{
+    Config.RenderSpec.TargetFPS = std::atoi(Argv[Cursor]);
+    Cursor += 1;
+}
+
+static void FixedFPSArg(char** Argv, i32& Cursor)
+{
+    Config.RenderSpec.TargetFixedFPS = std::atoi(Argv[Cursor]);
+    Cursor += 1;
+}
+
+static void MaxMipMaps(char** Argv, i32& Cursor)
+{
+    Config.RenderSpec.MaxMipMaps = std::atoi(Argv[Cursor]);
+    Cursor += 1;
+}
+
+static void LimitFPSArg(char** Argv, i32& Cursor)
+{
+    Config.RenderSpec.bLimitFPS = std::atoi(Argv[Cursor]);
+    Cursor += 1;
+}
+
+static void BackfaceRemovalArg(char** Argv, i32& Cursor)
+{
+    Config.RenderSpec.bBackfaceRemoval = std::atoi(Argv[Cursor]);
+    Cursor += 1;
+}
+
+static void SortPolygonsArg(char** Argv, i32& Cursor)
+{
+    Config.RenderSpec.bSortPolygons = std::atoi(Argv[Cursor]);
+    Cursor += 1;
+}
+
 static TMap<VString, ArgHandler> ArgHandlers = {
-    { "/l", { LauncherArg } },
-    { "/s", { SizeArg, 2  } },
+    { "/l",        { LauncherArg } },
+    { "/Launcher", { LauncherArg } },
+
+    { "/s",    { SizeArg, 2  } },
+    { "/Size", { SizeArg, 2  } },
+
     { "/wtf", { WindowTypeFullscreenArg }},
     { "/wtb", { WindowTypeBorderlessArg }},
-    { "/wtw", { WindowTypeWindowedArg }}
+    { "/wtw", { WindowTypeWindowedArg }},
+    { "/WindowTypeFullscreen", { WindowTypeFullscreenArg }},
+    { "/WindowTypeBorderless", { WindowTypeBorderlessArg }},
+    { "/WindowTypeWindowed",   { WindowTypeWindowedArg }},
+
+    { "/tfps", { TargetFPSArg, 1 }},
+    { "/ffps", { FixedFPSArg, 1 }},
+    { "/TargetFPS", { TargetFPSArg, 1 }}, // Works only with /LimitFPS 1
+    { "/FixedFPS",  { FixedFPSArg, 1 }},
+
+    { "/mmm",        { MaxMipMaps, 1 }},
+    { "/MaxMipMaps", { MaxMipMaps, 1 }},
+
+    { "/lfps", { LimitFPSArg, 1 }},
+    { "/bfr",  { BackfaceRemovalArg, 1 }},
+    { "/sp",   { SortPolygonsArg, 1 }},
+    { "/LimitFPS",        { LimitFPSArg, 1 }},
+    { "/BackfaceRemoval", { BackfaceRemovalArg, 1 }},
+    { "/SortPolygons",    { SortPolygonsArg, 1 }},
 };
 
 void VConfig::StartUp(i32 Argc, char** Argv)

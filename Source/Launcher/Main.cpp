@@ -1,9 +1,3 @@
-/* @TODO
-    - Combo Fullscreen, Borderless, Windowed
-    - Int TargetFPS, TargetFixedFPS, MaxMipMaps
-    - Bool bLimitFPS, bRenderSolid, bBackfaceRemoval, bSortPolygons
-*/
-
 #include <cstdlib>
 #include "Common/Platform/Platform.h"
 #include "Launcher/Launcher.h"
@@ -53,6 +47,14 @@ private:
     int WindowSizeCurrent = 4;
     int WindowTypeCurrent = 0;
 
+    int FPSLimit = 60;
+    int TargetFixedFPS = 60;
+    int MaxMipMaps = 8;
+
+    bool bLimitFPS = false;
+    bool bBackfaceRemoval = true;
+    bool bSortPolygons = false;
+
 private:
     virtual void Update() override
     {
@@ -73,26 +75,36 @@ private:
 
         ImGui::BeginChild("Work", WorkSize);
         {
-            static constexpr f32 ComboboxOffset = 50.0f;
+            ImGui::Combo("Window Size", &WindowSizeCurrent, WindowSizeItems, VLN_ARRAY_SIZE(WindowSizeItems));
+            ImGui::Combo("Window Type", &WindowTypeCurrent, WindowTypeItems, VLN_ARRAY_SIZE(WindowTypeItems));
 
-            ImGui::SetCursorPosX(ComboboxOffset);
-            ImGui::Combo("##ComboSize", &WindowSizeCurrent, WindowSizeItems, VLN_ARRAY_SIZE(WindowSizeItems));
+            ImGui::InputInt("FPS Limit", &FPSLimit);
+            ImGui::InputInt("Fixed FPS", &TargetFixedFPS);
+            ImGui::InputInt("Max Mip Maps", &MaxMipMaps);
 
-            ImGui::SetCursorPosX(ComboboxOffset);
-            ImGui::Combo("##ComboType", &WindowTypeCurrent, WindowTypeItems, VLN_ARRAY_SIZE(WindowTypeItems));
+            ImGui::Checkbox("Limit FPS", &bLimitFPS);
+            ImGui::Checkbox("Backface Removal", &bBackfaceRemoval);
+            ImGui::Checkbox("Polygons Sorting", &bSortPolygons);
 
-            static constexpr const char* PlayButtonText = "Play";
-
-            const f32 Size = ImGui::CalcTextSize(PlayButtonText).x + Style.FramePadding.x * 2.0f;
+            static constexpr const char* RunButtonText = "Run";
+            const f32 Size = ImGui::CalcTextSize(RunButtonText).x + Style.FramePadding.x * 2.0f;
             const f32 Available = ImGui::GetContentRegionAvail().x;
 
             ImGui::SetCursorPosX((Available - Size) / 2);
-            if (ImGui::Button(PlayButtonText))
+            if (ImGui::Button(RunButtonText))
             {
                 static constexpr i32f BufferSize = 512;
                 char Buffer[BufferSize];
 
-                std::snprintf(Buffer, BufferSize, "Game.exe /l /s %s %s", WindowSizeItems[WindowSizeCurrent], WindowTypeItemsToArgs[WindowTypeCurrent]);
+                std::snprintf(Buffer, BufferSize,
+                    "Game.exe /l "
+                    "/s %s %s "
+                    "/tfps %d /ffps %d /mmm %d "
+                    "/lfps %d /bfr %d /sp %d ",
+                    WindowSizeItems[WindowSizeCurrent], WindowTypeItemsToArgs[WindowTypeCurrent],
+                    FPSLimit, TargetFixedFPS, MaxMipMaps,
+                    bLimitFPS, bBackfaceRemoval, bSortPolygons
+                );
 
                 {
                     // @TODO: Put this in Volition System class
