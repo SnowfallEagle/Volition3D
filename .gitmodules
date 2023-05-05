@@ -9,3 +9,7 @@
 [submodule "ThirdParty/imgui"]
 	path = ThirdParty/imgui
 	url = https://github.com/ocornut/imgui
+[submodule "SDL_image"]
+	path = ThirdParty/SDL_image
+	url = https://github.com/libsdl-org/SDL_image/
+	branch = release-2.6.x
