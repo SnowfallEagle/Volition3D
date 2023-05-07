@@ -5,112 +5,119 @@
 namespace Volition
 {
 
-#if 0
-void VPerspectiveCorrectTextureInterpolator::Start()
+static void StartFun(VPerspectiveCorrectTextureInterpolator* Self)
 {
-    const VSurface* Texture = &InterpolationContext->Material->Texture.Get(InterpolationContext->MipMappingLevel);
+    const VSurface* Texture = &Self->InterpolationContext->Material->Texture.Get(Self->InterpolationContext->MipMappingLevel);
     VLN_ASSERT(Texture);
 
-    TextureBuffer = Texture->GetBuffer();
-    TexturePitch = Texture->GetPitch();
+    Self->TextureBuffer = Texture->GetBuffer();
+    Self->TexturePitch = Texture->GetPitch();
     const f32 TextureSize = (f32)Texture->GetWidth();
 
     for (i32f i = 0; i < 3; ++i)
     {
-        UVtx[i] =
-            IntToFx22((i32)(InterpolationContext->Vtx[i].U * TextureSize + 0.5f)) /
-                (i32)(InterpolationContext->Vtx[i].Z + 0.5f);
-        VVtx[i] =
-            IntToFx22((i32)(InterpolationContext->Vtx[i].V * TextureSize + 0.5f)) /
-                (i32)(InterpolationContext->Vtx[i].Z + 0.5f);
+        Self->UVtx[i] =
+            IntToFx22((i32)(Self->InterpolationContext->Vtx[i].U * TextureSize + 0.5f)) /
+                (i32)(Self->InterpolationContext->Vtx[i].Z + 0.5f);
+        Self->VVtx[i] =
+            IntToFx22((i32)(Self->InterpolationContext->Vtx[i].V * TextureSize + 0.5f)) /
+                (i32)(Self->InterpolationContext->Vtx[i].Z + 0.5f);
     }
 }
 
-void VPerspectiveCorrectTextureInterpolator::ComputeYStartsAndDeltasLeft(i32 YDiffLeft, i32 LeftStartVtx, i32 LeftEndVtx)
+static void ComputeYStartsAndDeltasLeftFun(VPerspectiveCorrectTextureInterpolator* Self, i32 YDiffLeft, i32 LeftStartVtx, i32 LeftEndVtx)
 {
-    ULeft = (UVtx[LeftStartVtx]);
-    VLeft = (VVtx[LeftStartVtx]);
+    Self->ULeft = (Self->UVtx[LeftStartVtx]);
+    Self->VLeft = (Self->VVtx[LeftStartVtx]);
 
-    UDeltaLeftByY = (UVtx[LeftEndVtx] - UVtx[LeftStartVtx]) / YDiffLeft;
-    VDeltaLeftByY = (VVtx[LeftEndVtx] - VVtx[LeftStartVtx]) / YDiffLeft;
+    Self->UDeltaLeftByY = (Self->UVtx[LeftEndVtx] - Self->UVtx[LeftStartVtx]) / YDiffLeft;
+    Self->VDeltaLeftByY = (Self->VVtx[LeftEndVtx] - Self->VVtx[LeftStartVtx]) / YDiffLeft;
 }
 
-void VPerspectiveCorrectTextureInterpolator::ComputeYStartsAndDeltasRight(i32 YDiffRight, i32 RightStartVtx, i32 RightEndVtx)
+static void ComputeYStartsAndDeltasRightFun(VPerspectiveCorrectTextureInterpolator* Self, i32 YDiffRight, i32 RightStartVtx, i32 RightEndVtx)
 {
-    URight = (UVtx[RightStartVtx]);
-    VRight = (VVtx[RightStartVtx]);
+    Self->URight = (Self->UVtx[RightStartVtx]);
+    Self->VRight = (Self->VVtx[RightStartVtx]);
 
-    UDeltaRightByY = (UVtx[RightEndVtx] - UVtx[RightStartVtx]) / YDiffRight;
-    VDeltaRightByY = (VVtx[RightEndVtx] - VVtx[RightStartVtx]) / YDiffRight;
+    Self->UDeltaRightByY = (Self->UVtx[RightEndVtx] - Self->UVtx[RightStartVtx]) / YDiffRight;
+    Self->VDeltaRightByY = (Self->VVtx[RightEndVtx] - Self->VVtx[RightStartVtx]) / YDiffRight;
 }
 
-void VPerspectiveCorrectTextureInterpolator::SwapLeftRight()
+static void SwapLeftRightFun(VPerspectiveCorrectTextureInterpolator* Self)
 {
     i32 TempInt;
 
-    VLN_SWAP(UDeltaLeftByY, UDeltaRightByY, TempInt);
-    VLN_SWAP(VDeltaLeftByY, VDeltaRightByY, TempInt);
+    VLN_SWAP(Self->UDeltaLeftByY, Self->UDeltaRightByY, TempInt);
+    VLN_SWAP(Self->VDeltaLeftByY, Self->VDeltaRightByY, TempInt);
 
-    VLN_SWAP(ULeft, URight, TempInt);
-    VLN_SWAP(VLeft, VRight, TempInt);
+    VLN_SWAP(Self->ULeft, Self->URight, TempInt);
+    VLN_SWAP(Self->VLeft, Self->VRight, TempInt);
 
-    VLN_SWAP(UVtx[InterpolationContext->VtxIndices[1]], UVtx[InterpolationContext->VtxIndices[2]], TempInt);
-    VLN_SWAP(VVtx[InterpolationContext->VtxIndices[1]], VVtx[InterpolationContext->VtxIndices[2]], TempInt);
+    VLN_SWAP(Self->UVtx[Self->InterpolationContext->VtxIndices[1]], Self->UVtx[Self->InterpolationContext->VtxIndices[2]], TempInt);
+    VLN_SWAP(Self->VVtx[Self->InterpolationContext->VtxIndices[1]], Self->VVtx[Self->InterpolationContext->VtxIndices[2]], TempInt);
 }
 
-void VPerspectiveCorrectTextureInterpolator::ComputeXStartsAndDeltas(i32 XDiff, fx28 ZLeft, fx28 ZRight)
+static void ComputeXStartsAndDeltasFun(VPerspectiveCorrectTextureInterpolator* Self, i32 XDiff, fx28 ZLeft, fx28 ZRight)
 {
-    U = ULeft;
-    V = VLeft;
+    Self->U = Self->ULeft;
+    Self->V = Self->VLeft;
 
     if (XDiff > 0)
     {
-        UDeltaByX = (URight - ULeft) / XDiff;
-        VDeltaByX = (VRight - VLeft) / XDiff;
+        Self->UDeltaByX = (Self->URight - Self->ULeft) / XDiff;
+        Self->VDeltaByX = (Self->VRight - Self->VLeft) / XDiff;
     }
     else
     {
-        UDeltaByX = (URight - ULeft);
-        VDeltaByX = (VRight - VLeft);
+        Self->UDeltaByX = (Self->URight - Self->ULeft);
+        Self->VDeltaByX = (Self->VRight - Self->VLeft);
     }
 }
 
-void VPerspectiveCorrectTextureInterpolator::ProcessPixel()
+static void ProcessPixelFun(VPerspectiveCorrectTextureInterpolator* Self)
 {
-    const VColorARGB Pixel = InterpolationContext->Pixel;
-    const VColorARGB TextureColor = TextureBuffer[
-        ((V << (Fx28Shift - Fx22Shift)) / InterpolationContext->Z) * TexturePitch +
-        ((U << (Fx28Shift - Fx22Shift)) / InterpolationContext->Z)
+    const VColorARGB Pixel = Self->InterpolationContext->Pixel;
+    const VColorARGB TextureColor = Self->TextureBuffer[
+        ((Self->V << (Fx28Shift - Fx22Shift)) / Self->InterpolationContext->Z) * Self->TexturePitch +
+        ((Self->U << (Fx28Shift - Fx22Shift)) / Self->InterpolationContext->Z)
     ];
 
-    InterpolationContext->Pixel = MAP_XRGB32(
+    Self->InterpolationContext->Pixel = MAP_XRGB32(
         (TextureColor.R * Pixel.R) >> 8,
         (TextureColor.G * Pixel.G) >> 8,
         (TextureColor.B * Pixel.B) >> 8
     );
 }
 
-void VPerspectiveCorrectTextureInterpolator::InterpolateX(i32 X)
+static void InterpolateXFun(VPerspectiveCorrectTextureInterpolator* Self, i32 X)
 {
-    U += UDeltaByX * X;
-    V += VDeltaByX * X;
+    Self->U += Self->UDeltaByX * X;
+    Self->V += Self->VDeltaByX * X;
 }
 
-void VPerspectiveCorrectTextureInterpolator::InterpolateYLeft(i32 YLeft)
+static void InterpolateYLeftFun(VPerspectiveCorrectTextureInterpolator* Self, i32 YLeft)
 {
-    ULeft += UDeltaLeftByY * YLeft;
-    VLeft += VDeltaLeftByY * YLeft;
+    Self->ULeft += Self->UDeltaLeftByY * YLeft;
+    Self->VLeft += Self->VDeltaLeftByY * YLeft;
 }
 
-void VPerspectiveCorrectTextureInterpolator::InterpolateYRight(i32 YRight)
+static void InterpolateYRightFun(VPerspectiveCorrectTextureInterpolator* Self, i32 YRight)
 {
-    URight += UDeltaRightByY * YRight;
-    VRight += VDeltaRightByY * YRight;
+    Self->URight += Self->UDeltaRightByY * YRight;
+    Self->VRight += Self->VDeltaRightByY * YRight;
 }
-#endif
 
 VPerspectiveCorrectTextureInterpolator::VPerspectiveCorrectTextureInterpolator()
 {
+    Start = (StartType)StartFun;
+    ComputeYStartsAndDeltasLeft = (ComputeYStartsAndDeltasLeftType)ComputeYStartsAndDeltasLeftFun;
+    ComputeYStartsAndDeltasRight = (ComputeYStartsAndDeltasRightType)ComputeYStartsAndDeltasRightFun;
+    SwapLeftRight = (SwapLeftRightType)SwapLeftRightFun;
+    ComputeXStartsAndDeltas = (ComputeXStartsAndDeltasType)ComputeXStartsAndDeltasFun;
+    ProcessPixel = (ProcessPixelType)ProcessPixelFun;
+    InterpolateX = (InterpolateXType)InterpolateXFun;
+    InterpolateYLeft = (InterpolateYLeftType)InterpolateYLeftFun;
+    InterpolateYRight = (InterpolateYRightType)InterpolateYRightFun;
 }
 
 }
