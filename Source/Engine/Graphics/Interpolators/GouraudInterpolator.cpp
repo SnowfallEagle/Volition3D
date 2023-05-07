@@ -4,111 +4,118 @@
 namespace Volition
 {
 
-#if 0
-void VGouraudInterpolator::Start()
+static void StartFun(VGouraudInterpolator* Self)
 {
     for (i32f i = 0; i < 3; ++i)
     {
-        RVtx[i] = IntToFx16(InterpolationContext->LitColor[i].R);
-        GVtx[i] = IntToFx16(InterpolationContext->LitColor[i].G);
-        BVtx[i] = IntToFx16(InterpolationContext->LitColor[i].B);
+        Self->RVtx[i] = IntToFx16(Self->InterpolationContext->LitColor[i].R);
+        Self->GVtx[i] = IntToFx16(Self->InterpolationContext->LitColor[i].G);
+        Self->BVtx[i] = IntToFx16(Self->InterpolationContext->LitColor[i].B);
     }
 }
 
-void VGouraudInterpolator::ComputeYStartsAndDeltasLeft(i32 YDiffLeft, i32 LeftStartVtx, i32 LeftEndVtx)
+static void ComputeYStartsAndDeltasLeftFun(VGouraudInterpolator* Self, i32 YDiffLeft, i32 LeftStartVtx, i32 LeftEndVtx)
 {
-    RLeft = (RVtx[LeftStartVtx]);
-    GLeft = (GVtx[LeftStartVtx]);
-    BLeft = (BVtx[LeftStartVtx]);
+    Self->RLeft = (Self->RVtx[LeftStartVtx]);
+    Self->GLeft = (Self->GVtx[LeftStartVtx]);
+    Self->BLeft = (Self->BVtx[LeftStartVtx]);
 
-    RDeltaLeftByY = (RVtx[LeftEndVtx] - RVtx[LeftStartVtx]) / YDiffLeft;
-    GDeltaLeftByY = (GVtx[LeftEndVtx] - GVtx[LeftStartVtx]) / YDiffLeft;
-    BDeltaLeftByY = (BVtx[LeftEndVtx] - BVtx[LeftStartVtx]) / YDiffLeft;
+    Self->RDeltaLeftByY = (Self->RVtx[LeftEndVtx] - Self->RVtx[LeftStartVtx]) / YDiffLeft;
+    Self->GDeltaLeftByY = (Self->GVtx[LeftEndVtx] - Self->GVtx[LeftStartVtx]) / YDiffLeft;
+    Self->BDeltaLeftByY = (Self->BVtx[LeftEndVtx] - Self->BVtx[LeftStartVtx]) / YDiffLeft;
 }
 
-void VGouraudInterpolator::ComputeYStartsAndDeltasRight(i32 YDiffRight, i32 RightStartVtx, i32 RightEndVtx)
+static void ComputeYStartsAndDeltasRightFun(VGouraudInterpolator* Self, i32 YDiffRight, i32 RightStartVtx, i32 RightEndVtx)
 {
-    RRight = (RVtx[RightStartVtx]);
-    GRight = (GVtx[RightStartVtx]);
-    BRight = (BVtx[RightStartVtx]);
+    Self->RRight = (Self->RVtx[RightStartVtx]);
+    Self->GRight = (Self->GVtx[RightStartVtx]);
+    Self->BRight = (Self->BVtx[RightStartVtx]);
 
-    RDeltaRightByY = (RVtx[RightEndVtx] - RVtx[RightStartVtx]) / YDiffRight;
-    GDeltaRightByY = (GVtx[RightEndVtx] - GVtx[RightStartVtx]) / YDiffRight;
-    BDeltaRightByY = (BVtx[RightEndVtx] - BVtx[RightStartVtx]) / YDiffRight;
+    Self->RDeltaRightByY = (Self->RVtx[RightEndVtx] - Self->RVtx[RightStartVtx]) / YDiffRight;
+    Self->GDeltaRightByY = (Self->GVtx[RightEndVtx] - Self->GVtx[RightStartVtx]) / YDiffRight;
+    Self->BDeltaRightByY = (Self->BVtx[RightEndVtx] - Self->BVtx[RightStartVtx]) / YDiffRight;
 }
 
-void VGouraudInterpolator::SwapLeftRight()
+static void SwapLeftRightFun(VGouraudInterpolator* Self)
 {
     i32 TempInt;
 
-    VLN_SWAP(RDeltaLeftByY, RDeltaRightByY, TempInt);
-    VLN_SWAP(GDeltaLeftByY, GDeltaRightByY, TempInt);
-    VLN_SWAP(BDeltaLeftByY, BDeltaRightByY, TempInt);
+    VLN_SWAP(Self->RDeltaLeftByY, Self->RDeltaRightByY, TempInt);
+    VLN_SWAP(Self->GDeltaLeftByY, Self->GDeltaRightByY, TempInt);
+    VLN_SWAP(Self->BDeltaLeftByY, Self->BDeltaRightByY, TempInt);
 
-    VLN_SWAP(RLeft, RRight, TempInt);
-    VLN_SWAP(GLeft, GRight, TempInt);
-    VLN_SWAP(BLeft, BRight, TempInt);
+    VLN_SWAP(Self->RLeft, Self->RRight, TempInt);
+    VLN_SWAP(Self->GLeft, Self->GRight, TempInt);
+    VLN_SWAP(Self->BLeft, Self->BRight, TempInt);
 
-    VLN_SWAP(RVtx[InterpolationContext->VtxIndices[1]], RVtx[InterpolationContext->VtxIndices[2]], TempInt);
-    VLN_SWAP(GVtx[InterpolationContext->VtxIndices[1]], GVtx[InterpolationContext->VtxIndices[2]], TempInt);
-    VLN_SWAP(BVtx[InterpolationContext->VtxIndices[1]], BVtx[InterpolationContext->VtxIndices[2]], TempInt);
+    VLN_SWAP(Self->RVtx[Self->InterpolationContext->VtxIndices[1]], Self->RVtx[Self->InterpolationContext->VtxIndices[2]], TempInt);
+    VLN_SWAP(Self->GVtx[Self->InterpolationContext->VtxIndices[1]], Self->GVtx[Self->InterpolationContext->VtxIndices[2]], TempInt);
+    VLN_SWAP(Self->BVtx[Self->InterpolationContext->VtxIndices[1]], Self->BVtx[Self->InterpolationContext->VtxIndices[2]], TempInt);
 }
 
-void VGouraudInterpolator::ComputeXStartsAndDeltas(i32 XDiff, fx28 ZLeft, fx28 ZRight)
+static void ComputeXStartsAndDeltasFun(VGouraudInterpolator* Self, i32 XDiff, fx28 ZLeft, fx28 ZRight)
 {
-    R = RLeft + Fx16RoundUp;
-    G = GLeft + Fx16RoundUp;
-    B = BLeft + Fx16RoundUp;
+    Self->R = Self->RLeft + Fx16RoundUp;
+    Self->G = Self->GLeft + Fx16RoundUp;
+    Self->B = Self->BLeft + Fx16RoundUp;
 
     if (XDiff > 0)
     {
-        RDeltaByX = (RRight - RLeft) / XDiff;
-        GDeltaByX = (GRight - GLeft) / XDiff;
-        BDeltaByX = (BRight - BLeft) / XDiff;
+        Self->RDeltaByX = (Self->RRight - Self->RLeft) / XDiff;
+        Self->GDeltaByX = (Self->GRight - Self->GLeft) / XDiff;
+        Self->BDeltaByX = (Self->BRight - Self->BLeft) / XDiff;
     }
     else
     {
-        RDeltaByX = (RRight - RLeft);
-        GDeltaByX = (GRight - GLeft);
-        BDeltaByX = (BRight - BLeft);
+        Self->RDeltaByX = (Self->RRight - Self->RLeft);
+        Self->GDeltaByX = (Self->GRight - Self->GLeft);
+        Self->BDeltaByX = (Self->BRight - Self->BLeft);
     }
 }
 
-void VGouraudInterpolator::ProcessPixel()
+static void ProcessPixelFun(VGouraudInterpolator* Self)
 {
-    const VColorARGB Pixel = InterpolationContext->Pixel;
+    const VColorARGB Pixel = Self->InterpolationContext->Pixel;
 
-    InterpolationContext->Pixel = MAP_XRGB32(
-        (Fx16ToInt(R) * Pixel.R) >> 8,
-        (Fx16ToInt(G) * Pixel.G) >> 8,
-        (Fx16ToInt(B) * Pixel.B) >> 8
+    Self->InterpolationContext->Pixel = MAP_XRGB32(
+        (Fx16ToInt(Self->R) * Pixel.R) >> 8,
+        (Fx16ToInt(Self->G) * Pixel.G) >> 8,
+        (Fx16ToInt(Self->B) * Pixel.B) >> 8
     );
 }
 
-void VGouraudInterpolator::InterpolateX(i32 X)
+static void InterpolateXFun(VGouraudInterpolator* Self, i32 X)
 {
-    R += RDeltaByX * X;
-    G += GDeltaByX * X;
-    B += BDeltaByX * X;
+    Self->R += Self->RDeltaByX * X;
+    Self->G += Self->GDeltaByX * X;
+    Self->B += Self->BDeltaByX * X;
 }
 
-void VGouraudInterpolator::InterpolateYLeft(i32 YLeft)
+static void InterpolateYLeftFun(VGouraudInterpolator* Self, i32 YLeft)
 {
-    RLeft += RDeltaLeftByY * YLeft;
-    GLeft += GDeltaLeftByY * YLeft;
-    BLeft += BDeltaLeftByY * YLeft;
+    Self->RLeft += Self->RDeltaLeftByY * YLeft;
+    Self->GLeft += Self->GDeltaLeftByY * YLeft;
+    Self->BLeft += Self->BDeltaLeftByY * YLeft;
 }
 
-void VGouraudInterpolator::InterpolateYRight(i32 YRight)
+static void InterpolateYRightFun(VGouraudInterpolator* Self, i32 YRight)
 {
-    RRight += RDeltaRightByY * YRight;
-    GRight += GDeltaRightByY * YRight;
-    BRight += BDeltaRightByY * YRight;
+    Self->RRight += Self->RDeltaRightByY * YRight;
+    Self->GRight += Self->GDeltaRightByY * YRight;
+    Self->BRight += Self->BDeltaRightByY * YRight;
 }
-#endif
 
 VGouraudInterpolator::VGouraudInterpolator()
 {
+    Start = (StartType)StartFun;
+    ComputeYStartsAndDeltasLeft = (ComputeYStartsAndDeltasLeftType)ComputeYStartsAndDeltasLeftFun;
+    ComputeYStartsAndDeltasRight = (ComputeYStartsAndDeltasRightType)ComputeYStartsAndDeltasRightFun;
+    SwapLeftRight = (SwapLeftRightType)SwapLeftRightFun;
+    ComputeXStartsAndDeltas = (ComputeXStartsAndDeltasType)ComputeXStartsAndDeltasFun;
+    ProcessPixel = (ProcessPixelType)ProcessPixelFun;
+    InterpolateX = (InterpolateXType)InterpolateXFun;
+    InterpolateYLeft = (InterpolateYLeftType)InterpolateYLeftFun;
+    InterpolateYRight = (InterpolateYRightType)InterpolateYRightFun;
 }
 
 }

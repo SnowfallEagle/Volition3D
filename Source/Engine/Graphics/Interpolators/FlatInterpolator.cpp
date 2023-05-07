@@ -4,26 +4,26 @@
 namespace Volition
 {
 
-#if 0
-void VFlatInterpolator::Start()
+static void StartFun(VFlatInterpolator* Self)
 {
-    Color = InterpolationContext->LitColor[0];
+    Self->Color = Self->InterpolationContext->LitColor[0];
 }
 
-void VFlatInterpolator::ProcessPixel()
+static void ProcessPixelFun(VFlatInterpolator* Self)
 {
-    const VColorARGB Pixel = InterpolationContext->Pixel;
+    const VColorARGB Pixel = Self->InterpolationContext->Pixel;
 
-    InterpolationContext->Pixel = MAP_XRGB32(
-        (Color.R * Pixel.R) >> 8,
-        (Color.G * Pixel.G) >> 8,
-        (Color.B * Pixel.B) >> 8
+    Self->InterpolationContext->Pixel = MAP_XRGB32(
+        (Self->Color.R * Pixel.R) >> 8,
+        (Self->Color.G * Pixel.G) >> 8,
+        (Self->Color.B * Pixel.B) >> 8
     );
 }
-#endif
 
 VFlatInterpolator::VFlatInterpolator()
 {
+    Start = (StartType)StartFun;
+    ProcessPixel = (ProcessPixelType)ProcessPixelFun;
 }
 
 }

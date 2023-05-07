@@ -4,29 +4,29 @@
 namespace Volition
 {
 
-#if 0
-void VAlphaInterpolator::Start()
+static void StartFun(VAlphaInterpolator* Self)
 {
-    Alpha = InterpolationContext->LitColor[0].A;
+    Self->Alpha = Self->InterpolationContext->LitColor[0].A;
 }
 
-void VAlphaInterpolator::ProcessPixel()
+static void ProcessPixelFun(VAlphaInterpolator* Self)
 {
-    const VColorARGB Pixel = InterpolationContext->Pixel;
-    const VColorARGB BufferPixel = InterpolationContext->Buffer[
-        InterpolationContext->Y * InterpolationContext->BufferPitch + InterpolationContext->X
+    const VColorARGB Pixel = Self->InterpolationContext->Pixel;
+    const VColorARGB BufferPixel = Self->InterpolationContext->Buffer[
+        Self->InterpolationContext->Y * Self->InterpolationContext->BufferPitch + Self->InterpolationContext->X
     ];
 
-    InterpolationContext->Pixel = MAP_XRGB32(
-        ( (Alpha * Pixel.R) + ((255 - Alpha) * BufferPixel.R) ) >> 8,
-        ( (Alpha * Pixel.G) + ((255 - Alpha) * BufferPixel.G) ) >> 8,
-        ( (Alpha * Pixel.B) + ((255 - Alpha) * BufferPixel.B) ) >> 8
+    Self->InterpolationContext->Pixel = MAP_XRGB32(
+        ( (Self->Alpha * Pixel.R) + ((255 - Self->Alpha) * BufferPixel.R) ) >> 8,
+        ( (Self->Alpha * Pixel.G) + ((255 - Self->Alpha) * BufferPixel.G) ) >> 8,
+        ( (Self->Alpha * Pixel.B) + ((255 - Self->Alpha) * BufferPixel.B) ) >> 8
     );
 }
-#endif
 
 VAlphaInterpolator::VAlphaInterpolator()
 {
+    Start = (StartType)StartFun;
+    ProcessPixel = (ProcessPixelType)ProcessPixelFun;
 }
 
 }
