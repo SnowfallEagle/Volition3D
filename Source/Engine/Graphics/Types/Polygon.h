@@ -38,6 +38,7 @@ namespace EPolyAttr
 		ShadeModeTexture  = VLN_BIT(8),
 
 		UsesMaterial = VLN_BIT(9),
+		Terrain      = VLN_BIT(10),
 	};
 }
 

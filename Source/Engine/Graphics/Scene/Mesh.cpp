@@ -910,7 +910,7 @@ void VMesh::GenerateTerrain(const char* HeightMap, const char* Texture, f32 Size
             VPoly& Poly2 = PolyList[PolyIndex + 1];
 
             Poly2.State         = Poly1.State        |= EPolyState::Active;
-            Poly2.Attr          = Poly1.Attr         |= EPolyAttr::ShadeModeGouraud | EPolyAttr::ShadeModeTexture;
+            Poly2.Attr          = Poly1.Attr         |= EPolyAttr::Terrain | EPolyAttr::ShadeModeGouraud | EPolyAttr::ShadeModeTexture;
             Poly2.OriginalColor = Poly1.OriginalColor = VColorARGB(0xFF, 0xFF, 0xFF, 0xFF);
             Poly2.Material      = Poly1.Material      = &Material;
 

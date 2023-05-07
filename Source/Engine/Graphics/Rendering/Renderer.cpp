@@ -1600,21 +1600,28 @@ void VRenderer::SetInterpolators()
                 Distance / (World.Camera->ZFarClip / (f32)MaxMipMaps)
             );
 
-            if (Distance < 10000.0f)
+            if (InterpolationContext.PolyAttr & EPolyAttr::Terrain)
             {
-                InterpolationContext.Interpolators[InterpolationContext.NumInterpolators] = &InterpolationContext.BillinearPerspectiveTextureInterpolator;
-            }
-            else if (Distance < 15000.0f)
-            {
-                InterpolationContext.Interpolators[InterpolationContext.NumInterpolators] = &InterpolationContext.PerspectiveCorrectTextureInterpolator;
-            }
-            else if (Distance < 50000.0f)
-            {
-                InterpolationContext.Interpolators[InterpolationContext.NumInterpolators] = &InterpolationContext.LinearPiecewiseTextureInterpolator;
+                InterpolationContext.Interpolators[InterpolationContext.NumInterpolators] = &InterpolationContext.AffineTextureInterpolator;
             }
             else
             {
-                InterpolationContext.Interpolators[InterpolationContext.NumInterpolators] = &InterpolationContext.AffineTextureInterpolator;
+                if (Distance < 10000.0f)
+                {
+                    InterpolationContext.Interpolators[InterpolationContext.NumInterpolators] = &InterpolationContext.BillinearPerspectiveTextureInterpolator;
+                }
+                else if (Distance < 15000.0f)
+                {
+                    InterpolationContext.Interpolators[InterpolationContext.NumInterpolators] = &InterpolationContext.PerspectiveCorrectTextureInterpolator;
+                }
+                else if (Distance < 50000.0f)
+                {
+                    InterpolationContext.Interpolators[InterpolationContext.NumInterpolators] = &InterpolationContext.LinearPiecewiseTextureInterpolator;
+                }
+                else
+                {
+                    InterpolationContext.Interpolators[InterpolationContext.NumInterpolators] = &InterpolationContext.AffineTextureInterpolator;
+                }
             }
         }
         else
