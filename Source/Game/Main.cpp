@@ -40,7 +40,7 @@ public:
         Entity->Mesh->Attr &= ~EMeshAttr::CastShadow;
 
         Camera = World.GetCamera();
-        Camera->Init(ECameraAttr::Euler, { 0, 75.0f, 0 }, { 0, 0, 0 }, VVector4(), 90, 50, 100000, {(f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
+        Camera->Init(ECameraAttr::Euler, { 0, 75.0f, 0 }, { 0, 0, 0 }, VVector4(), 60, 500, 100000, {(f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
 
         World.SetCubemap("Assets/Cubemaps/Cubemap.png");
         World.GetTerrain()->GenerateTerrain("Assets/Terrains/Large/Heightmap.bmp", "Assets/Terrains/RockyLand/Texture.bmp", 50000.0f, 25000.0f);
@@ -110,7 +110,7 @@ public:
                 ELightState::Active,
                 ELightAttr::ComplexSpotlight,
 
-                0, MAP_XRGB32(0x00, 0x66, 0x00), 0,
+                0, MAP_XRGB32(0xBB, 0x00, 0x00), 0,
                 { 0.0f, 1000.0f, -300.0f, 0 }, { 0, 0, 0, 0 }, VVector4(-0.5f, -1.0f, 1.0f).GetNormalized(), { 0, 0, 0, 0 },
 
                 0, 0.0005f, 0,
@@ -120,12 +120,10 @@ public:
 
             Renderer.AddLight(AmbientLight);
             Renderer.AddLight(InfiniteLight);
-            /*
-            Renderer.AddLight(PointLight);
+            // Renderer.AddLight(PointLight);
             Renderer.AddLight(ComplexSpotlight);
-            Renderer.AddLight(OccluderLight);
+            // Renderer.AddLight(OccluderLight);
             Renderer.SetOccluderLight(3);
-            */
         }
     }
 

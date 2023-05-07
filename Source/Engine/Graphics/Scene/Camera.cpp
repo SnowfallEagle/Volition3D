@@ -200,6 +200,13 @@ void VCamera::BuildCameraToPerspectiveMat44()
     };
 }
 
+void VCamera::BuildWorldToCameraMat44()
+{
+    Attr & ECameraAttr::Euler ? BuildWorldToCameraEulerMat44() : BuildWorldToCameraUVNMat44(EUVNMode::Spherical);
+    MatCameraRotationOnly = MatCamera;
+    MatCameraRotationOnly.C32 = MatCameraRotationOnly.C31 = MatCameraRotationOnly.C30 = 0.0f;
+}
+
 void VCamera::BuildHomogeneousPerspectiveToScreenMat44()
 {
     /*

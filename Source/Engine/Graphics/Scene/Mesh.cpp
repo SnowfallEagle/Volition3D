@@ -924,6 +924,12 @@ void VMesh::GenerateTerrain(const char* HeightMap, const char* Texture, f32 Size
         }
     }
 
+    // Set vertex info
+    for (i32f i = 0; i < NumVtx; ++i)
+    {
+        LocalVtxList[i].Attr |= EVertexAttr::HasTextureCoords;
+    }
+
     // Compute stuff
     ComputeRadius();
     ComputePolygonNormalsLength();

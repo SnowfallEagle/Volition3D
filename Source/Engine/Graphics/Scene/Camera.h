@@ -71,21 +71,15 @@ public:
         const VVector2& InViewPortSize
     );
 
-    // @TODO: Put in cpp
-    void BuildWorldToCameraMat44()
-    {
-        Attr & ECameraAttr::Euler ? BuildWorldToCameraEulerMat44() : BuildWorldToCameraUVNMat44(EUVNMode::Spherical);
-        MatCameraRotationOnly = MatCamera;
-        MatCameraRotationOnly.C32 = MatCameraRotationOnly.C31 = MatCameraRotationOnly.C30 = 0.0f;
-    }
-
-    void BuildWorldToCameraEulerMat44(ERotateSeq Seq = ERotateSeq::YXZ);
-    void BuildWorldToCameraUVNMat44(EUVNMode Mode);
-
+    void BuildWorldToCameraMat44();
     void BuildCameraToPerspectiveMat44();
 
     void BuildHomogeneousPerspectiveToScreenMat44();
     void BuildNonHomogeneousPerspectiveToScreenMat44();
+
+private:
+    void BuildWorldToCameraEulerMat44(ERotateSeq Seq = ERotateSeq::YXZ);
+    void BuildWorldToCameraUVNMat44(EUVNMode Mode);
 
 public:
     VLN_DEFINE_ALIGN_OPERATORS(16);

@@ -177,7 +177,6 @@ void VRenderList::TransformModelToWorld(const VPoint4& WorldPos, ETransformType 
             for (i32f V = 0; V < 3; ++V)
             {
                 Poly->TransVtx[V].Position = Poly->LocalVtx[V].Position + WorldPos;
-                Poly->TransVtx[V].Normal = Poly->LocalVtx[V].Normal; // @TODO: Do we need it?
             }
         }
     }
@@ -422,8 +421,6 @@ void VRenderList::Light(const VCamera& Cam, const VLight* Lights, i32 NumLights)
                 }
                 else if (Lights[LightIndex].Attr & ELightAttr::Infinite)
                 {
-                    // @FIXME: Normals aren't transformed!!!
-
                     f32 Dot = VVector4::Dot(Poly->TransVtx[0].Normal, Lights[LightIndex].TransDir);
                     if (Dot < 0)
                     {
@@ -784,7 +781,6 @@ void VRenderList::Clip(const VCamera& Camera, EClipFlags::Type Flags)
 
         if (Flags & EClipFlags::Y)
         {
-            // @FIXME: Maybe bug with clipping here?
             ZFactor = (0.5f * Camera.ViewPlaneSize.Y) / Camera.ViewDist;
             ZTest = ZFactor * Poly.TransVtx[0].Z;
 
