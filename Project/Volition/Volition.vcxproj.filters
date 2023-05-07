@@ -203,5 +203,6 @@
     <ClCompile Include="..\..\Source\Engine\Graphics\Scene\Mesh.cpp">
       <Filter>Engine\Graphics\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\IInterpolator.cpp" />
   </ItemGroup>
 </Project>

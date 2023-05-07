@@ -4,6 +4,7 @@
 namespace Volition
 {
 
+#if 0
 void VFlatInterpolator::Start()
 {
     Color = InterpolationContext->LitColor[0];
@@ -18,6 +19,11 @@ void VFlatInterpolator::ProcessPixel()
         (Color.G * Pixel.G) >> 8,
         (Color.B * Pixel.B) >> 8
     );
+}
+#endif
+
+VFlatInterpolator::VFlatInterpolator()
+{
 }
 
 }

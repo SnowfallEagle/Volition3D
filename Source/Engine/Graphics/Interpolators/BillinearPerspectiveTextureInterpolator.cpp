@@ -4,6 +4,7 @@
 namespace Volition
 {
 
+#if 0
 void VBillinearPerspectiveTextureInterpolator::Start()
 {
     const VSurface* Texture = &InterpolationContext->Material->Texture.Get(InterpolationContext->MipMappingLevel);
@@ -159,6 +160,11 @@ void VBillinearPerspectiveTextureInterpolator::InterpolateYRight(i32 YRight)
 {
     URight += UDeltaRightByY * YRight;
     VRight += VDeltaRightByY * YRight;
+}
+#endif
+
+VBillinearPerspectiveTextureInterpolator::VBillinearPerspectiveTextureInterpolator()
+{
 }
 
 }

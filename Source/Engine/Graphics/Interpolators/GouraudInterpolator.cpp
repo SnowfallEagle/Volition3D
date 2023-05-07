@@ -4,6 +4,7 @@
 namespace Volition
 {
 
+#if 0
 void VGouraudInterpolator::Start()
 {
     for (i32f i = 0; i < 3; ++i)
@@ -103,6 +104,11 @@ void VGouraudInterpolator::InterpolateYRight(i32 YRight)
     RRight += RDeltaRightByY * YRight;
     GRight += GDeltaRightByY * YRight;
     BRight += BDeltaRightByY * YRight;
+}
+#endif
+
+VGouraudInterpolator::VGouraudInterpolator()
+{
 }
 
 }

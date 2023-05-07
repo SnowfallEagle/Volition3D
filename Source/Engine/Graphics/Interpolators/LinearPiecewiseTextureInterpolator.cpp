@@ -4,6 +4,7 @@
 namespace Volition
 {
 
+#if 0
 void VLinearPiecewiseTextureInterpolator::Start()
 {
     const VSurface* Texture = &InterpolationContext->Material->Texture.Get(InterpolationContext->MipMappingLevel);
@@ -107,6 +108,11 @@ void VLinearPiecewiseTextureInterpolator::ProcessPixel()
         (TextureColor.G * Pixel.G) >> 8,
         (TextureColor.B * Pixel.B) >> 8
     );
+}
+#endif
+
+VLinearPiecewiseTextureInterpolator::VLinearPiecewiseTextureInterpolator()
+{
 }
 
 }

@@ -4,6 +4,7 @@
 namespace Volition
 {
 
+#if 0
 void VAlphaInterpolator::Start()
 {
     Alpha = InterpolationContext->LitColor[0].A;
@@ -21,6 +22,11 @@ void VAlphaInterpolator::ProcessPixel()
         ( (Alpha * Pixel.G) + ((255 - Alpha) * BufferPixel.G) ) >> 8,
         ( (Alpha * Pixel.B) + ((255 - Alpha) * BufferPixel.B) ) >> 8
     );
+}
+#endif
+
+VAlphaInterpolator::VAlphaInterpolator()
+{
 }
 
 }

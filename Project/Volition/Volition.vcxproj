@@ -259,6 +259,7 @@
     <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\BillinearPerspectiveTextureInterpolator.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\FlatInterpolator.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\GouraudInterpolator.cpp" />
+    <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\IInterpolator.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\LinearPiecewiseTextureInterpolator.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\PerspectiveCorrectTextureInterpolator.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Rendering\Renderer.cpp" />

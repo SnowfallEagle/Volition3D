@@ -5,16 +5,13 @@
 namespace Volition
 {
 
-class VFlatInterpolator final : public IInterpolator
+class VFlatInterpolator : public IInterpolator
 {
-private:
+public:
     VColorARGB Color;
 
 public:
-    virtual ~VFlatInterpolator() = default;
-
-    virtual void Start() override;
-    virtual void ProcessPixel() override;
+    VFlatInterpolator();
 };
 
 }

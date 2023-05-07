@@ -5,14 +5,13 @@
 namespace Volition
 {
 
-class VAlphaInterpolator final : public IInterpolator
+class VAlphaInterpolator : public IInterpolator
 {
-private:
+public:
     i32 Alpha;
 
 public:
-    virtual void Start() override;
-    virtual void ProcessPixel() override;
+    VAlphaInterpolator();
 };
 
 }

@@ -5,6 +5,7 @@
 namespace Volition
 {
 
+#if 0
 void VPerspectiveCorrectTextureInterpolator::Start()
 {
     const VSurface* Texture = &InterpolationContext->Material->Texture.Get(InterpolationContext->MipMappingLevel);
@@ -105,6 +106,11 @@ void VPerspectiveCorrectTextureInterpolator::InterpolateYRight(i32 YRight)
 {
     URight += UDeltaRightByY * YRight;
     VRight += VDeltaRightByY * YRight;
+}
+#endif
+
+VPerspectiveCorrectTextureInterpolator::VPerspectiveCorrectTextureInterpolator()
+{
 }
 
 }
