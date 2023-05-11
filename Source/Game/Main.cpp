@@ -51,7 +51,7 @@ public:
                 ELightAttr::Ambient,
 
                 MAP_XRGB32(0x33, 0x33, 0x22), 0, 0,
-                { 0, 0, 0, 0 }, { 0, 0, 0, 0}, VVector4{0, 0, 0, 0}.GetNormalized(), { 0 , 0, 0, 0 },
+                { 0.0f, 1000.0f, 0, 1.0f }, { 0, 0, 0, 0}, VVector4{0, 0, 0, 0}.GetNormalized(), { 0 , 0, 0, 0 },
 
                 0, 0, 0,
                 0, 0,
@@ -74,8 +74,8 @@ public:
                 ELightState::Active,
                 ELightAttr::Point,
 
-                0, MAP_XRGB32(0x33, 0x00, 0x77), 0,
-                { 1000.0f, 1000.0f, 0.0f, 0 }, { 0, 0, 0, 0 }, VVector4{ 0, 0, 0, 0 }.GetNormalized(), { 0, 0, 0, 0 },
+                0, MAP_XRGB32(0xAA, 0x00, 0x00), 0,
+                { 1000.0f, 1000.0f, 0.0f, 1.0f }, { 0, 0, 0, 0 }, VVector4{ 0, 0, 0, 0 }.GetNormalized(), { 0, 0, 0, 0 },
 
                 0, 0.001f, 0,
                 0, 0,
@@ -99,7 +99,7 @@ public:
                 ELightAttr::SimpleSpotlight,
 
                 0, MAP_XRGB32(0xAA, 0xAA, 0xAA), 0,
-                { 1000.0f, 1000.0f, 0.0f, 0 }, { 0, 0, 0, 0 }, VVector4(-1.0f, -1.0f, 0.0f).GetNormalized(), { 0, 0, 0, 0 },
+                { 0.0f, 75.0f, 0.0f, 0 }, { 0, 0, 0, 0 }, VVector4(-1.0f, -1.0f, 0.0f).GetNormalized(), { 0, 0, 0, 0 },
 
                 0, 0.0005f, 0,
                 30.0f, 60.0f,
@@ -113,17 +113,18 @@ public:
                 0, MAP_XRGB32(0xBB, 0x00, 0x00), 0,
                 { 0.0f, 1000.0f, -300.0f, 0 }, { 0, 0, 0, 0 }, VVector4(-0.5f, -1.0f, 1.0f).GetNormalized(), { 0, 0, 0, 0 },
 
-                0, 0.0005f, 0,
+                0, 0.0000001f, 0.001,
                 30.0f, 60.0f,
                 1.0f
             };
 
             Renderer.AddLight(AmbientLight);
             Renderer.AddLight(InfiniteLight);
-            // Renderer.AddLight(PointLight);
-            Renderer.AddLight(ComplexSpotlight);
+            Renderer.AddLight(PointLight);
+            // Renderer.AddLight(ComplexSpotlight);
+            // Renderer.AddLight(SimpleSpotlight);
             // Renderer.AddLight(OccluderLight);
-            Renderer.SetOccluderLight(3);
+            Renderer.SetOccluderLight(1);
         }
     }
 

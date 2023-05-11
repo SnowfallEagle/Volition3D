@@ -17,7 +17,7 @@ namespace Volition
 #define VLN_BIG_ENDIAN 0
 #define VLN_ENDIANNESS VLN_LITTLE_ENDIAN
 
-#define VLN_SSE 1
+#define VLN_SSE NDEBUG
 
 #define VLN_DEBUG_BREAK() __debugbreak()
 #define VLN_PAUSE() _mm_pause()

@@ -425,7 +425,7 @@ void VRenderList::Light(const VCamera& Cam, const VLight* Lights, i32 NumLights)
                     if (Dot < 0)
                     {
                         // 128 used for fixed point to don't lose accuracy with integers
-                        const i32 Intensity = (i32)( 128.0f * Math.Abs(Dot));
+                        const i32 Intensity = (i32)(128.0f * Math.Abs(Dot));
                         RSum0 += (Poly->OriginalColor.R * Lights[LightIndex].CDiffuse.R * Intensity) / (256 * 128);
                         GSum0 += (Poly->OriginalColor.G * Lights[LightIndex].CDiffuse.G * Intensity) / (256 * 128);
                         BSum0 += (Poly->OriginalColor.B * Lights[LightIndex].CDiffuse.B * Intensity) / (256 * 128);
@@ -435,7 +435,7 @@ void VRenderList::Light(const VCamera& Cam, const VLight* Lights, i32 NumLights)
                     if (Dot < 0)
                     {
                         // 128 used for fixed point to don't lose accuracy with integers
-                        const i32 Intensity = (i32)( 128.0f * Math.Abs(Dot));
+                        const i32 Intensity = (i32)(128.0f * Math.Abs(Dot));
                         RSum1 += (Poly->OriginalColor.R * Lights[LightIndex].CDiffuse.R * Intensity) / (256 * 128);
                         GSum1 += (Poly->OriginalColor.G * Lights[LightIndex].CDiffuse.G * Intensity) / (256 * 128);
                         BSum1 += (Poly->OriginalColor.B * Lights[LightIndex].CDiffuse.B * Intensity) / (256 * 128);
@@ -445,7 +445,7 @@ void VRenderList::Light(const VCamera& Cam, const VLight* Lights, i32 NumLights)
                     if (Dot < 0)
                     {
                         // 128 used for fixed point to don't lose accuracy with integers
-                        const i32 Intensity = (i32)( 128.0f * Math.Abs(Dot));
+                        const i32 Intensity = (i32)(128.0f * Math.Abs(Dot));
                         RSum2 += (Poly->OriginalColor.R * Lights[LightIndex].CDiffuse.R * Intensity) / (256 * 128);
                         GSum2 += (Poly->OriginalColor.G * Lights[LightIndex].CDiffuse.G * Intensity) / (256 * 128);
                         BSum2 += (Poly->OriginalColor.B * Lights[LightIndex].CDiffuse.B * Intensity) / (256 * 128);

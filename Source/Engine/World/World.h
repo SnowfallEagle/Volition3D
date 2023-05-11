@@ -16,7 +16,7 @@ class VWorld
     VCamera* Camera;
 
     VSurface Cubemap;
-    float CubemapMovementEffectAngle = 0.0f;
+    f32 CubemapMovementEffectAngle = 0.0f;
 
     VTerrain* Terrain;
 

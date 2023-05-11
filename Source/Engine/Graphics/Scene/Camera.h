@@ -54,10 +54,10 @@ public:
     VPlane3 TopClipPlane;
     VPlane3 BottomClipPlane;
 
-    VMatrix44 MatCamera;      /** World->Camera */
+    VMatrix44 MatCamera;             /** World->Camera */
     VMatrix44 MatCameraRotationOnly; /** World->Camera but only for Normals or Directions */
-    VMatrix44 MatPerspective; /** Camera->Perspective */
-    VMatrix44 MatScreen;      /** Perspective->Screen */
+    VMatrix44 MatPerspective;        /** Camera->Perspective */
+    VMatrix44 MatScreen;             /** Perspective->Screen */
 
 public:
     void Init(
@@ -82,7 +82,7 @@ private:
     void BuildWorldToCameraUVNMat44(EUVNMode Mode);
 
 public:
-    VLN_DEFINE_ALIGN_OPERATORS(16);
+    VLN_DEFINE_ALIGN_OPERATORS_SSE();
 };
 
 }

@@ -142,7 +142,7 @@ void VRenderer::Render()
     VCamera& Camera = *World.Camera;
     Camera.BuildWorldToCameraMat44();
 
-    float CameraAngle = Math.Mod(Camera.Dir.Y + World.CubemapMovementEffectAngle, 360.0f);
+    f32 CameraAngle = Math.Mod(Camera.Dir.Y + World.CubemapMovementEffectAngle, 360.0f);
 
     // Process cubemap
     VSurface& Cubemap = World.Cubemap;
@@ -181,7 +181,7 @@ void VRenderer::Render()
     // Insert terrain
     VMesh* TerrainMesh = World.GetTerrain()->Mesh;
 
-    // We already transformed terrain on VTerrain::Update()
+    TerrainMesh->TransformModelToWorld();
     TerrainMesh->ResetRenderState();
     TerrainMesh->Cull(Camera);
 
@@ -228,13 +228,13 @@ void VRenderer::Render()
             }
 
             // Compute shadow vertex positions
-            float YShadowPosition = TerrainMesh->Position.Y + 10.0f;
+            f32 YShadowPosition = TerrainMesh->Position.Y + 10.0f;
 
             VVertex* VtxList = Mesh->TransVtxList;
             for (i32f i = 0; i < Mesh->NumVtx; ++i)
             {
                 VVector4 Direction = (VtxList[i].Position - OccluderLight->Pos);
-                float T = (YShadowPosition - OccluderLight->Pos.Y) / Direction.Y;
+                f32 T = (YShadowPosition - OccluderLight->Pos.Y) / Direction.Y;
 
                 VtxList[i].X = OccluderLight->Pos.X + (T * Direction.X);
                 VtxList[i].Y = YShadowPosition;
@@ -269,7 +269,7 @@ void VRenderer::Render()
         RenderList->Clip(Camera);
 
         TransformLights(Camera);
-        RenderList->Light(Camera, Renderer.Lights, Renderer.MaxLights);
+        RenderList->Light(Camera, Lights, MaxLights);
 
         if (Config.RenderSpec.bSortPolygons)
         {
