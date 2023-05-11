@@ -42,7 +42,6 @@ public:
     i32 NumAdditionalPoly;
     b8 bTerrain = false;
 
-    VPolyFace* PolyPtrList[MaxPoly];
     VPolyFace PolyList[MaxPoly];
 
 public:
@@ -63,9 +62,7 @@ public:
 
     void RemoveBackfaces(const VCamera& Cam);
     void Light(const VCamera& Cam, const VLight* Lights, i32 NumLights);
-
     void Clip(const VCamera& Camera, EClipFlags::Type Flags = EClipFlags::Full);
-    void SortPolygons(ESortPolygonsMethod Method = ESortPolygonsMethod::Average);
 
     void ConvertFromHomogeneous();
 

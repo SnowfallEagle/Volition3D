@@ -76,12 +76,6 @@ static void BackfaceRemovalArg(char** Argv, i32& Cursor)
     Cursor += 1;
 }
 
-static void SortPolygonsArg(char** Argv, i32& Cursor)
-{
-    Config.RenderSpec.bSortPolygons = std::atoi(Argv[Cursor]);
-    Cursor += 1;
-}
-
 static TMap<VString, ArgHandler> ArgHandlers = {
     { LauncherArgShort, { LauncherArg } },
     { LauncherArgLong,  { LauncherArg } },
@@ -113,9 +107,6 @@ static TMap<VString, ArgHandler> ArgHandlers = {
 
     { BackfaceRemovalArgShort, { BackfaceRemovalArg, 1 }},
     { BackfaceRemovalArgLong,  { BackfaceRemovalArg, 1 }},
-
-    { SortPolygonsArgShort, { SortPolygonsArg, 1 }},
-    { SortPolygonsArgLong,  { SortPolygonsArg, 1 }},
 };
 
 void VConfig::StartUp(i32 Argc, char** Argv)

@@ -26,7 +26,7 @@ public:
     u32* Buffer;
     i32 BufferPitch;
 
-    VVertex* Vtx;
+    const VVertex* Vtx;
     const VMaterial* Material;
 
     VColorARGB OriginalColor;

@@ -288,11 +288,6 @@ void VRenderer::Render()
         RenderLists[i]->TransformWorldToCamera(Camera);
         RenderLists[i]->Clip(Camera);
         RenderLists[i]->Light(Camera, Lights, MaxLights);
-
-        if (Config.RenderSpec.bSortPolygons)
-        {
-            RenderLists[i]->SortPolygons(ESortPolygonsMethod::Average);
-        }
         RenderLists[i]->TransformCameraToScreen(Camera);
     }
 
@@ -1668,7 +1663,7 @@ void VRenderer::RenderSolid(const VRenderList* RenderList)
 {
     for (i32f i = 0; i < RenderList->NumPoly; ++i)
     {
-        VPolyFace* Poly = RenderList->PolyPtrList[i];
+        const VPolyFace* Poly = &RenderList->PolyList[i];
         if (!Poly ||
             ~Poly->State & EPolyState::Active ||
             Poly->State & EPolyState::Backface ||
@@ -1697,7 +1692,7 @@ void VRenderer::RenderWire(const VRenderList* RenderList)
 {
     for (i32f i = 0; i < RenderList->NumPoly; ++i)
     {
-        const VPolyFace* Poly = RenderList->PolyPtrList[i];
+        const VPolyFace* Poly = &RenderList->PolyList[i];
         if (!Poly ||
             ~Poly->State & EPolyState::Active ||
             Poly->State & EPolyState::Backface ||

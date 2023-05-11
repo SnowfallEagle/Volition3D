@@ -10,7 +10,6 @@ b32 VRenderList::InsertPoly(const VPoly& Poly, const VVertex* VtxList, const VPo
         return false;
     }
 
-    PolyPtrList[NumPoly] = &PolyList[NumPoly];
     PolyList[NumPoly].State = Poly.State;
     PolyList[NumPoly].Attr = Poly.Attr;
     PolyList[NumPoly].OriginalColor = Poly.OriginalColor;
@@ -36,7 +35,6 @@ b32 VRenderList::InsertPolyFace(const VPolyFace& Poly)
         return false;
     }
 
-    PolyPtrList[NumPoly] = &PolyList[NumPoly];
     PolyList[NumPoly] = Poly;
 
     ++NumPoly;
@@ -79,7 +77,7 @@ void VRenderList::ResetStateAndSaveList()
     // Restore polygons
     for (i32f i = 0; i < NumPoly; ++i)
     {
-        VPolyFace& Poly = *PolyPtrList[i];
+        VPolyFace& Poly = PolyList[i];
         if (~Poly.State & EPolyState::Active)
         {
             continue;
@@ -100,7 +98,7 @@ void VRenderList::Transform(const VMatrix44& M, ETransformType Type)
     {
         for (i32f i = 0; i < NumPoly; ++i)
         {
-            VPolyFace* Poly = PolyPtrList[i];
+            VPolyFace* Poly = &PolyList[i];
             if (!Poly ||
                 ~Poly->State & EPolyState::Active ||
                 Poly->State & EPolyState::Clipped ||
@@ -127,7 +125,7 @@ void VRenderList::Transform(const VMatrix44& M, ETransformType Type)
     {
         for (i32f i = 0; i < NumPoly; ++i)
         {
-            VPolyFace* Poly = PolyPtrList[i];
+            VPolyFace* Poly = &PolyList[i];
             if (!Poly ||
                 ~Poly->State & EPolyState::Active ||
                 Poly->State & EPolyState::Clipped ||
@@ -154,7 +152,7 @@ void VRenderList::Transform(const VMatrix44& M, ETransformType Type)
     {
         for (i32f i = 0; i < NumPoly; ++i)
         {
-            VPolyFace* Poly = PolyPtrList[i];
+            VPolyFace* Poly = &PolyList[i];
             if (!Poly ||
                 ~Poly->State & EPolyState::Active ||
                 Poly->State & EPolyState::Clipped ||
@@ -184,7 +182,7 @@ void VRenderList::TransformModelToWorld(const VPoint4& WorldPos, ETransformType 
     {
         for (i32f i = 0; i < NumPoly; ++i)
         {
-            VPolyFace* Poly = PolyPtrList[i];
+            VPolyFace* Poly = &PolyList[i];
             if (!Poly ||
                 ~Poly->State & EPolyState::Active ||
                 Poly->State & EPolyState::Clipped ||
@@ -203,7 +201,7 @@ void VRenderList::TransformModelToWorld(const VPoint4& WorldPos, ETransformType 
     {
         for (i32f i = 0; i < NumPoly; ++i)
         {
-            VPolyFace* Poly = PolyPtrList[i];
+            VPolyFace* Poly = &PolyList[i];
             if (!Poly ||
                 ~Poly->State & EPolyState::Active ||
                 Poly->State & EPolyState::Clipped ||
@@ -226,7 +224,7 @@ void VRenderList::RemoveBackfaces(const VCamera& Cam)
     {
         for (i32f i = 0; i < NumPoly; ++i)
         {
-            VPolyFace* Poly = PolyPtrList[i];
+            VPolyFace* Poly = &PolyList[i];
 
             if (~Poly->State & EPolyState::Active ||
                 Poly->State & EPolyState::Clipped ||
@@ -255,7 +253,7 @@ void VRenderList::RemoveBackfaces(const VCamera& Cam)
     {
         for (i32f i = 0; i < NumPoly; ++i)
         {
-            VPolyFace* Poly = PolyPtrList[i];
+            VPolyFace* Poly = &PolyList[i];
 
             if (~Poly->State & EPolyState::Active  ||
                 Poly->State & EPolyState::Clipped  ||
@@ -287,7 +285,7 @@ void VRenderList::Light(const VCamera& Cam, const VLight* Lights, i32 NumLights)
     for (i32f PolyIndex = 0; PolyIndex < NumPoly; ++PolyIndex)
     {
         // Check if we need to draw this poly
-        VPolyFace* Poly = PolyPtrList[PolyIndex];
+        VPolyFace* Poly = &PolyList[PolyIndex];
 
         if (~Poly->State & EPolyState::Active ||
             Poly->State & EPolyState::NotLightTest)
@@ -725,7 +723,7 @@ void VRenderList::TransformWorldToCamera(const VCamera& Camera)
 {
     for (i32f i = 0; i < NumPoly; ++i)
     {
-        VPolyFace* Poly = PolyPtrList[i];
+        VPolyFace* Poly = &PolyList[i];
         if (!Poly ||
             ~Poly->State & EPolyState::Active ||
             Poly->State & EPolyState::Clipped ||
@@ -765,7 +763,7 @@ void VRenderList::Clip(const VCamera& Camera, EClipFlags::Type Flags)
 
     for (i32f PolyIndex = 0; PolyIndex < SavedNumPoly; ++PolyIndex)
     {
-        VPolyFace& Poly = *PolyPtrList[PolyIndex];
+        VPolyFace& Poly = PolyList[PolyIndex];
 
         if (~Poly.State & EPolyState::Active  ||
             Poly.State & EPolyState::Backface ||
@@ -1102,93 +1100,11 @@ void VRenderList::Clip(const VCamera& Camera, EClipFlags::Type Flags)
     }
 }
 
-static i32 SortPolygonsCompareAverage(const void* Arg1, const void* Arg2)
-{
-    const VPolyFace* Poly1 = *(const VPolyFace**)Arg1;
-    const VPolyFace* Poly2 = *(const VPolyFace**)Arg2;
-
-    const f32 Z1 = 0.33333f * (Poly1->TransVtx[0].Z + Poly1->TransVtx[1].Z + Poly1->TransVtx[2].Z);
-    const f32 Z2 = 0.33333f * (Poly2->TransVtx[0].Z + Poly2->TransVtx[1].Z + Poly2->TransVtx[2].Z);
-
-    if (Z1 < Z2)
-    {
-        return 1;
-    }
-    else if (Z1 > Z2)
-    {
-        return -1;
-    }
-    else
-    {
-        return 0;
-    }
-
-    return 1;
-}
-
-static i32 SortPolygonsCompareNear(const void* Arg1, const void* Arg2)
-{
-    const VPolyFace* Poly1 = *(const VPolyFace**)Arg1;
-    const VPolyFace* Poly2 = *(const VPolyFace**)Arg2;
-
-    const f32 ZMin1 = VLN_MIN(VLN_MIN(Poly1->TransVtx[0].Z, Poly1->TransVtx[1].Z), Poly1->TransVtx[2].Z);
-    const f32 ZMin2 = VLN_MIN(VLN_MIN(Poly2->TransVtx[0].Z, Poly2->TransVtx[1].Z), Poly2->TransVtx[2].Z);
-
-    if (ZMin1 < ZMin2)
-    {
-        return 1;
-    }
-    else if (ZMin1 > ZMin2)
-    {
-        return -1;
-    }
-    else
-    {
-        return 0;
-    }
-
-    return 1;
-}
-
-static i32 SortPolygonsCompareFar(const void* Arg1, const void* Arg2)
-{
-    const VPolyFace* Poly1 = *(const VPolyFace**)Arg1;
-    const VPolyFace* Poly2 = *(const VPolyFace**)Arg2;
-
-    const f32 ZMax1 = VLN_MAX(VLN_MAX(Poly1->TransVtx[0].Z, Poly1->TransVtx[1].Z), Poly1->TransVtx[2].Z);
-    const f32 ZMax2 = VLN_MAX(VLN_MAX(Poly2->TransVtx[0].Z, Poly2->TransVtx[1].Z), Poly2->TransVtx[2].Z);
-
-    if (ZMax1 < ZMax2)
-    {
-        return 1;
-    }
-    else if (ZMax1 > ZMax2)
-    {
-        return -1;
-    }
-    else
-    {
-        return 0;
-    }
-
-    return 1;
-}
-
-void VRenderList::SortPolygons(ESortPolygonsMethod Method)
-{
-    switch (Method)
-    {
-    case ESortPolygonsMethod::Average: std::qsort(PolyPtrList, NumPoly, sizeof(*PolyPtrList), SortPolygonsCompareAverage); break;
-    case ESortPolygonsMethod::Near:    std::qsort(PolyPtrList, NumPoly, sizeof(*PolyPtrList), SortPolygonsCompareNear); break;
-    case ESortPolygonsMethod::Far:     std::qsort(PolyPtrList, NumPoly, sizeof(*PolyPtrList), SortPolygonsCompareFar); break;
-    }
-}
-
 void VRenderList::TransformCameraToPerspective(const VCamera& Cam)
 {
     for (i32f i = 0; i < NumPoly; ++i)
     {
-        VPolyFace* Poly = PolyPtrList[i];
+        VPolyFace* Poly = &PolyList[i];
         if (!Poly ||
             ~Poly->State & EPolyState::Active ||
             Poly->State & EPolyState::Clipped ||
@@ -1209,7 +1125,7 @@ void VRenderList::ConvertFromHomogeneous()
 {
     for (i32f i = 0; i < NumPoly; ++i)
     {
-        VPolyFace* Poly = PolyPtrList[i];
+        VPolyFace* Poly = &PolyList[i];
         if (!Poly ||
             ~Poly->State & EPolyState::Active ||
             Poly->State & EPolyState::Clipped ||
@@ -1232,7 +1148,7 @@ void VRenderList::TransformPerspectiveToScreen(const VCamera& Cam)
 
     for (i32f i = 0; i < NumPoly; ++i)
     {
-        VPolyFace* Poly = PolyPtrList[i];
+        VPolyFace* Poly = &PolyList[i];
         if (!Poly ||
             ~Poly->State & EPolyState::Active ||
             Poly->State & EPolyState::Clipped ||
@@ -1256,7 +1172,7 @@ void VRenderList::TransformCameraToScreen(const VCamera& Cam)
 
     for (i32f i = 0; i < NumPoly; ++i)
     {
-        VPolyFace* Poly = PolyPtrList[i];
+        VPolyFace* Poly = &PolyList[i];
         if (!Poly ||
             ~Poly->State & EPolyState::Active ||
             Poly->State & EPolyState::Clipped ||

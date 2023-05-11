@@ -29,7 +29,3 @@ static constexpr const char* LimitFPSArgLong = "/LimitFPS";
 
 static constexpr const char* BackfaceRemovalArgShort = "/bfr";
 static constexpr const char* BackfaceRemovalArgLong = "/BackfaceRemoval";
-
-static constexpr const char* SortPolygonsArgShort = "/sp";
-static constexpr const char* SortPolygonsArgLong = "/SortPolygons";
-

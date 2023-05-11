@@ -55,7 +55,6 @@ private:
 
     bool bLimitFPS = false;
     bool bBackfaceRemoval = true;
-    bool bSortPolygons = false;
 
 public:
     GLauncher() : VLauncher(L"Launcher", { 800, 600 })
@@ -95,7 +94,6 @@ private:
             {
                 ImGui::Checkbox("Limit FPS", &bLimitFPS);
                 ImGui::Checkbox("Backface Removal", &bBackfaceRemoval);
-                ImGui::Checkbox("Polygons Sorting", &bSortPolygons);
             }
             ImGui::EndGroup();
 
@@ -113,7 +111,7 @@ private:
                     "Game.exe %s "
                     "%s %s %s "
                     "%s %d %s %d %s %d "
-                    "%s %d %s %d %s %d ",
+                    "%s %d %s %d ",
                     LauncherArgShort,
                     SizeArgShort, WindowSizeItems[WindowSizeCurrent], WindowTypeItemsToArgs[WindowTypeCurrent],
 
@@ -122,8 +120,7 @@ private:
                     MaxMipMapsArgShort, MaxMipMaps,
 
                     LimitFPSArgShort,        bLimitFPS,
-                    BackfaceRemovalArgShort, bBackfaceRemoval,
-                    SortPolygonsArgShort,    bSortPolygons
+                    BackfaceRemovalArgShort, bBackfaceRemoval
                 );
 
                 System.OpenProcess(Buffer);

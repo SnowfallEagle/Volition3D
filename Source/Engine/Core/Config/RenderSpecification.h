@@ -18,7 +18,6 @@ public: /** Set by user */
     b8 bLimitFPS        = false;
     b8 bRenderSolid     = true;
     b8 bBackfaceRemoval = true;
-    b8 bSortPolygons    = false;
 
 private: /** Set by rendering engine */
     SDL_PixelFormat* SDLPixelFormat = nullptr;

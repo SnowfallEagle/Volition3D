@@ -1,8 +1,3 @@
-/* @TODO:
-    - Set other interpolators functions
-    - Try to use i32f instead i32
-*/
-
 #pragma once
 
 #include "Common/Math/Fixed16.h"
