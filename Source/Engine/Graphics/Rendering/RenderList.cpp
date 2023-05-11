@@ -685,14 +685,11 @@ void VRenderList::TransformWorldToCamera(const VCamera& Camera)
 
         for (i32f V = 0; V < 3; ++V)
         {
-            VVector4 Res;
-            VMatrix44::MulVecMat(Poly->TransVtx[V].Position, Camera.MatCamera, Res);
-            Poly->TransVtx[V].Position = Res;
+            VMatrix44::MulVecMat(Poly->LocalVtx[V].Position, Camera.MatCamera, Poly->TransVtx[V].Position);
 
             if (Poly->TransVtx[V].Attr & EVertexAttr::HasNormal)
             {
-                VMatrix44::MulVecMat(Poly->TransVtx[V].Normal, Camera.MatCameraRotationOnly, Res);
-                Poly->TransVtx[V].Normal = Res;
+                VMatrix44::MulVecMat(Poly->LocalVtx[V].Normal, Camera.MatCameraRotationOnly, Poly->TransVtx[V].Normal);
             }
         }
     }

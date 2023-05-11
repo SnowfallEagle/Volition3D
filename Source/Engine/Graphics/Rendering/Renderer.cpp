@@ -61,7 +61,8 @@ void VRenderer::StartUp()
 
     // Init renderer stuff 
     {
-        RenderList = new VRenderList();
+        BaseRenderList = new VRenderList();
+        TerrainRenderList = new VRenderList();
         ZBuffer.Create(Config.RenderSpec.TargetSize.X, Config.RenderSpec.TargetSize.Y);
 
         Memory.MemSetByte(Materials, 0, sizeof(Materials));
@@ -98,7 +99,8 @@ void VRenderer::ShutDown()
         ResetLights();
 
         ZBuffer.Destroy();
-        delete RenderList;
+        delete TerrainRenderList;
+        delete BaseRenderList;
 
         BackSurface.Destroy();
 
@@ -131,9 +133,17 @@ void VRenderer::TransformLights(const VCamera& Camera)
 void VRenderer::PreRender()
 {
     ZBuffer.Clear();
-    RenderList->Reset();
+    BaseRenderList->Reset();
 
     BackSurface.FillRectHW(nullptr, MAP_XRGB32(0x00, 0x00, 0x00));
+}
+
+void VRenderer::SetTerrain(VMesh& TerrainMesh)
+{
+    TerrainRenderList->Reset();
+    TerrainMesh.ResetRenderState();
+    TerrainMesh.TransformModelToWorld();
+    TerrainRenderList->InsertMesh(TerrainMesh, false);
 }
 
 void VRenderer::Render()
@@ -178,15 +188,6 @@ void VRenderer::Render()
     i32 Pitch;
     BackSurface.Lock(Buffer, Pitch);
 
-    // Insert terrain
-    VMesh* TerrainMesh = World.GetTerrain()->Mesh;
-
-    TerrainMesh->TransformModelToWorld();
-    TerrainMesh->ResetRenderState();
-    TerrainMesh->Cull(Camera);
-
-    RenderList->InsertMesh(*TerrainMesh, false);
-
     // Proccess and insert meshes
     for (const auto Entity : World.Entities)
     {
@@ -198,7 +199,7 @@ void VRenderer::Render()
             Mesh->TransformModelToWorld();
             Mesh->Cull(Camera);
 
-            RenderList->InsertMesh(*Mesh, false);
+            BaseRenderList->InsertMesh(*Mesh, false);
 
             // Make shadow
             if (~Mesh->Attr & EMeshAttr::CastShadow || !OccluderLight)
@@ -228,7 +229,8 @@ void VRenderer::Render()
             }
 
             // Compute shadow vertex positions
-            f32 YShadowPosition = TerrainMesh->Position.Y + 10.0f;
+            // @TODO: Figure out how we will set it 
+            static constexpr f32 YShadowPosition = 10.0f;
 
             VVertex* VtxList = Mesh->TransVtxList;
             for (i32f i = 0; i < Mesh->NumVtx; ++i)
@@ -243,7 +245,7 @@ void VRenderer::Render()
 
             // Insert shadow mesh
             Mesh->State &= ~EMeshState::Culled;
-            RenderList->InsertMesh(*Mesh, false);
+            BaseRenderList->InsertMesh(*Mesh, false);
 
             // Restore mesh color and attributes
             for (i32f i = 0; i < Mesh->NumPoly; ++i)
@@ -258,24 +260,44 @@ void VRenderer::Render()
         }
     }
 
+    // Transform our lights before lighting render lists
+    TransformLights(Camera);
+
     // Proccess render list
     {
         if (Config.RenderSpec.bBackfaceRemoval)
         {
-            RenderList->RemoveBackfaces(Camera);
+            BaseRenderList->RemoveBackfaces(Camera);
         }
 
-        RenderList->TransformWorldToCamera(Camera);
-        RenderList->Clip(Camera);
-
-        TransformLights(Camera);
-        RenderList->Light(Camera, Lights, MaxLights);
+        BaseRenderList->TransformWorldToCamera(Camera);
+        BaseRenderList->Clip(Camera);
+        BaseRenderList->Light(Camera, Lights, MaxLights);
 
         if (Config.RenderSpec.bSortPolygons)
         {
-            RenderList->SortPolygons(ESortPolygonsMethod::Average);
+            BaseRenderList->SortPolygons(ESortPolygonsMethod::Average);
         }
-        RenderList->TransformCameraToScreen(Camera);
+        BaseRenderList->TransformCameraToScreen(Camera);
+    }
+
+    // @TODO: Beautify and check what faster do one function on two arrays or only one array
+    // Proccess render list
+    {
+        if (Config.RenderSpec.bBackfaceRemoval)
+        {
+            TerrainRenderList->RemoveBackfaces(Camera);
+        }
+
+        TerrainRenderList->TransformWorldToCamera(Camera);
+        TerrainRenderList->Clip(Camera);
+        TerrainRenderList->Light(Camera, Lights, MaxLights);
+
+        if (Config.RenderSpec.bSortPolygons)
+        {
+            TerrainRenderList->SortPolygons(ESortPolygonsMethod::Average);
+        }
+        TerrainRenderList->TransformCameraToScreen(Camera);
     }
 
     // Render stuff
@@ -283,7 +305,16 @@ void VRenderer::Render()
         InterpolationContext.Buffer = Buffer;
         InterpolationContext.BufferPitch = Pitch;
 
-        Config.RenderSpec.bRenderSolid ? RenderSolid() : RenderWire();
+        if (Config.RenderSpec.bRenderSolid)
+        {
+            RenderSolid(BaseRenderList);
+            RenderSolid(TerrainRenderList);
+        }
+        else
+        {
+            RenderWire(BaseRenderList);
+            RenderWire(TerrainRenderList);
+        }
     }
 
     // Unlock buffer
@@ -1637,7 +1668,7 @@ void VRenderer::SetInterpolators()
     ++InterpolationContext.NumInterpolators;
 }
 
-void VRenderer::RenderSolid()
+void VRenderer::RenderSolid(const VRenderList* RenderList)
 {
     for (i32f i = 0; i < RenderList->NumPoly; ++i)
     {
@@ -1666,7 +1697,7 @@ void VRenderer::RenderSolid()
     }
 }
 
-void VRenderer::RenderWire()
+void VRenderer::RenderWire(const VRenderList* RenderList)
 {
     for (i32f i = 0; i < RenderList->NumPoly; ++i)
     {

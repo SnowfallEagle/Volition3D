@@ -47,7 +47,8 @@ public:
     VSurface VideoSurface;
     VSurface BackSurface;
 
-    VRenderList* RenderList;
+    VRenderList* BaseRenderList;
+    VRenderList* TerrainRenderList;
     VZBuffer ZBuffer;
 
     VInterpolationContext InterpolationContext;
@@ -62,7 +63,7 @@ public:
     VMaterial Materials[MaxMaterials];
     i32 NumMaterials;
 
-    VLight* OccluderLight = nullptr;
+    VLight* OccluderLight;
     VLight Lights[MaxLights];
     i32 NumLights;
 
@@ -83,6 +84,8 @@ public:
     void AddLight(const VLight& InLight);
     void SetOccluderLight(i32 Index);
     void TransformLights(const VCamera& Camera);
+
+    void SetTerrain(VMesh& TerrainMesh);
 
     void PreRender();
     void Render();
@@ -106,8 +109,8 @@ private:
     void VarDrawText(i32 X, i32 Y, VColorARGB Color, const char* Format, std::va_list VarList); 
 
     void SetInterpolators();
-    void RenderSolid();
-    void RenderWire();
+    void RenderSolid(const VRenderList* RenderList);
+    void RenderWire(const VRenderList* RenderList);
 
     friend class VSurface;
     friend class VMesh;
@@ -120,6 +123,8 @@ VLN_FINLINE void VRenderer::ResetLights()
 {
     Memory.MemSetByte(Lights, 0, sizeof(Lights));
     NumLights = 0;
+
+    OccluderLight = nullptr;
 }
 
 VLN_FINLINE void VRenderer::AddLight(const VLight& InLight)
