@@ -265,42 +265,25 @@ void VRenderer::Render()
     TransformLights(Camera);
 
     // Proccess render list
+    VRenderList* RenderLists[2] = { BaseRenderList, TerrainRenderList };
+    for (i32f i = 0; i < 2; ++i)
     {
         // Processing in LocalVtx
         if (Config.RenderSpec.bBackfaceRemoval)
         {
-            BaseRenderList->RemoveBackfaces(Camera);
+            RenderLists[i]->RemoveBackfaces(Camera);
         }
 
         // Transform LocalVtx and use TransVtx since there
-        BaseRenderList->TransformWorldToCamera(Camera);
-        BaseRenderList->Clip(Camera);
-        BaseRenderList->Light(Camera, Lights, MaxLights);
+        RenderLists[i]->TransformWorldToCamera(Camera);
+        RenderLists[i]->Clip(Camera);
+        RenderLists[i]->Light(Camera, Lights, MaxLights);
 
         if (Config.RenderSpec.bSortPolygons)
         {
-            BaseRenderList->SortPolygons(ESortPolygonsMethod::Average);
+            RenderLists[i]->SortPolygons(ESortPolygonsMethod::Average);
         }
-        BaseRenderList->TransformCameraToScreen(Camera);
-    }
-
-    // @TODO: Beautify and check what faster do one function on two arrays or only one array
-    // Proccess render list
-    {
-        if (Config.RenderSpec.bBackfaceRemoval)
-        {
-            TerrainRenderList->RemoveBackfaces(Camera);
-        }
-
-        TerrainRenderList->TransformWorldToCamera(Camera);
-        TerrainRenderList->Clip(Camera);
-        TerrainRenderList->Light(Camera, Lights, MaxLights);
-
-        if (Config.RenderSpec.bSortPolygons)
-        {
-            TerrainRenderList->SortPolygons(ESortPolygonsMethod::Average);
-        }
-        TerrainRenderList->TransformCameraToScreen(Camera);
+        RenderLists[i]->TransformCameraToScreen(Camera);
     }
 
     // Render stuff

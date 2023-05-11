@@ -39,6 +39,8 @@ public:
 
 public:
     i32 NumPoly;
+    i32 NumAdditionalPoly;
+
     VPolyFace* PolyPtrList[MaxPoly];
     VPolyFace PolyList[MaxPoly];
 
@@ -69,6 +71,7 @@ public:
     VLN_FINLINE void ResetList()
     {
         NumPoly = 0;
+        NumAdditionalPoly = 0;
     }
 
 public:

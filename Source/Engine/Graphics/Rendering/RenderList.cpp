@@ -73,6 +73,9 @@ void VRenderList::InsertMesh(VMesh& Mesh, b32 bInsertLocal)
 
 void VRenderList::ResetStateAndSaveList()
 {
+    NumPoly -= NumAdditionalPoly;
+    NumAdditionalPoly = 0;
+
     // Restore polygons
     for (i32f i = 0; i < NumPoly; ++i)
     {
@@ -1060,6 +1063,7 @@ void VRenderList::Clip(const VCamera& Camera, EClipFlags::Type Flags)
 
                     // Finally
                     InsertPolyFace(NewPoly);
+                    ++NumAdditionalPoly;
                 }
             }
         }
