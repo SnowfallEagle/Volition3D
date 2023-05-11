@@ -26,7 +26,14 @@ void VRenderer::StartUp()
     {
         VideoSurface.Create(SDLSurface);
 
-        Config.RenderSpec.TargetSize = { VideoSurface.Width, VideoSurface.Height };
+        /* @NOTE:
+            Set TargetSize as expected WindowSize, because in fullscreen we couldn't get really 10x10 window size,
+            but can render in 10x10 and blit to 640x480...
+
+            WindowSpec.Size become size of VideoSurface (== real window) size
+        */
+        Config.RenderSpec.TargetSize = Config.WindowSpec.Size;
+        Config.WindowSpec.Size = { VideoSurface.Width, VideoSurface.Height };
 
         Config.RenderSpec.MinClip = { 0, 0 };
         Config.RenderSpec.MaxClip = { Config.RenderSpec.TargetSize.X - 1, Config.RenderSpec.TargetSize.Y - 1 };
@@ -332,7 +339,7 @@ void VRenderer::RenderUI()
 
 void VRenderer::PostRender()
 {
-    SDL_BlitSurface(BackSurface.SDLSurface, nullptr, VideoSurface.SDLSurface, nullptr);
+    BackSurface.BlitHW(nullptr, &VideoSurface, nullptr);
     SDL_UpdateWindowSurface(Window.SDLWindow);
 
     TextQueue.Clear();
