@@ -42,8 +42,7 @@ private:
         VVector2i Position;
     };
 
-// @DEBUG: private:
-public:
+private:
     VSurface VideoSurface;
     VSurface BackSurface;
 

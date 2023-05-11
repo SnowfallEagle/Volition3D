@@ -47,6 +47,8 @@ public:
     b32 InsertPolyFace(const VPolyFace& Poly);
     void InsertMesh(VMesh& Mesh, b32 bInsertLocal);
 
+    void ResetStateAndSaveList();
+
     void Transform(const VMatrix44& M, ETransformType Type);
 
     /** LocalToTrans or TransOnly */
@@ -64,7 +66,7 @@ public:
 
     void ConvertFromHomogeneous();
 
-    VLN_FINLINE void Reset()
+    VLN_FINLINE void ResetList()
     {
         NumPoly = 0;
     }

@@ -71,6 +71,22 @@ void VRenderList::InsertMesh(VMesh& Mesh, b32 bInsertLocal)
     }
 }
 
+void VRenderList::ResetStateAndSaveList()
+{
+    // Restore polygons
+    for (i32f i = 0; i < NumPoly; ++i)
+    {
+        VPolyFace& Poly = *PolyPtrList[i];
+        if (~Poly.State & EPolyState::Active)
+        {
+            continue;
+        }
+
+        Poly.State &= ~(EPolyState::Clipped | EPolyState::Backface | EPolyState::Lit);
+        Poly.LitColor[2] = Poly.LitColor[1] = Poly.LitColor[0] = Poly.OriginalColor;
+    }
+}
+
 void VRenderList::Transform(const VMatrix44& M, ETransformType Type)
 {
     VVector4 Res;
@@ -215,13 +231,13 @@ void VRenderList::RemoveBackfaces(const VCamera& Cam)
             continue;
         }
 
-        const VVector4 U = Poly->TransVtx[1].Position - Poly->TransVtx[0].Position;
-        const VVector4 V = Poly->TransVtx[2].Position - Poly->TransVtx[0].Position;
+        const VVector4 U = Poly->LocalVtx[1].Position - Poly->LocalVtx[0].Position;
+        const VVector4 V = Poly->LocalVtx[2].Position - Poly->LocalVtx[0].Position;
 
         VVector4 N;
         VVector4::Cross(U, V, N);
 
-        const VVector4 View = Cam.Pos - Poly->TransVtx[0].Position;
+        const VVector4 View = Cam.Pos - Poly->LocalVtx[0].Position;
 
         // If > 0 then N watch in the same direction as View vector and visible
         if (VVector4::Dot(View, N) < 0.0f)

@@ -133,14 +133,15 @@ void VRenderer::TransformLights(const VCamera& Camera)
 void VRenderer::PreRender()
 {
     ZBuffer.Clear();
-    BaseRenderList->Reset();
+    BaseRenderList->ResetList();
+    TerrainRenderList->ResetStateAndSaveList();
 
     BackSurface.FillRectHW(nullptr, MAP_XRGB32(0x00, 0x00, 0x00));
 }
 
 void VRenderer::SetTerrain(VMesh& TerrainMesh)
 {
-    TerrainRenderList->Reset();
+    TerrainRenderList->ResetList();
     TerrainMesh.ResetRenderState();
     TerrainMesh.TransformModelToWorld();
     TerrainRenderList->InsertMesh(TerrainMesh, false);
@@ -265,11 +266,13 @@ void VRenderer::Render()
 
     // Proccess render list
     {
+        // Processing in LocalVtx
         if (Config.RenderSpec.bBackfaceRemoval)
         {
             BaseRenderList->RemoveBackfaces(Camera);
         }
 
+        // Transform LocalVtx and use TransVtx since there
         BaseRenderList->TransformWorldToCamera(Camera);
         BaseRenderList->Clip(Camera);
         BaseRenderList->Light(Camera, Lights, MaxLights);
