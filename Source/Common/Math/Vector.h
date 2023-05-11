@@ -252,7 +252,7 @@ public:
         return Math.FastDist3D(X, Y, Z);
     }
 
-    void Normalize()
+    VLN_FINLINE void Normalize()
     {
         const f32 Len = GetLength();
 
@@ -269,7 +269,24 @@ public:
         W = 1.0f;
     }
 
-    VVector4 GetNormalized() const
+    VLN_FINLINE void NormalizeFast()
+    {
+        const f32 Len = GetLengthFast();
+
+        // Don't do anything on zero vector
+        if (Len < Math.Epsilon5)
+        {
+            return;
+        }
+
+        const f32 Inv = 1.0f / Len;
+        X *= Inv;
+        Y *= Inv;
+        Z *= Inv;
+        W = 1.0f;
+    }
+
+    VLN_FINLINE VVector4 GetNormalized() const
     {
         const f32 Len = GetLength();
 

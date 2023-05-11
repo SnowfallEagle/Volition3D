@@ -222,30 +222,62 @@ void VRenderList::TransformModelToWorld(const VPoint4& WorldPos, ETransformType 
 
 void VRenderList::RemoveBackfaces(const VCamera& Cam)
 {
-    for (i32f i = 0; i < NumPoly; ++i)
+    if (bTerrain)
     {
-        VPolyFace* Poly = PolyPtrList[i];
-
-        if (~Poly->State & EPolyState::Active ||
-            Poly->State & EPolyState::Clipped ||
-            Poly->Attr & EPolyAttr::TwoSided ||
-            Poly->State & EPolyState::Backface)
+        for (i32f i = 0; i < NumPoly; ++i)
         {
-            continue;
+            VPolyFace* Poly = PolyPtrList[i];
+
+            if (~Poly->State & EPolyState::Active ||
+                Poly->State & EPolyState::Clipped ||
+                Poly->State & EPolyState::Backface ||
+                Poly->Attr & EPolyAttr::TwoSided)
+            {
+                continue;
+            }
+
+            const VVector4 U = Poly->LocalVtx[1].Position - Poly->LocalVtx[0].Position;
+            const VVector4 V = Poly->LocalVtx[2].Position - Poly->LocalVtx[0].Position;
+
+            VVector4 N;
+            VVector4::Cross(U, V, N);
+
+            const VVector4 View = Cam.Pos - Poly->LocalVtx[0].Position;
+
+            // If > 0 then N watch in the same direction as View vector and visible
+            if (VVector4::Dot(View, N) / (N.GetLengthFast() * View.GetLengthFast()) < -0.225f)
+            {
+                Poly->State |= EPolyState::Backface;
+            }
         }
-
-        const VVector4 U = Poly->LocalVtx[1].Position - Poly->LocalVtx[0].Position;
-        const VVector4 V = Poly->LocalVtx[2].Position - Poly->LocalVtx[0].Position;
-
-        VVector4 N;
-        VVector4::Cross(U, V, N);
-
-        const VVector4 View = Cam.Pos - Poly->LocalVtx[0].Position;
-
-        // If > 0 then N watch in the same direction as View vector and visible
-        if (VVector4::Dot(View, N) < 0.0f)
+    }
+    else
+    {
+        for (i32f i = 0; i < NumPoly; ++i)
         {
-            Poly->State |= EPolyState::Backface;
+            VPolyFace* Poly = PolyPtrList[i];
+
+            if (~Poly->State & EPolyState::Active  ||
+                Poly->State & EPolyState::Clipped  ||
+                Poly->State & EPolyState::Backface ||
+                Poly->Attr & EPolyAttr::TwoSided)
+            {
+                continue;
+            }
+
+            const VVector4 U = Poly->LocalVtx[1].Position - Poly->LocalVtx[0].Position;
+            const VVector4 V = Poly->LocalVtx[2].Position - Poly->LocalVtx[0].Position;
+
+            VVector4 N;
+            VVector4::Cross(U, V, N);
+
+            const VVector4 View = Cam.Pos - Poly->LocalVtx[0].Position;
+
+            // If > 0 then N watch in the same direction as View vector and visible
+            if (VVector4::Dot(View, N) < 0.0f)
+            {
+                Poly->State |= EPolyState::Backface;
+            }
         }
     }
 }

@@ -69,7 +69,10 @@ void VRenderer::StartUp()
     // Init renderer stuff 
     {
         BaseRenderList = new VRenderList();
+
         TerrainRenderList = new VRenderList();
+        TerrainRenderList->bTerrain = true;
+
         ZBuffer.Create(Config.RenderSpec.TargetSize.X, Config.RenderSpec.TargetSize.Y);
 
         Memory.MemSetByte(Materials, 0, sizeof(Materials));

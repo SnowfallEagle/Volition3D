@@ -40,6 +40,7 @@ public:
 public:
     i32 NumPoly;
     i32 NumAdditionalPoly;
+    b8 bTerrain = false;
 
     VPolyFace* PolyPtrList[MaxPoly];
     VPolyFace PolyList[MaxPoly];
