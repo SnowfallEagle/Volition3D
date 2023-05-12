@@ -33,11 +33,11 @@ public:
         ARGB(MAP_ARGB32(A, R, G, B))
     {}
 
-    VLN_FINLINE VColorARGB(u32 InARGB) :
+    VLN_FINLINE VColorARGB(u32 InARGB) noexcept :
         ARGB(InARGB)
     {}
 
-    VLN_FINLINE operator u32() const
+    VLN_FINLINE operator u32() const noexcept
     {
         return ARGB;
     }

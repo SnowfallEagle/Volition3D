@@ -51,6 +51,8 @@ const VSurface& VTexture::Get(i32 MipMaps) const
 
 void VTexture::GenerateMipMaps(i32 MaxMipMaps)
 {
+    // @TODO: We need to support situation when width != height
+
     NumMipMaps = 1;
 
     for (i32f i = 1; i < MaxMipMaps; ++i, ++NumMipMaps)

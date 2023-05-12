@@ -219,7 +219,7 @@ void VRenderer::Render()
             }
 
             VPoly* PolyList = Mesh->PolyList;
-            static constexpr VColorARGB ShadowColor = VColorARGB(248, 0, 0, 0);
+            static constexpr VColorARGB ShadowColor = VColorARGB(0xFF, 0x00, 0x00, 0x00);
 
             // Set new color and attributes for mesh
             for (i32f i = 0; i < Mesh->NumPoly; ++i)
@@ -236,7 +236,7 @@ void VRenderer::Render()
                 PolyList[i].LitColor[2] = ShadowColor;
 
                 PolyList[i].OriginalColor = ShadowColor;
-                PolyList[i].Attr          = EPolyAttr::ShadeModeEmissive | EPolyAttr::Transparent;
+                PolyList[i].Attr          = EPolyAttr::ShadeModeEmissive;
             }
 
             // Compute shadow vertex positions

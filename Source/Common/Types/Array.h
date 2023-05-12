@@ -58,6 +58,11 @@ public:
     {
         return Super::size();
     }
+
+    VLN_FINLINE T* GetData() const
+    {
+        return (T*)Super::data();
+    }
 };
 
 }

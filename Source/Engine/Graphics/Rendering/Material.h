@@ -1,3 +1,5 @@
+// @TODO: Clean stuff that we don't use
+
 #pragma once
 
 #include "Common/Platform/Platform.h"

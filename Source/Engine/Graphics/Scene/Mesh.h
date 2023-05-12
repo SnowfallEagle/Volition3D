@@ -41,7 +41,7 @@ namespace ECullType
     };
 }
 
-namespace ECOB
+namespace ECOBFlags
 {
     enum
     {
@@ -49,6 +49,18 @@ namespace ECOB
         SwapUV  = VLN_BIT(2),
         InvertU = VLN_BIT(3),
         InvertV = VLN_BIT(4),
+
+        Default = SwapYZ
+    };
+}
+
+namespace EMD2Flags
+{
+    enum
+    {
+        SwapYZ = VLN_BIT(1),
+
+        Default = SwapYZ
     };
 }
 
@@ -87,13 +99,17 @@ public:
     f32* AverageRadiusList;
     f32* MaxRadiusList;
 
+    i32 NumTextureCoords;
     VPoint2* TextureCoordsList;
 
 public:
     VMesh();
 
-    /** Allocates verticies, polygons, radius lists and texture list */
-    void Allocate(i32 InNumVtx, i32 InNumPoly, i32 InNumFrames);
+    /**
+        Allocates verticies, polygons, radius lists and texture list.
+        If not specified InNumTextureCoords = InNumPoly * 3
+    */
+    void Allocate(i32 InNumVtx, i32 InNumPoly, i32 InNumFrames, i32 InNumTextureCoords = -1);
     void Destroy();
 
     /** Called every time before rendering */
@@ -105,11 +121,19 @@ public:
     void ComputePolygonNormalsLength();
     void ComputeVertexNormals();
 
+    b32 LoadMD2(
+        const char* Path,
+        i32 SkinIndex = 0,
+        VVector4 InPosition = { 0.0f, 0.0f, 0.0f },
+        VVector3 InScale = { 1.0f, 1.0f, 1.0f },
+        u32 Flags = EMD2Flags::Default
+    );
+
     b32 LoadCOB(
         const char* Path,
         const VVector4& InPosition = { 0.0f, 0.0f, 0.0f, 0.0f },
         const VVector4& Scale      = { 1.0f, 1.0f, 1.0f, 1.0f },
-        u32 Flags = 0
+        u32 Flags = ECOBFlags::Default
     );
 
     /** LocalToTrans or TransOnly */
@@ -128,6 +152,7 @@ public:
     {
         return AverageRadiusList[CurrentFrame];
     }
+
     VLN_FINLINE f32 GetMaxRadius()
     {
         return MaxRadiusList[CurrentFrame];

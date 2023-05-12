@@ -31,19 +31,24 @@ public:
         */
 
         Entity = World.SpawnEntity<VEntity>();
+        /*
         Entity->Mesh->LoadCOB(
             "Assets/Models/jetski05.cob",
             { 0.0f, 0.0f, 0.0f },
             { 1000.0f, 1000.0f, 1000.0f },
-            ECOB::SwapYZ | ECOB::InvertV
+            ECOBFlags::SwapYZ | ECOBFlags::InvertV
         );
         Entity->Mesh->Attr &= ~EMeshAttr::CastShadow;
+        */
+
+        Entity->Mesh->LoadMD2("Assets/Models/007/tris.md2", 0, { 0.0f, 0.0f, 0.0f }, { 10.0f, 10.0f, 10.0f });
+        // World.SpawnEntity<VEntity>()->Mesh->LoadMD2("Assets/Models/007/weapon.md2", 0, { 0.0f, 0.0f, 0.0f }, { 10.0f, 10.0f, 10.0f });
 
         Camera = World.GetCamera();
-        Camera->Init(ECameraAttr::Euler, { 100.0f, 50.0f, 50.0f }, { 0, 90.0f, 0 }, VVector4(), 90, 500, 100000, {(f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
+        Camera->Init(ECameraAttr::Euler, { 100.0f, 50.0f, 50.0f }, { 0, 90.0f, 0 }, VVector4(), 90, 150, 100000, {(f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
 
         World.SetCubemap("Assets/Cubemaps/Cubemap.png");
-        World.GetTerrain()->GenerateTerrain("Assets/Terrains/Large/Heightmap.bmp", "Assets/Terrains/RockyLand/Texture.bmp", 50000.0f, 25000.0f);
+        World.GetTerrain()->GenerateTerrain("Assets/Terrains/Small/Heightmap.bmp", "Assets/Terrains/Common/Texture.bmp", 5000.0f, 1000.0f);
 
         {
             VLight AmbientLight = {
@@ -62,7 +67,7 @@ public:
                 ELightState::Active,
                 ELightAttr::Infinite,
 
-                0, MAP_XRGB32(0x77, 0x66, 0x22), 0,
+                0, MAP_XRGB32(0xAA, 0x99, 0x44), 0,
                 { 5000, 5000, 5000, 0 }, { 0, 0, 0, 0 }, VVector4{ -1.0f, -1.0f, 0, 0 }.GetNormalized(), { 0, 0, 0, 0 },
 
                 0, 0, 0,
@@ -124,7 +129,7 @@ public:
             // Renderer.AddLight(ComplexSpotlight);
             // Renderer.AddLight(SimpleSpotlight);
             // Renderer.AddLight(OccluderLight);
-            Renderer.SetOccluderLight(1);
+            Renderer.SetOccluderLight(2);
         }
     }
 
