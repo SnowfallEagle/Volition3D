@@ -243,7 +243,7 @@ void VRenderList::RemoveBackfaces(const VCamera& Cam)
             const VVector4 View = Cam.Pos - Poly->LocalVtx[0].Position;
 
             // If > 0 then N watch in the same direction as View vector and visible
-            if (VVector4::Dot(View, N) / (N.GetLengthFast() * View.GetLengthFast()) < -0.225f)
+            if (VVector4::Dot(View, N) / (N.GetLengthFast() * View.GetLengthFast()) < -0.45f)
             {
                 Poly->State |= EPolyState::Backface;
             }
