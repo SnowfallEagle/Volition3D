@@ -1187,7 +1187,6 @@ b32 VMesh::LoadMD2(const char* Path, const char* InSkinPath, i32 SkinIndex, VVec
     VMD2TextureCoord* MD2TextureCoords = (VMD2TextureCoord*)(FileBuffer.GetData() + Header->OffsetTextureCoords);
     for (i32f TextureCoord = 0; TextureCoord < NumTextureCoords; ++TextureCoord)
     {
-        // @TODO: Is it right?
         TextureCoordsList[TextureCoord].X = (f32)MD2TextureCoords[TextureCoord].U / (f32)Header->SkinWidth;
         TextureCoordsList[TextureCoord].Y = (f32)MD2TextureCoords[TextureCoord].V / (f32)Header->SkinHeight;
     }
@@ -1203,9 +1202,9 @@ b32 VMesh::LoadMD2(const char* Path, const char* InSkinPath, i32 SkinIndex, VVec
             VVector3 Translation = { Frame->Translation[0], Frame->Translation[1], Frame->Translation[2] };
 
             VVector4 Position = {
-                (f32)Frame->VtxList[VtxIndex].X * Scale.X + Translation.X,
+                (f32)Frame->VtxList[VtxIndex].Y * Scale.Y + Translation.Y, // MD2 Y = Volition X
                 (f32)Frame->VtxList[VtxIndex].Z * Scale.Z + Translation.Z, // MD2 Z = Volition Y
-                (f32)Frame->VtxList[VtxIndex].Y * Scale.Y + Translation.Y, // MD2 Y = Volition Z
+                (f32)Frame->VtxList[VtxIndex].X * Scale.X + Translation.X, // MD2 X = Volition Z
             };
 
             HeadLocalVtxList[(FrameIndex * NumVtx) + VtxIndex].Position = Position;
@@ -1242,13 +1241,14 @@ b32 VMesh::LoadMD2(const char* Path, const char* InSkinPath, i32 SkinIndex, VVec
     {
         VPoly& Poly = PolyList[PolyIndex];
 
+        // @NOTE: MD2 format use CCW order, so paste (0->2->1) -> (0->1->2)
         Poly.VtxIndices[0] = MD2Polygons[PolyIndex].VtxIndices[0];
-        Poly.VtxIndices[1] = MD2Polygons[PolyIndex].VtxIndices[1];
-        Poly.VtxIndices[2] = MD2Polygons[PolyIndex].VtxIndices[2];
+        Poly.VtxIndices[1] = MD2Polygons[PolyIndex].VtxIndices[2];
+        Poly.VtxIndices[2] = MD2Polygons[PolyIndex].VtxIndices[1];
 
         Poly.TextureCoordsIndices[0] = MD2Polygons[PolyIndex].TextureIndices[0];
-        Poly.TextureCoordsIndices[1] = MD2Polygons[PolyIndex].TextureIndices[1];
-        Poly.TextureCoordsIndices[2] = MD2Polygons[PolyIndex].TextureIndices[2];
+        Poly.TextureCoordsIndices[1] = MD2Polygons[PolyIndex].TextureIndices[2];
+        Poly.TextureCoordsIndices[2] = MD2Polygons[PolyIndex].TextureIndices[1];
 
         HeadTransVtxList[Poly.VtxIndices[0]].Attr = HeadLocalVtxList[Poly.VtxIndices[0]].Attr |= EVertexAttr::HasTextureCoords;
         HeadTransVtxList[Poly.VtxIndices[1]].Attr = HeadLocalVtxList[Poly.VtxIndices[1]].Attr |= EVertexAttr::HasTextureCoords;
