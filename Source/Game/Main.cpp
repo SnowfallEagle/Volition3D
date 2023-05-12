@@ -41,11 +41,11 @@ public:
         Entity->Mesh->Attr &= ~EMeshAttr::CastShadow;
         */
 
-        Entity->Mesh->LoadMD2("Assets/Models/007/tris.md2", 0, { 0.0f, 0.0f, 0.0f }, { 10.0f, 10.0f, 10.0f });
-        World.SpawnEntity<VEntity>()->Mesh->LoadMD2("Assets/Models/007/weapon.md2", 0, { 50.0f, 300.0f, -15.0f }, { 10.0f, 10.0f, 10.0f });
+        Entity->Mesh->LoadMD2("Assets/Models/0069/tris.md2", nullptr, 0, { 0.0f, 0.0f, 0.0f }, { 10.0f, 10.0f, 10.0f });
+        World.SpawnEntity<VEntity>()->Mesh->LoadMD2("Assets/Models/007/weapon.md2", nullptr, 0, { 50.0f, 300.0f, -15.0f }, { 10.0f, 10.0f, 10.0f });
 
         Camera = World.GetCamera();
-        Camera->Init(ECameraAttr::Euler, { 100.0f, 50.0f, 50.0f }, { 0, 90.0f, 0 }, VVector4(), 90, 150, 100000, {(f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
+        Camera->Init(ECameraAttr::Euler, { 100.0f, 50.0f, 50.0f }, { 0, 90.0f, 0 }, VVector4(), 75, 45, 100000, {(f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
 
         World.SetCubemap("Assets/Cubemaps/Cubemap.png");
         World.GetTerrain()->GenerateTerrain("Assets/Terrains/Small/Heightmap.bmp", "Assets/Terrains/Common/Texture.bmp", 5000.0f, 1000.0f);
@@ -154,7 +154,7 @@ public:
             Camera->Pos.Z -= Math.FastCos(Camera->Dir.Y) * CamPosSpeed;
         }
 
-        f32 CamDirSpeed = 0.5f * DeltaTime;
+        f32 CamDirSpeed = 0.1f * DeltaTime;
         if (Input.IsKeyDown(EKeycode::Left))  Camera->Dir.Y -= CamDirSpeed;
         if (Input.IsKeyDown(EKeycode::Right)) Camera->Dir.Y += CamDirSpeed;
         if (Input.IsKeyDown(EKeycode::Up))    Camera->Dir.X -= CamDirSpeed;

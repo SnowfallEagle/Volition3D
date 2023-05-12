@@ -58,9 +58,9 @@ namespace EMD2Flags
 {
     enum
     {
-        SwapYZ = VLN_BIT(1),
+        ShadeModeFlat = VLN_BIT(1),
 
-        Default = SwapYZ
+        Default = 0
     };
 }
 
@@ -123,7 +123,8 @@ public:
 
     b32 LoadMD2(
         const char* Path,
-        i32 SkinIndex = 0,
+        const char* InSkinPath = nullptr,
+        i32 SkinIndex = 0, // Used if SpecificSkinPath != nullptr
         VVector4 InPosition = { 0.0f, 0.0f, 0.0f },
         VVector3 InScale = { 1.0f, 1.0f, 1.0f },
         u32 Flags = EMD2Flags::Default

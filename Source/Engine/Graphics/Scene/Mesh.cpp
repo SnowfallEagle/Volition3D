@@ -1046,7 +1046,7 @@ public:
 
 VLN_DEFINE_LOG_CHANNEL(hLogMD2, "MD2");
 
-b32 VMesh::LoadMD2(const char* Path, i32 SkinIndex, VVector4 InPosition, VVector3 InScale, u32 Flags)
+b32 VMesh::LoadMD2(const char* Path, const char* InSkinPath, i32 SkinIndex, VVector4 InPosition, VVector3 InScale, u32 Flags)
 {
     VLN_NOTE(hLogMD2, "Parsing started\n");
 
@@ -1144,15 +1144,9 @@ b32 VMesh::LoadMD2(const char* Path, i32 SkinIndex, VVector4 InPosition, VVector
 
             VVector4 Position = {
                 (f32)Frame->VtxList[VtxIndex].X * Scale.X + Translation.X,
-                (f32)Frame->VtxList[VtxIndex].Y * Scale.Y + Translation.Y,
-                (f32)Frame->VtxList[VtxIndex].Z * Scale.Z + Translation.Z,
+                (f32)Frame->VtxList[VtxIndex].Z * Scale.Z + Translation.Z, // MD2 Z = Volition Y
+                (f32)Frame->VtxList[VtxIndex].Y * Scale.Y + Translation.Y, // MD2 Y = Volition Z
             };
-
-            if (Flags & EMD2Flags::SwapYZ)
-            {
-                f32 Temp;
-                VLN_SWAP(Position.Y, Position.Z, Temp);
-            }
 
             HeadLocalVtxList[(FrameIndex * NumVtx) + VtxIndex].Position = Position;
         }
@@ -1162,17 +1156,25 @@ b32 VMesh::LoadMD2(const char* Path, i32 SkinIndex, VVector4 InPosition, VVector
     VMaterial* Material = &Renderer.Materials[Renderer.NumMaterials];
     ++Renderer.NumMaterials;
 
-    if (Header->NumSkins > 0)
+    if (InSkinPath)
     {
-        SkinIndex %= Header->NumSkins;
+        VLN_LOG_VERBOSE("Skin Path: %s\n", InSkinPath);
+        Material->Texture.Load(InSkinPath);
     }
+    else
+    {
+        if (Header->NumSkins > 0)
+        {
+            SkinIndex %= Header->NumSkins;
+        }
 
-    const char* SkinPathRaw = (const char*)(FileBuffer.GetData() + Header->OffsetSkins + (SkinIndex * MD2SkinPathSize));
-    char SkinPath[MD2SkinPathSize];
-    GetTexturePathFromModelDirectory(SkinPath, MD2SkinPathSize, SkinPathRaw, Path);
+        const char* SkinPathRaw = (const char*)(FileBuffer.GetData() + Header->OffsetSkins + (SkinIndex * MD2SkinPathSize));
+        char SkinPath[MD2SkinPathSize];
+        GetTexturePathFromModelDirectory(SkinPath, MD2SkinPathSize, SkinPathRaw, Path);
 
-    VLN_LOG_VERBOSE("%s\n", SkinPath);
-    Material->Texture.Load(SkinPath);
+        VLN_LOG_VERBOSE("Skin Path: %s\n", SkinPath);
+        Material->Texture.Load(SkinPath);
+    }
 
     // Read polygons
     VMD2Poly* MD2Polygons = (VMD2Poly*)(FileBuffer.GetData() + Header->OffsetPoly);
@@ -1190,7 +1192,7 @@ b32 VMesh::LoadMD2(const char* Path, i32 SkinIndex, VVector4 InPosition, VVector
         Poly.TextureCoordsIndices[2] = MD2Polygons[PolyIndex].TextureIndices[2];
 
         Poly.State = EPolyState::Active;
-        Poly.Attr = EPolyAttr::RGB32 | EPolyAttr::ShadeModeGouraud | EPolyAttr::ShadeModeTexture | EPolyAttr::UsesMaterial;
+        Poly.Attr = (Flags & EMD2Flags::ShadeModeFlat ? EPolyAttr::ShadeModeFlat : EPolyAttr::ShadeModeGouraud) | EPolyAttr::RGB32 | EPolyAttr::ShadeModeTexture | EPolyAttr::UsesMaterial;
         Poly.OriginalColor = MAP_XRGB32(0xFF, 0xFF, 0xFF);
 
         Poly.Material = Material;
