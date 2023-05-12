@@ -234,6 +234,7 @@ void VRenderList::RemoveBackfaces(const VCamera& Cam)
                 continue;
             }
 
+            // @NOTE: Use local vtx because we didn't transformed vertices at this stage yet
             const VVector4 U = Poly->LocalVtx[1].Position - Poly->LocalVtx[0].Position;
             const VVector4 V = Poly->LocalVtx[2].Position - Poly->LocalVtx[0].Position;
 

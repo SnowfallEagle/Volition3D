@@ -209,12 +209,11 @@ void VRenderer::Render()
             Mesh->ResetRenderState();
             if (Mesh->Attr & EMeshAttr::MultiFrame)
             {
-                Mesh->UpdateAnimation();
-                Mesh->TransformModelToWorld(ETransformType::TransOnly);
+                Mesh->UpdateAnimationAndTransformModelToWorld();
             }
             else
             {
-                Mesh->TransformModelToWorld(ETransformType::LocalToTrans);
+                Mesh->TransformModelToWorld();
             }
             Mesh->Cull(Camera);
 

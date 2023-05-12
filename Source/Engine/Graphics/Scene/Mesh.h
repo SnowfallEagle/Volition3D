@@ -135,7 +135,7 @@ public:
         u32 Flags = ECOBFlags::Default
     );
 
-    void UpdateAnimation();
+    void UpdateAnimationAndTransformModelToWorld();
 
     /** LocalToTrans or TransOnly */
     void TransformModelToWorld(ETransformType Type = ETransformType::LocalToTrans);

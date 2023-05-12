@@ -123,50 +123,61 @@ void VMesh::ComputePolygonNormalsLength()
 
 void VMesh::ComputeVertexNormals()
 {
-    i32* NumPolyTouchVtx = new i32[NumVtx];
-    Memory.MemSetQuad(NumPolyTouchVtx, 0, NumVtx);
+    TArray<i32> NumPolyTouchVtx(NumVtx);
+    Memory.MemSetQuad(NumPolyTouchVtx.GetData(), 0, NumVtx);
 
-    for (i32f i = 0; i < NumPoly; ++i)
+    for (i32f PolyIndex = 0; PolyIndex < NumPoly; ++PolyIndex)
     {
-        if (PolyList[i].Attr & EPolyAttr::ShadeModeGouraud)
+        if (PolyList[PolyIndex].Attr & EPolyAttr::ShadeModeGouraud)
         {
-            const i32f V0 = PolyList[i].VtxIndices[0];
-            const i32f V1 = PolyList[i].VtxIndices[1];
-            const i32f V2 = PolyList[i].VtxIndices[2];
-
-            const VVector4 U = LocalVtxList[V1].Position - LocalVtxList[V0].Position;
-            const VVector4 V = LocalVtxList[V2].Position - LocalVtxList[V0].Position;
-
-            VVector4 Normal;
-            VVector4::Cross(U, V, Normal);
-
-            LocalVtxList[V0].Normal += Normal;
-            LocalVtxList[V1].Normal += Normal;
-            LocalVtxList[V2].Normal += Normal;
+            i32f V0 = PolyList[PolyIndex].VtxIndices[0];
+            i32f V1 = PolyList[PolyIndex].VtxIndices[1];
+            i32f V2 = PolyList[PolyIndex].VtxIndices[2];
 
             ++NumPolyTouchVtx[V0];
             ++NumPolyTouchVtx[V1];
             ++NumPolyTouchVtx[V2];
+
+            for (i32f FrameIndex = 0; FrameIndex < NumFrames; ++FrameIndex)
+            {
+                const VVector4 U = HeadLocalVtxList[V1].Position - HeadLocalVtxList[V0].Position;
+                const VVector4 V = HeadLocalVtxList[V2].Position - HeadLocalVtxList[V0].Position;
+
+                VVector4 Normal;
+                VVector4::Cross(U, V, Normal);
+
+                HeadLocalVtxList[V0].Normal += Normal;
+                HeadLocalVtxList[V1].Normal += Normal;
+                HeadLocalVtxList[V2].Normal += Normal;
+
+                V0 += NumVtx;
+                V1 += NumVtx;
+                V2 += NumVtx;
+            }
         }
     }
 
-    for (i32f i = 0; i < NumVtx; ++i)
+    for (i32f FrameIndex = 0; FrameIndex < NumFrames; ++FrameIndex)
     {
-        if (NumPolyTouchVtx[i] > 0)
+        i32f VtxFrameStart = FrameIndex * NumVtx;
+        i32f VtxFrameBound = (FrameIndex + 1) * NumVtx;
+
+        for (i32f VtxIndex = VtxFrameStart, TouchIndex = 0; VtxIndex < VtxFrameBound; ++VtxIndex, ++TouchIndex)
         {
-            LocalVtxList[i].Normal /= (f32)NumPolyTouchVtx[i];
-            LocalVtxList[i].Normal.Normalize();
+            if (NumPolyTouchVtx[TouchIndex] > 0)
+            {
+                HeadLocalVtxList[VtxIndex].Normal /= (f32)NumPolyTouchVtx[TouchIndex];
+                HeadLocalVtxList[VtxIndex].Normal.Normalize();
 
-            TransVtxList[i].Attr = LocalVtxList[i].Attr |= EVertexAttr::HasNormal;
+                HeadTransVtxList[VtxIndex].Attr = HeadLocalVtxList[VtxIndex].Attr |= EVertexAttr::HasNormal;
 
-            VLN_LOG_VERBOSE("Vertex normal [%d]: <%.2f %.2f %.2f>\n", i, LocalVtxList[i].Normal.X, LocalVtxList[i].Normal.Y, LocalVtxList[i].Normal.Z);
+                VLN_LOG_VERBOSE("Vertex normal [%d]: <%.2f %.2f %.2f>\n", VtxIndex, HeadLocalVtxList[VtxIndex].Normal.X, HeadLocalVtxList[VtxIndex].Normal.Y, HeadLocalVtxList[VtxIndex].Normal.Z);
+            }
         }
     }
-
-    delete[] NumPolyTouchVtx;
 }
 
-void VMesh::UpdateAnimation()
+void VMesh::UpdateAnimationAndTransformModelToWorld()
 {
     i32f Frame1 = (i32f)CurrentFrame;
     i32f Frame2 = Frame1 + 1;
@@ -175,7 +186,7 @@ void VMesh::UpdateAnimation()
     for (i32f i = 0; i < NumVtx; ++i)
     {
         i32f Frame1Index = (Frame1 * NumVtx) + i;
-        i32f Frame2Index = Frame2 < NumFrames ? Frame1Index + NumVtx : NumFrames;
+        i32f Frame2Index = Frame2 < NumFrames ? Frame1Index + NumVtx : (NumFrames - 1) + NumVtx;
 
         TransVtxList[i] = HeadLocalVtxList[Frame1Index]; // Copy other from position stuff
         TransVtxList[i].Position = Position +            // Interpolate

@@ -13,7 +13,7 @@ namespace Volition
 #define VLN_ERROR(CHANNEL, FORMAT, ...) DebugLog.Output(CHANNEL, "Error", FORMAT, __VA_ARGS__)
 #define VLN_LOG(FORMAT, ...) DebugLog.Output("", "", FORMAT, __VA_ARGS__)
 
-#if 1
+#if 0
     #define VLN_LOG_VERBOSE(FORMAT, ...) DebugLog.Output("", "", FORMAT, __VA_ARGS__)
 #else
     #define VLN_LOG_VERBOSE(...) 
