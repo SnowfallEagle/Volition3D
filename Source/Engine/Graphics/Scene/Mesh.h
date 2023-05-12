@@ -12,9 +12,9 @@ namespace EMeshState
 {
     enum
     {
-        Active  = VLN_BIT(1),
-        Visible = VLN_BIT(2),
-        Culled  = VLN_BIT(3),
+        Active   = VLN_BIT(1),
+        Visible  = VLN_BIT(2),
+        Culled   = VLN_BIT(3),
     };
 }
 
@@ -83,7 +83,7 @@ public:
     VVector4 UX, UY, UZ; /** Local axes to track full orientation */
 
     i32 NumFrames;
-    i32 CurrentFrame;
+    f32 CurrentFrame;
 
     i32 NumVtx;
     i32 TotalNumVtx;
@@ -115,8 +115,6 @@ public:
     /** Called every time before rendering */
     void ResetRenderState();
 
-    void SetFrame(i32 Frame);
-
     void ComputeRadius();
     void ComputePolygonNormalsLength();
     void ComputeVertexNormals();
@@ -137,6 +135,8 @@ public:
         u32 Flags = ECOBFlags::Default
     );
 
+    void UpdateAnimation();
+
     /** LocalToTrans or TransOnly */
     void TransformModelToWorld(ETransformType Type = ETransformType::LocalToTrans);
     void Transform(const VMatrix44& M, ETransformType Type, b32 bTransBasis);
@@ -151,12 +151,12 @@ public:
 
     VLN_FINLINE f32 GetAverageRadius()
     {
-        return AverageRadiusList[CurrentFrame];
+        return AverageRadiusList[(i32f)CurrentFrame];
     }
 
     VLN_FINLINE f32 GetMaxRadius()
     {
-        return MaxRadiusList[CurrentFrame];
+        return MaxRadiusList[(i32f)CurrentFrame];
     }
 
 public:

@@ -21,7 +21,7 @@ VMesh::VMesh()
     UZ = { 0.0f, 0.0f, 1.0f };
 
     NumFrames = 1;
-    CurrentFrame = 0;
+    CurrentFrame = 0.0f;
 }
 
 void VMesh::Allocate(i32 InNumVtx, i32 InNumPoly, i32 InNumFrames, i32 InNumTextureCoords)
@@ -75,28 +75,6 @@ void VMesh::ResetRenderState()
         Poly.State &= ~(EPolyState::Clipped | EPolyState::Backface | EPolyState::Lit);
         Poly.LitColor[2] = Poly.LitColor[1] = Poly.LitColor[0] = Poly.OriginalColor;
     }
-}
-
-void VMesh::SetFrame(i32 Frame)
-{
-    if (~Attr & EMeshAttr::MultiFrame)
-    {
-        return;
-    }
-
-    if (Frame < 0)
-    {
-        Frame = 0;
-    }
-    else if (Frame >= NumFrames)
-    {
-        Frame = NumFrames - 1;
-    }
-
-    CurrentFrame = Frame;
-
-    LocalVtxList = &HeadLocalVtxList[Frame * NumVtx];
-    TransVtxList = &HeadTransVtxList[Frame * NumVtx];
 }
 
 void VMesh::ComputeRadius()
@@ -188,6 +166,24 @@ void VMesh::ComputeVertexNormals()
     delete[] NumPolyTouchVtx;
 }
 
+void VMesh::UpdateAnimation()
+{
+    i32f Frame1 = (i32f)CurrentFrame;
+    i32f Frame2 = Frame1 + 1;
+    f32 FrameInterp = CurrentFrame - Math.Floor(CurrentFrame);
+
+    for (i32f i = 0; i < NumVtx; ++i)
+    {
+        i32f Frame1Index = (Frame1 * NumVtx) + i;
+        i32f Frame2Index = Frame2 < NumFrames ? Frame1Index + NumVtx : NumFrames;
+
+        TransVtxList[i] = HeadLocalVtxList[Frame1Index]; // Copy other from position stuff
+        TransVtxList[i].Position = Position +            // Interpolate
+            (1.0f - FrameInterp) * HeadLocalVtxList[Frame1Index].Position +
+            FrameInterp          * HeadLocalVtxList[Frame2Index].Position;
+    }
+}
+
 void VMesh::TransformModelToWorld(ETransformType Type)
 {
     if (Type == ETransformType::LocalToTrans)
@@ -195,7 +191,7 @@ void VMesh::TransformModelToWorld(ETransformType Type)
         for (i32f i = 0; i < NumVtx; ++i)
         {
             TransVtxList[i] = LocalVtxList[i];
-            TransVtxList[i].Position = LocalVtxList[i].Position + Position;
+            TransVtxList[i].Position += Position;
         }
     }
     else // TransOnly

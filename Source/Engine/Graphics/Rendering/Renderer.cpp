@@ -207,7 +207,15 @@ void VRenderer::Render()
             VMesh* Mesh = Entity->Mesh;
 
             Mesh->ResetRenderState();
-            Mesh->TransformModelToWorld();
+            if (Mesh->Attr & EMeshAttr::MultiFrame)
+            {
+                Mesh->UpdateAnimation();
+                Mesh->TransformModelToWorld(ETransformType::TransOnly);
+            }
+            else
+            {
+                Mesh->TransformModelToWorld(ETransformType::LocalToTrans);
+            }
             Mesh->Cull(Camera);
 
             BaseRenderList->InsertMesh(*Mesh, false);
