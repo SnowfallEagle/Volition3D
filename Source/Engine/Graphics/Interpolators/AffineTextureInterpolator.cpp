@@ -11,12 +11,12 @@ static void StartFun(VAffineTextureInterpolator* Self)
 
     Self->TextureBuffer = Texture->GetBuffer();
     Self->TexturePitch = Texture->GetPitch();
-    const f32 TextureSize = (f32)Texture->GetWidth();
+    const VVector2 TextureSize = { (f32)Texture->GetWidth(), (f32)Texture->GetHeight() };
 
     for (i32f i = 0; i < 3; ++i)
     {
-        Self->UVtx[i] = IntToFx16((i32)(Self->InterpolationContext->Vtx[i].U * TextureSize + 0.5f));
-        Self->VVtx[i] = IntToFx16((i32)(Self->InterpolationContext->Vtx[i].V * TextureSize + 0.5f));
+        Self->UVtx[i] = IntToFx16((i32)(Self->InterpolationContext->Vtx[i].U * TextureSize.X + 0.5f));
+        Self->VVtx[i] = IntToFx16((i32)(Self->InterpolationContext->Vtx[i].V * TextureSize.Y + 0.5f));
     }
 }
 

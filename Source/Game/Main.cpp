@@ -42,7 +42,7 @@ public:
         */
 
         Entity->Mesh->LoadMD2("Assets/Models/007/tris.md2", 0, { 0.0f, 0.0f, 0.0f }, { 10.0f, 10.0f, 10.0f });
-        // World.SpawnEntity<VEntity>()->Mesh->LoadMD2("Assets/Models/007/weapon.md2", 0, { 0.0f, 0.0f, 0.0f }, { 10.0f, 10.0f, 10.0f });
+        World.SpawnEntity<VEntity>()->Mesh->LoadMD2("Assets/Models/007/weapon.md2", 0, { 50.0f, 300.0f, -15.0f }, { 10.0f, 10.0f, 10.0f });
 
         Camera = World.GetCamera();
         Camera->Init(ECameraAttr::Euler, { 100.0f, 50.0f, 50.0f }, { 0, 90.0f, 0 }, VVector4(), 90, 150, 100000, {(f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
@@ -79,7 +79,7 @@ public:
                 ELightState::Active,
                 ELightAttr::Point,
 
-                0, MAP_XRGB32(0xAA, 0x00, 0x00), 0,
+                0, MAP_XRGB32(0xAA, 0x22, 0x11), 0,
                 { 1000.0f, 1000.0f, 0.0f, 1.0f }, { 0, 0, 0, 0 }, VVector4{ 0, 0, 0, 0 }.GetNormalized(), { 0, 0, 0, 0 },
 
                 0, 0.001f, 0,

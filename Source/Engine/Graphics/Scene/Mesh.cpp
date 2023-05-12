@@ -1162,14 +1162,17 @@ b32 VMesh::LoadMD2(const char* Path, i32 SkinIndex, VVector4 InPosition, VVector
     VMaterial* Material = &Renderer.Materials[Renderer.NumMaterials];
     ++Renderer.NumMaterials;
 
-    SkinIndex %= Header->NumSkins;
+    if (Header->NumSkins > 0)
+    {
+        SkinIndex %= Header->NumSkins;
+    }
 
     const char* SkinPathRaw = (const char*)(FileBuffer.GetData() + Header->OffsetSkins + (SkinIndex * MD2SkinPathSize));
     char SkinPath[MD2SkinPathSize];
     GetTexturePathFromModelDirectory(SkinPath, MD2SkinPathSize, SkinPathRaw, Path);
 
     VLN_LOG_VERBOSE("%s\n", SkinPath);
-    Material->Texture.Load(SkinPath, 1); // @DEBUG
+    Material->Texture.Load(SkinPath);
 
     // Read polygons
     VMD2Poly* MD2Polygons = (VMD2Poly*)(FileBuffer.GetData() + Header->OffsetPoly);

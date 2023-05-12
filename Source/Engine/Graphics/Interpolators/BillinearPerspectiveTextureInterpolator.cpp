@@ -11,15 +11,15 @@ static void StartFun(VBillinearPerspectiveTextureInterpolator* Self)
 
     Self->TextureBuffer = Texture->GetBuffer();
     Self->TexturePitch = Texture->GetPitch();
-    Self->TextureSize = Texture->GetWidth();
+    Self->TextureSize = { (f32)Texture->GetWidth(), (f32)Texture->GetHeight() };
 
     for (i32f i = 0; i < 3; ++i)
     {
         Self->UVtx[i] =
-            IntToFx22((i32)(Self->InterpolationContext->Vtx[i].U * (f32)Self->TextureSize + 0.5f)) /
+            IntToFx22((i32)(Self->InterpolationContext->Vtx[i].U * (f32)Self->TextureSize.X + 0.5f)) /
             (i32)(Self->InterpolationContext->Vtx[i].Z + 0.5f);
         Self->VVtx[i] =
-            IntToFx22((i32)(Self->InterpolationContext->Vtx[i].V * (f32)Self->TextureSize + 0.5f)) /
+            IntToFx22((i32)(Self->InterpolationContext->Vtx[i].V * (f32)Self->TextureSize.Y + 0.5f)) /
             (i32)(Self->InterpolationContext->Vtx[i].Z + 0.5f);
     }
 }
@@ -79,13 +79,13 @@ static void ProcessPixelFun(VBillinearPerspectiveTextureInterpolator* Self)
     const i32f Y0 = ((Self->V << (Fx28Shift - Fx22Shift)) / Self->InterpolationContext->Z) * Self->TexturePitch;
 
     i32f X1 = X0 + 1;
-    if (X1 >= Self->TextureSize)
+    if (X1 >= Self->TextureSize.X)
     {
         X1 = X0;
     }
 
     i32f Y1 = Y0 + Self->TexturePitch;
-    if (Y1 >= (Self->TextureSize * Self->TexturePitch))
+    if (Y1 >= (Self->TextureSize.Y * Self->TexturePitch))
     {
         Y1 = Y0;
     }

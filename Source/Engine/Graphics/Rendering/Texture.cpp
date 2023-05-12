@@ -51,21 +51,19 @@ const VSurface& VTexture::Get(i32 MipMaps) const
 
 void VTexture::GenerateMipMaps(i32 MaxMipMaps)
 {
-    // @TODO: We need to support situation when width != height
-
     NumMipMaps = 1;
 
     for (i32f i = 1; i < MaxMipMaps; ++i, ++NumMipMaps)
     {
-        const i32 PrevSize = Surfaces[i - 1].GetWidth();
-        const i32 CurrentSize = PrevSize / 2;
+        const VVector2i PrevSize = { Surfaces[i - 1].GetWidth(), Surfaces[i - 1].GetHeight() };
+        const VVector2i CurrentSize = { PrevSize.X / 2, PrevSize.Y / 2 };
 
-        if (CurrentSize <= 0)
+        if (CurrentSize.X <= 0 || CurrentSize.Y <= 0)
         {
             break;
         }
 
-        Surfaces[i].Create(CurrentSize, CurrentSize);
+        Surfaces[i].Create(CurrentSize.X, CurrentSize.Y);
 
         u32* CurrentBuffer;
         i32 CurrentPitch;
@@ -75,20 +73,20 @@ void VTexture::GenerateMipMaps(i32 MaxMipMaps)
         i32 PrevPitch;
         Surfaces[i - 1].Lock(PrevBuffer, PrevPitch);
 
-        for (i32f Y = 0; Y < CurrentSize; ++Y)
+        for (i32f Y = 0; Y < CurrentSize.Y; ++Y)
         {
-            for (i32f X = 0; X < CurrentSize; ++X)
+            for (i32f X = 0; X < CurrentSize.X; ++X)
             {
                 const i32 PrevPixelY0 = (Y * 2) * PrevPitch;
                 i32 PrevPixelY1 = PrevPixelY0 + PrevPitch;
-                if (PrevPixelY1 > (PrevSize * PrevPitch))
+                if (PrevPixelY1 > (PrevSize.Y * PrevPitch))
                 {
                     PrevPixelY1 = PrevPixelY0;
                 }
 
                 const i32 PrevPixelX0 = (X * 2);
                 i32 PrevPixelX1 = PrevPixelX0 + 1;
-                if (PrevPixelX1 > PrevSize)
+                if (PrevPixelX1 > PrevSize.X)
                 {
                     PrevPixelX1 = PrevPixelX0;
                 }
