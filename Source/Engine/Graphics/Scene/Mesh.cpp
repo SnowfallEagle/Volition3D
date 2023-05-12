@@ -179,8 +179,7 @@ void VMesh::ComputeVertexNormals()
             LocalVtxList[i].Normal /= (f32)NumPolyTouchVtx[i];
             LocalVtxList[i].Normal.Normalize();
 
-            LocalVtxList[i].Attr |= EVertexAttr::HasNormal;
-            TransVtxList[i].Attr = LocalVtxList[i].Attr;
+            TransVtxList[i].Attr = LocalVtxList[i].Attr |= EVertexAttr::HasNormal;
 
             VLN_LOG_VERBOSE("Vertex normal [%d]: <%.2f %.2f %.2f>\n", i, LocalVtxList[i].Normal.X, LocalVtxList[i].Normal.Y, LocalVtxList[i].Normal.Z);
         }
@@ -945,7 +944,7 @@ void VMesh::GenerateTerrain(const char* HeightMap, const char* Texture, f32 Size
     // Set vertex info
     for (i32f i = 0; i < NumVtx; ++i)
     {
-        LocalVtxList[i].Attr |= EVertexAttr::HasTextureCoords;
+        TransVtxList[i].Attr = LocalVtxList[i].Attr |= EVertexAttr::HasTextureCoords;
     }
 
     // Compute stuff
@@ -1182,7 +1181,6 @@ b32 VMesh::LoadMD2(const char* Path, const char* InSkinPath, i32 SkinIndex, VVec
     {
         VPoly& Poly = PolyList[PolyIndex];
 
-        // @TODO: Inverting?
         Poly.VtxIndices[0] = MD2Polygons[PolyIndex].VtxIndices[0];
         Poly.VtxIndices[1] = MD2Polygons[PolyIndex].VtxIndices[1];
         Poly.VtxIndices[2] = MD2Polygons[PolyIndex].VtxIndices[2];
@@ -1190,6 +1188,10 @@ b32 VMesh::LoadMD2(const char* Path, const char* InSkinPath, i32 SkinIndex, VVec
         Poly.TextureCoordsIndices[0] = MD2Polygons[PolyIndex].TextureIndices[0];
         Poly.TextureCoordsIndices[1] = MD2Polygons[PolyIndex].TextureIndices[1];
         Poly.TextureCoordsIndices[2] = MD2Polygons[PolyIndex].TextureIndices[2];
+
+        HeadTransVtxList[Poly.VtxIndices[0]].Attr = HeadLocalVtxList[Poly.VtxIndices[0]].Attr |= EVertexAttr::HasTextureCoords;
+        HeadTransVtxList[Poly.VtxIndices[1]].Attr = HeadLocalVtxList[Poly.VtxIndices[1]].Attr |= EVertexAttr::HasTextureCoords;
+        HeadTransVtxList[Poly.VtxIndices[2]].Attr = HeadLocalVtxList[Poly.VtxIndices[2]].Attr |= EVertexAttr::HasTextureCoords;
 
         Poly.State = EPolyState::Active;
         Poly.Attr = (Flags & EMD2Flags::ShadeModeFlat ? EPolyAttr::ShadeModeFlat : EPolyAttr::ShadeModeGouraud) | EPolyAttr::RGB32 | EPolyAttr::ShadeModeTexture | EPolyAttr::UsesMaterial;
@@ -1201,8 +1203,6 @@ b32 VMesh::LoadMD2(const char* Path, const char* InSkinPath, i32 SkinIndex, VVec
     ComputeRadius();
     ComputePolygonNormalsLength();
     ComputeVertexNormals();
-
-    // @TODO: Set vertex stuff?
 
     VLN_NOTE(hLogMD2, "Parsing ended\n");
     return true;

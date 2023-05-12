@@ -41,7 +41,7 @@ public:
         Entity->Mesh->Attr &= ~EMeshAttr::CastShadow;
         */
 
-        Entity->Mesh->LoadMD2("Assets/Models/0069/tris.md2", nullptr, 0, { 0.0f, 0.0f, 0.0f }, { 10.0f, 10.0f, 10.0f });
+        Entity->Mesh->LoadMD2("Assets/Models/0069/tris.md2", "Assets/Models/007/actionbond.pcx", 0, {0.0f, 0.0f, 0.0f}, {10.0f, 10.0f, 10.0f});
         World.SpawnEntity<VEntity>()->Mesh->LoadMD2("Assets/Models/007/weapon.md2", nullptr, 0, { 50.0f, 300.0f, -15.0f }, { 10.0f, 10.0f, 10.0f });
 
         Camera = World.GetCamera();
