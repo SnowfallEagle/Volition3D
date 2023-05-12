@@ -2,8 +2,9 @@
 #include "SDL_image.h"
 #include "Common/Platform/Memory.h"
 #include "Engine/Core/Window.h"
-#include "Engine/World/World.h"
+#include "Engine/Core/Time.h"
 #include "Engine/Graphics/Rendering/Renderer.h"
+#include "Engine/World/World.h"
 
 namespace Volition
 {
@@ -209,7 +210,7 @@ void VRenderer::Render()
             Mesh->ResetRenderState();
             if (Mesh->Attr & EMeshAttr::MultiFrame)
             {
-                Mesh->UpdateAnimationAndTransformModelToWorld();
+                Mesh->UpdateAnimationAndTransformModelToWorld(Time.GetDeltaTime());
             }
             else
             {
@@ -247,8 +248,8 @@ void VRenderer::Render()
             }
 
             // Compute shadow vertex positions
-            // @TODO: Figure out how we will set it 
-            static constexpr f32 YShadowPosition = 10.0f;
+            // @TODO: Figure out
+            static constexpr f32 YShadowPosition = -25.0f;
 
             VVertex* VtxList = Mesh->TransVtxList;
             for (i32f i = 0; i < Mesh->NumVtx; ++i)

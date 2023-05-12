@@ -64,6 +64,32 @@ namespace EMD2Flags
     };
 }
 
+enum class EMD2AnimationId : u8
+{
+    StandingIdle = 0,
+    Run,
+    Attack,
+    Pain1,
+    Pain2,
+    Pain3,
+    Jump,
+    Flip,
+    Salute,
+    Taunt,
+    Wave,
+    Point,
+    CrouchStand,
+    CrouchWalk,
+    CrouchAttack,
+    CrouchPain,
+    CrouchDeath,
+    DeathBack,
+    DeathForward,
+    DeathSlow,
+
+    MaxAnimations
+};
+
 VLN_DEFINE_LOG_CHANNEL(hLogObject, "Object");
 
 VLN_DECL_ALIGN_SSE() class VMesh
@@ -84,6 +110,11 @@ public:
 
     i32 NumFrames;
     f32 CurrentFrame;
+
+    EMD2AnimationId CurrentAnimationId;
+    f32 AnimationTimeAccum;
+    b8 bLoopAnimation   : 1;
+    b8 bAnimationPlayed : 1;
 
     i32 NumVtx;
     i32 TotalNumVtx;
@@ -135,7 +166,8 @@ public:
         u32 Flags = ECOBFlags::Default
     );
 
-    void UpdateAnimationAndTransformModelToWorld();
+    void PlayAnimation(EMD2AnimationId AnimationId, b32 bLoop = false);
+    void UpdateAnimationAndTransformModelToWorld(f32 DeltaTime);
 
     /** LocalToTrans or TransOnly */
     void TransformModelToWorld(ETransformType Type = ETransformType::LocalToTrans);

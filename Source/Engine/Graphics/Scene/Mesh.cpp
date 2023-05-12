@@ -22,6 +22,8 @@ VMesh::VMesh()
 
     NumFrames = 1;
     CurrentFrame = 0.0f;
+
+    bAnimationPlayed = true;
 }
 
 void VMesh::Allocate(i32 InNumVtx, i32 InNumPoly, i32 InNumFrames, i32 InNumTextureCoords)
@@ -32,7 +34,7 @@ void VMesh::Allocate(i32 InNumVtx, i32 InNumPoly, i32 InNumFrames, i32 InNumText
     Memory.MemSetByte(HeadTransVtxList, 0, sizeof(VVertex) * (InNumVtx * InNumFrames));
 
     PolyList          = new VPoly[InNumPoly];
-    NumTextureCoords = InNumTextureCoords != -1 ? InNumTextureCoords : InNumPoly * 3;
+    NumTextureCoords  = InNumTextureCoords != -1 ? InNumTextureCoords : InNumPoly * 3;
     TextureCoordsList = new VPoint2[NumTextureCoords];
     Memory.MemSetByte(PolyList, 0, sizeof(VPoly) * InNumPoly);
     Memory.MemSetByte(TextureCoordsList, 0, sizeof(VPoint2) * NumTextureCoords);
@@ -174,24 +176,6 @@ void VMesh::ComputeVertexNormals()
                 VLN_LOG_VERBOSE("Vertex normal [%d]: <%.2f %.2f %.2f>\n", VtxIndex, HeadLocalVtxList[VtxIndex].Normal.X, HeadLocalVtxList[VtxIndex].Normal.Y, HeadLocalVtxList[VtxIndex].Normal.Z);
             }
         }
-    }
-}
-
-void VMesh::UpdateAnimationAndTransformModelToWorld()
-{
-    i32f Frame1 = (i32f)CurrentFrame;
-    i32f Frame2 = Frame1 + 1;
-    f32 FrameInterp = CurrentFrame - Math.Floor(CurrentFrame);
-
-    for (i32f i = 0; i < NumVtx; ++i)
-    {
-        i32f Frame1Index = (Frame1 * NumVtx) + i;
-        i32f Frame2Index = Frame2 < NumFrames ? Frame1Index + NumVtx : (NumFrames - 1) + NumVtx;
-
-        TransVtxList[i] = HeadLocalVtxList[Frame1Index]; // Copy other from position stuff
-        TransVtxList[i].Position = Position +            // Interpolate
-            (1.0f - FrameInterp) * HeadLocalVtxList[Frame1Index].Position +
-            FrameInterp          * HeadLocalVtxList[Frame2Index].Position;
     }
 }
 
@@ -968,33 +952,7 @@ void VMesh::GenerateTerrain(const char* HeightMap, const char* Texture, f32 Size
 
 static constexpr i32f MD2Magic = ('I') + ('D' << 8) + ('P' << 16) + ('2' << 24);
 static constexpr i32f MD2Version = 8;
-
-static constexpr i32f MD2MaxAnimations = 20;
 static constexpr i32f MD2SkinPathSize = 64;
-
-enum class EMD2AnimState : u8
-{
-    StandingIdle = 0,
-    Run,
-    Attack,
-    Pain1,
-    Pain2,
-    Pain3,
-    Jump,
-    Flip,
-    Salute,
-    Taunt,
-    Wave,
-    Point,
-    CrouchStand,
-    CrouchWalk,
-    CrouchAttack,
-    CrouchPain,
-    CrouchDeath,
-    DeathBack,
-    DeathForward,
-    DeathSlow,
-};
 
 class VMD2Header
 {
@@ -1050,7 +1008,103 @@ public:
     u16 TextureIndices[3];
 };
 
+class VMD2Animation
+{
+public:
+    i32 FrameStart;
+    i32 FrameEnd;
+
+    f32 InterpRate;
+    f32 InterpOnceInSeconds;
+};
+
 VLN_DEFINE_LOG_CHANNEL(hLogMD2, "MD2");
+
+static VMD2Animation MD2AnimationTable[(i32f)EMD2AnimationId::MaxAnimations] = {
+    { 0,   39,  0.5f,  0.05f },      // Idle
+    { 40,  45,  0.5f,  0.05f },      // Run
+    { 46,  53,  0.5f,  0.05f },      // Attack
+    { 54,  57,  0.5f,  0.05f },      // Pain1 
+    { 58,  61,  0.5f,  0.05f },      // Pain2
+    { 62,  65,  0.5f,  0.05f },      // Pain3
+    { 66,  71,  0.5f,  0.05f },      // Jump
+    { 72,  83,  0.5f,  0.05f },      // Flip
+    { 84,  94,  0.5f,  0.05f },      // Salute
+    { 95,  111, 0.5f,  0.05f },      // Taun
+    { 112, 122, 0.5f,  0.05f },      // Wave
+    { 123, 134, 0.5f,  0.05f },      // Point
+    { 135, 153, 0.5f,  0.05f },      // Stand
+    { 154, 159, 0.5f,  0.05f },      // Walk
+    { 160, 168, 0.5f,  0.05f },      // Attack
+    { 169, 172, 0.5f,  0.05f },      // CrouchPain
+    { 173, 177, 0.25f, 0.025f },     // CrouchDeath
+    { 178, 183, 0.25f, 0.025f },     // DeathBack
+    { 184, 189, 0.25f, 0.025f },     // DeathForward
+    { 190, 197, 0.25f, 0.025f }      // DeathSlow
+};
+
+void VMesh::PlayAnimation(EMD2AnimationId AnimationId, b32 bLoop)
+{
+    if (~Attr & EMeshAttr::MultiFrame)
+    {
+        return;
+    }
+
+    CurrentAnimationId = AnimationId;
+    AnimationTimeAccum = 0.0f;
+    bLoopAnimation = bLoop;
+    bAnimationPlayed = false;
+
+    CurrentFrame = (f32)MD2AnimationTable[(i32f)AnimationId].FrameStart;
+}
+
+void VMesh::UpdateAnimationAndTransformModelToWorld(f32 DeltaTime)
+{
+    i32f Frame1 = (i32f)CurrentFrame;
+    i32f Frame2 = Frame1 + 1;
+    f32 FrameInterp = CurrentFrame - Math.Floor(CurrentFrame);
+
+    for (i32f VtxIndex = 0; VtxIndex < NumVtx; ++VtxIndex)
+    {
+        i32f Frame1Index = (Frame1 * NumVtx) + VtxIndex;
+        i32f Frame2Index = Frame2 < NumFrames ? Frame1Index + NumVtx : (NumFrames - 1) + NumVtx;
+
+        TransVtxList[VtxIndex] = HeadLocalVtxList[Frame1Index]; // Copy other from position stuff
+        TransVtxList[VtxIndex].Position = Position +            // Interpolate
+            (1.0f - FrameInterp) * HeadLocalVtxList[Frame1Index].Position +
+            FrameInterp          * HeadLocalVtxList[Frame2Index].Position;
+    }
+
+    if (bAnimationPlayed)
+    {
+        return;
+    }
+
+    const VMD2Animation& Animation = MD2AnimationTable[(i32f)CurrentAnimationId];
+
+    AnimationTimeAccum += DeltaTime / 1000.0f;
+    i32f InterpCount = (i32f)(AnimationTimeAccum / Animation.InterpOnceInSeconds);
+    AnimationTimeAccum -= InterpCount * Animation.InterpOnceInSeconds;
+
+    for ( ; InterpCount > 0; --InterpCount)
+    {
+        CurrentFrame += Animation.InterpRate;
+    }
+
+    if (CurrentFrame >= Animation.FrameEnd)
+    {
+        if (bLoopAnimation)
+        {
+            CurrentFrame = (f32)Animation.FrameStart;
+            AnimationTimeAccum = 0.0f;
+        }
+        else
+        {
+            CurrentFrame = (f32)Animation.FrameEnd;
+            bAnimationPlayed = true;
+        }
+    }
+}
 
 b32 VMesh::LoadMD2(const char* Path, const char* InSkinPath, i32 SkinIndex, VVector4 InPosition, VVector3 InScale, u32 Flags)
 {

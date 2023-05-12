@@ -11,6 +11,8 @@ class GGameState : public VGameState
     VEntity* Entity = nullptr;
     VCamera* Camera;
 
+    u8 CurrentAnimation = 1;
+
 public:
     virtual void StartUp() override
     {
@@ -41,7 +43,9 @@ public:
         Entity->Mesh->Attr &= ~EMeshAttr::CastShadow;
         */
 
-        Entity->Mesh->LoadMD2("Assets/Models/tekkblade/tris.md2", nullptr, 0, { 0.0f, 0.0f, 0.0f }, { 10.0f, 10.0f, 10.0f });
+        Entity->Mesh->LoadMD2("Assets/Models/007/tris.md2", nullptr, 0, { 0.0f, 0.0f, 0.0f }, { 10.0f, 10.0f, 10.0f });
+        Entity->Mesh->PlayAnimation((EMD2AnimationId)CurrentAnimation, true);
+
         // World.SpawnEntity<VEntity>()->Mesh->LoadMD2("Assets/Models/007/weapon.md2", nullptr, 0, { 25.0f, 150.0f, -5.0f }, { 10.0f, 10.0f, 10.0f });
 
         Camera = World.GetCamera();
@@ -49,6 +53,7 @@ public:
 
         World.SetCubemap("Assets/Cubemaps/Cubemap.png");
         World.GetTerrain()->GenerateTerrain("Assets/Terrains/Small/Heightmap.bmp", "Assets/Terrains/Common/Texture.bmp", 5000.0f, 1000.0f);
+        // World.GetTerrain()->GenerateTerrain("Assets/Terrains/Large/Heightmap.bmp", "Assets/Terrains/RockyLand/Texture.bmp", 50000.0f, 25000.0f);
 
         {
             VLight AmbientLight = {
@@ -172,6 +177,14 @@ public:
         if (Input.IsKeyDown(EKeycode::Z)) Rot.BuildRotationXYZ(Speed, 0, 0);
         if (Input.IsKeyDown(EKeycode::X)) Rot.BuildRotationXYZ(-Speed, 0, 0);
 
+        if (Input.IsKeyDown(EKeycode::P)) Entity->Mesh->PlayAnimation((EMD2AnimationId)CurrentAnimation, false);
+        if (Input.IsKeyDown(EKeycode::L)) Entity->Mesh->PlayAnimation((EMD2AnimationId)CurrentAnimation, true);
+
+        if (Input.IsKeyDown(EKeycode::Comma)) --CurrentAnimation;
+        if (Input.IsKeyDown(EKeycode::Period)) ++CurrentAnimation;
+
+        CurrentAnimation %= 20;
+
         if (Entity)
         {
             Entity->Mesh->Transform(Rot, ETransformType::LocalOnly, true);
@@ -183,6 +196,7 @@ public:
         }
 
         Renderer.DrawDebugText("FPS: %.2f", 1000.0f / DeltaTime);
+        Renderer.DrawDebugText("AnimationId: %d", CurrentAnimation);
     }
 };
 
