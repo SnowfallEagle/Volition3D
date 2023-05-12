@@ -1052,8 +1052,10 @@ void VMesh::PlayAnimation(EMD2AnimationId AnimationId, b32 bLoop)
 
     CurrentAnimationId = AnimationId;
     AnimationTimeAccum = 0.0f;
-    bLoopAnimation = bLoop;
-    bAnimationPlayed = false;
+
+    bLoopAnimation    = bLoop;
+    bAnimationPlayed  = false;
+    bPlayingLastFrame = false;
 
     CurrentFrame = (f32)MD2AnimationTable[(i32f)AnimationId].FrameStart;
 }
@@ -1061,18 +1063,41 @@ void VMesh::PlayAnimation(EMD2AnimationId AnimationId, b32 bLoop)
 void VMesh::UpdateAnimationAndTransformModelToWorld(f32 DeltaTime)
 {
     i32f Frame1 = (i32f)CurrentFrame;
-    i32f Frame2 = Frame1 + 1;
+    i32f Frame2;
+
+    if (Frame1 < NumFrames)
+    {
+        Frame2 = Frame1 + 1;
+    }
+    else
+    {
+        Frame1 = NumFrames - 1;
+        Frame2 = Frame1;
+    }
+
     f32 FrameInterp = CurrentFrame - Math.Floor(CurrentFrame);
 
-    for (i32f VtxIndex = 0; VtxIndex < NumVtx; ++VtxIndex)
+    if (Frame2 < NumFrames)
     {
-        i32f Frame1Index = (Frame1 * NumVtx) + VtxIndex;
-        i32f Frame2Index = Frame2 < NumFrames ? Frame1Index + NumVtx : (NumFrames - 1) + NumVtx;
+        for (i32f VtxIndex = 0; VtxIndex < NumVtx; ++VtxIndex)
+        {
+            i32f Frame1Index = (Frame1 * NumVtx) + VtxIndex;
+            TransVtxList[VtxIndex] = HeadLocalVtxList[Frame1Index]; // Copy other from position stuff
 
-        TransVtxList[VtxIndex] = HeadLocalVtxList[Frame1Index]; // Copy other from position stuff
-        TransVtxList[VtxIndex].Position = Position +            // Interpolate
-            (1.0f - FrameInterp) * HeadLocalVtxList[Frame1Index].Position +
-            FrameInterp          * HeadLocalVtxList[Frame2Index].Position;
+            // Interpolate
+            i32f Frame2Index = Frame1Index + NumVtx;
+            TransVtxList[VtxIndex].Position = Position +
+                (1.0f - FrameInterp) * HeadLocalVtxList[Frame1Index].Position +
+                FrameInterp          * HeadLocalVtxList[Frame2Index].Position;
+        }
+    }
+    else
+    {
+        for (i32f VtxIndex = 0; VtxIndex < NumVtx; ++VtxIndex)
+        {
+            TransVtxList[VtxIndex] = HeadLocalVtxList[(Frame1 * NumVtx) + VtxIndex]; // Copy other from position stuff
+            TransVtxList[VtxIndex].Position += Position;                             // Add world position
+        }
     }
 
     if (bAnimationPlayed)
@@ -1086,17 +1111,28 @@ void VMesh::UpdateAnimationAndTransformModelToWorld(f32 DeltaTime)
     i32f InterpCount = (i32f)(AnimationTimeAccum / Animation.InterpOnceInSeconds);
     AnimationTimeAccum -= InterpCount * Animation.InterpOnceInSeconds;
 
-    for ( ; InterpCount > 0; --InterpCount)
-    {
-        CurrentFrame += Animation.InterpRate;
-    }
-
+    CurrentFrame += InterpCount * Animation.InterpRate;
     if (CurrentFrame >= Animation.FrameEnd)
     {
+        if (!bPlayingLastFrame)
+        {
+            bPlayingLastFrame = true;
+            return;
+        }
+
         if (bLoopAnimation)
         {
-            CurrentFrame = (f32)Animation.FrameStart;
+            // Interpolate a bit to make it more smooth
+            CurrentFrame = (f32)Animation.FrameStart + Animation.InterpRate * (AnimationTimeAccum / Animation.InterpOnceInSeconds);
             AnimationTimeAccum = 0.0f;
+            
+            // Check possible case
+            if (CurrentFrame > (f32)Animation.FrameEnd)
+            {
+                CurrentFrame = (f32)Animation.FrameStart;
+            }
+
+            bPlayingLastFrame = false;
         }
         else
         {

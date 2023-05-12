@@ -11,7 +11,7 @@ class GGameState : public VGameState
     VEntity* Entity = nullptr;
     VCamera* Camera;
 
-    u8 CurrentAnimation = 1;
+    u8 CurrentAnimation = 0;
 
 public:
     virtual void StartUp() override
@@ -49,7 +49,7 @@ public:
         // World.SpawnEntity<VEntity>()->Mesh->LoadMD2("Assets/Models/007/weapon.md2", nullptr, 0, { 25.0f, 150.0f, -5.0f }, { 10.0f, 10.0f, 10.0f });
 
         Camera = World.GetCamera();
-        Camera->Init(ECameraAttr::Euler, { 100.0f, 50.0f, 50.0f }, { 0, 0.0f, 0 }, VVector4(), 75, 45, 100000, {(f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
+        Camera->Init(ECameraAttr::Euler, { 0.0f, 1000.0f, 1500.0f }, { 25.0f, 180.0f, 0 }, VVector4(), 75, 45, 100000, {(f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
 
         World.SetCubemap("Assets/Cubemaps/Cubemap.png");
         World.GetTerrain()->GenerateTerrain("Assets/Terrains/Small/Heightmap.bmp", "Assets/Terrains/Common/Texture.bmp", 5000.0f, 1000.0f);
