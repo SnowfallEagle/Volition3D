@@ -116,7 +116,6 @@ public:
 
     b8 bLoopAnimation    : 1;
     b8 bAnimationPlayed  : 1;
-    b8 bPlayingLastFrame : 1;
 
     i32 NumVtx;
     i32 TotalNumVtx;

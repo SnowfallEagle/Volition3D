@@ -43,7 +43,7 @@ public:
         Entity->Mesh->Attr &= ~EMeshAttr::CastShadow;
         */
 
-        Entity->Mesh->LoadMD2("Assets/Models/007/tris.md2", nullptr, 0, { 0.0f, 0.0f, 0.0f }, { 10.0f, 10.0f, 10.0f });
+        Entity->Mesh->LoadMD2("Assets/Models/tekkblade/tris.md2", nullptr, 0, { 0.0f, 0.0f, 0.0f }, { 10.0f, 10.0f, 10.0f });
         Entity->Mesh->PlayAnimation((EMD2AnimationId)CurrentAnimation, true);
 
         // World.SpawnEntity<VEntity>()->Mesh->LoadMD2("Assets/Models/007/weapon.md2", nullptr, 0, { 25.0f, 150.0f, -5.0f }, { 10.0f, 10.0f, 10.0f });

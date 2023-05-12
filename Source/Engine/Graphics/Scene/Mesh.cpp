@@ -1055,7 +1055,6 @@ void VMesh::PlayAnimation(EMD2AnimationId AnimationId, b32 bLoop)
 
     bLoopAnimation    = bLoop;
     bAnimationPlayed  = false;
-    bPlayingLastFrame = false;
 
     CurrentFrame = (f32)MD2AnimationTable[(i32f)AnimationId].FrameStart;
 }
@@ -1114,12 +1113,6 @@ void VMesh::UpdateAnimationAndTransformModelToWorld(f32 DeltaTime)
     CurrentFrame += InterpCount * Animation.InterpRate;
     if (CurrentFrame >= Animation.FrameEnd)
     {
-        if (!bPlayingLastFrame)
-        {
-            bPlayingLastFrame = true;
-            return;
-        }
-
         if (bLoopAnimation)
         {
             // Interpolate a bit to make it more smooth
@@ -1131,8 +1124,6 @@ void VMesh::UpdateAnimationAndTransformModelToWorld(f32 DeltaTime)
             {
                 CurrentFrame = (f32)Animation.FrameStart;
             }
-
-            bPlayingLastFrame = false;
         }
         else
         {
