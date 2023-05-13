@@ -54,15 +54,12 @@ namespace ECOBFlags
     };
 }
 
-namespace EMD2Flags
+enum class EMD2ShadeMode
 {
-    enum
-    {
-        ShadeModeFlat = VLN_BIT(1),
-
-        Default = 0
-    };
-}
+    Emissive = EPolyAttr::ShadeModeEmissive,
+    Flat     = EPolyAttr::ShadeModeFlat,
+    Gouraud  = EPolyAttr::ShadeModeGouraud,
+};
 
 enum class EMD2AnimationId : u8
 {
@@ -90,6 +87,14 @@ enum class EMD2AnimationId : u8
     MaxAnimations
 };
 
+enum class EAnimationInterpMode : u8
+{
+    Default = 0, // Get from animation table
+
+    Linear,      // Smooth, but MD2 models can be jerky in transitions between looping animations
+    Fixed,       // Not smooth, but good for looping MD2 animations
+};
+
 VLN_DEFINE_LOG_CHANNEL(hLogObject, "Object");
 
 VLN_DECL_ALIGN_SSE() class VMesh
@@ -112,6 +117,7 @@ public:
     f32 CurrentFrame;
 
     EMD2AnimationId CurrentAnimationId;
+    EAnimationInterpMode AnimationInterpMode;
     f32 AnimationTimeAccum;
 
     b8 bLoopAnimation    : 1;
@@ -157,7 +163,7 @@ public:
         i32 SkinIndex = 0, // Used if SpecificSkinPath != nullptr
         VVector4 InPosition = { 0.0f, 0.0f, 0.0f },
         VVector3 InScale = { 1.0f, 1.0f, 1.0f },
-        u32 Flags = EMD2Flags::Default
+        EMD2ShadeMode ShadeMode = EMD2ShadeMode::Gouraud
     );
 
     b32 LoadCOB(
@@ -167,7 +173,7 @@ public:
         u32 Flags = ECOBFlags::Default
     );
 
-    void PlayAnimation(EMD2AnimationId AnimationId, b32 bLoop = false);
+    void PlayAnimation(EMD2AnimationId AnimationId, b32 bLoop = false, EAnimationInterpMode InterpMode = EAnimationInterpMode::Default);
     void UpdateAnimationAndTransformModelToWorld(f32 DeltaTime);
 
     /** LocalToTrans or TransOnly */

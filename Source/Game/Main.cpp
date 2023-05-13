@@ -12,6 +12,7 @@ class GGameState : public VGameState
     VCamera* Camera;
 
     u8 CurrentAnimation = 0;
+    EAnimationInterpMode InterpMode = EAnimationInterpMode::Default;
 
 public:
     virtual void StartUp() override
@@ -43,8 +44,9 @@ public:
         Entity->Mesh->Attr &= ~EMeshAttr::CastShadow;
         */
 
-        Entity->Mesh->LoadMD2("Assets/Models/tekkblade/tris.md2", nullptr, 0, { 0.0f, 0.0f, 0.0f }, { 10.0f, 10.0f, 10.0f });
-        Entity->Mesh->PlayAnimation((EMD2AnimationId)CurrentAnimation, true);
+        Entity->Mesh->LoadMD2("Assets/Models/tekkblade/tris.md2", nullptr, 0, {0.0f, 0.0f, 0.0f}, {10.0f, 10.0f, 10.0f}, EMD2ShadeMode::Gouraud);
+        // Entity->Mesh->LoadMD2("Assets/Models/marine/tris.md2", "Assets/Models/marine/Centurion.pcx", 0, {0.0f, 0.0f, 0.0f}, {10.0f, 10.0f, 10.0f});
+        // Entity->Mesh->PlayAnimation((EMD2AnimationId)CurrentAnimation, true, InterpMode);
 
         // World.SpawnEntity<VEntity>()->Mesh->LoadMD2("Assets/Models/007/weapon.md2", nullptr, 0, { 25.0f, 150.0f, -5.0f }, { 10.0f, 10.0f, 10.0f });
 
@@ -177,13 +179,31 @@ public:
         if (Input.IsKeyDown(EKeycode::Z)) Rot.BuildRotationXYZ(Speed, 0, 0);
         if (Input.IsKeyDown(EKeycode::X)) Rot.BuildRotationXYZ(-Speed, 0, 0);
 
-        if (Input.IsKeyDown(EKeycode::P)) Entity->Mesh->PlayAnimation((EMD2AnimationId)CurrentAnimation, false);
-        if (Input.IsKeyDown(EKeycode::L)) Entity->Mesh->PlayAnimation((EMD2AnimationId)CurrentAnimation, true);
+        if (Input.IsKeyDown(EKeycode::P)) Entity->Mesh->PlayAnimation((EMD2AnimationId)CurrentAnimation, false, InterpMode);
+        if (Input.IsKeyDown(EKeycode::L)) Entity->Mesh->PlayAnimation((EMD2AnimationId)CurrentAnimation, true, InterpMode);
 
-        if (Input.IsKeyDown(EKeycode::Comma)) --CurrentAnimation;
-        if (Input.IsKeyDown(EKeycode::Period)) ++CurrentAnimation;
+        if (Input.IsKeyDown(EKeycode::N0)) InterpMode = EAnimationInterpMode::Default;
+        if (Input.IsKeyDown(EKeycode::N1)) InterpMode = EAnimationInterpMode::Linear;
+        if (Input.IsKeyDown(EKeycode::N2)) InterpMode = EAnimationInterpMode::Fixed;
 
-        CurrentAnimation %= 20;
+        static float AnimButtonCounter = 0.0f;
+        if (AnimButtonCounter <= 0.0f && Input.IsKeyDown(EKeycode::Comma)) { --CurrentAnimation; AnimButtonCounter = 100.0f; };
+        if (AnimButtonCounter <= 0.0f && Input.IsKeyDown(EKeycode::Period)) { ++CurrentAnimation; AnimButtonCounter = 100.0f; };
+
+        if (AnimButtonCounter >= 0.0f)
+        {
+            AnimButtonCounter -= DeltaTime;
+        }
+        CurrentAnimation %= (i32)EMD2AnimationId::MaxAnimations;
+
+        static bool bStarted = false;
+        if (Input.IsKeyDown(EKeycode::B)) bStarted = true;
+
+        if (bStarted && Entity->Mesh->bAnimationPlayed)
+        {
+            Entity->Mesh->PlayAnimation((EMD2AnimationId)CurrentAnimation++, false, InterpMode);
+            CurrentAnimation %= (i32)EMD2AnimationId::MaxAnimations;
+        }
 
         if (Entity)
         {
@@ -197,6 +217,7 @@ public:
 
         Renderer.DrawDebugText("FPS: %.2f", 1000.0f / DeltaTime);
         Renderer.DrawDebugText("AnimationId: %d", CurrentAnimation);
+        Renderer.DrawDebugText("AnimationInterpMode: %d", (i32)InterpMode);
     }
 };
 

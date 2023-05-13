@@ -1016,34 +1016,36 @@ public:
 
     f32 InterpRate;
     f32 InterpOnceInSeconds;
+
+    EAnimationInterpMode InterpMode = EAnimationInterpMode::Linear;
 };
 
 VLN_DEFINE_LOG_CHANNEL(hLogMD2, "MD2");
 
 static VMD2Animation MD2AnimationTable[(i32f)EMD2AnimationId::MaxAnimations] = {
-    { 0,   39,  0.5f,  0.05f },      // Idle
-    { 40,  45,  0.5f,  0.05f },      // Run
-    { 46,  53,  0.5f,  0.05f },      // Attack
-    { 54,  57,  0.5f,  0.05f },      // Pain1 
-    { 58,  61,  0.5f,  0.05f },      // Pain2
-    { 62,  65,  0.5f,  0.05f },      // Pain3
-    { 66,  71,  0.5f,  0.05f },      // Jump
-    { 72,  83,  0.5f,  0.05f },      // Flip
-    { 84,  94,  0.5f,  0.05f },      // Salute
-    { 95,  111, 0.5f,  0.05f },      // Taun
-    { 112, 122, 0.5f,  0.05f },      // Wave
-    { 123, 134, 0.5f,  0.05f },      // Point
-    { 135, 153, 0.5f,  0.05f },      // Stand
-    { 154, 159, 0.5f,  0.05f },      // Walk
-    { 160, 168, 0.5f,  0.05f },      // Attack
-    { 169, 172, 0.5f,  0.05f },      // CrouchPain
-    { 173, 177, 0.25f, 0.025f },     // CrouchDeath
-    { 178, 183, 0.25f, 0.025f },     // DeathBack
-    { 184, 189, 0.25f, 0.025f },     // DeathForward
-    { 190, 197, 0.25f, 0.025f }      // DeathSlow
+    { 0,   39,  0.5f,  0.05f, EAnimationInterpMode::Fixed },      // StandingIdle
+    { 40,  45,  0.5f,  0.05f, EAnimationInterpMode::Fixed },      // Run
+    { 46,  53,  0.5f,  0.05f },                                   // Attack
+    { 54,  57,  0.5f,  0.05f },                                   // Pain1 
+    { 58,  61,  0.5f,  0.05f },                                   // Pain2
+    { 62,  65,  0.5f,  0.05f },                                   // Pain3
+    { 66,  71,  0.5f,  0.05f },                                   // Jump
+    { 72,  83,  0.5f,  0.05f },                                   // Flip
+    { 84,  94,  0.5f,  0.05f },                                   // Salute
+    { 95,  111, 0.5f,  0.05f },                                   // Taun
+    { 112, 122, 0.5f,  0.05f },                                   // Wave
+    { 123, 134, 0.5f,  0.05f },                                   // Point
+    { 135, 153, 0.5f,  0.05f },                                   // CrouchStand
+    { 154, 159, 0.5f,  0.05f, EAnimationInterpMode::Fixed },      // CrouchWalk
+    { 160, 168, 0.5f,  0.05f },                                   // CrouchAttack
+    { 169, 172, 0.5f,  0.05f },                                   // CrouchPain
+    { 173, 177, 0.25f, 0.025f },                                  // CrouchDeath
+    { 178, 183, 0.25f, 0.025f },                                  // DeathBack
+    { 184, 189, 0.25f, 0.025f },                                  // DeathForward
+    { 190, 197, 0.25f, 0.025f }                                   // DeathSlow
 };
 
-void VMesh::PlayAnimation(EMD2AnimationId AnimationId, b32 bLoop)
+void VMesh::PlayAnimation(EMD2AnimationId AnimationId, b32 bLoop, EAnimationInterpMode InterpMode)
 {
     if (~Attr & EMeshAttr::MultiFrame)
     {
@@ -1051,6 +1053,7 @@ void VMesh::PlayAnimation(EMD2AnimationId AnimationId, b32 bLoop)
     }
 
     CurrentAnimationId = AnimationId;
+    AnimationInterpMode = InterpMode == EAnimationInterpMode::Default && !bLoop ? EAnimationInterpMode::Linear : InterpMode;
     AnimationTimeAccum = 0.0f;
 
     bLoopAnimation    = bLoop;
@@ -1064,6 +1067,7 @@ void VMesh::UpdateAnimationAndTransformModelToWorld(f32 DeltaTime)
     i32f Frame1 = (i32f)CurrentFrame;
     i32f Frame2;
 
+    // Check frame overflow
     if (Frame1 < NumFrames)
     {
         Frame2 = Frame1 + 1;
@@ -1074,10 +1078,11 @@ void VMesh::UpdateAnimationAndTransformModelToWorld(f32 DeltaTime)
         Frame2 = Frame1;
     }
 
-    f32 FrameInterp = CurrentFrame - Math.Floor(CurrentFrame);
 
-    if (Frame2 < NumFrames)
+    if (Frame2 < NumFrames) // Interpolate if we didn't overflow
     {
+        f32 FrameInterp = CurrentFrame - Math.Floor(CurrentFrame);
+
         for (i32f VtxIndex = 0; VtxIndex < NumVtx; ++VtxIndex)
         {
             i32f Frame1Index = (Frame1 * NumVtx) + VtxIndex;
@@ -1090,7 +1095,7 @@ void VMesh::UpdateAnimationAndTransformModelToWorld(f32 DeltaTime)
                 FrameInterp          * HeadLocalVtxList[Frame2Index].Position;
         }
     }
-    else
+    else // Get position from one frame on overflow
     {
         for (i32f VtxIndex = 0; VtxIndex < NumVtx; ++VtxIndex)
         {
@@ -1099,41 +1104,70 @@ void VMesh::UpdateAnimationAndTransformModelToWorld(f32 DeltaTime)
         }
     }
 
+    // Check if we already played animation
     if (bAnimationPlayed)
     {
         return;
     }
 
+    // Get animation and interpolation mode
     const VMD2Animation& Animation = MD2AnimationTable[(i32f)CurrentAnimationId];
+    EAnimationInterpMode InterpMode = AnimationInterpMode != EAnimationInterpMode:: Default ? AnimationInterpMode : Animation.InterpMode;
 
-    AnimationTimeAccum += DeltaTime / 1000.0f;
-    i32f InterpCount = (i32f)(AnimationTimeAccum / Animation.InterpOnceInSeconds);
-    AnimationTimeAccum -= InterpCount * Animation.InterpOnceInSeconds;
-
-    CurrentFrame += InterpCount * Animation.InterpRate;
-    if (CurrentFrame >= Animation.FrameEnd)
+    if (InterpMode == EAnimationInterpMode::Linear)
     {
-        if (bLoopAnimation)
+        CurrentFrame += ((DeltaTime / 1000.0f) / Animation.InterpOnceInSeconds) * Animation.InterpRate;
+        if (CurrentFrame >= Animation.FrameEnd)
         {
-            // Interpolate a bit to make it more smooth
-            CurrentFrame = (f32)Animation.FrameStart + Animation.InterpRate * (AnimationTimeAccum / Animation.InterpOnceInSeconds);
-            AnimationTimeAccum = 0.0f;
-            
-            // Check possible case
-            if (CurrentFrame > (f32)Animation.FrameEnd)
+            if (bLoopAnimation)
             {
-                CurrentFrame = (f32)Animation.FrameStart;
+                // Interpolate a bit to make it more smooth
+                CurrentFrame = (f32)Animation.FrameStart + Animation.InterpRate * (Math.Floor(CurrentFrame) / Animation.InterpOnceInSeconds);
+                
+                // Check possible case
+                if (CurrentFrame > (f32)Animation.FrameEnd)
+                {
+                    CurrentFrame = (f32)Animation.FrameStart;
+                }
+            }
+            else
+            {
+                CurrentFrame = (f32)Animation.FrameEnd;
+                bAnimationPlayed = true;
             }
         }
-        else
+    }
+    else
+    {
+        AnimationTimeAccum += DeltaTime / 1000.0f;
+        i32f InterpCount = (i32f)(AnimationTimeAccum / Animation.InterpOnceInSeconds);
+        AnimationTimeAccum -= InterpCount * Animation.InterpOnceInSeconds;
+
+        CurrentFrame += InterpCount * Animation.InterpRate;
+        if (CurrentFrame >= Animation.FrameEnd)
         {
-            CurrentFrame = (f32)Animation.FrameEnd;
-            bAnimationPlayed = true;
+            if (bLoopAnimation)
+            {
+                // Interpolate a bit to make it more smooth
+                CurrentFrame = (f32)Animation.FrameStart + Animation.InterpRate * (AnimationTimeAccum / Animation.InterpOnceInSeconds);
+                AnimationTimeAccum = 0.0f;
+                
+                // Check possible case
+                if (CurrentFrame > (f32)Animation.FrameEnd)
+                {
+                    CurrentFrame = (f32)Animation.FrameStart;
+                }
+            }
+            else
+            {
+                CurrentFrame = (f32)Animation.FrameEnd;
+                bAnimationPlayed = true;
+            }
         }
     }
 }
 
-b32 VMesh::LoadMD2(const char* Path, const char* InSkinPath, i32 SkinIndex, VVector4 InPosition, VVector3 InScale, u32 Flags)
+b32 VMesh::LoadMD2(const char* Path, const char* InSkinPath, i32 SkinIndex, VVector4 InPosition, VVector3 InScale, EMD2ShadeMode ShadeMode)
 {
     VLN_NOTE(hLogMD2, "Parsing started\n");
 
@@ -1282,7 +1316,7 @@ b32 VMesh::LoadMD2(const char* Path, const char* InSkinPath, i32 SkinIndex, VVec
         HeadTransVtxList[Poly.VtxIndices[2]].Attr = HeadLocalVtxList[Poly.VtxIndices[2]].Attr |= EVertexAttr::HasTextureCoords;
 
         Poly.State = EPolyState::Active;
-        Poly.Attr = (Flags & EMD2Flags::ShadeModeFlat ? EPolyAttr::ShadeModeFlat : EPolyAttr::ShadeModeGouraud) | EPolyAttr::RGB32 | EPolyAttr::ShadeModeTexture | EPolyAttr::UsesMaterial;
+        Poly.Attr = (u32)ShadeMode | EPolyAttr::RGB32 | EPolyAttr::ShadeModeTexture | EPolyAttr::UsesMaterial;
         Poly.OriginalColor = MAP_XRGB32(0xFF, 0xFF, 0xFF);
 
         Poly.Material = Material;

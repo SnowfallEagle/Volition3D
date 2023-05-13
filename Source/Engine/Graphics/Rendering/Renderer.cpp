@@ -1663,8 +1663,11 @@ void VRenderer::SetInterpolators()
         ++InterpolationContext.NumInterpolators;
     }
 
-    InterpolationContext.Interpolators[InterpolationContext.NumInterpolators] = &InterpolationContext.AlphaInterpolator;
-    ++InterpolationContext.NumInterpolators;
+    if (InterpolationContext.PolyAttr & EPolyAttr::Transparent)
+    {
+        InterpolationContext.Interpolators[InterpolationContext.NumInterpolators] = &InterpolationContext.AlphaInterpolator;
+        ++InterpolationContext.NumInterpolators;
+    }
 }
 
 void VRenderer::RenderSolid(const VRenderList* RenderList)
