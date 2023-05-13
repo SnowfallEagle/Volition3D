@@ -118,6 +118,7 @@ private:
     friend class VSurface;
     friend class VMesh;
     friend class VCubemap;
+    friend class VWorld;
 };
 
 inline VRenderer Renderer;

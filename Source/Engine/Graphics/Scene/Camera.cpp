@@ -17,16 +17,16 @@ void VCamera::Init(u32 InAttr, const VPoint4& InPos, const VVector4& InDir, cons
     Target = InTarget;
 
     FOV = InFOV;
-    ViewPortSize = { (f32)Config.RenderSpec.TargetSize.X, (f32)Config.RenderSpec.TargetSize.Y };
-    AspectRatio = ViewPortSize.X / ViewPortSize.Y;
+    ViewportSize = { (f32)Config.RenderSpec.TargetSize.X, (f32)Config.RenderSpec.TargetSize.Y };
+    AspectRatio = ViewportSize.X / ViewportSize.Y;
 
     ZNearClip = InZNearClip;
     ZFarClip = InZFarClip;
 
-    ViewPlaneSize = { 2.0f, 2.0f/AspectRatio };
-    ViewDist = (ViewPlaneSize.X * 0.5f) / Math.Tan(FOV * 0.5f);
-    ViewPortCenter = {
-        (ViewPortSize.X - 1.0f) * 0.5f, (ViewPortSize.Y - 1.0f) * 0.5f
+    ViewplaneSize = { 2.0f, 2.0f/AspectRatio };
+    ViewDist = (ViewplaneSize.X * 0.5f) / Math.Tan(FOV * 0.5f);
+    ViewportCenter = {
+        (ViewportSize.X - 1.0f) * 0.5f, (ViewportSize.Y - 1.0f) * 0.5f
     };
 
     MatCamera = VMatrix44::Identity;
@@ -59,7 +59,7 @@ void VCamera::Init(u32 InAttr, const VPoint4& InPos, const VVector4& InDir, cons
         VPoint3 Origin;
         Origin.Zero();
 
-        const f32 MinusViewPlaneWidthDiv2 = -ViewPlaneSize.X * 0.5f;
+        const f32 MinusViewPlaneWidthDiv2 = -ViewplaneSize.X * 0.5f;
 
         VVector3 N = { -ViewDist, 0.0f, MinusViewPlaneWidthDiv2 };
         N.Normalize();
@@ -215,8 +215,8 @@ void VCamera::BuildHomogeneousPerspectiveToScreenMat44()
         we will perform conversion 4D->3D
     */
 
-    const f32 Alpha = ViewPortSize.X * 0.5f - 0.5f;
-    const f32 Beta = ViewPortSize.Y * 0.5f - 0.5f;
+    const f32 Alpha = ViewportSize.X * 0.5f - 0.5f;
+    const f32 Beta = ViewportSize.Y * 0.5f - 0.5f;
 
     MatScreen = {
         Alpha, 0.0f, 0.0f, 0.0f,
@@ -233,8 +233,8 @@ void VCamera::BuildNonHomogeneousPerspectiveToScreenMat44()
         performed conversion 4D->3D
     */
 
-    const f32 Alpha = ViewPortSize.X * 0.5f - 0.5f;
-    const f32 Beta = ViewPortSize.Y * 0.5f - 0.5f;
+    const f32 Alpha = ViewportSize.X * 0.5f - 0.5f;
+    const f32 Beta = ViewportSize.Y * 0.5f - 0.5f;
 
     MatScreen = {
         Alpha, 0.0f, 0.0f, 0.0f,

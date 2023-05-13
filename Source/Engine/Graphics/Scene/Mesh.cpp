@@ -274,7 +274,7 @@ b32 VMesh::Cull(const VCamera& Cam, u32 CullType)
 
     if (CullType & ECullType::X)
     {
-        f32 ZTest = (0.5f * Cam.ViewPlaneSize.X) * (SpherePos.Z / Cam.ViewDist);
+        f32 ZTest = (0.5f * Cam.ViewplaneSize.X) * (SpherePos.Z / Cam.ViewDist);
 
         if (SpherePos.X - MaxRadius > ZTest ||  // Check Sphere's Left with Right side
             SpherePos.X + MaxRadius < -ZTest)   // Check Sphere's Right with Left side
@@ -286,7 +286,7 @@ b32 VMesh::Cull(const VCamera& Cam, u32 CullType)
 
     if (CullType & ECullType::Y)
     {
-        f32 ZTest = (0.5f * Cam.ViewPlaneSize.Y) * (SpherePos.Z / Cam.ViewDist);
+        f32 ZTest = (0.5f * Cam.ViewplaneSize.Y) * (SpherePos.Z / Cam.ViewDist);
 
         if (SpherePos.Y - MaxRadius > ZTest ||  // Check Sphere's Bottom with Top side
             SpherePos.Y + MaxRadius < -ZTest)   // Check Sphere's Top with Bottom side
@@ -538,7 +538,7 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
         // Read polygon faces
         i32 NumMaterialsInObject = 0;
         TArray<b8> DoesMaterialAppearFirstTime(Renderer.MaxMaterials, true);
-        TArray<i32> MaterialIndexByPolyIndex(GetMaxPoly(), 0);
+        TArray<i32> MaterialIndexByPolyIndex(MaxPoly, 0);
 
         {
             Line = FindLineCOB("Faces", File, Buffer, BufferSize);

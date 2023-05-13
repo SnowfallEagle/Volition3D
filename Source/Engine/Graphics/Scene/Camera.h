@@ -45,9 +45,9 @@ public:
     f32 ZNearClip;
     f32 ZFarClip;
 
-    VVector2 ViewPlaneSize;
-    VVector2 ViewPortSize;
-    VVector2 ViewPortCenter;
+    VVector2 ViewplaneSize;
+    VVector2 ViewportSize;
+    VVector2 ViewportCenter;
 
     VPlane3 LeftClipPlane;
     VPlane3 RightClipPlane;

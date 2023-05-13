@@ -779,7 +779,7 @@ void VRenderList::Clip(const VCamera& Camera, EClipFlags::Type Flags)
 
         if (Flags & EClipFlags::X)
         {
-            ZFactor = (0.5f * Camera.ViewPlaneSize.X) / Camera.ViewDist;
+            ZFactor = (0.5f * Camera.ViewplaneSize.X) / Camera.ViewDist;
             ZTest = ZFactor * Poly.TransVtx[0].Z;
 
             if (Poly.TransVtx[0].X > ZTest)
@@ -828,7 +828,7 @@ void VRenderList::Clip(const VCamera& Camera, EClipFlags::Type Flags)
 
         if (Flags & EClipFlags::Y)
         {
-            ZFactor = (0.5f * Camera.ViewPlaneSize.Y) / Camera.ViewDist;
+            ZFactor = (0.5f * Camera.ViewplaneSize.Y) / Camera.ViewDist;
             ZTest = ZFactor * Poly.TransVtx[0].Z;
 
             if (Poly.TransVtx[0].Y > ZTest)
@@ -971,8 +971,8 @@ void VRenderList::Clip(const VCamera& Camera, EClipFlags::Type Flags)
                     VVector4 Direction = Poly.TransVtx[V1].Position - Poly.TransVtx[V0].Position;
                     const f32 T1 = (Camera.ZNearClip - Poly.TransVtx[V0].Z) / Direction.Z;
 
-                    Poly.TransVtx[V1].X = Poly.TransVtx[V0].X + Direction.X * T1;
-                    Poly.TransVtx[V1].Y = Poly.TransVtx[V0].Y + Direction.Y * T1;
+                    Poly.TransVtx[V1].X = 0.5f + Poly.TransVtx[V0].X + Direction.X * T1;
+                    Poly.TransVtx[V1].Y = 0.5f + Poly.TransVtx[V0].Y + Direction.Y * T1;
                     Poly.TransVtx[V1].Z = Camera.ZNearClip;
 
                     Direction = Poly.TransVtx[V2].Position - Poly.TransVtx[V0].Position;
@@ -1144,8 +1144,8 @@ void VRenderList::ConvertFromHomogeneous()
 
 void VRenderList::TransformPerspectiveToScreen(const VCamera& Cam)
 {
-    const f32 Alpha = Cam.ViewPortSize.X * 0.5f - 0.5f;
-    const f32 Beta = Cam.ViewPortSize.Y * 0.5f - 0.5f;
+    const f32 Alpha = Cam.ViewportSize.X * 0.5f - 0.5f;
+    const f32 Beta = Cam.ViewportSize.Y * 0.5f - 0.5f;
 
     for (i32f i = 0; i < NumPoly; ++i)
     {
@@ -1168,8 +1168,8 @@ void VRenderList::TransformPerspectiveToScreen(const VCamera& Cam)
 
 void VRenderList::TransformCameraToScreen(const VCamera& Cam)
 {
-    const f32 Alpha = Cam.ViewPortSize.X * 0.5f - 0.5f;
-    const f32 Beta = Cam.ViewPortSize.Y * 0.5f - 0.5f;
+    const f32 Alpha = Cam.ViewportSize.X * 0.5f - 0.5f;
+    const f32 Beta = Cam.ViewportSize.Y * 0.5f - 0.5f;
 
     for (i32f i = 0; i < NumPoly; ++i)
     {

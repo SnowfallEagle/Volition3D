@@ -26,7 +26,7 @@ namespace EMeshAttr
         HasTexture  = VLN_BIT(2),
         CanBeCulled = VLN_BIT(3),
         CastShadow  = VLN_BIT(4),
-        TerrainMesh = VLN_BIT(5)
+        TerrainMesh = VLN_BIT(5),
     };
 }
 
@@ -104,8 +104,7 @@ VLN_DECL_ALIGN_SSE() class VMesh
 {
 public:
     static constexpr i32f NameSize = 64;
-    static constexpr i32f MaxDefaultPoly = 32768;
-    static constexpr i32f MaxTerrainPoly = 262'144;
+    static constexpr i32f MaxPoly = 32768;
 
 public:
     char Name[NameSize];
@@ -186,11 +185,6 @@ public:
     b32 Cull(const VCamera& Cam, u32 CullType = ECullType::XYZ);
 
     void GenerateTerrain(const char* HeightMap, const char* Texture, f32 Size, f32 Height, EShadeMode ShadeMode = EShadeMode::Gouraud);
-
-    VLN_FINLINE i32f GetMaxPoly()
-    {
-        return Attr & EMeshAttr::TerrainMesh ? MaxTerrainPoly : MaxDefaultPoly;
-    }
 
     VLN_FINLINE f32 GetAverageRadius()
     {

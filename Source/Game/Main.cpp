@@ -53,10 +53,10 @@ public:
         // World.SpawnEntity<VEntity>()->Mesh->LoadMD2("Assets/Models/007/weapon.md2", nullptr, 0, { 25.0f, 150.0f, -5.0f }, { 10.0f, 10.0f, 10.0f });
 
         Camera = World.GetCamera();
-        Camera->Init(ECameraAttr::Euler, { 0.0f, 1000.0f, 1500.0f }, { 25.0f, 180.0f, 0 }, VVector4(), 75, 45, 100000);
+        Camera->Init(ECameraAttr::Euler, { 0.0f, 1000.0f, 1500.0f }, { 25.0f, 180.0f, 0 }, VVector4(), 75, 45, 50000);
 
         World.SetCubemap("Assets/Cubemaps/Cubemap.png");
-        World.GetTerrain()->GenerateTerrain("Assets/Terrains/Large/Heightmap.bmp", "Assets/Terrains/RockyLand/Texture.bmp", 50000.0f, 25000.0f, EShadeMode::Gouraud);
+        World.GetTerrain()->GenerateTerrain("Assets/Terrains/RockyLand/Heightmap.bmp", "Assets/Terrains/RockyLand/Texture.bmp", 50000.0f, 25000.0f, EShadeMode::Gouraud);
         // World.GetTerrain()->GenerateTerrain("Assets/Terrains/Large/Heightmap.bmp", "Assets/Terrains/RockyLand/Texture.bmp", 50000.0f, 25000.0f);
 
         {
@@ -199,7 +199,7 @@ public:
         CurrentAnimation %= (i32)EMD2AnimationId::MaxAnimations;
 
         static bool bStarted = false;
-        if (Input.IsKeyDown(EKeycode::B)) bStarted = true;
+        if (Input.IsKeyDown(EKeycode::B)) bStarted ^= true;
 
         if (bStarted && Entity->Mesh->bAnimationPlayed)
         {

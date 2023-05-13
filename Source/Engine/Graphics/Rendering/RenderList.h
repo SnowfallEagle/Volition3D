@@ -23,13 +23,6 @@ namespace EClipFlags
     };
 }
 
-enum class ESortPolygonsMethod
-{
-    Average = 0,
-    Near,
-    Far
-};
-
 VLN_DEFINE_LOG_CHANNEL(hLogRenderList, "RenderList");
 
 VLN_DECL_ALIGN_SSE() class VRenderList
@@ -51,6 +44,7 @@ public:
         PolyList = new VPolyFace[InMaxPoly];
     }
 
+    // @TODO: Do we inherit?
     virtual ~VRenderList()
     {
         delete[] PolyList;
@@ -59,8 +53,6 @@ public:
     b32 InsertPoly(const VPoly& Poly, const VVertex* VtxList, const VPoint2* TextureCoordsList);
     b32 InsertPolyFace(const VPolyFace& Poly);
     void InsertMesh(VMesh& Mesh, b32 bInsertLocal);
-
-    void ResetStateAndSaveList();
 
     void Transform(const VMatrix44& M, ETransformType Type);
 
@@ -82,6 +74,8 @@ public:
         NumPoly = 0;
         NumAdditionalPoly = 0;
     }
+
+    void ResetStateAndSaveList();
 
 public:
     VLN_DEFINE_ALIGN_OPERATORS_SSE()

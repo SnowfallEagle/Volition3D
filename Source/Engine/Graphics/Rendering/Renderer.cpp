@@ -955,7 +955,7 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
             ZBufferArray = (fx28*)ZBuffer.Buffer + (ZBuffer.Pitch * YStart);
 
             // Process each Y
-            for (InterpolationContext.Y = YStart; InterpolationContext.Y < YEnd; ++InterpolationContext.Y)
+            for (InterpolationContext.Y = YStart; InterpolationContext.Y <= YEnd; ++InterpolationContext.Y)
             {
                 // Compute starting values
                 i32f XStart = Fx16ToIntRounded(XLeft);
@@ -1000,7 +1000,7 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                 }
 
                 // Process each X
-                for (i32f X = XStart; X < XEnd; ++X)
+                for (i32f X = XStart; X <= XEnd; ++X)
                 {
                     if (Z > ZBufferArray[X])
                     {
@@ -1050,7 +1050,7 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
             ZBufferArray = (fx28*)ZBuffer.Buffer + (ZBuffer.Pitch * YStart);
 
             // Process each Y
-            for (InterpolationContext.Y = YStart; InterpolationContext.Y < YEnd; ++InterpolationContext.Y)
+            for (InterpolationContext.Y = YStart; InterpolationContext.Y <= YEnd; ++InterpolationContext.Y)
             {
                 // Compute starting values
                 const i32f XStart = Fx16ToIntRounded(XLeft);
@@ -1077,7 +1077,7 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                 }
 
                 // Process each X
-                for (i32f X = XStart; X < XEnd; ++X)
+                for (i32f X = XStart; X <= XEnd; ++X)
                 {
                     if (Z > ZBufferArray[X])
                     {
@@ -1298,7 +1298,7 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
             ZBufferArray = (fx28*)ZBuffer.Buffer + (ZBuffer.Pitch * YStart);
 
             // Process each Y
-            for (InterpolationContext.Y = YStart; InterpolationContext.Y < YEnd; ++InterpolationContext.Y)
+            for (InterpolationContext.Y = YStart; InterpolationContext.Y <= YEnd; ++InterpolationContext.Y)
             {
                 // Compute starting values
                 i32f XStart = Fx16ToIntRounded(XLeft);
@@ -1343,7 +1343,7 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                 }
 
                 // Process each X
-                for (i32f X = XStart; X < XEnd; ++X)
+                for (i32f X = XStart; X <= XEnd; ++X)
                 {
                     if (Z > ZBufferArray[X])
                     {
@@ -1442,7 +1442,7 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
             ZBufferArray = (fx28*)ZBuffer.Buffer + (ZBuffer.Pitch * YStart);
 
             // Process each Y
-            for (InterpolationContext.Y = YStart; InterpolationContext.Y < YEnd; ++InterpolationContext.Y)
+            for (InterpolationContext.Y = YStart; InterpolationContext.Y <= YEnd; ++InterpolationContext.Y)
             {
                 // Compute starting values
                 const i32f XStart = Fx16ToIntRounded(XLeft);
@@ -1469,7 +1469,7 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                 }
 
                 // Process each X
-                for (i32f X = XStart; X < XEnd; ++X)
+                for (i32f X = XStart; X <= XEnd; ++X)
                 {
                     if (Z > ZBufferArray[X])
                     {
