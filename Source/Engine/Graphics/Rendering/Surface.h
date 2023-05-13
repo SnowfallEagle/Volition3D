@@ -31,6 +31,8 @@ public:
     void Lock(u32*& OutBuffer, i32& OutPitch);
     void Unlock();
 
+    void CorrectColors(const VVector3& ColorCorrection = { 1.0f, 1.0f, 1.0f });
+
     VLN_FINLINE u32* GetBuffer()
     {
         VLN_ASSERT(bLocked);

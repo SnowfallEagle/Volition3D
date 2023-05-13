@@ -165,7 +165,8 @@ public:
         i32 SkinIndex = 0, // Used if SpecificSkinPath != nullptr
         VVector4 InPosition = { 0.0f, 0.0f, 0.0f },
         VVector3 InScale = { 1.0f, 1.0f, 1.0f },
-        EShadeMode ShadeMode = EShadeMode::Gouraud
+        EShadeMode ShadeMode = EShadeMode::Gouraud,
+        const VVector3& ColorCorrection = { 1.0f, 1.0f, 1.0f }
     );
 
     b32 LoadCOB(

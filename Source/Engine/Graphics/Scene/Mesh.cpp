@@ -868,7 +868,7 @@ void VMesh::GenerateTerrain(const char* HeightMap, const char* Texture, f32 Size
 {
     // Load texture in terrain material
     VMaterial& Material = Renderer.Materials[Renderer.NumMaterials];
-    Material.Texture.Load(Texture, 1);
+    Material.Texture.Load(Texture, { 1.0f, 1.0f, 1.0f }, 1);
 
     // Load height map
     VSurface MapSurface;
@@ -1174,7 +1174,7 @@ void VMesh::UpdateAnimationAndTransformModelToWorld(f32 DeltaTime)
     }
 }
 
-b32 VMesh::LoadMD2(const char* Path, const char* InSkinPath, i32 SkinIndex, VVector4 InPosition, VVector3 InScale, EShadeMode ShadeMode)
+b32 VMesh::LoadMD2(const char* Path, const char* InSkinPath, i32 SkinIndex, VVector4 InPosition, VVector3 InScale, EShadeMode ShadeMode, const VVector3& ColorCorrection)
 {
     VLN_NOTE(hLogMD2, "Parsing started\n");
 
@@ -1286,7 +1286,7 @@ b32 VMesh::LoadMD2(const char* Path, const char* InSkinPath, i32 SkinIndex, VVec
     if (InSkinPath)
     {
         VLN_LOG_VERBOSE("Skin Path: %s\n", InSkinPath);
-        Material->Texture.Load(InSkinPath);
+        Material->Texture.Load(InSkinPath, ColorCorrection);
     }
     else
     {
@@ -1300,7 +1300,7 @@ b32 VMesh::LoadMD2(const char* Path, const char* InSkinPath, i32 SkinIndex, VVec
         GetTexturePathFromModelDirectory(SkinPath, MD2SkinPathSize, SkinPathRaw, Path);
 
         VLN_LOG_VERBOSE("Skin Path: %s\n", SkinPath);
-        Material->Texture.Load(SkinPath);
+        Material->Texture.Load(SkinPath, ColorCorrection);
     }
 
     // Read polygons

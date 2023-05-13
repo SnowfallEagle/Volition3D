@@ -250,6 +250,7 @@ void VRenderer::Render()
             // Compute shadow vertex positions
             // @TODO: Figure out
             static constexpr f32 YShadowPosition = -25.0f;
+            static constexpr f32 MaxShadowOffset = 5000.0f;
 
             VVertex* VtxList = Mesh->TransVtxList;
             for (i32f i = 0; i < Mesh->NumVtx; ++i)
@@ -257,9 +258,9 @@ void VRenderer::Render()
                 VVector4 Direction = (VtxList[i].Position - OccluderLight->Pos);
                 f32 T = (YShadowPosition - OccluderLight->Pos.Y) / Direction.Y;
 
-                VtxList[i].X = OccluderLight->Pos.X + (T * Direction.X);
+                VtxList[i].X = OccluderLight->Pos.X + T * Direction.X;
                 VtxList[i].Y = YShadowPosition;
-                VtxList[i].Z = OccluderLight->Pos.Z + (T * Direction.Z);
+                VtxList[i].Z = OccluderLight->Pos.Z + T * Direction.Z;
             }
 
             // Insert shadow mesh
@@ -1632,7 +1633,15 @@ void VRenderer::SetInterpolators()
 
             if (InterpolationContext.PolyAttr & EPolyAttr::Terrain)
             {
-                InterpolationContext.Interpolators[InterpolationContext.NumInterpolators] = &InterpolationContext.AffineTextureInterpolator;
+                if (Distance < 25000.0f)
+                {
+                    // @NOTE: Can crash if texture size > 512, because of 22 fixed point used in this interpolator
+                    InterpolationContext.Interpolators[InterpolationContext.NumInterpolators] = &InterpolationContext.PerspectiveCorrectTextureInterpolator;
+                }
+                else
+                {
+                    InterpolationContext.Interpolators[InterpolationContext.NumInterpolators] = &InterpolationContext.AffineTextureInterpolator;
+                }
             }
             else
             {

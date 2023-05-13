@@ -73,6 +73,11 @@ public:
         return std::ceilf(X);
     }
 
+    VLN_FINLINE static f32 Sign(f32 X)
+    {
+        return X < 0.0f ? -1.0f : 1.0f;
+    }
+
     VLN_FINLINE static b32 IsEqualFloat(f32 A, f32 B)
     {
         return Abs(A - B) < Epsilon3;

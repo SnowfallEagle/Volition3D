@@ -4,7 +4,7 @@
 namespace Volition
 {
 
-void VTexture::Load(const char* Path, i32 MaxMipMaps)
+void VTexture::Load(const char* Path, const VVector3& ColorCorrection, i32 MaxMipMaps)
 {
     if (MaxMipMaps <= 0)
     {
@@ -14,6 +14,7 @@ void VTexture::Load(const char* Path, i32 MaxMipMaps)
     Surfaces.Resize(MaxMipMaps);
     Surfaces[0].Load(Path);
 
+    Surfaces[0].CorrectColors(ColorCorrection);
     GenerateMipMaps(MaxMipMaps);
 
     for (i32f i = 0; i < NumMipMaps; ++i)

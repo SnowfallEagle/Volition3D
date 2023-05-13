@@ -61,4 +61,41 @@ void VSurface::Destroy()
     Height = 0;
 }
 
+void VSurface::CorrectColors(const VVector3& ColorCorrection)
+{
+    u32* Buffer;
+    i32 Pitch;
+    Lock(Buffer, Pitch);
+
+    for (i32f Y = 0; Y < Height; ++Y)
+    {
+        for (i32f X = 0; X < Width; ++X)
+        {
+            VColorARGB Pixel = Buffer[X];
+
+            i32 Colors[3] = {
+                (i32)( (((f32)Pixel.R / 255.0f) * ColorCorrection.X) * 255.0f + 0.5f ),
+                (i32)( (((f32)Pixel.G / 255.0f) * ColorCorrection.Y) * 255.0f + 0.5f ),
+                (i32)( (((f32)Pixel.B / 255.0f) * ColorCorrection.Z) * 255.0f + 0.5f )
+            };
+
+            for (i32f ColorIndex = 0; ColorIndex < 3; ++ColorIndex)
+            {
+                Colors[ColorIndex] = VLN_MIN(VLN_MAX(Colors[ColorIndex], 0), 255);
+            }
+
+            Buffer[X] = MAP_ARGB32(
+                Pixel.A,
+                Colors[0],
+                Colors[1],
+                Colors[2]
+            );
+        }
+
+        Buffer += Pitch;
+    }
+
+    Unlock();
+}
+
 }

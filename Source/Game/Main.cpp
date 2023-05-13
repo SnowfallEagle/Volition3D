@@ -9,10 +9,13 @@ namespace Game
 class GGameState : public VGameState
 {
     VEntity* Entity = nullptr;
+    VEntity* LightEntity = nullptr;
     VCamera* Camera;
 
     u8 CurrentAnimation = 0;
     EAnimationInterpMode InterpMode = EAnimationInterpMode::Default;
+
+    VVector4 OccluderLightPosition;
 
 public:
     virtual void StartUp() override
@@ -34,6 +37,7 @@ public:
         */
 
         Entity = World.SpawnEntity<VEntity>();
+        LightEntity = World.SpawnEntity<VEntity>();
 
         /*
         Entity->Mesh->LoadCOB(
@@ -46,18 +50,21 @@ public:
         Entity->Mesh->Attr &= ~EMeshAttr::CastShadow;
         */
 
-        Entity->Mesh->LoadMD2("Assets/Models/tekkblade/tris.md2", nullptr, 0, {0.0f, 0.0f, 0.0f}, {10.0f, 10.0f, 10.0f}, EShadeMode::Gouraud);
-        // Entity->Mesh->LoadMD2("Assets/Models/marine/tris.md2", "Assets/Models/marine/Centurion.pcx", 0, {0.0f, 0.0f, 0.0f}, {10.0f, 10.0f, 10.0f}, EShadeMode::Gouraud);
+        // Entity->Mesh->LoadMD2("Assets/Models/tekkblade/tris.md2", nullptr, 0, {0.0f, 0.0f, 0.0f}, {10.0f, 10.0f, 10.0f}, EShadeMode::Gouraud);
+        Entity->Mesh->LoadMD2("Assets/Models/marine/tris.md2", "Assets/Models/marine/Centurion.pcx", 0, {0.0f, 0.0f, 0.0f}, {10.0f, 10.0f, 10.0f}, EShadeMode::Gouraud, { 1.5f, 2.0f, 1.5f });
         // Entity->Mesh->PlayAnimation((EMD2AnimationId)CurrentAnimation, true, InterpMode);
 
         // World.SpawnEntity<VEntity>()->Mesh->LoadMD2("Assets/Models/007/weapon.md2", nullptr, 0, { 25.0f, 150.0f, -5.0f }, { 10.0f, 10.0f, 10.0f });
+
+        LightEntity->Mesh->LoadMD2("Assets/Models/tekkblade/tris.md2");
+        LightEntity->Mesh->Attr &= ~EMeshAttr::CastShadow;
 
         Camera = World.GetCamera();
         Camera->Init(ECameraAttr::Euler, { 0.0f, 1000.0f, 1500.0f }, { 25.0f, 180.0f, 0 }, VVector4(), 75, 100, 1000000);
 
         World.SetCubemap("Assets/Cubemaps/Cubemap.png");
-        // World.GetTerrain()->GenerateTerrain("Assets/Terrains/RockyLand/Heightmap.bmp", "Assets/Terrains/RockyLand/Texture.bmp", 50000.0f, 25000.0f, EShadeMode::Gouraud);
-        World.GetTerrain()->GenerateTerrain("Assets/Terrains/Large/Heightmap.bmp", "Assets/Terrains/RockyLand/Texture.bmp", 1000000.0f, 250000.0f, EShadeMode::Gouraud);
+        World.GetTerrain()->GenerateTerrain("Assets/Terrains/Small/Heightmap.bmp", "Assets/Terrains/Common/Texture.bmp", 10000.0f, 5000.0f, EShadeMode::Gouraud);
+        // World.GetTerrain()->GenerateTerrain("Assets/Terrains/Large/Heightmap.bmp", "Assets/Terrains/RockyLand/Texture.bmp", 100000.0f, 50000.0f, EShadeMode::Gouraud);
         // World.GetTerrain()->GenerateTerrain("Assets/Terrains/Large/Heightmap.bmp", "Assets/Terrains/RockyLand/Texture.bmp", 50000.0f, 25000.0f);
 
         {
@@ -77,8 +84,8 @@ public:
                 ELightState::Active,
                 ELightAttr::Infinite,
 
-                0, MAP_XRGB32(0xAA, 0x99, 0x44), 0,
-                { 5000, 5000, 5000, 0 }, { 0, 0, 0, 0 }, VVector4{ -1.0f, -1.0f, 0, 0 }.GetNormalized(), { 0, 0, 0, 0 },
+                0, MAP_XRGB32(0x99, 0x66, 0x22), 0,
+                { 7500.0f, 7500.0f, 7500.0f, 0 }, { 0, 0, 0, 0 }, VVector4{ -1.0f, -1.0f, 0, 0 }.GetNormalized(), { 0, 0, 0, 0 },
 
                 0, 0, 0,
                 0, 0,
@@ -139,7 +146,9 @@ public:
             // Renderer.AddLight(ComplexSpotlight);
             // Renderer.AddLight(SimpleSpotlight);
             // Renderer.AddLight(OccluderLight);
-            Renderer.SetOccluderLight(2);
+            Renderer.SetOccluderLight(1);
+
+            OccluderLightPosition = PointLight.Pos;
         }
     }
 
@@ -189,6 +198,11 @@ public:
         if (Input.IsKeyDown(EKeycode::N1)) InterpMode = EAnimationInterpMode::Linear;
         if (Input.IsKeyDown(EKeycode::N2)) InterpMode = EAnimationInterpMode::Fixed;
 
+        if (Input.IsKeyDown(EKeycode::Home)) Entity->Mesh->Position.Z += DeltaTime * ShiftModifier;
+        if (Input.IsKeyDown(EKeycode::End)) Entity->Mesh->Position.Z -= DeltaTime * ShiftModifier;
+        if (Input.IsKeyDown(EKeycode::Delete)) Entity->Mesh->Position.X -= DeltaTime * ShiftModifier;
+        if (Input.IsKeyDown(EKeycode::PageDown)) Entity->Mesh->Position.X += DeltaTime * ShiftModifier;
+
         static float AnimButtonCounter = 0.0f;
         if (AnimButtonCounter <= 0.0f && Input.IsKeyDown(EKeycode::Comma)) { --CurrentAnimation; AnimButtonCounter = 100.0f; };
         if (AnimButtonCounter <= 0.0f && Input.IsKeyDown(EKeycode::Period)) { ++CurrentAnimation; AnimButtonCounter = 100.0f; };
@@ -199,7 +213,7 @@ public:
         }
         CurrentAnimation %= (i32)EMD2AnimationId::MaxAnimations;
 
-        static bool bStarted = false;
+        static b32 bStarted = false;
         if (Input.IsKeyDown(EKeycode::B)) bStarted ^= true;
 
         if (bStarted && Entity->Mesh->bAnimationPlayed)
@@ -217,6 +231,16 @@ public:
         {
             Config.RenderSpec.bRenderSolid ^= true;
         }
+
+        static f32 Accum = 0.0f; 
+        Accum += DeltaTime / 1000.0f;
+
+        VVector4 NewLightPosition = OccluderLightPosition;
+        NewLightPosition.Y += 1000.0f * Math.Sin(Accum * 5.0f);
+        NewLightPosition.Z += 1000.0f * Math.Cos(Accum * 5.0f);
+        Renderer.Lights[2].Pos = NewLightPosition;
+
+        LightEntity->Mesh->Position = NewLightPosition;
 
         Renderer.DrawDebugText("FPS: %.2f", 1000.0f / DeltaTime);
         Renderer.DrawDebugText("AnimationId: %d", CurrentAnimation);

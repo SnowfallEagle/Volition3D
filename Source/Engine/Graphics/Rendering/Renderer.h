@@ -66,10 +66,12 @@ private:
     VMaterial Materials[MaxMaterials];
     i32 NumMaterials;
 
+public: // @TODO: Later collect lights in world
     VLight* OccluderLight;
     VLight Lights[MaxLights];
     i32 NumLights;
 
+private:
     VColorARGB (*OriginalLitColors)[3]; /** [MaxPoly][3] */
     VColorARGB* OriginalColors;         /** [MaxPoly] */
     u32* OriginalAttrs;                 /** [MaxPoly] */
