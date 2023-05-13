@@ -29,9 +29,9 @@ VMesh::VMesh()
 void VMesh::Allocate(i32 InNumVtx, i32 InNumPoly, i32 InNumFrames, i32 InNumTextureCoords)
 {
     HeadLocalVtxList = LocalVtxList = new VVertex[InNumVtx * InNumFrames];
-    HeadTransVtxList = TransVtxList = new VVertex[InNumVtx * InNumFrames];
+    HeadTransVtxList = TransVtxList = new VVertex[InNumVtx];
     Memory.MemSetByte(HeadLocalVtxList, 0, sizeof(VVertex) * (InNumVtx * InNumFrames));
-    Memory.MemSetByte(HeadTransVtxList, 0, sizeof(VVertex) * (InNumVtx * InNumFrames));
+    Memory.MemSetByte(HeadTransVtxList, 0, sizeof(VVertex) * (InNumVtx));
 
     PolyList          = new VPoly[InNumPoly];
     NumTextureCoords  = InNumTextureCoords != -1 ? InNumTextureCoords : InNumPoly * 3;
@@ -171,7 +171,7 @@ void VMesh::ComputeVertexNormals()
                 HeadLocalVtxList[VtxIndex].Normal /= (f32)NumPolyTouchVtx[TouchIndex];
                 HeadLocalVtxList[VtxIndex].Normal.Normalize();
 
-                HeadTransVtxList[VtxIndex].Attr = HeadLocalVtxList[VtxIndex].Attr |= EVertexAttr::HasNormal;
+                HeadLocalVtxList[VtxIndex].Attr |= EVertexAttr::HasNormal;
 
                 VLN_LOG_VERBOSE("Vertex normal [%d]: <%.2f %.2f %.2f>\n", VtxIndex, HeadLocalVtxList[VtxIndex].Normal.X, HeadLocalVtxList[VtxIndex].Normal.Y, HeadLocalVtxList[VtxIndex].Normal.Z);
             }
