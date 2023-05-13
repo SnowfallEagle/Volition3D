@@ -37,6 +37,7 @@ namespace ECullType
         X = VLN_BIT(1),
         Y = VLN_BIT(2),
         Z = VLN_BIT(3),
+
         XYZ = X | Y | Z,
     };
 }
@@ -50,11 +51,13 @@ namespace ECOBFlags
         InvertU = VLN_BIT(3),
         InvertV = VLN_BIT(4),
 
+        OverrideShadeMode = VLN_BIT(5),
+
         Default = SwapYZ
     };
 }
 
-enum class EMD2ShadeMode
+enum class EShadeMode
 {
     Emissive = EPolyAttr::ShadeModeEmissive,
     Flat     = EPolyAttr::ShadeModeFlat,
@@ -163,14 +166,15 @@ public:
         i32 SkinIndex = 0, // Used if SpecificSkinPath != nullptr
         VVector4 InPosition = { 0.0f, 0.0f, 0.0f },
         VVector3 InScale = { 1.0f, 1.0f, 1.0f },
-        EMD2ShadeMode ShadeMode = EMD2ShadeMode::Gouraud
+        EShadeMode ShadeMode = EShadeMode::Gouraud
     );
 
     b32 LoadCOB(
         const char* Path,
         const VVector4& InPosition = { 0.0f, 0.0f, 0.0f, 0.0f },
         const VVector4& Scale      = { 1.0f, 1.0f, 1.0f, 1.0f },
-        u32 Flags = ECOBFlags::Default
+        u32 Flags = ECOBFlags::Default,
+        EShadeMode OverrideShadeMode = EShadeMode::Gouraud // Only with ECobFlags::OverrideShadeMode
     );
 
     void PlayAnimation(EMD2AnimationId AnimationId, b32 bLoop = false, EAnimationInterpMode InterpMode = EAnimationInterpMode::Default);
@@ -181,7 +185,7 @@ public:
     void Transform(const VMatrix44& M, ETransformType Type, b32 bTransBasis);
     b32 Cull(const VCamera& Cam, u32 CullType = ECullType::XYZ);
 
-    void GenerateTerrain(const char* HeightMap, const char* Texture, f32 Size, f32 Height);
+    void GenerateTerrain(const char* HeightMap, const char* Texture, f32 Size, f32 Height, EShadeMode ShadeMode = EShadeMode::Gouraud);
 
     VLN_FINLINE i32f GetMaxPoly()
     {

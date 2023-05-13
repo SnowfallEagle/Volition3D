@@ -394,7 +394,7 @@ char* FindLineCOB(const char* Pattern, std::FILE* File, char* Buffer, i32 Size)
     }
 }
 
-b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4& Scale, u32 Flags)
+b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4& Scale, u32 Flags, EShadeMode OverrideShadeMode)
 {
     static constexpr i32f BufferSize = 4096;
 
@@ -775,18 +775,25 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                 }
 
                 // Set shade mode and params
-                if (PolyMaterial.Attr & EMaterialAttr::ShadeModeEmissive)
+                if (Flags & ECOBFlags::OverrideShadeMode)
                 {
-                    Poly.Attr |= EPolyAttr::ShadeModeEmissive;
+                    Poly.Attr |= (u32)OverrideShadeMode;
                 }
-                else if (PolyMaterial.Attr & EMaterialAttr::ShadeModeFlat)
+                else
                 {
-                    Poly.Attr |= EPolyAttr::ShadeModeFlat;
-                }
-                else if (PolyMaterial.Attr & EMaterialAttr::ShadeModeGouraud ||
-                    PolyMaterial.Attr & EMaterialAttr::ShadeModePhong)
-                {
-                    Poly.Attr |= EPolyAttr::ShadeModeGouraud;
+                    if (PolyMaterial.Attr & EMaterialAttr::ShadeModeEmissive)
+                    {
+                        Poly.Attr |= EPolyAttr::ShadeModeEmissive;
+                    }
+                    else if (PolyMaterial.Attr & EMaterialAttr::ShadeModeFlat)
+                    {
+                        Poly.Attr |= EPolyAttr::ShadeModeFlat;
+                    }
+                    else if (PolyMaterial.Attr & EMaterialAttr::ShadeModeGouraud ||
+                        PolyMaterial.Attr & EMaterialAttr::ShadeModePhong)
+                    {
+                        Poly.Attr |= EPolyAttr::ShadeModeGouraud;
+                    }
                 }
 
                 if (PolyMaterial.Attr & EMaterialAttr::ShadeModeTexture)
@@ -857,7 +864,7 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                     Terrain Generation                *
  ******************************************************/
 
-void VMesh::GenerateTerrain(const char* HeightMap, const char* Texture, f32 Size, f32 Height)
+void VMesh::GenerateTerrain(const char* HeightMap, const char* Texture, f32 Size, f32 Height, EShadeMode ShadeMode)
 {
     // Load texture in terrain material
     VMaterial& Material = Renderer.Materials[Renderer.NumMaterials];
@@ -918,7 +925,7 @@ void VMesh::GenerateTerrain(const char* HeightMap, const char* Texture, f32 Size
             VPoly& Poly2 = PolyList[PolyIndex + 1];
 
             Poly2.State         = Poly1.State        |= EPolyState::Active;
-            Poly2.Attr          = Poly1.Attr         |= EPolyAttr::Terrain | EPolyAttr::ShadeModeGouraud | EPolyAttr::ShadeModeTexture;
+            Poly2.Attr          = Poly1.Attr         |= EPolyAttr::Terrain | (u32)ShadeMode | EPolyAttr::ShadeModeTexture;
             Poly2.OriginalColor = Poly1.OriginalColor = VColorARGB(0xFF, 0xFF, 0xFF, 0xFF);
             Poly2.Material      = Poly1.Material      = &Material;
 
@@ -1167,7 +1174,7 @@ void VMesh::UpdateAnimationAndTransformModelToWorld(f32 DeltaTime)
     }
 }
 
-b32 VMesh::LoadMD2(const char* Path, const char* InSkinPath, i32 SkinIndex, VVector4 InPosition, VVector3 InScale, EMD2ShadeMode ShadeMode)
+b32 VMesh::LoadMD2(const char* Path, const char* InSkinPath, i32 SkinIndex, VVector4 InPosition, VVector3 InScale, EShadeMode ShadeMode)
 {
     VLN_NOTE(hLogMD2, "Parsing started\n");
 
