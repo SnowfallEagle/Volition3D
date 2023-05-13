@@ -69,9 +69,9 @@ void VRenderer::StartUp()
 
     // Init renderer stuff 
     {
-        BaseRenderList = new VRenderList();
+        BaseRenderList = new VRenderList(MaxBaseRenderListPoly);
 
-        TerrainRenderList = new VRenderList();
+        TerrainRenderList = new VRenderList(MaxTerrainRenderListPoly);
         TerrainRenderList->bTerrain = true;
 
         ZBuffer.Create(Config.RenderSpec.TargetSize.X, Config.RenderSpec.TargetSize.Y);
@@ -82,9 +82,9 @@ void VRenderer::StartUp()
 
     // Allocate memory
     {
-        OriginalLitColors = new VColorARGB[VRenderList::MaxPoly][3];
-        OriginalColors    = new VColorARGB[VRenderList::MaxPoly];
-        OriginalAttrs     = new u32[VRenderList::MaxPoly];
+        OriginalLitColors = new VColorARGB[MaxCachedRenderListPoly][3];
+        OriginalColors    = new VColorARGB[MaxCachedRenderListPoly];
+        OriginalAttrs     = new u32[MaxCachedRenderListPoly];
     }
 
     // Log

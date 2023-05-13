@@ -30,7 +30,11 @@ class VRenderer
 {
 public:
     static constexpr i32f MaxMaterials = 256;
-    static constexpr i32f MaxLights = 8;
+    static constexpr i32f MaxLights    = 8;
+
+    static constexpr i32f MaxBaseRenderListPoly    = 131'072;
+    static constexpr i32f MaxTerrainRenderListPoly = 524'288;
+    static constexpr i32f MaxCachedRenderListPoly  = MaxTerrainRenderListPoly;
 
 private:
     struct VTextElement

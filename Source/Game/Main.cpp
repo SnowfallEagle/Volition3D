@@ -34,6 +34,8 @@ public:
         */
 
         Entity = World.SpawnEntity<VEntity>();
+
+        /*
         Entity->Mesh->LoadCOB(
             "Assets/Models/jetski05.cob",
             { 0.0f, 0.0f, 0.0f },
@@ -42,18 +44,19 @@ public:
             EShadeMode::Emissive
         );
         Entity->Mesh->Attr &= ~EMeshAttr::CastShadow;
+        */
 
         // Entity->Mesh->LoadMD2("Assets/Models/tekkblade/tris.md2", nullptr, 0, {0.0f, 0.0f, 0.0f}, {10.0f, 10.0f, 10.0f}, EShadeMode::Gouraud);
-        // Entity->Mesh->LoadMD2("Assets/Models/marine/tris.md2", "Assets/Models/marine/Centurion.pcx", 0, {0.0f, 0.0f, 0.0f}, {10.0f, 10.0f, 10.0f});
+        Entity->Mesh->LoadMD2("Assets/Models/marine/tris.md2", "Assets/Models/marine/Centurion.pcx", 0, {0.0f, 0.0f, 0.0f}, {10.0f, 10.0f, 10.0f}, EShadeMode::Gouraud);
         // Entity->Mesh->PlayAnimation((EMD2AnimationId)CurrentAnimation, true, InterpMode);
 
         // World.SpawnEntity<VEntity>()->Mesh->LoadMD2("Assets/Models/007/weapon.md2", nullptr, 0, { 25.0f, 150.0f, -5.0f }, { 10.0f, 10.0f, 10.0f });
 
         Camera = World.GetCamera();
-        Camera->Init(ECameraAttr::Euler, { 0.0f, 1000.0f, 1500.0f }, { 25.0f, 180.0f, 0 }, VVector4(), 75, 45, 100000, {(f32)Renderer.GetScreenWidth(), (f32)Renderer.GetScreenHeight()});
+        Camera->Init(ECameraAttr::Euler, { 0.0f, 1000.0f, 1500.0f }, { 25.0f, 180.0f, 0 }, VVector4(), 75, 45, 100000);
 
         World.SetCubemap("Assets/Cubemaps/Cubemap.png");
-        World.GetTerrain()->GenerateTerrain("Assets/Terrains/Small/Heightmap.bmp", "Assets/Terrains/Common/Texture.bmp", 5000.0f, 1000.0f, EShadeMode::Emissive);
+        World.GetTerrain()->GenerateTerrain("Assets/Terrains/Large/Heightmap.bmp", "Assets/Terrains/RockyLand/Texture.bmp", 50000.0f, 25000.0f, EShadeMode::Gouraud);
         // World.GetTerrain()->GenerateTerrain("Assets/Terrains/Large/Heightmap.bmp", "Assets/Terrains/RockyLand/Texture.bmp", 50000.0f, 25000.0f);
 
         {

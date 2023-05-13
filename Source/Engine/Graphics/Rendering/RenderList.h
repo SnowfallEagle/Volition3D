@@ -35,16 +35,27 @@ VLN_DEFINE_LOG_CHANNEL(hLogRenderList, "RenderList");
 VLN_DECL_ALIGN_SSE() class VRenderList
 {
 public:
-    static constexpr i32f MaxPoly = 524'288;
+    i32 MaxPoly;
 
-public:
     i32 NumPoly;
     i32 NumAdditionalPoly;
+
     b8 bTerrain = false;
 
-    VPolyFace PolyList[MaxPoly];
+    VPolyFace* PolyList;
 
 public:
+    VRenderList(i32 InMaxPoly)
+    {
+        MaxPoly = InMaxPoly;
+        PolyList = new VPolyFace[InMaxPoly];
+    }
+
+    virtual ~VRenderList()
+    {
+        delete[] PolyList;
+    }
+
     b32 InsertPoly(const VPoly& Poly, const VVertex* VtxList, const VPoint2* TextureCoordsList);
     b32 InsertPolyFace(const VPolyFace& Poly);
     void InsertMesh(VMesh& Mesh, b32 bInsertLocal);

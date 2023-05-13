@@ -67,8 +67,7 @@ public:
         const VPoint4& InTarget,
         f32 InFOV,
         f32 InZNearClip,
-        f32 InZFarClip,
-        const VVector2& InViewPortSize
+        f32 InZFarClip
     );
 
     void BuildWorldToCameraMat44();

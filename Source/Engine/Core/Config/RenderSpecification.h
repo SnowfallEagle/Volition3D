@@ -36,6 +36,7 @@ private: /** Set by rendering engine */
 
     friend class VRenderer;
     friend class VSurface;
+    friend class VCamera;
 };
 
 }

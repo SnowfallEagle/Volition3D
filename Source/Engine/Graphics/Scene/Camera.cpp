@@ -1,9 +1,10 @@
+#include "Engine/Core/Config/Config.h"
 #include "Engine/Graphics/Scene/Camera.h"
 
 namespace Volition
 {
 
-void VCamera::Init(u32 InAttr, const VPoint4& InPos, const VVector4& InDir, const VPoint4& InTarget, f32 InFOV, f32 InZNearClip, f32 InZFarClip, const VVector2& InViewPortSize)
+void VCamera::Init(u32 InAttr, const VPoint4& InPos, const VVector4& InDir, const VPoint4& InTarget, f32 InFOV, f32 InZNearClip, f32 InZFarClip)
 {
     Attr = InAttr;
 
@@ -16,14 +17,14 @@ void VCamera::Init(u32 InAttr, const VPoint4& InPos, const VVector4& InDir, cons
     Target = InTarget;
 
     FOV = InFOV;
-    AspectRatio = InViewPortSize.X / InViewPortSize.Y;
+    ViewPortSize = { (f32)Config.RenderSpec.TargetSize.X, (f32)Config.RenderSpec.TargetSize.Y };
+    AspectRatio = ViewPortSize.X / ViewPortSize.Y;
 
     ZNearClip = InZNearClip;
     ZFarClip = InZFarClip;
 
     ViewPlaneSize = { 2.0f, 2.0f/AspectRatio };
     ViewDist = (ViewPlaneSize.X * 0.5f) / Math.Tan(FOV * 0.5f);
-    ViewPortSize = InViewPortSize;
     ViewPortCenter = {
         (ViewPortSize.X - 1.0f) * 0.5f, (ViewPortSize.Y - 1.0f) * 0.5f
     };
