@@ -321,6 +321,14 @@ void VRenderer::Render()
     BackSurface.Unlock();
 }
 
+void VRenderer::PostProcess()
+{
+    if (Config.RenderSpec.bPostProcessing)
+    {
+        BackSurface.CorrectColors(Config.RenderSpec.PostProcessColorCorrection);
+    }
+}
+
 void VRenderer::RenderUI()
 {
     for (const auto& TextElement : TextQueue)

@@ -18,6 +18,9 @@ public: /** Set by user */
     b8 bLimitFPS        = false;
     b8 bRenderSolid     = true;
     b8 bBackfaceRemoval = true;
+    b8 bPostProcessing  = true;
+
+    VVector3 PostProcessColorCorrection = { 1.0f, 1.0f, 1.0f };
 
 private: /** Set by rendering engine */
     SDL_PixelFormat* SDLPixelFormat = nullptr;

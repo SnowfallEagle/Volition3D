@@ -67,6 +67,7 @@ inline i32 VEngine::Run(i32 Argc, char** Argv)
 
         Renderer.PreRender();
         Renderer.Render();
+        Renderer.PostProcess();
         Renderer.RenderUI();
         Renderer.PostRender();
 

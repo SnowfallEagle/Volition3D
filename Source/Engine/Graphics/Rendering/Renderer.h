@@ -94,6 +94,7 @@ public:
 
     void PreRender();
     void Render();
+    void PostProcess();
     void RenderUI();
     void PostRender();
 
