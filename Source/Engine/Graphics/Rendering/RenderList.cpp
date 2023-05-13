@@ -967,47 +967,57 @@ void VRenderList::Clip(const VCamera& Camera, EClipFlags::Type Flags)
                         V2 = 1;
                     }
 
+                    // Copy current poly and mark it "clipped"
+                    VPolyFace NewPoly = Poly;
+                    Poly.State |= EPolyState::Clipped;
+
                     // Recompute X and Y for ZNearClip
-                    VVector4 Direction = Poly.TransVtx[V1].Position - Poly.TransVtx[V0].Position;
-                    const f32 T1 = (Camera.ZNearClip - Poly.TransVtx[V0].Z) / Direction.Z;
+                    VVector4 Direction = NewPoly.TransVtx[V1].Position - NewPoly.TransVtx[V0].Position;
+                    const f32 T1 = (Camera.ZNearClip - NewPoly.TransVtx[V0].Z) / Direction.Z;
 
-                    Poly.TransVtx[V1].X = 0.5f + Poly.TransVtx[V0].X + Direction.X * T1;
-                    Poly.TransVtx[V1].Y = 0.5f + Poly.TransVtx[V0].Y + Direction.Y * T1;
-                    Poly.TransVtx[V1].Z = Camera.ZNearClip;
+                    NewPoly.TransVtx[V1].X = 0.5f + NewPoly.TransVtx[V0].X + Direction.X * T1;
+                    NewPoly.TransVtx[V1].Y = 0.5f + NewPoly.TransVtx[V0].Y + Direction.Y * T1;
+                    NewPoly.TransVtx[V1].Z = Camera.ZNearClip;
 
-                    Direction = Poly.TransVtx[V2].Position - Poly.TransVtx[V0].Position;
-                    const f32 T2 = (Camera.ZNearClip - Poly.TransVtx[V0].Z) / Direction.Z;
+                    Direction = NewPoly.TransVtx[V2].Position - NewPoly.TransVtx[V0].Position;
+                    const f32 T2 = (Camera.ZNearClip - NewPoly.TransVtx[V0].Z) / Direction.Z;
 
-                    Poly.TransVtx[V2].X = Poly.TransVtx[V0].X + Direction.X * T2;
-                    Poly.TransVtx[V2].Y = Poly.TransVtx[V0].Y + Direction.Y * T2;
-                    Poly.TransVtx[V2].Z = Camera.ZNearClip;
+                    NewPoly.TransVtx[V2].X = NewPoly.TransVtx[V0].X + Direction.X * T2;
+                    NewPoly.TransVtx[V2].Y = NewPoly.TransVtx[V0].Y + Direction.Y * T2;
+                    NewPoly.TransVtx[V2].Z = Camera.ZNearClip;
 
                     // Recompute texture coords
-                    if (Poly.Attr & EPolyAttr::ShadeModeTexture)
+                    if (NewPoly.Attr & EPolyAttr::ShadeModeTexture)
                     {
-                        VPoint2 TextureDirection = Poly.TransVtx[V1].TextureCoords - Poly.TransVtx[V0].TextureCoords;
+                        VPoint2 TextureDirection = NewPoly.TransVtx[V1].TextureCoords - NewPoly.TransVtx[V0].TextureCoords;
 
-                        Poly.TransVtx[V1].U = Poly.TransVtx[V0].U + TextureDirection.X * T1;
-                        Poly.TransVtx[V1].V = Poly.TransVtx[V0].V + TextureDirection.Y * T1;
+                        NewPoly.TransVtx[V1].U = NewPoly.TransVtx[V0].U + TextureDirection.X * T1;
+                        NewPoly.TransVtx[V1].V = NewPoly.TransVtx[V0].V + TextureDirection.Y * T1;
 
-                        TextureDirection = Poly.TransVtx[V2].TextureCoords - Poly.TransVtx[V0].TextureCoords;
+                        TextureDirection = NewPoly.TransVtx[V2].TextureCoords - NewPoly.TransVtx[V0].TextureCoords;
 
-                        Poly.TransVtx[V2].U = Poly.TransVtx[V0].U + TextureDirection.X * T2;
-                        Poly.TransVtx[V2].V = Poly.TransVtx[V0].V + TextureDirection.Y * T2;
+                        NewPoly.TransVtx[V2].U = NewPoly.TransVtx[V0].U + TextureDirection.X * T2;
+                        NewPoly.TransVtx[V2].V = NewPoly.TransVtx[V0].V + TextureDirection.Y * T2;
                     }
 
                     // Recompute poly normal length
-                    const VVector4 Vec1 = Poly.TransVtx[V1].Position - Poly.TransVtx[V0].Position;
-                    const VVector4 Vec2 = Poly.TransVtx[V2].Position - Poly.TransVtx[V0].Position;
+                    const VVector4 Vec1 = NewPoly.TransVtx[V1].Position - NewPoly.TransVtx[V0].Position;
+                    const VVector4 Vec2 = NewPoly.TransVtx[V2].Position - NewPoly.TransVtx[V0].Position;
                     VVector4 VecNormal;
 
                     VVector4::Cross(Vec1, Vec2, VecNormal);
-                    Poly.NormalLength = VecNormal.GetLengthFast();
+                    NewPoly.NormalLength = VecNormal.GetLengthFast();
+
+                    // Insert
+                    InsertPolyFace(NewPoly);
+                    ++NumAdditionalPoly;
                 }
                 else
                 {
-                    // Copy current poly
-                    VPolyFace NewPoly = Poly;
+                    // Copy current poly and mark it "clipped"
+                    VPolyFace NewPoly1, NewPoly2;
+                    NewPoly2 = NewPoly1 = Poly;
+                    Poly.State |= EPolyState::Clipped;
 
                     // Get vertex indices
                     if (ClipCodes[0] & EClipCode::ZLess)
@@ -1030,71 +1040,72 @@ void VRenderList::Clip(const VCamera& Camera, EClipFlags::Type Flags)
                     }
 
                     // Recompute X and Y for ZNearClip
-                    VVector4 Direction = Poly.TransVtx[V1].Position - Poly.TransVtx[V0].Position;
-                    const f32 T1 = (Camera.ZNearClip - Poly.TransVtx[V0].Z) / Direction.Z;
+                    VVector4 Direction = NewPoly1.TransVtx[V1].Position - NewPoly1.TransVtx[V0].Position;
+                    const f32 T1 = (Camera.ZNearClip - NewPoly1.TransVtx[V0].Z) / Direction.Z;
 
-                    const f32 X01 = Poly.TransVtx[V0].X + Direction.X * T1;
-                    const f32 Y01 = Poly.TransVtx[V0].Y + Direction.Y * T1;
+                    const f32 X01 = NewPoly1.TransVtx[V0].X + Direction.X * T1;
+                    const f32 Y01 = NewPoly1.TransVtx[V0].Y + Direction.Y * T1;
 
-                    Direction = Poly.TransVtx[V2].Position - Poly.TransVtx[V0].Position;
-                    const f32 T2 = (Camera.ZNearClip - Poly.TransVtx[V0].Z) / Direction.Z;
+                    Direction = NewPoly1.TransVtx[V2].Position - NewPoly1.TransVtx[V0].Position;
+                    const f32 T2 = (Camera.ZNearClip - NewPoly1.TransVtx[V0].Z) / Direction.Z;
 
-                    const f32 X02 = Poly.TransVtx[V0].X + Direction.X * T2;
-                    const f32 Y02 = Poly.TransVtx[V0].Y + Direction.Y * T2;
+                    const f32 X02 = NewPoly1.TransVtx[V0].X + Direction.X * T2;
+                    const f32 Y02 = NewPoly1.TransVtx[V0].Y + Direction.Y * T2;
 
                     // Put values in polygons
-                    Poly.TransVtx[V0].X = X01;
-                    Poly.TransVtx[V0].Y = Y01;
-                    Poly.TransVtx[V0].Z = Camera.ZNearClip;
+                    NewPoly1.TransVtx[V0].X = X01;
+                    NewPoly1.TransVtx[V0].Y = Y01;
+                    NewPoly1.TransVtx[V0].Z = Camera.ZNearClip;
 
-                    NewPoly.TransVtx[V0].X = X02;
-                    NewPoly.TransVtx[V0].Y = Y02;
-                    NewPoly.TransVtx[V0].Z = Camera.ZNearClip;
+                    NewPoly2.TransVtx[V0].X = X02;
+                    NewPoly2.TransVtx[V0].Y = Y02;
+                    NewPoly2.TransVtx[V0].Z = Camera.ZNearClip;
 
-                    NewPoly.TransVtx[V1].X = X01;
-                    NewPoly.TransVtx[V1].Y = Y01;
-                    NewPoly.TransVtx[V1].Z = Camera.ZNearClip;
+                    NewPoly2.TransVtx[V1].X = X01;
+                    NewPoly2.TransVtx[V1].Y = Y01;
+                    NewPoly2.TransVtx[V1].Z = Camera.ZNearClip;
 
                     // Recompute texture coords
-                    if (Poly.Attr & EPolyAttr::ShadeModeTexture)
+                    if (NewPoly1.Attr & EPolyAttr::ShadeModeTexture)
                     {
-                        VPoint2 TextureDirection = Poly.TransVtx[V1].TextureCoords - Poly.TransVtx[V0].TextureCoords;
+                        VPoint2 TextureDirection = NewPoly1.TransVtx[V1].TextureCoords - NewPoly1.TransVtx[V0].TextureCoords;
 
-                        const f32 U01 = Poly.TransVtx[V0].U + TextureDirection.X * T1;
-                        const f32 V01 = Poly.TransVtx[V0].V + TextureDirection.Y * T1;
+                        const f32 U01 = NewPoly1.TransVtx[V0].U + TextureDirection.X * T1;
+                        const f32 V01 = NewPoly1.TransVtx[V0].V + TextureDirection.Y * T1;
 
-                        TextureDirection = Poly.TransVtx[V2].TextureCoords - Poly.TransVtx[V0].TextureCoords;
+                        TextureDirection = NewPoly1.TransVtx[V2].TextureCoords - NewPoly1.TransVtx[V0].TextureCoords;
 
-                        const f32 U02 = Poly.TransVtx[V0].U + TextureDirection.X * T2;
-                        const f32 V02 = Poly.TransVtx[V0].V + TextureDirection.Y * T2;
+                        const f32 U02 = NewPoly1.TransVtx[V0].U + TextureDirection.X * T2;
+                        const f32 V02 = NewPoly1.TransVtx[V0].V + TextureDirection.Y * T2;
 
-                        Poly.TransVtx[V0].U = U01;
-                        Poly.TransVtx[V0].V = V01;
+                        NewPoly1.TransVtx[V0].U = U01;
+                        NewPoly1.TransVtx[V0].V = V01;
 
-                        NewPoly.TransVtx[V0].U = U02;
-                        NewPoly.TransVtx[V0].V = V02;
-                        NewPoly.TransVtx[V1].U = U01;
-                        NewPoly.TransVtx[V1].V = V01;
+                        NewPoly2.TransVtx[V0].U = U02;
+                        NewPoly2.TransVtx[V0].V = V02;
+                        NewPoly2.TransVtx[V1].U = U01;
+                        NewPoly2.TransVtx[V1].V = V01;
                     }
 
                     // Recompute poly normal length
-                    VVector4 Vec1 = Poly.TransVtx[V1].Position - Poly.TransVtx[V0].Position;
-                    VVector4 Vec2 = Poly.TransVtx[V2].Position - Poly.TransVtx[V0].Position;
+                    VVector4 Vec1 = NewPoly1.TransVtx[V1].Position - NewPoly1.TransVtx[V0].Position;
+                    VVector4 Vec2 = NewPoly1.TransVtx[V2].Position - NewPoly1.TransVtx[V0].Position;
                     VVector4 VecNormal;
 
                     VVector4::Cross(Vec1, Vec2, VecNormal);
-                    Poly.NormalLength = VecNormal.GetLengthFast();
+                    NewPoly1.NormalLength = VecNormal.GetLengthFast();
 
-                    Vec1 = NewPoly.TransVtx[V1].Position - NewPoly.TransVtx[V0].Position;
-                    Vec2 = NewPoly.TransVtx[V2].Position - NewPoly.TransVtx[V0].Position;
+                    Vec1 = NewPoly2.TransVtx[V1].Position - NewPoly2.TransVtx[V0].Position;
+                    Vec2 = NewPoly2.TransVtx[V2].Position - NewPoly2.TransVtx[V0].Position;
                     VecNormal;
 
                     VVector4::Cross(Vec1, Vec2, VecNormal);
-                    NewPoly.NormalLength = VecNormal.GetLengthFast();
+                    NewPoly2.NormalLength = VecNormal.GetLengthFast();
 
                     // Finally
-                    InsertPolyFace(NewPoly);
-                    ++NumAdditionalPoly;
+                    InsertPolyFace(NewPoly1);
+                    InsertPolyFace(NewPoly2);
+                    NumAdditionalPoly += 2;
                 }
             }
         }

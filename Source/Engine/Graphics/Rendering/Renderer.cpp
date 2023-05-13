@@ -61,9 +61,9 @@ void VRenderer::StartUp()
         VLN_ASSERT(Res == 0);
 
         FontCharWidth = Config.RenderSpec.TargetSize.X / CharsPerLine;
-        FontCharHeight = (i32)(FontCharWidth * 1.25f);
+        FontCharHeight = (i32)(FontCharWidth * 1.5f);
 
-        Font = TTF_OpenFont("Assets/Fonts/Default.ttf", (i32)( (f32)FontCharWidth * PointDivPixel * QualityMultiplier ));
+        Font = TTF_OpenFont("Assets/Fonts/Quake2.ttf", (i32)( (f32)FontCharWidth * PointDivPixel * QualityMultiplier ));
         VLN_ASSERT(Font);
     }
 
