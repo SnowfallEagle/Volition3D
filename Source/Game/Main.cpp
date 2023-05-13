@@ -53,11 +53,11 @@ public:
         // World.SpawnEntity<VEntity>()->Mesh->LoadMD2("Assets/Models/007/weapon.md2", nullptr, 0, { 25.0f, 150.0f, -5.0f }, { 10.0f, 10.0f, 10.0f });
 
         Camera = World.GetCamera();
-        Camera->Init(ECameraAttr::Euler, { 0.0f, 1000.0f, 1500.0f }, { 25.0f, 180.0f, 0 }, VVector4(), 75, 45, 50000);
+        Camera->Init(ECameraAttr::Euler, { 0.0f, 1000.0f, 1500.0f }, { 25.0f, 180.0f, 0 }, VVector4(), 75, 100, 1000000);
 
         World.SetCubemap("Assets/Cubemaps/Cubemap.png");
         // World.GetTerrain()->GenerateTerrain("Assets/Terrains/RockyLand/Heightmap.bmp", "Assets/Terrains/RockyLand/Texture.bmp", 50000.0f, 25000.0f, EShadeMode::Gouraud);
-        World.GetTerrain()->GenerateTerrain("Assets/Terrains/Small/Heightmap.bmp", "Assets/Terrains/Common/Texture.bmp", 5000.0f, 1000.0f, EShadeMode::Gouraud);
+        World.GetTerrain()->GenerateTerrain("Assets/Terrains/Large/Heightmap.bmp", "Assets/Terrains/RockyLand/Texture.bmp", 1000000.0f, 250000.0f, EShadeMode::Gouraud);
         // World.GetTerrain()->GenerateTerrain("Assets/Terrains/Large/Heightmap.bmp", "Assets/Terrains/RockyLand/Texture.bmp", 50000.0f, 25000.0f);
 
         {
@@ -170,8 +170,8 @@ public:
         if (Input.IsKeyDown(EKeycode::Up))    Camera->Dir.X -= CamDirSpeed;
         if (Input.IsKeyDown(EKeycode::Down))  Camera->Dir.X += CamDirSpeed;
 
-        if (Input.IsKeyDown(EKeycode::Space)) Camera->Pos.Y += CamDirSpeed * ShiftModifier;
-        if (Input.IsKeyDown(EKeycode::C))     Camera->Pos.Y -= CamDirSpeed * ShiftModifier;
+        if (Input.IsKeyDown(EKeycode::Space)) Camera->Pos.Y += CamPosSpeed * ShiftModifier;
+        if (Input.IsKeyDown(EKeycode::C))     Camera->Pos.Y -= CamPosSpeed * ShiftModifier;
 
         VMatrix44 Rot = VMatrix44::Identity;
         f32 Speed = 0.05f * DeltaTime;

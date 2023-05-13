@@ -898,14 +898,14 @@ void VMesh::GenerateTerrain(const char* HeightMap, const char* Texture, f32 Size
             i32f Index = Y*VerticesInRow + X;
 
              LocalVtxList[Index].Position = {
-                X*TileSize,
+                X * TileSize,
                 (f32)VColorARGB(Buffer[(i32f)YMap*Pitch + (i32f)XMap]).R * UnitsPerHeight,
                 Y * TileSize,
              };
 
              TextureCoordsList[Index] = {
                 (f32)X / (f32)VerticesInRow,
-                (f32)Y / (f32)VerticesInRow
+                1.0f - ((f32)Y / (f32)VerticesInRow) // Invert Y because we start from bottom
              };
         }
     }
@@ -929,13 +929,13 @@ void VMesh::GenerateTerrain(const char* HeightMap, const char* Texture, f32 Size
             Poly2.OriginalColor = Poly1.OriginalColor = VColorARGB(0xFF, 0xFF, 0xFF, 0xFF);
             Poly2.Material      = Poly1.Material      = &Material;
 
-            Poly1.TextureCoordsIndices[0] = Poly1.VtxIndices[0] = (Y + 1)*VerticesInRow + X;
-            Poly1.TextureCoordsIndices[1] = Poly1.VtxIndices[1] = (Y + 1)*VerticesInRow + X + 1;
-            Poly1.TextureCoordsIndices[2] = Poly1.VtxIndices[2] = Y*VerticesInRow + X;
+            Poly1.TextureCoordsIndices[0] = Poly1.VtxIndices[0] = Y*VerticesInRow + X;
+            Poly1.TextureCoordsIndices[1] = Poly1.VtxIndices[1] = (Y + 1)*VerticesInRow + X;
+            Poly1.TextureCoordsIndices[2] = Poly1.VtxIndices[2] = (Y + 1)*VerticesInRow + X + 1;
 
-            Poly2.TextureCoordsIndices[0] = Poly2.VtxIndices[0] = Y*VerticesInRow + X + 1;
-            Poly2.TextureCoordsIndices[1] = Poly2.VtxIndices[1] = Y*VerticesInRow + X;
-            Poly2.TextureCoordsIndices[2] = Poly2.VtxIndices[2] = (Y + 1)*VerticesInRow + X + 1;
+            Poly2.TextureCoordsIndices[0] = Poly2.VtxIndices[0] = Y*VerticesInRow + X;
+            Poly2.TextureCoordsIndices[1] = Poly2.VtxIndices[1] = (Y + 1)*VerticesInRow + X + 1;
+            Poly2.TextureCoordsIndices[2] = Poly2.VtxIndices[2] = Y*VerticesInRow + X + 1;
         }
     }
 
