@@ -110,6 +110,8 @@ public:
     void DrawText(i32 X, i32 Y, VColorARGB Color, const char* Format, ...);
     void DrawDebugText(const char* Format, ...);
 
+    void RefreshWindowSurface();
+
 private:
     void DrawTriangle(VInterpolationContext& InterpolationContext);
     void VarDrawText(i32 X, i32 Y, VColorARGB Color, const char* Format, std::va_list VarList); 

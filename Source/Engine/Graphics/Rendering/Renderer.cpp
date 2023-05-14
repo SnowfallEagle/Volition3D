@@ -113,6 +113,7 @@ void VRenderer::ShutDown()
         delete TerrainRenderList;
         delete BaseRenderList;
 
+        // Don't destroy VideoSurface
         BackSurface.Destroy();
 
         delete[] OriginalAttrs;
@@ -168,7 +169,7 @@ void VRenderer::Render()
 
     // Process cubemap
     VSurface& Cubemap = World.Cubemap;
-    if (Cubemap.SDLSurface->pixels)
+    if (Cubemap.SDLSurface && Cubemap.SDLSurface->pixels)
     {
         // Blit first cubemap
         VRelativeRectInt Src;
@@ -1750,5 +1751,9 @@ void VRenderer::RenderWire(const VRenderList* RenderList)
     }
 }
 
+void VRenderer::RefreshWindowSurface()
+{
+    VideoSurface.SDLSurface = SDL_GetWindowSurface(Window.SDLWindow);
+}
 
 }

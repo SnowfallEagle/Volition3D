@@ -6,7 +6,7 @@ using namespace Volition;
 namespace Game
 {
 
-class GGameState : public VGameState
+class GTestGameState : public VGameState
 {
     VEntity* Entity = nullptr;
     VEntity* LightEntity = nullptr;
@@ -20,60 +20,19 @@ class GGameState : public VGameState
 public:
     virtual void StartUp() override
     {
-        /*
-        for (i32f i = 0; i < 4; ++i)
-        {
-            VEntity* TempEntity = World.SpawnEntity<VEntity>();
-            TempEntity->Mesh->LoadCOB(
-                I == 0 ? "hammer03.cob" :
-                    I == 1 ? "jetski05.cob" :
-                        I == 2 ? "s.cob" :
-                            "tie04.cob",
-                { 500.0f * I, 100.0f * Math.Sin(I * 20.0f), 250.0f},
-                { 100.0f, 100.0f, 100.0f },
-                ECOB::SwapYZ | ECOB::InvertV
-            );
-        }
-        */
-
         Entity = World.SpawnEntity<VEntity>();
         LightEntity = World.SpawnEntity<VEntity>();
-
-        /*
-        Entity->Mesh->LoadCOB(
-            "Assets/Models/jetski05.cob",
-            { 0.0f, 0.0f, 0.0f },
-            { 1000.0f, 1000.0f, 1000.0f },
-            ECOBFlags::SwapYZ | ECOBFlags::InvertV | ECOBFlags::OverrideShadeMode,
-            EShadeMode::Emissive
-        );
-        Entity->Mesh->Attr &= ~EMeshAttr::CastShadow;
-        */
 
         // Entity->Mesh->LoadMD2("Assets/Models/tekkblade/tris.md2", nullptr, 0, {0.0f, 0.0f, 0.0f}, {10.0f, 10.0f, 10.0f}, EShadeMode::Gouraud);
         Entity->Mesh->LoadMD2("Assets/Models/monsters/brain/tris.md2", nullptr, 0, {0.0f, 0.0f, 0.0f}, {10.0f, 10.0f, 10.0f}, EShadeMode::Gouraud, { 1.5f, 2.0f, 1.5f });
         // Entity->Mesh->LoadMD2("Assets/Models/marine/tris.md2", "Assets/Models/marine/Centurion.pcx", 0, {0.0f, 0.0f, 0.0f}, {10.0f, 10.0f, 10.0f}, EShadeMode::Gouraud, { 1.5f, 2.0f, 1.5f });
 
-        /*
-        VEntity* WeaponEntity = World.SpawnEntity();
-        WeaponEntity->Mesh->LoadMD2("Assets/Models/q2mdl-droideka/droideka/weapon.md2", "Assets/Models/q2mdl-droideka/droideka/weapon.pcx", 0, {0.0f, 200.0f, 0.0f}, {10.0f, 10.0f, 10.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
-
-        Entity->Mesh->PlayAnimation((EMD2AnimationId)CurrentAnimation, true, InterpMode);
-        WeaponEntity->Mesh->PlayAnimation((EMD2AnimationId)CurrentAnimation, true, InterpMode);
-        */
-
-        // World.SpawnEntity<VEntity>()->Mesh->LoadMD2("Assets/Models/007/weapon.md2", nullptr, 0, { 25.0f, 150.0f, -5.0f }, { 10.0f, 10.0f, 10.0f });
-
-        LightEntity->Mesh->LoadMD2("Assets/Models/tekkblade/tris.md2");
-        LightEntity->Mesh->Attr &= ~EMeshAttr::CastShadow;
-
         Camera = World.GetCamera();
         Camera->Init(ECameraAttr::Euler, { 0.0f, 1000.0f, 1500.0f }, { 25.0f, 180.0f, 0 }, VVector4(), 75, 100, 1000000);
 
         World.SetCubemap("Assets/Cubemaps/Cubemap.png");
-        World.GetTerrain()->GenerateTerrain("Assets/Terrains/Small/Heightmap.bmp", "Assets/Terrains/Common/Texture.bmp", 10000.0f, 5000.0f, EShadeMode::Gouraud);
-        // World.GetTerrain()->GenerateTerrain("Assets/Terrains/Large/Heightmap.bmp", "Assets/Terrains/RockyLand/Texture.bmp", 100000.0f, 50000.0f, EShadeMode::Gouraud);
-        // World.GetTerrain()->GenerateTerrain("Assets/Terrains/Large/Heightmap.bmp", "Assets/Terrains/RockyLand/Texture.bmp", 50000.0f, 25000.0f);
+        // World.GetTerrain()->GenerateTerrain("Assets/Terrains/Large/Heightmap.bmp", "Assets/Terrains/RockyLand/Texture.bmp", 1000000.0f, 250000.0f, EShadeMode::Gouraud);
+        World.GetTerrain()->GenerateTerrain("Assets/Terrains/Medium/Heightmap.bmp", "Assets/Terrains/Common/Texture.bmp", 10000.0f, 2500.0f, EShadeMode::Gouraud);
 
         {
             VLight AmbientLight = {
@@ -267,5 +226,5 @@ public:
 
 int main(int Argc, char** Argv)
 {
-    return Engine.Run<Game::GGameState>(Argc, Argv);
+    return Engine.Run<Game::GTestGameState>(Argc, Argv);
 }

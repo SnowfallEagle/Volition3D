@@ -59,6 +59,14 @@ void VWindow::ProcessEvents()
             Engine.Stop();
         } break;
 
+        case SDL_WINDOWEVENT:
+        {
+            if (Event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
+            {
+                Renderer.RefreshWindowSurface();
+            }
+        } break;
+
         default: {} break;
         }
     }
