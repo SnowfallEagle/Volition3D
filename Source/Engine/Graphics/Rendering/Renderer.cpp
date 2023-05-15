@@ -328,18 +328,15 @@ void VRenderer::RenderUI()
         SDL_SetColorKey(SDLSurface, SDL_TRUE, static_cast<u32*>(SDLSurface->pixels)[0]);
 
         // Convert surface
-        /*
         SDL_Surface* SDLConverted = SDL_ConvertSurface(SDLSurface, Config.RenderSpec.SDLPixelFormat, 0);
         VLN_ASSERT(SDLConverted);
-        */
 
         // Blit
         SDL_Rect Dest = { TextElement.Position.X, TextElement.Position.Y, (i32f)std::strlen(TextElement.Text) * FontCharWidth, FontCharHeight };
-        SDL_BlitScaled(SDLSurface, nullptr, BackSurface.SDLSurface, &Dest);
-        // SDL_BlitScaled(SDLConverted, nullptr, BackSurface.SDLSurface, &Dest);
+        SDL_BlitScaled(SDLConverted, nullptr, BackSurface.SDLSurface, &Dest);
 
         // Free memory
-        // SDL_FreeSurface(SDLConverted);
+        SDL_FreeSurface(SDLConverted);
         SDL_FreeSurface(SDLSurface);
     }
 }

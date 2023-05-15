@@ -103,7 +103,7 @@ VLN_DEFINE_LOG_CHANNEL(hLogObject, "Object");
 VLN_DECL_ALIGN_SSE() class VMesh
 {
 public:
-    static constexpr i32f MaxPoly = 32768;
+    static constexpr i32f MaxPoly = 8192;
     static constexpr i32f MaxMaterialsPerModel = 256;
 
 public:
