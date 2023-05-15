@@ -137,8 +137,8 @@ void VRenderer::TransformLights(const VCamera& Camera)
 {
     for (i32f LightIndex = 0; LightIndex < NumLights; ++LightIndex)
     {
-        VMatrix44::MulVecMat(Lights[LightIndex].Pos, Camera.MatCamera, Lights[LightIndex].TransPos);
-        VMatrix44::MulVecMat(Lights[LightIndex].Dir, Camera.MatCameraRotationOnly, Lights[LightIndex].TransDir);
+        VMatrix44::MulVecMat(Lights[LightIndex].Position, Camera.MatCamera, Lights[LightIndex].TransPosition);
+        VMatrix44::MulVecMat(Lights[LightIndex].Direction, Camera.MatCameraRotationOnly, Lights[LightIndex].TransDirection);
     }
 }
 
@@ -256,12 +256,12 @@ void VRenderer::Render()
             VVertex* VtxList = Mesh->TransVtxList;
             for (i32f i = 0; i < Mesh->NumVtx; ++i)
             {
-                VVector4 Direction = (VtxList[i].Position - OccluderLight->Pos);
-                f32 T = (YShadowPosition - OccluderLight->Pos.Y) / Direction.Y;
+                VVector4 Direction = (VtxList[i].Position - OccluderLight->Position);
+                f32 T = (YShadowPosition - OccluderLight->Position.Y) / Direction.Y;
 
-                VtxList[i].X = OccluderLight->Pos.X + T * Direction.X;
+                VtxList[i].X = OccluderLight->Position.X + T * Direction.X;
                 VtxList[i].Y = YShadowPosition;
-                VtxList[i].Z = OccluderLight->Pos.Z + T * Direction.Z;
+                VtxList[i].Z = OccluderLight->Position.Z + T * Direction.Z;
             }
 
             // Insert shadow mesh

@@ -10,6 +10,10 @@ namespace Volition
 
 class VWorld
 {
+private:
+    static constexpr i32f MinEntitiesCapacity = 128;
+
+private:
     VGameState* GameState;
 
     TArray<VEntity*> Entities;
@@ -52,8 +56,6 @@ inline VWorld World;
 template<typename GameStateT>
 void VWorld::StartUp()
 {
-    static constexpr i32f MinEntitiesCapacity = 128;
-
     Entities.Resize(MinEntitiesCapacity);
 
     for (i32f i = 0; i < MinEntitiesCapacity; ++i)
@@ -62,6 +64,7 @@ void VWorld::StartUp()
     }
 
     Camera = new VCamera();
+    Camera->Init(ECameraAttr::Euler, { 0.0f, 1000.0f, 1500.0f }, { 25.0f, 180.0f, 0.0f }, VVector4(), 90.0f, 100.0f, 1000000.0f);
 
     Terrain = new VTerrain();
     Terrain->Init();

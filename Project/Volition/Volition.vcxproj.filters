@@ -206,5 +206,8 @@
     <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\IInterpolator.cpp">
       <Filter>Engine\Graphics\Interpolators</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Graphics\Scene\Light.cpp">
+      <Filter>Engine\Graphics\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

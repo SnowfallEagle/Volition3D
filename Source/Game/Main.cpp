@@ -25,6 +25,7 @@ public:
 
         // Entity->Mesh->LoadMD2("Assets/Models/tekkblade/tris.md2", nullptr, 0, {0.0f, 0.0f, 0.0f}, {10.0f, 10.0f, 10.0f}, EShadeMode::Gouraud);
         Entity->Mesh->LoadMD2("Assets/Models/monsters/brain/tris.md2", nullptr, 0, {0.0f, 0.0f, 0.0f}, {10.0f, 10.0f, 10.0f}, EShadeMode::Gouraud, { 1.5f, 2.0f, 1.5f });
+        // Entity->Mesh->LoadMD2("Assets/Models/boss3/tris.md2", "Assets/Models/boss3/rider.pcx", 0, {0.0f, 0.0f, 0.0f}, {10.0f, 10.0f, 10.0f}, EShadeMode::Gouraud, { 1.5f, 2.0f, 1.5f });
         // Entity->Mesh->LoadMD2("Assets/Models/marine/tris.md2", "Assets/Models/marine/Centurion.pcx", 0, {0.0f, 0.0f, 0.0f}, {10.0f, 10.0f, 10.0f}, EShadeMode::Gouraud, { 1.5f, 2.0f, 1.5f });
 
         Camera = World.GetCamera();
@@ -34,76 +35,71 @@ public:
         // World.GetTerrain()->GenerateTerrain("Assets/Terrains/Large/Heightmap.bmp", "Assets/Terrains/RockyLand/Texture.bmp", 1000000.0f, 250000.0f, EShadeMode::Gouraud);
         World.GetTerrain()->GenerateTerrain("Assets/Terrains/Medium/Heightmap.bmp", "Assets/Terrains/Common/Texture.bmp", 10000.0f, 2500.0f, EShadeMode::Gouraud);
 
+        #if 1
         {
             VLight AmbientLight = {
-                ELightState::Active,
-                ELightAttr::Ambient,
+                true,
+                ELightType::Ambient,
 
-                MAP_XRGB32(0x33, 0x33, 0x22), 0, 0,
+                MAP_XRGB32(0x33, 0x33, 0x22),
                 { 0.0f, 1000.0f, 0, 1.0f }, { 0, 0, 0, 0}, VVector4{0, 0, 0, 0}.GetNormalized(), { 0 , 0, 0, 0 },
 
                 0, 0, 0,
-                0, 0,
                 0
             };
 
             VLight InfiniteLight = {
-                ELightState::Active,
-                ELightAttr::Infinite,
+                true,
+                ELightType::Infinite,
 
-                0, MAP_XRGB32(0x99, 0x66, 0x22), 0,
+                MAP_XRGB32(0x99, 0x66, 0x22),
                 { 7500.0f, 7500.0f, 7500.0f, 0 }, { 0, 0, 0, 0 }, VVector4{ -1.0f, -1.0f, 0, 0 }.GetNormalized(), { 0, 0, 0, 0 },
 
                 0, 0, 0,
-                0, 0,
                 0
             };
 
             VLight PointLight = {
-                ELightState::Active,
-                ELightAttr::Point,
+                true,
+                ELightType::Point,
 
-                0, MAP_XRGB32(0xAA, 0x22, 0x11), 0,
+                MAP_XRGB32(0xAA, 0x22, 0x11),
                 { 1000.0f, 1000.0f, 0.0f, 1.0f }, { 0, 0, 0, 0 }, VVector4{ 0, 0, 0, 0 }.GetNormalized(), { 0, 0, 0, 0 },
 
                 0, 0.001f, 0,
-                0, 0,
                 0
             };
 
             VLight OccluderLight = {
-                ELightState::Active,
-                ELightAttr::Point,
+                true,
+                ELightType::Point,
 
-                0, MAP_XRGB32(0x00, 0x00, 0xAA), 0,
+                MAP_XRGB32(0x00, 0x00, 0xAA),
                 { 0.0f, 1000.0f, 1000.0f, 0 }, { 0, 0, 0, 0 }, VVector4{ 0, 0, 0, 0 }.GetNormalized(), { 0, 0, 0, 0 },
 
                 0, 0.0001f, 0,
-                0, 0,
                 0
             };
 
             VLight SimpleSpotlight = {
-                ELightState::Active,
-                ELightAttr::SimpleSpotlight,
+                true,
+                ELightType::SimpleSpotlight,
 
-                0, MAP_XRGB32(0xAA, 0xAA, 0xAA), 0,
+                MAP_XRGB32(0xAA, 0xAA, 0xAA),
                 { 0.0f, 75.0f, 0.0f, 0 }, { 0, 0, 0, 0 }, VVector4(-1.0f, -1.0f, 0.0f).GetNormalized(), { 0, 0, 0, 0 },
 
                 0, 0.0005f, 0,
-                30.0f, 60.0f,
                 1.0f
             };
 
             VLight ComplexSpotlight = {
-                ELightState::Active,
-                ELightAttr::ComplexSpotlight,
+                true,
+                ELightType::ComplexSpotlight,
 
-                0, MAP_XRGB32(0xBB, 0x00, 0x00), 0,
+                MAP_XRGB32(0xBB, 0x00, 0x00),
                 { 0.0f, 1000.0f, -300.0f, 0 }, { 0, 0, 0, 0 }, VVector4(-0.5f, -1.0f, 1.0f).GetNormalized(), { 0, 0, 0, 0 },
 
                 0, 0.0000001f, 0.001,
-                30.0f, 60.0f,
                 1.0f
             };
 
@@ -115,8 +111,9 @@ public:
             // Renderer.AddLight(OccluderLight);
             Renderer.SetOccluderLight(1);
 
-            OccluderLightPosition = PointLight.Pos;
+            OccluderLightPosition = PointLight.Position;
         }
+        #endif
     }
 
     virtual void Update(f32 DeltaTime) override
@@ -212,13 +209,43 @@ public:
         VVector4 NewLightPosition = OccluderLightPosition;
         NewLightPosition.Y += 1000.0f * Math.Sin(Accum * 5.0f);
         NewLightPosition.Z += 1000.0f * Math.Cos(Accum * 5.0f);
-        Renderer.Lights[2].Pos = NewLightPosition;
+        Renderer.Lights[2].Position = NewLightPosition;
 
         LightEntity->Mesh->Position = NewLightPosition;
 
         Renderer.DrawDebugText("FPS: %.2f", 1000.0f / DeltaTime);
         Renderer.DrawDebugText("AnimationId: %d", CurrentAnimation);
         Renderer.DrawDebugText("AnimationInterpMode: %d", (i32)InterpMode);
+    }
+};
+
+class GModelsScene : public VGameState
+{
+public:
+    virtual void StartUp() override
+    {
+    }
+
+    virtual void Update(f32 DeltaTime) override
+    {
+    }
+};
+
+class GTerrainScene : public VGameState
+{
+public:
+    virtual void StartUp() override
+    {
+        World.GetCamera()->Init(ECameraAttr::Euler, { 0.0f, 1000.0f, 1500.0f }, { 25.0f, 180.0f, 0.0f }, VVector4(), 75.0f, 100.0f, 1000000.0f);
+
+        World.SetCubemap("Assets/Cubemaps/Cubemap.png");
+        World.GetTerrain()->GenerateTerrain("Assets/Terrains/Large/Heightmap.bmp", "Assets/Terrains/RockyLand/Texture.bmp", 1000000.0f, 250000.0f, EShadeMode::Gouraud);
+
+        // VLight* Light = World.SpawnLight<VAmbientLight>();
+    }
+
+    virtual void Update(f32 DeltaTime) override
+    {
     }
 };
 

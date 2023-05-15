@@ -1,5 +1,3 @@
-// @TODO: Clean stuff that we don't use
-
 #pragma once
 
 #include "Common/Platform/Platform.h"
@@ -34,14 +32,15 @@ namespace EMaterialAttr
     };
 }
 
+// @TODO: Do we really need it?
 class VMaterial
 {
 public:
     static constexpr i32f NameSize = 64;
 
 public:
-    i32 State;
-    i32 Attr;
+    u32 State; // @TODO: bActive
+    u32 Attr;
 
     VColorARGB Color;
     f32 KAmbient, KDiffuse, KSpecular, Power;

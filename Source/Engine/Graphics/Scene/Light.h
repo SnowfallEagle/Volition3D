@@ -8,39 +8,57 @@
 namespace Volition
 {
 
-namespace ELightState
+enum class ELightType : u8
 {
-    enum
-    {
-        Active = VLN_BIT(1)
-    };
-}
+    Ambient = 0,
+    Infinite,
+    Point,
+    SimpleSpotlight,
+    ComplexSpotlight
+};
 
-namespace ELightAttr
-{
-    enum
-    {
-        Ambient          = VLN_BIT(1),
-        Infinite         = VLN_BIT(2),
-        Point            = VLN_BIT(3),
-        SimpleSpotlight  = VLN_BIT(4),
-        ComplexSpotlight = VLN_BIT(5)
-    };
-}
+/* @NOTE: What types of lights use
+    Ambient:
+        Color
+
+    Infinite:
+        Color
+        Direction
+
+    Point:
+        Color
+        Position
+        KConst, KLinear, KQuad
+
+    SimpleSpotlight:
+        Color
+        Position
+        Direction
+        KConst, KLinear, KQuad
+
+    ComplexSpotlight:
+        Color
+        Position
+        Direction
+        KConst, KLinear, KQuad
+        FalloffPower
+*/
 
 class VLight
 {
 public:
-    u32 State;
-    u32 Attr;
+    b8 bActive;
+    ELightType Type;
 
-    VColorARGB CAmbient, CDiffuse, CSpecular;
-    VPoint4 Pos, TransPos;
-    VVector4 Dir, TransDir;
+    VColorARGB Color;
+    VPoint4 Position, TransPosition;
+    VVector4 Direction, TransDirection;
 
     f32 KConst, KLinear, KQuad;
-    f32 SpotInner, SpotOuter;
-    f32 Power; /** Falloff for spotlights */
+    f32 FalloffPower;
+
+public:
+    void Init(ELightType InType);
 };
 
 }
