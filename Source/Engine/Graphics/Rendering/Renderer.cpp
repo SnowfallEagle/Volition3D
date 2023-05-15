@@ -77,7 +77,6 @@ void VRenderer::StartUp()
         ZBuffer.Create(Config.RenderSpec.TargetSize.X, Config.RenderSpec.TargetSize.Y);
 
         Memory.MemSetByte(Materials, 0, sizeof(Materials));
-        ResetLights();
     }
 
     // Allocate memory
@@ -107,7 +106,6 @@ void VRenderer::ShutDown()
     // Free renderer stuff
     {
         ResetMaterials();
-        ResetLights();
 
         ZBuffer.Destroy();
         delete TerrainRenderList;
@@ -135,10 +133,10 @@ void VRenderer::ResetMaterials()
 
 void VRenderer::TransformLights(const VCamera& Camera)
 {
-    for (i32f LightIndex = 0; LightIndex < NumLights; ++LightIndex)
+    for (auto& Light : World.Lights)
     {
-        VMatrix44::MulVecMat(Lights[LightIndex].Position, Camera.MatCamera, Lights[LightIndex].TransPosition);
-        VMatrix44::MulVecMat(Lights[LightIndex].Direction, Camera.MatCameraRotationOnly, Lights[LightIndex].TransDirection);
+        VMatrix44::MulVecMat(Light.Position, Camera.MatCamera, Light.TransPosition);
+        VMatrix44::MulVecMat(Light.Direction, Camera.MatCameraRotationOnly, Light.TransDirection);
     }
 }
 
@@ -195,6 +193,9 @@ void VRenderer::Render()
             Cubemap.BlitHW(&Src, &BackSurface, &Dest);
         }
     }
+
+    // Get occluder light
+    VLight* OccluderLight = World.OccluderLight;
 
     // Get buffer
     u32* Buffer;
@@ -297,7 +298,7 @@ void VRenderer::Render()
         // Transform LocalVtx and use TransVtx since there
         RenderLists[i]->TransformWorldToCamera(Camera);
         RenderLists[i]->Clip(Camera);
-        RenderLists[i]->Light(Camera, Lights, MaxLights);
+        RenderLists[i]->Light(Camera, World.Lights);
         RenderLists[i]->TransformCameraToScreen(Camera);
     }
 

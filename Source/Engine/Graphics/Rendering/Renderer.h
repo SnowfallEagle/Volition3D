@@ -66,11 +66,6 @@ private:
     VMaterial Materials[MaxMaterials];
     i32 NumMaterials;
 
-public: // @TODO: Later collect lights in world
-    VLight* OccluderLight;
-    VLight Lights[MaxLights];
-    i32 NumLights;
-
 private:
     VColorARGB (*OriginalLitColors)[3]; /** [MaxPoly][3] */
     VColorARGB* OriginalColors;         /** [MaxPoly] */
@@ -84,13 +79,9 @@ public:
     i32 GetScreenHeight() const;
 
     void ResetMaterials();
-    void ResetLights();
-
-    void AddLight(const VLight& InLight);
-    void SetOccluderLight(i32 Index);
-    void TransformLights(const VCamera& Camera);
-
     void SetTerrain(VMesh& TerrainMesh);
+
+    void TransformLights(const VCamera& Camera);
 
     void PreRender();
     void Render();
@@ -128,30 +119,7 @@ private:
 
 inline VRenderer Renderer;
 
-VLN_FINLINE void VRenderer::ResetLights()
-{
-    Memory.MemSetByte(Lights, 0, sizeof(Lights));
-    NumLights = 0;
-
-    OccluderLight = nullptr;
-}
-
-VLN_FINLINE void VRenderer::AddLight(const VLight& InLight)
-{
-    Lights[NumLights] = InLight;
-    ++NumLights;
-}
-
-VLN_FINLINE void VRenderer::SetOccluderLight(i32 Index)
-{
-    if (Index >= 0 && Index < NumLights)
-    {
-        OccluderLight = &Lights[Index];
-    }
-}
-
 VLN_FINLINE void VRenderer::PutPixel(u32* Buffer, i32 Pitch, i32 X, i32 Y, u32 Color) const
-
 {
     VLN_ASSERT(X >= 0);
     VLN_ASSERT(X < Config.RenderSpec.TargetSize.X);

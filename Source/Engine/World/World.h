@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Common/Types/Array.h"
+#include "Engine/Graphics/Scene/Light.h"
 #include "Engine/World/Terrain.h"
 #include "Engine/World/Entity.h"
 #include "Engine/World/GameState.h"
@@ -12,16 +13,19 @@ class VWorld
 {
 private:
     static constexpr i32f MinEntitiesCapacity = 128;
+    static constexpr i32f MinLightsCapacity = 128;
 
 private:
     VGameState* GameState;
 
     TArray<VEntity*> Entities;
-    VCamera* Camera;
+    TArray<VLight> Lights;
+    VLight* OccluderLight;
 
     VSurface Cubemap;
     f32 CubemapMovementEffectAngle = 0.0f;
 
+    VCamera* Camera;
     VTerrain* Terrain;
 
 public:
@@ -38,6 +42,8 @@ public:
     T* SpawnEntity();
     void DestroyEntity(VEntity* Entity);
 
+    VLight* SpawnLight(ELightType Type);
+
     VLN_FINLINE VCamera* GetCamera() const
     {
         return Camera;
@@ -46,6 +52,11 @@ public:
     VLN_FINLINE VTerrain* GetTerrain() const
     {
         return Terrain;
+    }
+
+    VLN_FINLINE void SetOccluderLight(VLight* Light)
+    {
+        OccluderLight = Light;
     }
 
     friend class VRenderer;
@@ -58,17 +69,13 @@ void VWorld::StartUp()
 {
     Entities.Resize(MinEntitiesCapacity);
 
-    for (i32f i = 0; i < MinEntitiesCapacity; ++i)
-    {
-        Entities[i] = nullptr;
-    }
+    Lights.Resize(MinLightsCapacity);
+    OccluderLight = nullptr;
 
     Camera = new VCamera();
     Camera->Init(ECameraAttr::Euler, { 0.0f, 1000.0f, 1500.0f }, { 25.0f, 180.0f, 0.0f }, VVector4(), 90.0f, 100.0f, 1000000.0f);
 
     Terrain = new VTerrain();
-    Terrain->Init();
-    Terrain->Mesh->Position = { -1000.0f, -425.0f, 1000.0f };
 
     GameState = new GameStateT();
     GameState->StartUp();

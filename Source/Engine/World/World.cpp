@@ -88,4 +88,11 @@ void VWorld::SetCubemap(const char* Path)
     Cubemap.Load(Path);
 }
 
+VLight* VWorld::SpawnLight(ELightType Type)
+{
+    VLight& Light = Lights.EmplaceBack(VLight());
+    Light.Init(Type);
+    return &Light;
+}
+
 }

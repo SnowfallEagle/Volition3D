@@ -59,6 +59,11 @@ public:
         return Super::size();
     }
 
+    VLN_FINLINE VSizeType GetCapacity() const
+    {
+        return Super::capacity();
+    }
+
     VLN_FINLINE T* GetData() const
     {
         return (T*)Super::data();

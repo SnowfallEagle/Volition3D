@@ -35,85 +35,11 @@ public:
         // World.GetTerrain()->GenerateTerrain("Assets/Terrains/Large/Heightmap.bmp", "Assets/Terrains/RockyLand/Texture.bmp", 1000000.0f, 250000.0f, EShadeMode::Gouraud);
         World.GetTerrain()->GenerateTerrain("Assets/Terrains/Medium/Heightmap.bmp", "Assets/Terrains/Common/Texture.bmp", 10000.0f, 2500.0f, EShadeMode::Gouraud);
 
-        #if 1
-        {
-            VLight AmbientLight = {
-                true,
-                ELightType::Ambient,
+        World.SpawnLight(ELightType::Ambient);
+        const auto OccluderLight = World.SpawnLight(ELightType::Infinite);
+        World.SpawnLight(ELightType::Point);
 
-                MAP_XRGB32(0x33, 0x33, 0x22),
-                { 0.0f, 1000.0f, 0, 1.0f }, { 0, 0, 0, 0}, VVector4{0, 0, 0, 0}.GetNormalized(), { 0 , 0, 0, 0 },
-
-                0, 0, 0,
-                0
-            };
-
-            VLight InfiniteLight = {
-                true,
-                ELightType::Infinite,
-
-                MAP_XRGB32(0x99, 0x66, 0x22),
-                { 7500.0f, 7500.0f, 7500.0f, 0 }, { 0, 0, 0, 0 }, VVector4{ -1.0f, -1.0f, 0, 0 }.GetNormalized(), { 0, 0, 0, 0 },
-
-                0, 0, 0,
-                0
-            };
-
-            VLight PointLight = {
-                true,
-                ELightType::Point,
-
-                MAP_XRGB32(0xAA, 0x22, 0x11),
-                { 1000.0f, 1000.0f, 0.0f, 1.0f }, { 0, 0, 0, 0 }, VVector4{ 0, 0, 0, 0 }.GetNormalized(), { 0, 0, 0, 0 },
-
-                0, 0.001f, 0,
-                0
-            };
-
-            VLight OccluderLight = {
-                true,
-                ELightType::Point,
-
-                MAP_XRGB32(0x00, 0x00, 0xAA),
-                { 0.0f, 1000.0f, 1000.0f, 0 }, { 0, 0, 0, 0 }, VVector4{ 0, 0, 0, 0 }.GetNormalized(), { 0, 0, 0, 0 },
-
-                0, 0.0001f, 0,
-                0
-            };
-
-            VLight SimpleSpotlight = {
-                true,
-                ELightType::SimpleSpotlight,
-
-                MAP_XRGB32(0xAA, 0xAA, 0xAA),
-                { 0.0f, 75.0f, 0.0f, 0 }, { 0, 0, 0, 0 }, VVector4(-1.0f, -1.0f, 0.0f).GetNormalized(), { 0, 0, 0, 0 },
-
-                0, 0.0005f, 0,
-                1.0f
-            };
-
-            VLight ComplexSpotlight = {
-                true,
-                ELightType::ComplexSpotlight,
-
-                MAP_XRGB32(0xBB, 0x00, 0x00),
-                { 0.0f, 1000.0f, -300.0f, 0 }, { 0, 0, 0, 0 }, VVector4(-0.5f, -1.0f, 1.0f).GetNormalized(), { 0, 0, 0, 0 },
-
-                0, 0.0000001f, 0.001,
-                1.0f
-            };
-
-            Renderer.AddLight(AmbientLight);
-            Renderer.AddLight(InfiniteLight);
-            Renderer.AddLight(PointLight);
-            // Renderer.AddLight(ComplexSpotlight);
-            // Renderer.AddLight(SimpleSpotlight);
-            // Renderer.AddLight(OccluderLight);
-            Renderer.SetOccluderLight(1);
-
-            OccluderLightPosition = PointLight.Position;
-        }
-        #endif
+        World.SetOccluderLight(OccluderLight);
     }
 
     virtual void Update(f32 DeltaTime) override
@@ -206,13 +132,6 @@ public:
         static f32 Accum = 0.0f; 
         Accum += DeltaTime / 1000.0f;
 
-        VVector4 NewLightPosition = OccluderLightPosition;
-        NewLightPosition.Y += 1000.0f * Math.Sin(Accum * 5.0f);
-        NewLightPosition.Z += 1000.0f * Math.Cos(Accum * 5.0f);
-        Renderer.Lights[2].Position = NewLightPosition;
-
-        LightEntity->Mesh->Position = NewLightPosition;
-
         Renderer.DrawDebugText("FPS: %.2f", 1000.0f / DeltaTime);
         Renderer.DrawDebugText("AnimationId: %d", CurrentAnimation);
         Renderer.DrawDebugText("AnimationInterpMode: %d", (i32)InterpMode);
@@ -241,11 +160,38 @@ public:
         World.SetCubemap("Assets/Cubemaps/Cubemap.png");
         World.GetTerrain()->GenerateTerrain("Assets/Terrains/Large/Heightmap.bmp", "Assets/Terrains/RockyLand/Texture.bmp", 1000000.0f, 250000.0f, EShadeMode::Gouraud);
 
-        // VLight* Light = World.SpawnLight<VAmbientLight>();
+        World.SpawnLight(ELightType::Ambient);
+        const auto OccluderLight = World.SpawnLight(ELightType::Infinite);
+        World.SpawnLight(ELightType::Point);
+
+        World.SetOccluderLight(OccluderLight);
     }
 
     virtual void Update(f32 DeltaTime) override
     {
+        VCamera* Camera = World.GetCamera();
+
+        f32 ShiftModifier = (Input.IsKeyDown(EKeycode::LShift) ? 4.0f : 1.0f);
+
+        f32 CamPosSpeed = 0.5f * DeltaTime * ShiftModifier;
+        if (Input.IsKeyDown(EKeycode::W))
+        {
+            Camera->Pos.X += Math.FastSin(Camera->Dir.Y) * CamPosSpeed;
+            Camera->Pos.Z += Math.FastCos(Camera->Dir.Y) * CamPosSpeed;
+        }
+        if (Input.IsKeyDown(EKeycode::S))
+        {
+            Camera->Pos.X -= Math.FastSin(Camera->Dir.Y) * CamPosSpeed;
+            Camera->Pos.Z -= Math.FastCos(Camera->Dir.Y) * CamPosSpeed;
+        }
+
+        f32 CamDirSpeed = 0.1f * DeltaTime;
+        if (Input.IsKeyDown(EKeycode::Left))  Camera->Dir.Y -= CamDirSpeed;
+        if (Input.IsKeyDown(EKeycode::Right)) Camera->Dir.Y += CamDirSpeed;
+        if (Input.IsKeyDown(EKeycode::Up))    Camera->Dir.X -= CamDirSpeed;
+        if (Input.IsKeyDown(EKeycode::Down))  Camera->Dir.X += CamDirSpeed;
+
+        Renderer.DrawDebugText("FPS: %.2f", 1000.0f / DeltaTime);
     }
 };
 

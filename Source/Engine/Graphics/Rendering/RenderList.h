@@ -64,7 +64,7 @@ public:
     void TransformCameraToScreen(const VCamera& Cam);
 
     void RemoveBackfaces(const VCamera& Cam);
-    void Light(const VCamera& Cam, const VLight* Lights, i32 NumLights);
+    void Light(const VCamera& Cam, const TArray<VLight> Lights);
     void Clip(const VCamera& Camera, EClipFlags::Type Flags = EClipFlags::Full);
 
     void ConvertFromHomogeneous();
