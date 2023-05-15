@@ -55,7 +55,7 @@ void VRenderer::StartUp()
     {
         static constexpr i32f CharsPerLine = 80;
         static constexpr f32 PointDivPixel = 0.75f;
-        static constexpr f32 QualityMultiplier = 2.0f;
+        static constexpr f32 QualityMultiplier = 1.0f;
 
         const i32 Res = TTF_Init();
         VLN_ASSERT(Res == 0);
@@ -75,8 +75,6 @@ void VRenderer::StartUp()
         TerrainRenderList->bTerrain = true;
 
         ZBuffer.Create(Config.RenderSpec.TargetSize.X, Config.RenderSpec.TargetSize.Y);
-
-        Memory.MemSetByte(Materials, 0, sizeof(Materials));
     }
 
     // Allocate memory
@@ -105,8 +103,6 @@ void VRenderer::ShutDown()
 
     // Free renderer stuff
     {
-        ResetMaterials();
-
         ZBuffer.Destroy();
         delete TerrainRenderList;
         delete BaseRenderList;
@@ -118,17 +114,6 @@ void VRenderer::ShutDown()
         delete[] OriginalColors;
         delete[] OriginalLitColors;
     }
-}
-
-void VRenderer::ResetMaterials()
-{
-    for (i32f i = 0; i < MaxMaterials; ++i)
-    {
-        Materials[i].Texture.Destroy();
-    }
-    Memory.MemSetByte(Materials, 0, sizeof(Materials));
-
-    NumMaterials = 0;
 }
 
 void VRenderer::TransformLights(const VCamera& Camera)
@@ -343,16 +328,19 @@ void VRenderer::RenderUI()
         SDL_SetColorKey(SDLSurface, SDL_TRUE, static_cast<u32*>(SDLSurface->pixels)[0]);
 
         // Convert surface
+        /*
         SDL_Surface* SDLConverted = SDL_ConvertSurface(SDLSurface, Config.RenderSpec.SDLPixelFormat, 0);
         VLN_ASSERT(SDLConverted);
+        */
 
         // Blit
         SDL_Rect Dest = { TextElement.Position.X, TextElement.Position.Y, (i32f)std::strlen(TextElement.Text) * FontCharWidth, FontCharHeight };
-        SDL_BlitScaled(SDLConverted, nullptr, BackSurface.SDLSurface, &Dest);
+        SDL_BlitScaled(SDLSurface, nullptr, BackSurface.SDLSurface, &Dest);
+        // SDL_BlitScaled(SDLConverted, nullptr, BackSurface.SDLSurface, &Dest);
 
         // Free memory
+        // SDL_FreeSurface(SDLConverted);
         SDL_FreeSurface(SDLSurface);
-        SDL_FreeSurface(SDLConverted);
     }
 }
 
@@ -1757,6 +1745,9 @@ void VRenderer::RenderWire(const VRenderList* RenderList)
 void VRenderer::RefreshWindowSurface()
 {
     VideoSurface.SDLSurface = SDL_GetWindowSurface(Window.SDLWindow);
+
+    Config.RenderSpec.SDLPixelFormat = VideoSurface.SDLSurface->format;
+    Config.RenderSpec.SDLPixelFormatEnum = Config.RenderSpec.SDLPixelFormat->format;
 }
 
 }

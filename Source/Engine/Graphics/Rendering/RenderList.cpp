@@ -282,7 +282,7 @@ void VRenderList::RemoveBackfaces(const VCamera& Cam)
 }
 
 // @TODO: Fix spotlight
-void VRenderList::Light(const VCamera& Cam, const TArray<VLight> Lights)
+void VRenderList::Light(const VCamera& Cam, const TArray<VLight>& Lights)
 {
     for (i32f PolyIndex = 0; PolyIndex < NumPoly; ++PolyIndex)
     {

@@ -229,7 +229,6 @@
     <ClInclude Include="..\..\Source\Engine\Graphics\Interpolators\PerspectiveCorrectTextureInterpolator.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\Interpolators\AffineTextureInterpolator.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\Rendering\InterpolationContext.h" />
-    <ClInclude Include="..\..\Source\Engine\Graphics\Rendering\Material.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\Rendering\Renderer.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\Rendering\RenderList.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\Rendering\Surface.h" />
@@ -237,6 +236,7 @@
     <ClInclude Include="..\..\Source\Engine\Graphics\Rendering\ZBuffer.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\Scene\Camera.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\Scene\Light.h" />
+    <ClInclude Include="..\..\Source\Engine\Graphics\Scene\Material.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\Scene\Mesh.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\Scene\TransformType.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\Types\Color.h" />
@@ -268,6 +268,7 @@
     <ClCompile Include="..\..\Source\Engine\Graphics\Rendering\Texture.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Scene\Camera.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Scene\Light.cpp" />
+    <ClCompile Include="..\..\Source\Engine\Graphics\Scene\Material.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Scene\Mesh.cpp" />
     <ClCompile Include="..\..\Source\Engine\World\Entity.cpp" />
     <ClCompile Include="..\..\Source\Engine\World\Terrain.cpp" />

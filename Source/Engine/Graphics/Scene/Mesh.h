@@ -103,11 +103,11 @@ VLN_DEFINE_LOG_CHANNEL(hLogObject, "Object");
 VLN_DECL_ALIGN_SSE() class VMesh
 {
 public:
-    static constexpr i32f NameSize = 64;
     static constexpr i32f MaxPoly = 32768;
+    static constexpr i32f MaxMaterialsPerModel = 256;
 
 public:
-    char Name[NameSize];
+    char Name[64]; // @TODO: -> VString
 
     u32 State;
     u32 Attr;
@@ -164,7 +164,7 @@ public:
         const char* InSkinPath = nullptr,
         i32 SkinIndex = 0, // Used if SpecificSkinPath != nullptr
         VVector4 InPosition = { 0.0f, 0.0f, 0.0f },
-        VVector3 InScale = { 1.0f, 1.0f, 1.0f },
+        VVector3 InScale    = { 1.0f, 1.0f, 1.0f },
         EShadeMode ShadeMode = EShadeMode::Gouraud,
         const VVector3& ColorCorrection = { 1.0f, 1.0f, 1.0f }
     );

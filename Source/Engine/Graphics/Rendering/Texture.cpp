@@ -6,6 +6,8 @@ namespace Volition
 
 void VTexture::Load(const char* Path, const VVector3& ColorCorrection, i32 MaxMipMaps)
 {
+    Destroy();
+
     if (MaxMipMaps <= 0)
     {
         MaxMipMaps = Config.RenderSpec.MaxMipMaps;
@@ -24,15 +26,24 @@ void VTexture::Load(const char* Path, const VVector3& ColorCorrection, i32 MaxMi
 
         Surfaces[i].Lock(DummyBuffer, DummyPitch);
     }
+
+    bLoaded = true;
 }
 
 void VTexture::Destroy()
 {
+    if (!bLoaded)
+    {
+        return;
+    }
+
     for (i32f i = 0; i < NumMipMaps; ++i)
     {
         Surfaces[i].Unlock();
         Surfaces[i].Destroy();
     }
+
+    bLoaded = false;
 }
 
 const VSurface& VTexture::Get(i32 MipMaps) const

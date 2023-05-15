@@ -16,7 +16,6 @@
 #include "Engine/Graphics/Scene/Light.h"
 #include "Engine/Graphics/Scene/Camera.h"
 #include "Engine/Graphics/Rendering/Surface.h"
-#include "Engine/Graphics/Rendering/Material.h"
 #include "Engine/Graphics/Rendering/ZBuffer.h"
 #include "Engine/Graphics/Rendering/RenderList.h"
 #include "Engine/Graphics/Rendering/InterpolationContext.h"
@@ -29,9 +28,6 @@ class VRenderList;
 class VRenderer
 {
 public:
-    static constexpr i32f MaxMaterials = 256;
-    static constexpr i32f MaxLights    = 8;
-
     static constexpr i32f MaxBaseRenderListPoly    = 131'072;
     static constexpr i32f MaxTerrainRenderListPoly = 524'288;
     static constexpr i32f MaxCachedRenderListPoly  = MaxTerrainRenderListPoly;
@@ -52,8 +48,8 @@ private:
 
     VRenderList* BaseRenderList;
     VRenderList* TerrainRenderList;
-    VZBuffer ZBuffer;
 
+    VZBuffer ZBuffer;
     VInterpolationContext InterpolationContext;
 
     TTF_Font* Font;
@@ -62,9 +58,6 @@ private:
 
     i32 DebugTextY;
     TArray<VTextElement> TextQueue;
-
-    VMaterial Materials[MaxMaterials];
-    i32 NumMaterials;
 
 private:
     VColorARGB (*OriginalLitColors)[3]; /** [MaxPoly][3] */
@@ -78,7 +71,6 @@ public:
     i32 GetScreenWidth() const;
     i32 GetScreenHeight() const;
 
-    void ResetMaterials();
     void SetTerrain(VMesh& TerrainMesh);
 
     void TransformLights(const VCamera& Camera);

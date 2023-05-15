@@ -132,11 +132,11 @@
     <ClInclude Include="..\..\Source\Engine\Graphics\Scene\TransformType.h">
       <Filter>Engine\Graphics\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Graphics\Rendering\Material.h">
-      <Filter>Engine\Graphics\Rendering</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Core\Config\Arguments.h">
       <Filter>Engine\Core\Config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Graphics\Scene\Material.h">
+      <Filter>Engine\Graphics\Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -207,6 +207,9 @@
       <Filter>Engine\Graphics\Interpolators</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Graphics\Scene\Light.cpp">
+      <Filter>Engine\Graphics\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Graphics\Scene\Material.cpp">
       <Filter>Engine\Graphics\Scene</Filter>
     </ClCompile>
   </ItemGroup>

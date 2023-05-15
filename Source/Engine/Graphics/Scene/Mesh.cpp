@@ -4,6 +4,7 @@
 #include "Common/Types/Array.h"
 #include "Common/Platform/Memory.h"
 #include "Common/Math/Vector.h"
+#include "Engine/World/World.h"
 #include "Engine/Graphics/Rendering/Renderer.h"
 #include "Engine/Graphics/Scene/Mesh.h"
 
@@ -12,6 +13,7 @@ namespace Volition
 
 VMesh::VMesh()
 {
+    // @FIXME: VString Name
     Memory.MemSetByte(this, 0, sizeof(*this));
 
     State = EMeshState::Active | EMeshState::Visible;
@@ -536,8 +538,14 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
         }
 
         // Read polygon faces
-        i32 NumMaterialsInObject = 0;
-        TArray<b8> DoesMaterialAppearFirstTime(Renderer.MaxMaterials, true);
+        struct VMaterialInfo
+        {
+            VMaterial* Material;
+            b8 bAppearFirstTime;
+        };
+
+        i32 NumMaterialsInModel = 0;
+        TArray<VMaterialInfo> MaterialInfoByIndex(MaxMaterialsPerModel, { nullptr, true });
         TArray<i32> MaterialIndexByPolyIndex(MaxPoly, 0);
 
         {
@@ -554,10 +562,10 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                 std::sscanf(Line, "Face verts %d flags %d mat %d", &DummyInt, &DummyInt, &MaterialIndex);
 
                 MaterialIndexByPolyIndex[i] = MaterialIndex;
-                if (DoesMaterialAppearFirstTime[MaterialIndex])
+                if (MaterialInfoByIndex[MaterialIndex].bAppearFirstTime)
                 {
-                    ++NumMaterialsInObject;
-                    DoesMaterialAppearFirstTime[MaterialIndex] = false;
+                    ++NumMaterialsInModel;
+                    MaterialInfoByIndex[MaterialIndex].bAppearFirstTime = false;
                 }
 
                 VLN_LOG_VERBOSE("\tMaterial index of poly face [%d]: %d\n", i, MaterialIndexByPolyIndex[i]);
@@ -585,9 +593,9 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
 
         // Read materials
         {
-            for (i32f i = 0; i < NumMaterialsInObject; ++i)
+            for (i32f i = 0; i < NumMaterialsInModel; ++i)
             {
-                VMaterial& CurrentMaterial = Renderer.Materials[Renderer.NumMaterials + i];
+                VMaterial* CurrentMaterial = World.AddMaterial();
 
                 static constexpr i32f FormatSize = 256;
                 char Format[FormatSize];
@@ -603,7 +611,7 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                     Line = FindLineCOB("rgb", File, Buffer, BufferSize);
                     std::sscanf(Line, "rgb %f,%f,%f", &R, &G, &B);
 
-                    CurrentMaterial.Color = MAP_ARGB32(
+                    CurrentMaterial->Color = MAP_ARGB32(
                         255, // Opaque by default, may be overriden by transparency shader
                         (i32)(R * 255.0f + 0.5f),
                         (i32)(G * 255.0f + 0.5f),
@@ -613,11 +621,9 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                     // Material parameters
                     Line = FindLineCOB("alpha", File, Buffer, BufferSize);
                     std::sscanf(Line, "alpha %f ka %f ks %f exp %f",
-                        &A, &CurrentMaterial.KAmbient, &CurrentMaterial.KSpecular, &CurrentMaterial.Power
+                        &A, &CurrentMaterial->KAmbient, &CurrentMaterial->KSpecular, &CurrentMaterial->Power
                     );
-
-                    // We try to find diffuse factor below, but this is default
-                    CurrentMaterial.KDiffuse = 1.0f;
+                    // @NOTE: We try to find diffuse factor below, 1.0f by default in VMaterial::Init()
 
                     // Log color
                     VLN_LOG_VERBOSE("\tMaterial color [%d]: ", i);
@@ -651,8 +657,8 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                         GetTexturePathFromModelDirectory(TexturePath, TexturePathSize, TexturePathRaw, Path);
 
                         // Load texture in material
-                        CurrentMaterial.Texture.Load(TexturePath);
-                        CurrentMaterial.Attr |= EMaterialAttr::ShadeModeTexture;
+                        CurrentMaterial->Texture.Load(TexturePath);
+                        CurrentMaterial->Attr |= EPolyAttr::ShadeModeTexture;
 
                         // Texture in object
                         Attr |= EMeshAttr::HasTexture;
@@ -677,8 +683,8 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                         Line = FindLineCOB("colour: color", File, Buffer, BufferSize);
                         std::sscanf(Buffer, "colour: color (%d, %d, %d)", &AlphaRed, &AlphaGreen, &AlphaBlue);
 
-                        CurrentMaterial.Color.A = VLN_MAX(AlphaRed, VLN_MAX(AlphaGreen, AlphaBlue));
-                        CurrentMaterial.Attr |= EMaterialAttr::Transparent;
+                        CurrentMaterial->Color.A = VLN_MAX(AlphaRed, VLN_MAX(AlphaGreen, AlphaBlue));
+                        CurrentMaterial->Attr |= EPolyAttr::Transparent;
 
                         VLN_LOG_VERBOSE("\tAlpha channel: %d\n", CurrentMaterial.Color.A);
                     }
@@ -694,21 +700,21 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
 
                     if (0 == strncmp(ShaderName, "constant", ShaderNameSize))
                     {
-                        CurrentMaterial.Attr |= EMaterialAttr::ShadeModeEmissive;
+                        CurrentMaterial->Attr |= EPolyAttr::ShadeModeEmissive;
                     }
                     else if (0 == strncmp(ShaderName, "matte", ShaderNameSize))
                     {
-                        CurrentMaterial.Attr |= EMaterialAttr::ShadeModeFlat;
+                        CurrentMaterial->Attr |= EPolyAttr::ShadeModeFlat;
                     }
                     else if (0 == strncmp(ShaderName, "plastic", ShaderNameSize) ||
                              0 == strncmp(ShaderName, "phong", ShaderNameSize))
                     {
                         // We have no phong support, so we use gouraud for phong too
-                        CurrentMaterial.Attr |= EMaterialAttr::ShadeModeGouraud;
+                        CurrentMaterial->Attr |= EPolyAttr::ShadeModeGouraud;
                     }
                     else
                     {
-                        CurrentMaterial.Attr |= EMaterialAttr::ShadeModeEmissive;
+                        CurrentMaterial->Attr |= EPolyAttr::ShadeModeEmissive;
                     }
 
                     VLN_LOG_VERBOSE("\tShader name: %s\n", ShaderName);
@@ -727,8 +733,8 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                         Line = GetLineCOB(File, Buffer, BufferSize);
                         if (0 == std::strncmp(Line, Pattern, PatternLength))
                         {
-                            std::sscanf(Line, "diffuse factor: float %f", &CurrentMaterial.KDiffuse);
-                            VLN_LOG_VERBOSE("\tDiffuse factor found: %f\n", CurrentMaterial.KDiffuse);
+                            std::sscanf(Line, "diffuse factor: float %f", &CurrentMaterial->KDiffuse);
+                            VLN_LOG_VERBOSE("\tDiffuse factor found: %f\n", CurrentMaterial->KDiffuse);
                             break;
                         }
                     }
@@ -737,9 +743,10 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                 // Precompute reflectivities for engine
                 for (i32f RGBIndex = 1; RGBIndex < 4; ++RGBIndex)
                 {
-                    CurrentMaterial.RAmbient.C[RGBIndex]  = (u8)(CurrentMaterial.KAmbient * CurrentMaterial.Color.C[RGBIndex]);
-                    CurrentMaterial.RDiffuse.C[RGBIndex]  = (u8)(CurrentMaterial.KDiffuse * CurrentMaterial.Color.C[RGBIndex]);
-                    CurrentMaterial.RSpecular.C[RGBIndex] = (u8)(CurrentMaterial.RSpecular * CurrentMaterial.Color.C[RGBIndex]);
+                    // @TODO: Check overflow
+                    CurrentMaterial->RAmbient.C[RGBIndex]  = (u8)(CurrentMaterial->KAmbient * CurrentMaterial->Color.C[RGBIndex]);
+                    CurrentMaterial->RDiffuse.C[RGBIndex]  = (u8)(CurrentMaterial->KDiffuse * CurrentMaterial->Color.C[RGBIndex]);
+                    CurrentMaterial->RSpecular.C[RGBIndex] = (u8)(CurrentMaterial->RSpecular * CurrentMaterial->Color.C[RGBIndex]);
 
                     // Log precomputed colors and factors
                     VLN_LOG_VERBOSE("\tRa [%d]: %d\n", RGBIndex, CurrentMaterial.RAmbient.C[RGBIndex]);
@@ -762,16 +769,16 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
             for (i32f i = 0; i < NumPoly; ++i)
             {
                 VPoly& Poly = PolyList[i];
-                const VMaterial& PolyMaterial = Renderer.Materials[Renderer.NumMaterials + MaterialIndexByPolyIndex[i]];
+                const VMaterial* PolyMaterial = MaterialInfoByIndex[MaterialIndexByPolyIndex[i]].Material;
 
                 // Set color
-                if (PolyMaterial.Attr & EMaterialAttr::ShadeModeTexture)
+                if (PolyMaterial->Attr & EPolyAttr::ShadeModeTexture)
                 {
-                    Poly.OriginalColor = MAP_ARGB32(PolyMaterial.Color.A, 255, 255, 255);
+                    Poly.OriginalColor = MAP_ARGB32(PolyMaterial->Color.A, 255, 255, 255);
                 }
                 else
                 {
-                    Poly.OriginalColor = PolyMaterial.Color;
+                    Poly.OriginalColor = PolyMaterial->Color;
                 }
 
                 // Set shade mode and params
@@ -781,22 +788,22 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                 }
                 else
                 {
-                    if (PolyMaterial.Attr & EMaterialAttr::ShadeModeEmissive)
+                    if (PolyMaterial->Attr & EPolyAttr::ShadeModeEmissive)
                     {
                         Poly.Attr |= EPolyAttr::ShadeModeEmissive;
                     }
-                    else if (PolyMaterial.Attr & EMaterialAttr::ShadeModeFlat)
+                    else if (PolyMaterial->Attr & EPolyAttr::ShadeModeFlat)
                     {
                         Poly.Attr |= EPolyAttr::ShadeModeFlat;
                     }
-                    else if (PolyMaterial.Attr & EMaterialAttr::ShadeModeGouraud ||
-                        PolyMaterial.Attr & EMaterialAttr::ShadeModePhong)
+                    else if (PolyMaterial->Attr & EPolyAttr::ShadeModeGouraud ||
+                             PolyMaterial->Attr & EPolyAttr::ShadeModePhong)
                     {
                         Poly.Attr |= EPolyAttr::ShadeModeGouraud;
                     }
                 }
 
-                if (PolyMaterial.Attr & EMaterialAttr::ShadeModeTexture)
+                if (PolyMaterial->Attr & EPolyAttr::ShadeModeTexture)
                 {
                     Poly.Attr |= EPolyAttr::ShadeModeTexture;
 
@@ -809,19 +816,16 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                 }
 
                 // Set transparent flag
-                if (PolyMaterial.Attr & EMaterialAttr::Transparent)
+                if (PolyMaterial->Attr & EPolyAttr::Transparent)
                 {
                     Poly.Attr |= EPolyAttr::Transparent;
                 }
 
                 // Set poly material
                 Poly.Attr |= EPolyAttr::UsesMaterial;
-                Poly.Material = &PolyMaterial;
+                Poly.Material = PolyMaterial;
             }
         }
-
-        // Update num materials in engine
-        Renderer.NumMaterials += NumMaterialsInObject;
 
         // Fix texture coords
         {
@@ -867,8 +871,8 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
 void VMesh::GenerateTerrain(const char* HeightMap, const char* Texture, f32 Size, f32 Height, EShadeMode ShadeMode)
 {
     // Load texture in terrain material
-    VMaterial& Material = Renderer.Materials[Renderer.NumMaterials];
-    Material.Texture.Load(Texture, { 1.0f, 1.0f, 1.0f }, 1);
+    VMaterial* Material = World.AddMaterial();
+    Material->Texture.Load(Texture, { 1.0f, 1.0f, 1.0f }, 1);
 
     // Load height map
     VSurface MapSurface;
@@ -927,7 +931,7 @@ void VMesh::GenerateTerrain(const char* HeightMap, const char* Texture, f32 Size
             Poly2.State         = Poly1.State        |= EPolyState::Active;
             Poly2.Attr          = Poly1.Attr         |= EPolyAttr::Terrain | (u32)ShadeMode | EPolyAttr::ShadeModeTexture;
             Poly2.OriginalColor = Poly1.OriginalColor = VColorARGB(0xFF, 0xFF, 0xFF, 0xFF);
-            Poly2.Material      = Poly1.Material      = &Material;
+            Poly2.Material      = Poly1.Material      = Material;
 
             Poly1.TextureCoordsIndices[0] = Poly1.VtxIndices[0] = Y*VerticesInRow + X;
             Poly1.TextureCoordsIndices[1] = Poly1.VtxIndices[1] = (Y + 1)*VerticesInRow + X;
@@ -1280,8 +1284,7 @@ b32 VMesh::LoadMD2(const char* Path, const char* InSkinPath, i32 SkinIndex, VVec
     }
 
     // Set up material
-    VMaterial* Material = &Renderer.Materials[Renderer.NumMaterials];
-    ++Renderer.NumMaterials;
+    VMaterial* Material = World.AddMaterial();
 
     if (InSkinPath)
     {

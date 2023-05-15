@@ -2,6 +2,7 @@
 
 #include "SDL.h"
 #include "Common/Types/Common.h"
+#include "Common/Math/Vector.h"
 #include "Common/Math/Rect.h"
 #include "Common/Platform/Platform.h"
 #include "Common/Platform/Assert.h"

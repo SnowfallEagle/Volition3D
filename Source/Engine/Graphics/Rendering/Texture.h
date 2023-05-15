@@ -11,6 +11,8 @@ class VTexture
     TArray<VSurface> Surfaces;
     i32 NumMipMaps;
 
+    b8 bLoaded = false;
+
 public:
     void Load(const char* Path, const VVector3& ColorCorrection = { 1.0f, 1.0f, 1.0f }, i32 MaxMipMaps = -1);
     void Destroy();

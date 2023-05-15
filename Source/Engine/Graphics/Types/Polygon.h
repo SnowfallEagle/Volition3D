@@ -5,7 +5,7 @@
 #include "Engine/Graphics/Types/Color.h"
 #include "Engine/Graphics/Types/Vertex.h"
 #include "Engine/Graphics/Rendering/Surface.h"
-#include "Engine/Graphics/Rendering/Material.h"
+#include "Engine/Graphics/Scene/Material.h"
 
 namespace Volition
 {
@@ -46,9 +46,9 @@ class VPoly
 {
 public:
 	u32 State;
-	u32 Attr;
+	u32 Attr;                 // @TODO: Move in Material
 
-	VColorARGB OriginalColor;
+	VColorARGB OriginalColor; // @TODO: Move in material
 	VColorARGB LitColor[3]; /** For each vertex, 0 for flat shading */
 
 	const VMaterial* Material;

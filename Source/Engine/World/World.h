@@ -2,6 +2,7 @@
 
 #include "Common/Types/Array.h"
 #include "Engine/Graphics/Scene/Light.h"
+#include "Engine/Graphics/Scene/Material.h"
 #include "Engine/World/Terrain.h"
 #include "Engine/World/Entity.h"
 #include "Engine/World/GameState.h"
@@ -12,13 +13,16 @@ namespace Volition
 class VWorld
 {
 private:
-    static constexpr i32f MinEntitiesCapacity = 128;
-    static constexpr i32f MinLightsCapacity = 128;
+    static constexpr i32f MinEntitiesCapacity  = 128;
+    static constexpr i32f MinMaterialsCapacity = 128;
+    static constexpr i32f MinLightsCapacity    = 128;
 
 private:
     VGameState* GameState;
 
     TArray<VEntity*> Entities;
+    TArray<VMaterial> Materials;
+
     TArray<VLight> Lights;
     VLight* OccluderLight;
 
@@ -43,6 +47,7 @@ public:
     void DestroyEntity(VEntity* Entity);
 
     VLight* SpawnLight(ELightType Type);
+    VMaterial* AddMaterial();
 
     VLN_FINLINE VCamera* GetCamera() const
     {
@@ -68,7 +73,7 @@ template<typename GameStateT>
 void VWorld::StartUp()
 {
     Entities.Resize(MinEntitiesCapacity);
-
+    Materials.Resize(MinMaterialsCapacity);
     Lights.Resize(MinLightsCapacity);
     OccluderLight = nullptr;
 

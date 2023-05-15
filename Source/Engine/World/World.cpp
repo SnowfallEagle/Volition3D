@@ -20,7 +20,11 @@ void VWorld::ShutDown()
             delete Entity;
         }
     }
-    Entities.Clear();
+
+    for (auto& Material : Materials)
+    {
+        Material.Destroy();
+    }
 
     Terrain->Destroy();
     delete Terrain;
@@ -93,6 +97,13 @@ VLight* VWorld::SpawnLight(ELightType Type)
     VLight& Light = Lights.EmplaceBack(VLight());
     Light.Init(Type);
     return &Light;
+}
+
+VMaterial* VWorld::AddMaterial()
+{
+    VMaterial& Material = Materials.EmplaceBack(VMaterial());
+    Material.Init();
+    return &Material;
 }
 
 }
