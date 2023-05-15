@@ -14,7 +14,7 @@ void VTexture::Load(const char* Path, const VVector3& ColorCorrection, i32 MaxMi
     Surfaces.Resize(MaxMipMaps);
     Surfaces[0].Load(Path);
 
-    Surfaces[0].CorrectColors(ColorCorrection);
+    Surfaces[0].CorrectColorsSlow(ColorCorrection);
     GenerateMipMaps(MaxMipMaps);
 
     for (i32f i = 0; i < NumMipMaps; ++i)

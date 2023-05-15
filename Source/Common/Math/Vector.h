@@ -72,6 +72,16 @@ public:
     };
 
 public:
+    VLN_FINLINE b32 operator!=(const VVector3& Other)
+    {
+        return X != Other.X || Y != Other.Y || Z != Other.Z;
+    }
+
+    VLN_FINLINE b32 operator==(const VVector3& Other)
+    {
+        return X == Other.X && Y == Other.Y && Z == Other.Z;
+    }
+
     VLN_FINLINE void Zero()
     {
         X = Y = Z = 0;

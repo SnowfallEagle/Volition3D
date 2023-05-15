@@ -325,9 +325,11 @@ void VRenderer::Render()
 
 void VRenderer::PostProcess()
 {
-    if (Config.RenderSpec.bPostProcessing)
+    static constexpr VVector3 DefaultColorCorrection = { 1.0f, 1.0f, 1.0f };
+
+    if (Config.RenderSpec.bPostProcessing && Config.RenderSpec.PostProcessColorCorrection != DefaultColorCorrection)
     {
-        BackSurface.CorrectColors(Config.RenderSpec.PostProcessColorCorrection);
+        BackSurface.CorrectColorsFast(Config.RenderSpec.PostProcessColorCorrection);
     }
 }
 

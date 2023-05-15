@@ -12,6 +12,9 @@ namespace Volition
 class VColorARGB
 {
 public:
+    static VColorARGB Transparent, White, Black, Red, Green, Blue;
+
+public:
     union
     {
         u32 ARGB;
@@ -41,6 +44,18 @@ public:
     {
         return ARGB;
     }
+
+    VLN_FINLINE b32 operator==(const VColorARGB Other) const
+    {
+        return (u32)*this == (u32)Other;
+    }
 };
+
+inline VColorARGB VColorARGB::Transparent = MAP_ARGB32(0x00, 0x00, 0x00, 0x00);
+inline VColorARGB VColorARGB::White       = MAP_XRGB32(0xFF, 0xFF, 0xFF);
+inline VColorARGB VColorARGB::Black       = MAP_XRGB32(0x00, 0x00, 0x00);
+inline VColorARGB VColorARGB::Red         = MAP_XRGB32(0xFF, 0x00, 0x00);
+inline VColorARGB VColorARGB::Green       = MAP_XRGB32(0x00, 0xFF, 0x00);
+inline VColorARGB VColorARGB::Blue        = MAP_XRGB32(0x00, 0x00, 0xFF);
 
 }

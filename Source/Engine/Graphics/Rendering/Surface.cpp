@@ -61,7 +61,55 @@ void VSurface::Destroy()
     Height = 0;
 }
 
-void VSurface::CorrectColors(const VVector3& ColorCorrection)
+void VSurface::CorrectColorsFast(const VVector3& ColorCorrection)
+{
+    u32* Buffer;
+    i32 Pitch;
+    Lock(Buffer, Pitch);
+
+    i32 RCorrection = (i32)(ColorCorrection.X * 255.0f + 0.5f);
+    i32 GCorrection = (i32)(ColorCorrection.Y * 255.0f + 0.5f);
+    i32 BCorrection = (i32)(ColorCorrection.Z * 255.0f + 0.5f);
+
+    for (i32f Y = 0; Y < Height; ++Y)
+    {
+        for (i32f X = 0; X < Width; ++X)
+        {
+            VColorARGB Pixel = Buffer[X];
+
+            i32 Colors[3] = {
+                Pixel.R * RCorrection / 255,
+                Pixel.G * GCorrection / 255,
+                Pixel.B * BCorrection / 255,
+            };
+
+            for (i32f ColorIndex = 0; ColorIndex < 3; ++ColorIndex)
+            {
+                if (Colors[ColorIndex] > 255)
+                {
+                    Colors[ColorIndex] = 255;
+                }
+                else if (Colors[ColorIndex] < 0)
+                {
+                    Colors[ColorIndex] = 0;
+                }
+            }
+
+            Buffer[X] = MAP_ARGB32(
+                Pixel.A,
+                Colors[0],
+                Colors[1],
+                Colors[2]
+            );
+        }
+
+        Buffer += Pitch;
+    }
+
+    Unlock();
+}
+
+void VSurface::CorrectColorsSlow(const VVector3& ColorCorrection)
 {
     u32* Buffer;
     i32 Pitch;
@@ -81,7 +129,14 @@ void VSurface::CorrectColors(const VVector3& ColorCorrection)
 
             for (i32f ColorIndex = 0; ColorIndex < 3; ++ColorIndex)
             {
-                Colors[ColorIndex] = VLN_MIN(VLN_MAX(Colors[ColorIndex], 0), 255);
+                if (Colors[ColorIndex] > 255)
+                {
+                    Colors[ColorIndex] = 255;
+                }
+                else if (Colors[ColorIndex] < 0)
+                {
+                    Colors[ColorIndex] = 0;
+                }
             }
 
             Buffer[X] = MAP_ARGB32(
