@@ -60,7 +60,7 @@ namespace Volition
         if ((X)) \
         { \
             delete (X); \
-            X = nullptr; \
+            (X) = nullptr; \
         } \
     }
 
@@ -69,7 +69,7 @@ namespace Volition
         if ((X)) \
         { \
             delete[] (X); \
-            X = nullptr; \
+            (X) = nullptr; \
         } \
     }
 

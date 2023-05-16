@@ -42,6 +42,11 @@ public:
         Super::clear();
     }
 
+    VLN_FINLINE void Remove(T& Instance)
+    {
+        auto _ = std::remove(Super::begin(), Super::end(), Instance);
+    }
+
     template<typename... ArgsT>
     VLN_FINLINE T& EmplaceBack(ArgsT&&... Args)
     {

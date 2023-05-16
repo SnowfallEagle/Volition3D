@@ -47,13 +47,13 @@ public:
     void Update(f32 DeltaTime);
     void FixedUpdate(f32 FixedDeltaTime);
 
-    void SetCubemap(const char* Path);
-
     template<typename T = VEntity>
     T* SpawnEntity();
     void DestroyEntity(VEntity* Entity);
 
     VLight* SpawnLight(ELightType Type);
+    void SetCubemap(const char* Path);
+
     VMaterial* AddMaterial();
 
     template<typename GameStateT = VGameState>
@@ -89,7 +89,7 @@ VLN_FINLINE void VWorld::StartUp()
 }
 
 template<typename T>
-T* VWorld::SpawnEntity()
+inline T* VWorld::SpawnEntity()
 {
     VEntity* Entity = Entities.EmplaceBack(new T());
     Entity->Init();

@@ -321,6 +321,11 @@ void VRenderer::PostProcess()
 
 void VRenderer::RenderUI()
 {
+    if (!Config.RenderSpec.bRenderUI)
+    {
+        return;
+    }
+
     for (const auto& TextElement : TextQueue)
     {
         // Render text

@@ -15,10 +15,11 @@ public: /** Set by user */
     i32 TargetFixedFPS = 60;
     i32 MaxMipMaps = 8;
 
-    b8 bLimitFPS        = false;
-    b8 bRenderSolid     = true;
-    b8 bBackfaceRemoval = true;
-    b8 bPostProcessing  = true;
+    b32 bLimitFPS        : 1;
+    b32 bRenderSolid     : 1;
+    b32 bBackfaceRemoval : 1;
+    b32 bPostProcessing  : 1;
+    b32 bRenderUI        : 1;
 
     VVector3 PostProcessColorCorrection = { 1.0f, 1.0f, 1.0f };
 
@@ -36,6 +37,16 @@ private: /** Set by rendering engine */
 
     VVector2 MinClipFloat = { 0.0f, 0.0f };
     VVector2 MaxClipFloat = { 0.0f, 0.0f };
+
+public:
+    VRenderSpecification()
+    {
+        bLimitFPS        = false;
+        bRenderSolid     = true;
+        bBackfaceRemoval = true;
+        bPostProcessing  = true;
+        bRenderUI        = true;
+    }
 
     friend class VRenderer;
     friend class VSurface;

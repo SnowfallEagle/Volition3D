@@ -24,6 +24,8 @@ void VWorld::ShutDown(EWorldShutDownReason Reason)
         Terrain->Destroy();
         delete Terrain;
         Terrain = nullptr;
+
+        Renderer.RemoveTerrain();
     }
 
     Cubemap.Destroy();
@@ -89,7 +91,7 @@ void VWorld::DestroyEntity(VEntity* Entity)
 {
     if (Entity)
     {
-        std::remove(Entities.begin(), Entities.end(), Entity);
+        Entities.Remove(Entity);
         Entity->Destroy();
         delete Entity;
     }
@@ -123,7 +125,7 @@ void VWorld::StartUp(VGameState* InGameState)
     OccluderLight = nullptr;
 
     Camera = new VCamera();
-    Camera->Init(ECameraAttr::Euler, { 0.0f, 1000.0f, 1500.0f }, { 25.0f, 180.0f, 0.0f }, VVector4(), 90.0f, 100.0f, 1000000.0f);
+    Camera->Init(ECameraAttr::Euler, { 0.0f, 1000.0f, 1500.0f }, { 0.0f, 0.0f, 0.0f }, VVector4(), 90.0f, 250.0f, 1000000.0f);
 
     Terrain = new VTerrain();
 

@@ -93,13 +93,6 @@ public:
         if (Input.IsKeyDown(EKeycode::Delete)) Entity->Mesh->Position.X -= DeltaTime * ShiftModifier;
         if (Input.IsKeyDown(EKeycode::PageDown)) Entity->Mesh->Position.X += DeltaTime * ShiftModifier;
 
-        if (Input.IsKeyDown(EKeycode::F12)) Config.RenderSpec.PostProcessColorCorrection = { 1.0f, 1.0f, 1.0f };
-        if (Input.IsKeyDown(EKeycode::F1)) Config.RenderSpec.PostProcessColorCorrection = { 1.25f, 1.1f, 1.0f };
-        if (Input.IsKeyDown(EKeycode::F2)) Config.RenderSpec.PostProcessColorCorrection = { 1.25f, 1.25f, 1.0f };
-        if (Input.IsKeyDown(EKeycode::F3)) Config.RenderSpec.PostProcessColorCorrection = { 1.0f, 1.25f, 1.0f };
-        if (Input.IsKeyDown(EKeycode::F4)) Config.RenderSpec.PostProcessColorCorrection = { 1.25f, 1.0f, 1.25f };
-        if (Input.IsKeyDown(EKeycode::F5)) Config.RenderSpec.PostProcessColorCorrection = { 1.0f, 1.0f, 1.25f };
-
         static float AnimButtonCounter = 0.0f;
         if (AnimButtonCounter <= 0.0f && Input.IsKeyDown(EKeycode::Comma)) { --CurrentAnimation; AnimButtonCounter = 100.0f; };
         if (AnimButtonCounter <= 0.0f && Input.IsKeyDown(EKeycode::Period)) { ++CurrentAnimation; AnimButtonCounter = 100.0f; };
@@ -124,11 +117,14 @@ public:
             Entity->Mesh->Transform(Rot, ETransformType::LocalOnly, true);
         }
 
-        if (Input.IsKeyDown(EKeycode::Backspace))
-        {
-            Config.RenderSpec.bRenderSolid ^= true;
-        }
+        if (Input.IsKeyDown(EKeycode::Backspace)) Config.RenderSpec.bRenderSolid ^= true;
 
+        if (Input.IsKeyDown(EKeycode::F12)) Config.RenderSpec.PostProcessColorCorrection = { 1.0f, 1.0f, 1.0f };
+        if (Input.IsKeyDown(EKeycode::F1)) Config.RenderSpec.PostProcessColorCorrection = { 1.25f, 1.1f, 1.0f };
+        if (Input.IsKeyDown(EKeycode::F2)) Config.RenderSpec.PostProcessColorCorrection = { 1.25f, 1.25f, 1.0f };
+        if (Input.IsKeyDown(EKeycode::F3)) Config.RenderSpec.PostProcessColorCorrection = { 1.0f, 1.25f, 1.0f };
+        if (Input.IsKeyDown(EKeycode::F4)) Config.RenderSpec.PostProcessColorCorrection = { 1.25f, 1.0f, 1.25f };
+        if (Input.IsKeyDown(EKeycode::F5)) Config.RenderSpec.PostProcessColorCorrection = { 1.0f, 1.0f, 1.25f };
         static f32 Accum = 0.0f; 
         Accum += DeltaTime / 1000.0f;
 
@@ -138,71 +134,131 @@ public:
     }
 };
 
-class GModelsScene : public VGameState
+class GGameState : public VGameState
 {
-public:
+protected:
     virtual void StartUp() override
     {
-    }
-
-    virtual void Update(f32 DeltaTime) override
-    {
-    }
-};
-
-class GTerrainScene : public VGameState
-{
-public:
-    virtual void StartUp() override
-    {
-        World.GetCamera()->Init(ECameraAttr::Euler, { 0.0f, 1000.0f, 1500.0f }, { 25.0f, 180.0f, 0.0f }, VVector4(), 75.0f, 100.0f, 1000000.0f);
-
         World.SetCubemap("Assets/Cubemaps/Cubemap.png");
-        World.GetTerrain()->GenerateTerrain("Assets/Terrains/Large/Heightmap.bmp", "Assets/Terrains/RockyLand/Texture.bmp", 1000000.0f, 250000.0f, EShadeMode::Gouraud);
 
         World.SpawnLight(ELightType::Ambient);
         const auto OccluderLight = World.SpawnLight(ELightType::Infinite);
         World.SpawnLight(ELightType::Point);
 
         World.SetOccluderLight(OccluderLight);
+
+        Config.RenderSpec.PostProcessColorCorrection = { 1.25f, 1.1f, 1.0f };
     }
 
     virtual void Update(f32 DeltaTime) override
     {
-        VCamera* Camera = World.GetCamera();
-
-        f32 ShiftModifier = (Input.IsKeyDown(EKeycode::LShift) ? 4.0f : 1.0f);
-
-        f32 CamPosSpeed = 0.5f * DeltaTime * ShiftModifier;
-        if (Input.IsKeyDown(EKeycode::W))
-        {
-            Camera->Pos.X += Math.FastSin(Camera->Dir.Y) * CamPosSpeed;
-            Camera->Pos.Z += Math.FastCos(Camera->Dir.Y) * CamPosSpeed;
-        }
-        if (Input.IsKeyDown(EKeycode::S))
-        {
-            Camera->Pos.X -= Math.FastSin(Camera->Dir.Y) * CamPosSpeed;
-            Camera->Pos.Z -= Math.FastCos(Camera->Dir.Y) * CamPosSpeed;
-        }
-
-        f32 CamDirSpeed = 0.1f * DeltaTime;
-        if (Input.IsKeyDown(EKeycode::Left))  Camera->Dir.Y -= CamDirSpeed;
-        if (Input.IsKeyDown(EKeycode::Right)) Camera->Dir.Y += CamDirSpeed;
-        if (Input.IsKeyDown(EKeycode::Up))    Camera->Dir.X -= CamDirSpeed;
-        if (Input.IsKeyDown(EKeycode::Down))  Camera->Dir.X += CamDirSpeed;
-
-        if (Input.IsKeyDown(EKeycode::M))
-        {
-            World.ChangeState<GTestGameState>();
-        }
+        ProcessInput(DeltaTime);
 
         Renderer.DrawDebugText("FPS: %.2f", 1000.0f / DeltaTime);
     }
+
+    virtual void ProcessInput(f32 DeltaTime);
 };
+
+class GModelsScene : public GGameState
+{
+public:
+    using Super = GGameState;
+
+protected:
+    virtual void StartUp() override
+    {
+        Super::StartUp();
+    }
+
+    virtual void Update(f32 DeltaTime) override
+    {
+        Super::Update(DeltaTime);
+    }
+};
+
+class GLargeTerrainScene : public GGameState
+{
+public:
+    using Super = GGameState;
+
+protected:
+    virtual void StartUp() override
+    {
+        Super::StartUp();
+
+        VCamera* Camera = World.GetCamera();
+        Camera->Dir = { 15.0f, 180.0f, 0.0f };
+        Camera->ZFarClip = 3000000.0f;
+
+        World.GetTerrain()->GenerateTerrain("Assets/Terrains/Large/Heightmap.bmp", "Assets/Terrains/RockyLand/Texture.bmp", 1000000.0f, 250000.0f, EShadeMode::Gouraud);
+    }
+};
+
+class GGrandTerrainScene : public GGameState
+{
+public:
+    using Super = GGameState;
+
+protected:
+    virtual void StartUp() override
+    {
+        Super::StartUp();
+
+        VCamera* Camera = World.GetCamera();
+        Camera->Pos = { 50000.0f, 0.0f, -500000.0f };
+        Camera->Dir = { 45.0f, -15.0f, 0.0f };
+        Camera->ZFarClip = 5000000.0f;
+        World.GetTerrain()->GenerateTerrain("Assets/Terrains/Grand/Heightmap.png", "Assets/Terrains/Grand/Texture.png", 2000000.0f, 2000000.0f, EShadeMode::Gouraud);
+    }
+};
+
+void GGameState::ProcessInput(f32 DeltaTime)
+{
+    VCamera* Camera = World.GetCamera();
+
+    f32 ShiftModifier = (Input.IsKeyDown(EKeycode::LShift) ? 150.0f : 1.0f);
+
+    f32 CamPosSpeed = 0.5f * DeltaTime * ShiftModifier;
+    if (Input.IsKeyDown(EKeycode::W))
+    {
+        Camera->Pos.X += Math.FastSin(Camera->Dir.Y) * CamPosSpeed;
+        Camera->Pos.Z += Math.FastCos(Camera->Dir.Y) * CamPosSpeed;
+    }
+    if (Input.IsKeyDown(EKeycode::S))
+    {
+        Camera->Pos.X -= Math.FastSin(Camera->Dir.Y) * CamPosSpeed;
+        Camera->Pos.Z -= Math.FastCos(Camera->Dir.Y) * CamPosSpeed;
+    }
+
+    if (Input.IsKeyDown(EKeycode::Space)) Camera->Pos.Y += CamPosSpeed * 5.0f;
+    if (Input.IsKeyDown(EKeycode::C))     Camera->Pos.Y -= CamPosSpeed * 5.0f;
+
+    f32 CamDirSpeed = 0.1f * DeltaTime;
+    if (Input.IsKeyDown(EKeycode::Left))  Camera->Dir.Y -= CamDirSpeed;
+    if (Input.IsKeyDown(EKeycode::Right)) Camera->Dir.Y += CamDirSpeed;
+    if (Input.IsKeyDown(EKeycode::Up))    Camera->Dir.X -= CamDirSpeed;
+    if (Input.IsKeyDown(EKeycode::Down))  Camera->Dir.X += CamDirSpeed;
+
+    if (Input.IsKeyDown(EKeycode::Backspace)) Config.RenderSpec.bRenderSolid ^= true;
+
+    if (Input.IsKeyDown(EKeycode::F1)) World.ChangeState<GLargeTerrainScene>();
+    if (Input.IsKeyDown(EKeycode::F2)) World.ChangeState<GGrandTerrainScene>();
+    if (Input.IsKeyDown(EKeycode::F3)) World.ChangeState<GModelsScene>();
+
+    if (Input.IsKeyDown(EKeycode::F12)) Config.RenderSpec.PostProcessColorCorrection = { 1.0f, 1.0f, 1.0f };
+    if (Input.IsKeyDown(EKeycode::F5)) Config.RenderSpec.PostProcessColorCorrection = { 1.25f, 1.1f, 1.0f };
+    if (Input.IsKeyDown(EKeycode::F6)) Config.RenderSpec.PostProcessColorCorrection = { 1.25f, 1.25f, 1.0f };
+    if (Input.IsKeyDown(EKeycode::F7)) Config.RenderSpec.PostProcessColorCorrection = { 1.0f, 1.25f, 1.0f };
+    if (Input.IsKeyDown(EKeycode::F8)) Config.RenderSpec.PostProcessColorCorrection = { 1.25f, 1.0f, 1.25f };
+    if (Input.IsKeyDown(EKeycode::F9)) Config.RenderSpec.PostProcessColorCorrection = { 1.0f, 1.0f, 1.25f };
+
+    if (Input.IsKeyDown(EKeycode::Escape)) Engine.Stop();
+}
 
 }
 
 int main(int Argc, char** Argv)
 {
-    return Engine.Run<Game::GTerrainScene>(Argc, Argv);
+    return Engine.Run<Game::GModelsScene>(Argc, Argv);
 }

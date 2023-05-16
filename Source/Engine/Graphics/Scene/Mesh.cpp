@@ -57,9 +57,9 @@ void VMesh::Destroy()
     VLN_SAFE_DELETE_ARRAY(HeadLocalVtxList);
     VLN_SAFE_DELETE_ARRAY(HeadTransVtxList);
     VLN_SAFE_DELETE_ARRAY(PolyList);
+    VLN_SAFE_DELETE_ARRAY(TextureCoordsList);
     VLN_SAFE_DELETE_ARRAY(AverageRadiusList);
     VLN_SAFE_DELETE_ARRAY(MaxRadiusList);
-    VLN_SAFE_DELETE_ARRAY(TextureCoordsList);
 }
 
 void VMesh::ResetRenderState()
@@ -870,6 +870,8 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
 
 void VMesh::GenerateTerrain(const char* HeightMap, const char* Texture, f32 Size, f32 Height, EShadeMode ShadeMode)
 {
+    Destroy();
+
     // Load texture in terrain material
     VMaterial* Material = World.AddMaterial();
     Material->Texture.Load(Texture, { 1.0f, 1.0f, 1.0f }, 1);

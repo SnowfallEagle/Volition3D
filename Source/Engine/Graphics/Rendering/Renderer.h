@@ -72,6 +72,7 @@ public:
     i32 GetScreenHeight() const;
 
     void SetTerrain(VMesh& TerrainMesh);
+    void RemoveTerrain();
 
     void TransformLights(const VCamera& Camera);
 
@@ -102,6 +103,9 @@ private:
     void SetInterpolators();
     void RenderSolid(const VRenderList* RenderList);
     void RenderWire(const VRenderList* RenderList);
+
+public:
+    VLN_DEFINE_ALIGN_OPERATORS_SSE()
 
     friend class VSurface;
     friend class VMesh;
@@ -137,6 +141,11 @@ VLN_FINLINE i32 VRenderer::GetScreenWidth() const
 VLN_FINLINE i32 VRenderer::GetScreenHeight() const
 {
     return Config.RenderSpec.TargetSize.Y;
+}
+
+VLN_FINLINE void VRenderer::RemoveTerrain()
+{
+    TerrainRenderList->ResetList();
 }
 
 }
