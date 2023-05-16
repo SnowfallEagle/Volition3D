@@ -28,14 +28,14 @@ VLN_DEFINE_LOG_CHANNEL(hLogRenderList, "RenderList");
 VLN_DECL_ALIGN_SSE() class VRenderList
 {
 public:
-    i32 MaxPoly;
+    i32 MaxPoly = 0;
 
-    i32 NumPoly;
-    i32 NumAdditionalPoly;
+    i32 NumPoly = 0;
+    i32 NumAdditionalPoly = 0;
 
     b8 bTerrain = false;
 
-    VPolyFace* PolyList;
+    VPolyFace* PolyList = nullptr;
 
 public:
     VRenderList(i32 InMaxPoly)
@@ -44,8 +44,7 @@ public:
         PolyList = new VPolyFace[InMaxPoly];
     }
 
-    // @TODO: Do we inherit?
-    virtual ~VRenderList()
+    ~VRenderList()
     {
         delete[] PolyList;
     }

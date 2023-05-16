@@ -544,14 +544,14 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
             b8 bAppearFirstTime;
         };
 
+        Line = FindLineCOB("Faces", File, Buffer, BufferSize);
+        std::sscanf(Line, "Faces %d", &NumPoly);
+
         i32 NumMaterialsInModel = 0;
         TArray<VMaterialInfo> MaterialInfoByIndex(MaxMaterialsPerModel, { nullptr, true });
-        TArray<i32> MaterialIndexByPolyIndex(MaxPoly, 0);
+        TArray<i32> MaterialIndexByPolyIndex(NumPoly, 0);
 
         {
-            Line = FindLineCOB("Faces", File, Buffer, BufferSize);
-            std::sscanf(Line, "Faces %d", &NumPoly);
-
             for (i32f i = 0; i < NumPoly; ++i)
             {
                 i32 DummyInt;
