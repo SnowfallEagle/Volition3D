@@ -26,6 +26,7 @@ void VRenderer::StartUp()
     // Create video and back surfaces
     {
         VideoSurface.Create(SDLSurface);
+        VideoSurface.bDestroyable = false;
 
         /* @NOTE:
             Set TargetSize as expected WindowSize, because in fullscreen we couldn't get really 10x10 window size,
@@ -55,7 +56,7 @@ void VRenderer::StartUp()
     {
         static constexpr i32f CharsPerLine = 80;
         static constexpr f32 PointDivPixel = 0.75f;
-        static constexpr f32 QualityMultiplier = 1.0f;
+        static constexpr f32 QualityMultiplier = 2.0f;
 
         const i32 Res = TTF_Init();
         VLN_ASSERT(Res == 0);

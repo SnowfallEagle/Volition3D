@@ -15,6 +15,12 @@ void VSurface::Create(SDL_Surface* InSDLSurface)
     Height = InSDLSurface->h;
 }
 
+VSurface::VSurface()
+{
+    Memory.MemSetByte(this, 0, sizeof(*this));
+    bDestroyable = true;
+}
+
 void VSurface::Create(i32 InWidth, i32 InHeight)
 {
     Destroy();
@@ -48,7 +54,7 @@ void VSurface::Load(const char* Path)
 
 void VSurface::Destroy()
 {
-    if (SDLSurface)
+    if (bDestroyable && SDLSurface)
     {
         SDL_FreeSurface(SDLSurface);
         SDLSurface = nullptr;
@@ -56,9 +62,11 @@ void VSurface::Destroy()
 
     Buffer = nullptr;
     Pitch = 0;
-    bLocked = false;
+
     Width = 0;
     Height = 0;
+
+    bLocked = false;
 }
 
 void VSurface::CorrectColorsFast(const VVector3& ColorCorrection)

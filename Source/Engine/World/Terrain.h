@@ -5,6 +5,7 @@
 namespace Volition
 {
 
+// @TODO: Maybe use only Mesh in World???
 class VTerrain : public VEntity
 {
 public:

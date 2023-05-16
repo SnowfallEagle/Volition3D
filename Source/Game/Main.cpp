@@ -191,6 +191,11 @@ public:
         if (Input.IsKeyDown(EKeycode::Up))    Camera->Dir.X -= CamDirSpeed;
         if (Input.IsKeyDown(EKeycode::Down))  Camera->Dir.X += CamDirSpeed;
 
+        if (Input.IsKeyDown(EKeycode::M))
+        {
+            World.ChangeState<GTestGameState>();
+        }
+
         Renderer.DrawDebugText("FPS: %.2f", 1000.0f / DeltaTime);
     }
 };
@@ -199,5 +204,5 @@ public:
 
 int main(int Argc, char** Argv)
 {
-    return Engine.Run<Game::GTestGameState>(Argc, Argv);
+    return Engine.Run<Game::GTerrainScene>(Argc, Argv);
 }

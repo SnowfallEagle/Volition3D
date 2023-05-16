@@ -52,11 +52,14 @@ inline i32 VEngine::Run(i32 Argc, char** Argv)
 
     while (bRunning)
     {
+        // Get delta time
         Time.TickFrame();
 
+        // Process all events
         Window.ProcessEvents();
         Input.ProcessEvents();
 
+        // Update world
         World.Update(Time.GetDeltaTime());
 
         i32f FixedUpdates = Time.GetNumFixedUpdates();
@@ -65,12 +68,14 @@ inline i32 VEngine::Run(i32 Argc, char** Argv)
             World.FixedUpdate(Time.GetFixedDeltaTime());
         }
 
+        // Render frame
         Renderer.PreRender();
         Renderer.Render();
         Renderer.PostProcess();
         Renderer.RenderUI();
         Renderer.PostRender();
 
+        // Synchronize fps
         Time.SyncFrame();
     }
 

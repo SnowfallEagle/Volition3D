@@ -10,6 +10,12 @@
 namespace Volition
 {
 
+enum class EWorldShutDownReason
+{
+    Final,
+    Reset
+};
+
 class VWorld
 {
 private:
@@ -19,6 +25,7 @@ private:
 
 private:
     VGameState* GameState;
+    VGameState* NextGameState;
 
     TArray<VEntity*> Entities;
     TArray<VMaterial> Materials;
@@ -33,9 +40,9 @@ private:
     VTerrain* Terrain;
 
 public:
-    template<typename GameStateT>
+    template<typename GameStateT = VGameState>
     void StartUp();
-    void ShutDown();
+    void ShutDown(EWorldShutDownReason Reason = EWorldShutDownReason::Final);
 
     void Update(f32 DeltaTime);
     void FixedUpdate(f32 FixedDeltaTime);
@@ -48,6 +55,9 @@ public:
 
     VLight* SpawnLight(ELightType Type);
     VMaterial* AddMaterial();
+
+    template<typename GameStateT = VGameState>
+    void ChangeState();
 
     VLN_FINLINE VCamera* GetCamera() const
     {
@@ -64,26 +74,18 @@ public:
         OccluderLight = Light;
     }
 
+private:
+    void StartUp(VGameState* InGameState);
+
     friend class VRenderer;
 };
 
 inline VWorld World;
 
 template<typename GameStateT>
-void VWorld::StartUp()
+VLN_FINLINE void VWorld::StartUp()
 {
-    Entities.Resize(MinEntitiesCapacity);
-    Materials.Resize(MinMaterialsCapacity);
-    Lights.Resize(MinLightsCapacity);
-    OccluderLight = nullptr;
-
-    Camera = new VCamera();
-    Camera->Init(ECameraAttr::Euler, { 0.0f, 1000.0f, 1500.0f }, { 25.0f, 180.0f, 0.0f }, VVector4(), 90.0f, 100.0f, 1000000.0f);
-
-    Terrain = new VTerrain();
-
-    GameState = new GameStateT();
-    GameState->StartUp();
+    StartUp(new GameStateT());
 }
 
 template<typename T>
@@ -92,6 +94,12 @@ T* VWorld::SpawnEntity()
     VEntity* Entity = Entities.EmplaceBack(new T());
     Entity->Init();
     return (T*)Entity;
+}
+
+template<typename GameStateT>
+VLN_FINLINE void VWorld::ChangeState()
+{
+    NextGameState = new GameStateT();
 }
 
 }

@@ -4,13 +4,29 @@
 namespace Volition
 {
 
-void VWorld::ShutDown()
+void VWorld::ShutDown(EWorldShutDownReason Reason)
 {
     if (GameState)
     {
         GameState->ShutDown();
         delete GameState;
+        GameState = nullptr;
     }
+
+    if (Reason == EWorldShutDownReason::Final)
+    {
+        VLN_SAFE_DELETE(NextGameState);
+        VLN_SAFE_DELETE(Camera);
+    }
+
+    if (Terrain)
+    {
+        Terrain->Destroy();
+        delete Terrain;
+        Terrain = nullptr;
+    }
+
+    Cubemap.Destroy();
 
     for (const auto Entity : Entities)
     {
@@ -20,28 +36,35 @@ void VWorld::ShutDown()
             delete Entity;
         }
     }
+    Entities.Clear();
 
     for (auto& Material : Materials)
     {
         Material.Destroy();
     }
-
-    Terrain->Destroy();
-    delete Terrain;
-
-    Cubemap.Destroy();
-
-    VLN_SAFE_DELETE(Camera);
+    Materials.Clear();
 }
 
 void VWorld::Update(f32 DeltaTime)
 {
-    if (GameState)
+    // Check new state
+    if (NextGameState)
     {
-        GameState->Update(DeltaTime);
+        World.ShutDown(EWorldShutDownReason::Reset);
+        World.StartUp(NextGameState);
     }
 
-    Terrain->Update(DeltaTime);
+    // Update world stuff
+    GameState->Update(DeltaTime);
+
+    // @TODO: Camera->Update()
+    {
+        Camera->Dir.Y = Math.Mod(Camera->Dir.Y, 360.0f);
+        if (Camera->Dir.Y < 0.0f)
+        {
+            Camera->Dir.Y += 360.0f;
+        }
+    }
 
     for (const auto Entity : Entities)
     {
@@ -49,12 +72,6 @@ void VWorld::Update(f32 DeltaTime)
         {
             Entity->Update(DeltaTime);
         }
-    }
-
-    Camera->Dir.Y = Math.Mod(Camera->Dir.Y, 360.0f);
-    if (Camera->Dir.Y < 0.0f)
-    {
-        Camera->Dir.Y += 360.0f;
     }
 }
 
@@ -72,16 +89,7 @@ void VWorld::DestroyEntity(VEntity* Entity)
 {
     if (Entity)
     {
-        i32f Length = Entities.GetLength();
-        for (i32f i = 0; i < Length; ++i)
-        {
-            if (Entities[i] == Entity)
-            {
-                Entities[i] = nullptr;
-                return;
-            }
-        }
-
+        std::remove(Entities.begin(), Entities.end(), Entity);
         Entity->Destroy();
         delete Entity;
     }
@@ -104,6 +112,24 @@ VMaterial* VWorld::AddMaterial()
     VMaterial& Material = Materials.EmplaceBack(VMaterial());
     Material.Init();
     return &Material;
+}
+
+void VWorld::StartUp(VGameState* InGameState)
+{
+    Entities.Resize(MinEntitiesCapacity);
+    Materials.Resize(MinMaterialsCapacity);
+
+    Lights.Resize(MinLightsCapacity);
+    OccluderLight = nullptr;
+
+    Camera = new VCamera();
+    Camera->Init(ECameraAttr::Euler, { 0.0f, 1000.0f, 1500.0f }, { 25.0f, 180.0f, 0.0f }, VVector4(), 90.0f, 100.0f, 1000000.0f);
+
+    Terrain = new VTerrain();
+
+    GameState = InGameState;
+    GameState->StartUp();
+    NextGameState = nullptr;
 }
 
 }
