@@ -54,23 +54,23 @@ public:
         f32 CamPosSpeed = 0.5f * DeltaTime * ShiftModifier;
         if (Input.IsKeyDown(EKeycode::W))
         {
-            Camera->Pos.X += Math.FastSin(Camera->Dir.Y) * CamPosSpeed;
-            Camera->Pos.Z += Math.FastCos(Camera->Dir.Y) * CamPosSpeed;
+            Camera->Position.X += Math.FastSin(Camera->Direction.Y) * CamPosSpeed;
+            Camera->Position.Z += Math.FastCos(Camera->Direction.Y) * CamPosSpeed;
         }
         if (Input.IsKeyDown(EKeycode::S))
         {
-            Camera->Pos.X -= Math.FastSin(Camera->Dir.Y) * CamPosSpeed;
-            Camera->Pos.Z -= Math.FastCos(Camera->Dir.Y) * CamPosSpeed;
+            Camera->Position.X -= Math.FastSin(Camera->Direction.Y) * CamPosSpeed;
+            Camera->Position.Z -= Math.FastCos(Camera->Direction.Y) * CamPosSpeed;
         }
 
         f32 CamDirSpeed = 0.1f * DeltaTime;
-        if (Input.IsKeyDown(EKeycode::Left))  Camera->Dir.Y -= CamDirSpeed;
-        if (Input.IsKeyDown(EKeycode::Right)) Camera->Dir.Y += CamDirSpeed;
-        if (Input.IsKeyDown(EKeycode::Up))    Camera->Dir.X -= CamDirSpeed;
-        if (Input.IsKeyDown(EKeycode::Down))  Camera->Dir.X += CamDirSpeed;
+        if (Input.IsKeyDown(EKeycode::Left))  Camera->Direction.Y -= CamDirSpeed;
+        if (Input.IsKeyDown(EKeycode::Right)) Camera->Direction.Y += CamDirSpeed;
+        if (Input.IsKeyDown(EKeycode::Up))    Camera->Direction.X -= CamDirSpeed;
+        if (Input.IsKeyDown(EKeycode::Down))  Camera->Direction.X += CamDirSpeed;
 
-        if (Input.IsKeyDown(EKeycode::Space)) Camera->Pos.Y += CamPosSpeed * ShiftModifier;
-        if (Input.IsKeyDown(EKeycode::C))     Camera->Pos.Y -= CamPosSpeed * ShiftModifier;
+        if (Input.IsKeyDown(EKeycode::Space)) Camera->Position.Y += CamPosSpeed * ShiftModifier;
+        if (Input.IsKeyDown(EKeycode::C))     Camera->Position.Y -= CamPosSpeed * ShiftModifier;
 
         VMatrix44 Rot = VMatrix44::Identity;
         f32 Speed = 0.05f * DeltaTime;
@@ -188,7 +188,7 @@ protected:
         Super::StartUp();
 
         VCamera* Camera = World.GetCamera();
-        Camera->Dir = { 15.0f, 180.0f, 0.0f };
+        Camera->Direction = { 15.0f, 180.0f, 0.0f };
         Camera->ZFarClip = 3000000.0f;
 
         World.GetTerrain()->GenerateTerrain("Assets/Terrains/Large/Heightmap.bmp", "Assets/Terrains/RockyLand/Texture.bmp", 1000000.0f, 250000.0f, EShadeMode::Gouraud);
@@ -206,8 +206,8 @@ protected:
         Super::StartUp();
 
         VCamera* Camera = World.GetCamera();
-        Camera->Pos = { 50000.0f, 0.0f, -500000.0f };
-        Camera->Dir = { 45.0f, -15.0f, 0.0f };
+        Camera->Position = { 50000.0f, 0.0f, -500000.0f };
+        Camera->Direction = { 45.0f, -15.0f, 0.0f };
         Camera->ZFarClip = 5000000.0f;
         World.GetTerrain()->GenerateTerrain("Assets/Terrains/Grand/Heightmap.png", "Assets/Terrains/Grand/Texture.png", 2000000.0f, 2000000.0f, EShadeMode::Gouraud);
     }
@@ -222,23 +222,23 @@ void GGameState::ProcessInput(f32 DeltaTime)
     f32 CamPosSpeed = 0.5f * DeltaTime * ShiftModifier;
     if (Input.IsKeyDown(EKeycode::W))
     {
-        Camera->Pos.X += Math.FastSin(Camera->Dir.Y) * CamPosSpeed;
-        Camera->Pos.Z += Math.FastCos(Camera->Dir.Y) * CamPosSpeed;
+        Camera->Position.X += Math.FastSin(Camera->Direction.Y) * CamPosSpeed;
+        Camera->Position.Z += Math.FastCos(Camera->Direction.Y) * CamPosSpeed;
     }
     if (Input.IsKeyDown(EKeycode::S))
     {
-        Camera->Pos.X -= Math.FastSin(Camera->Dir.Y) * CamPosSpeed;
-        Camera->Pos.Z -= Math.FastCos(Camera->Dir.Y) * CamPosSpeed;
+        Camera->Position.X -= Math.FastSin(Camera->Direction.Y) * CamPosSpeed;
+        Camera->Position.Z -= Math.FastCos(Camera->Direction.Y) * CamPosSpeed;
     }
 
-    if (Input.IsKeyDown(EKeycode::Space)) Camera->Pos.Y += CamPosSpeed * 5.0f;
-    if (Input.IsKeyDown(EKeycode::C))     Camera->Pos.Y -= CamPosSpeed * 5.0f;
+    if (Input.IsKeyDown(EKeycode::Space)) Camera->Position.Y += CamPosSpeed * 5.0f;
+    if (Input.IsKeyDown(EKeycode::C))     Camera->Position.Y -= CamPosSpeed * 5.0f;
 
     f32 CamDirSpeed = 0.1f * DeltaTime;
-    if (Input.IsKeyDown(EKeycode::Left))  Camera->Dir.Y -= CamDirSpeed;
-    if (Input.IsKeyDown(EKeycode::Right)) Camera->Dir.Y += CamDirSpeed;
-    if (Input.IsKeyDown(EKeycode::Up))    Camera->Dir.X -= CamDirSpeed;
-    if (Input.IsKeyDown(EKeycode::Down))  Camera->Dir.X += CamDirSpeed;
+    if (Input.IsKeyDown(EKeycode::Left))  Camera->Direction.Y -= CamDirSpeed;
+    if (Input.IsKeyDown(EKeycode::Right)) Camera->Direction.Y += CamDirSpeed;
+    if (Input.IsKeyDown(EKeycode::Up))    Camera->Direction.X -= CamDirSpeed;
+    if (Input.IsKeyDown(EKeycode::Down))  Camera->Direction.X += CamDirSpeed;
 
     if (Input.IsKeyDown(EKeycode::Backspace)) Config.RenderSpec.bRenderSolid ^= true;
 

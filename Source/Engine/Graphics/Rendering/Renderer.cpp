@@ -149,7 +149,7 @@ void VRenderer::Render()
     VCamera& Camera = *World.Camera;
     Camera.BuildWorldToCameraMat44();
 
-    f32 CameraAngle = Math.Mod(Camera.Dir.Y + World.CubemapMovementEffectAngle, 360.0f);
+    f32 CameraAngle = Math.Mod(Camera.Direction.Y + World.CubemapMovementEffectAngle, 360.0f);
 
     // Process cubemap
     VSurface& Cubemap = World.Cubemap;

@@ -241,7 +241,7 @@ void VRenderList::RemoveBackfaces(const VCamera& Cam)
             VVector4 N;
             VVector4::Cross(U, V, N);
 
-            const VVector4 View = Cam.Pos - Poly->LocalVtx[0].Position;
+            const VVector4 View = Cam.Position - Poly->LocalVtx[0].Position;
 
             // If > 0 then N watch in the same direction as View vector and visible
             if (VVector4::Dot(View, N) / (N.GetLength() * View.GetLength()) < -0.45f)
@@ -270,7 +270,7 @@ void VRenderList::RemoveBackfaces(const VCamera& Cam)
             VVector4 N;
             VVector4::Cross(U, V, N);
 
-            const VVector4 View = Cam.Pos - Poly->LocalVtx[0].Position;
+            const VVector4 View = Cam.Position - Poly->LocalVtx[0].Position;
 
             // If > 0 then N watch in the same direction as View vector and visible
             if (VVector4::Dot(View, N) < 0.0f)

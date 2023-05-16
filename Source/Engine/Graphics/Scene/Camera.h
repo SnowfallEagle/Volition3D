@@ -32,8 +32,8 @@ VLN_DECL_ALIGN_SSE() class VCamera
 public:
     u32 Attr;
 
-    VPoint4 Pos;
-    VVector4 Dir; /** Euler angles or look at direction */
+    VPoint4 Position;
+    VVector4 Direction; /** Euler angles or look at direction */
 
     VVector4 U, V, N;
     VPoint4 Target;

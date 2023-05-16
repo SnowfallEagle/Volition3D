@@ -61,10 +61,10 @@ void VWorld::Update(f32 DeltaTime)
 
     // @TODO: Camera->Update()
     {
-        Camera->Dir.Y = Math.Mod(Camera->Dir.Y, 360.0f);
-        if (Camera->Dir.Y < 0.0f)
+        Camera->Direction.Y = Math.Mod(Camera->Direction.Y, 360.0f);
+        if (Camera->Direction.Y < 0.0f)
         {
-            Camera->Dir.Y += 360.0f;
+            Camera->Direction.Y += 360.0f;
         }
     }
 

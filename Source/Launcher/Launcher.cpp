@@ -222,7 +222,7 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 
     case WM_DESTROY:
     {
-        PostQuitMessage(0);
+        PositiontQuitMessage(0);
     } return 0;
     }
 

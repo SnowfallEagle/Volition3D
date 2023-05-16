@@ -8,8 +8,8 @@ void VCamera::Init(u32 InAttr, const VPoint4& InPos, const VVector4& InDir, cons
 {
     Attr = InAttr;
 
-    Pos = InPos;
-    Dir = InDir;
+    Position = InPos;
+    Direction = InDir;
 
     U = { 1.0f, 0.0f, 0.0f, 1.0f };
     V = { 0.0f, 1.0f, 0.0f, 1.0f };
@@ -89,12 +89,12 @@ void VCamera::BuildWorldToCameraEulerMat44(ERotateSeq Seq)
         1.0f, 0.0f, 0.0f, 0.0f,
         0.0f, 1.0f, 0.0f, 0.0f,
         0.0f, 0.0f, 1.0f, 0.0f,
-        -Pos.X, -Pos.Y, -Pos.Z, 1.0f,
+        -Position.X, -Position.Y, -Position.Z, 1.0f,
     };
 
     // Rotation X
-    SinA = -Math.FastSin(Dir.X); // sin(-a) = -sin(a)
-    CosA = Math.FastCos(Dir.X);  // cos(-a) = cos(a)
+    SinA = -Math.FastSin(Direction.X); // sin(-a) = -sin(a)
+    CosA = Math.FastCos(Direction.X);  // cos(-a) = cos(a)
 
     InvX = {
         1.0f, 0.0f, 0.0f, 0.0f,
@@ -104,8 +104,8 @@ void VCamera::BuildWorldToCameraEulerMat44(ERotateSeq Seq)
     };
 
     // Rotation Y
-    SinA = -Math.FastSin(Dir.Y); // sin(-a) = -sin(a)
-    CosA = Math.FastCos(Dir.Y);  // cos(-a) = cos(a)
+    SinA = -Math.FastSin(Direction.Y); // sin(-a) = -sin(a)
+    CosA = Math.FastCos(Direction.Y);  // cos(-a) = cos(a)
 
     InvY = {
         CosA, 0.0f, -SinA, 0.0f,
@@ -115,8 +115,8 @@ void VCamera::BuildWorldToCameraEulerMat44(ERotateSeq Seq)
     };
 
     // Rotation Z
-    SinA = -Math.FastSin(Dir.Z); // sin(-a) = -sin(a)
-    CosA = Math.FastCos(Dir.Z);  // cos(-a) = cos(a)
+    SinA = -Math.FastSin(Direction.Z); // sin(-a) = -sin(a)
+    CosA = Math.FastCos(Direction.Z);  // cos(-a) = cos(a)
 
     InvZ = {
         CosA, SinA, 0.0f, 0.0f,
@@ -152,24 +152,24 @@ void VCamera::BuildWorldToCameraUVNMat44(EUVNMode Mode)
         1.0f, 0.0f, 0.0f, 0.0f,
         0.0f, 1.0f, 0.0f, 0.0f,
         0.0f, 0.0f, 1.0f, 0.0f,
-        -Pos.X, -Pos.Y, -Pos.Z, 1.0f
+        -Position.X, -Position.Y, -Position.Z, 1.0f
     };
 
     // Compute target for Spherical mode
     if (Mode == EUVNMode::Spherical)
     {
-        // Elevation - Dir.X
-        // Heading - Dir.Y
+        // Elevation - Direction.X
+        // Heading - Direction.Y
 
-        const f32 SinPhi = Math.FastSin(Dir.X);
+        const f32 SinPhi = Math.FastSin(Direction.X);
 
-        Target.X = -1 * SinPhi * Math.FastSin(Dir.X);
-        Target.Y = 1 * Math.FastCos(Dir.Y);
-        Target.Z = 1 * SinPhi * Math.FastCos(Dir.Z);
+        Target.X = -1 * SinPhi * Math.FastSin(Direction.X);
+        Target.Y = 1 * Math.FastCos(Direction.Y);
+        Target.Z = 1 * SinPhi * Math.FastCos(Direction.Z);
     }
 
     // Compute UVN
-    N = Target - Pos;
+    N = Target - Position;
     V = { 0.0f, 1.0f, 0.0f, 1.0f };
     VVector4::Cross(V, N, U);
     VVector4::Cross(N, U, V);
