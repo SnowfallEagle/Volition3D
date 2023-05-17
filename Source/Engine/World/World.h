@@ -33,8 +33,8 @@ private:
     TArray<VLight> Lights;
     VLight* OccluderLight;
 
-    VSurface Cubemap;
-    f32 CubemapMovementEffectAngle = 0.0f;
+    VSurface Environment2D;
+    f32 Environment2DMovementEffectAngle = 0.0f;
 
     VCamera* Camera;
     VTerrain* Terrain;
@@ -52,7 +52,7 @@ public:
     void DestroyEntity(VEntity* Entity);
 
     VLight* SpawnLight(ELightType Type);
-    void SetCubemap(const char* Path);
+    void SetEnvironment2D(const char* Path);
 
     VMaterial* AddMaterial();
 

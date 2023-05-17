@@ -28,7 +28,7 @@ void VWorld::ShutDown(EWorldShutDownReason Reason)
         Renderer.RemoveTerrain();
     }
 
-    Cubemap.Destroy();
+    Environment2D.Destroy();
 
     for (const auto Entity : Entities)
     {
@@ -79,11 +79,11 @@ void VWorld::Update(f32 DeltaTime)
 
 void VWorld::FixedUpdate(f32 FixedDeltaTime)
 {
-    static constexpr f32 CubemapMovementEffectSpeed = 0.00175f;
-    CubemapMovementEffectAngle = Math.Mod(CubemapMovementEffectAngle + (CubemapMovementEffectSpeed * FixedDeltaTime), 360.0f);
-    if (CubemapMovementEffectAngle < 0.0f)
+    static constexpr f32 Environment2DMovementEffectSpeed = 0.00175f;
+    Environment2DMovementEffectAngle = Math.Mod(Environment2DMovementEffectAngle + (Environment2DMovementEffectSpeed * FixedDeltaTime), 360.0f);
+    if (Environment2DMovementEffectAngle < 0.0f)
     {
-        CubemapMovementEffectAngle += 360.0f;
+        Environment2DMovementEffectAngle += 360.0f;
     }
 }
 
@@ -97,9 +97,9 @@ void VWorld::DestroyEntity(VEntity* Entity)
     }
 }
 
-void VWorld::SetCubemap(const char* Path)
+void VWorld::SetEnvironment2D(const char* Path)
 {
-    Cubemap.Load(Path);
+    Environment2D.Load(Path);
 }
 
 VLight* VWorld::SpawnLight(ELightType Type)

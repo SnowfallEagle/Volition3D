@@ -33,7 +33,7 @@ public:
         Camera = World.GetCamera();
         Camera->Init(ECameraAttr::Euler, { 0.0f, 1000.0f, 1500.0f }, { 25.0f, 180.0f, 0 }, VVector4(), 75, 100, 1000000);
 
-        World.SetCubemap("Assets/Cubemaps/Cubemap.png");
+        World.SetEnvironment2D("Assets/Environment2D/Texture.png");
         // World.GetTerrain()->GenerateTerrain("Assets/Terrains/Large/Heightmap.bmp", "Assets/Terrains/RockyLand/Texture.bmp", 1000000.0f, 250000.0f, EShadeMode::Gouraud);
         World.GetTerrain()->GenerateTerrain("Assets/Terrains/Medium/Heightmap.bmp", "Assets/Terrains/Common/Texture.bmp", 10000.0f, 2500.0f, EShadeMode::Gouraud);
 
@@ -141,7 +141,7 @@ class GGameState : public VGameState
 protected:
     virtual void StartUp() override
     {
-        World.SetCubemap("Assets/Cubemaps/Cubemap.png");
+        World.SetEnvironment2D("Assets/Environment2D/Texture.png");
 
         World.SpawnLight(ELightType::Ambient);
         const auto OccluderLight = World.SpawnLight(ELightType::Infinite);
@@ -193,7 +193,7 @@ protected:
         Camera->Direction = { 15.0f, 180.0f, 0.0f };
         Camera->ZFarClip = 3000000.0f;
 
-        World.GetTerrain()->GenerateTerrain("Assets/Terrains/Large/Heightmap.bmp", "Assets/Terrains/RockyLand/Texture.bmp", 1000000.0f, 250000.0f, EShadeMode::Gouraud);
+        World.GetTerrain()->GenerateTerrain("Assets/Terrains/Large/Heightmap.jpg", "Assets/Terrains/RockyLand/Texture.bmp", 1000000.0f, 250000.0f, EShadeMode::Gouraud);
     }
 };
 
@@ -247,6 +247,7 @@ void GGameState::ProcessInput(f32 DeltaTime)
     if (Input.IsKeyDown(EKeycode::F1)) World.ChangeState<GLargeTerrainScene>();
     if (Input.IsKeyDown(EKeycode::F2)) World.ChangeState<GGrandTerrainScene>();
     if (Input.IsKeyDown(EKeycode::F3)) World.ChangeState<GModelsScene>();
+    if (Input.IsKeyDown(EKeycode::F4)) World.ChangeState<GTestGameState>();
 
     if (Input.IsKeyDown(EKeycode::F12)) Config.RenderSpec.PostProcessColorCorrection = { 1.0f, 1.0f, 1.0f };
     if (Input.IsKeyDown(EKeycode::F5)) Config.RenderSpec.PostProcessColorCorrection = { 1.25f, 1.1f, 1.0f };

@@ -1000,6 +1000,7 @@ void VRenderList::Clip(const VCamera& Camera, EClipFlags::Type Flags)
                     NewPoly.TransVtx[V1].Z = Camera.ZNearClip;
 
                     Direction = NewPoly.TransVtx[V2].Position - NewPoly.TransVtx[V0].Position;
+                    // @FIXME: T2 == T1 ???
                     const f32 T2 = (Camera.ZNearClip - NewPoly.TransVtx[V0].Z) / Direction.Z;
 
                     NewPoly.TransVtx[V2].X = NewPoly.TransVtx[V0].X + Direction.X * T2;

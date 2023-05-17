@@ -147,23 +147,23 @@ void VRenderer::Render()
     VCamera& Camera = *World.Camera;
     Camera.BuildWorldToCameraMat44();
 
-    f32 CameraAngle = Math.Mod(Camera.Direction.Y + World.CubemapMovementEffectAngle, 360.0f);
+    f32 CameraAngle = Math.Mod(Camera.Direction.Y + World.Environment2DMovementEffectAngle, 360.0f);
 
-    // Process cubemap
-    VSurface& Cubemap = World.Cubemap;
-    if (Cubemap.SDLSurface && Cubemap.SDLSurface->pixels)
+    // Process 2D environment
+    VSurface& Environment2D = World.Environment2D;
+    if (Environment2D.SDLSurface && Environment2D.SDLSurface->pixels)
     {
-        // Blit first cubemap
+        // Blit first environment
         VRelativeRectInt Src;
-        Src.X = (i32)((CameraAngle / 360.0f) * (f32)World.Cubemap.Width + 0.5f);
+        Src.X = (i32)((CameraAngle / 360.0f) * (f32)World.Environment2D.Width + 0.5f);
         Src.Y = 0;
         Src.W = GetScreenWidth();
-        Src.H = Cubemap.Height;
+        Src.H = Environment2D.Height;
 
-        Cubemap.BlitHW(&Src, &BackSurface, nullptr);
+        Environment2D.BlitHW(&Src, &BackSurface, nullptr);
 
         // If we have empty space on screen on right - blit this area
-        i32f Remainder = Cubemap.Width - Src.X;
+        i32f Remainder = Environment2D.Width - Src.X;
         if (Remainder < GetScreenWidth())
         {
             Src.X = 0;
@@ -174,7 +174,7 @@ void VRenderer::Render()
             Dest.Y = 0;
             Dest.W = GetScreenWidth();
             Dest.H = GetScreenHeight();
-            Cubemap.BlitHW(&Src, &BackSurface, &Dest);
+            Environment2D.BlitHW(&Src, &BackSurface, &Dest);
         }
     }
 
