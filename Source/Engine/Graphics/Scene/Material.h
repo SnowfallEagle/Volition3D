@@ -8,16 +8,32 @@
 namespace Volition
 {
 
+namespace EMaterialAttr
+{
+	enum
+	{
+		TwoSided    = VLN_BIT(1),
+		Transparent = VLN_BIT(2),
+		Terrain     = VLN_BIT(3),
+
+		ShadeModeEmissive = VLN_BIT(4),
+		ShadeModeFlat     = VLN_BIT(5),
+		ShadeModeGouraud  = VLN_BIT(6),
+		ShadeModeTexture  = VLN_BIT(7),
+	};
+}
+
 class VMaterial
 {
 public:
-    u32 Attr; // @TODO: EPolyAttr
+    u32 Attr;
 
     VColorARGB Color;
-    f32 KAmbient, KDiffuse, KSpecular, Power;
-    // @TODO: Use it in lighting
+    f32 KAmbient, KDiffuse, Power;
     // @TODO: Do we check overflow?
-    VColorARGB RAmbient, RDiffuse, RSpecular; // K * Color
+    // @TODO: We need to compute RColors every changing of K or Color
+    // @TODO: Use it in lighting
+    VColorARGB RAmbient, RDiffuse; /** K*Color */
 
     VTexture Texture;
 

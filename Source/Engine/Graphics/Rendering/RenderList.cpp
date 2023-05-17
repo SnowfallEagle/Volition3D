@@ -10,18 +10,18 @@ b32 VRenderList::InsertPoly(const VPoly& Poly, const VVertex* VtxList, const VPo
         return false;
     }
 
-    PolyList[NumPoly].State = Poly.State;
-    PolyList[NumPoly].Attr = Poly.Attr;
-    PolyList[NumPoly].OriginalColor = Poly.OriginalColor;
-    PolyList[NumPoly].NormalLength = Poly.NormalLength;
-    PolyList[NumPoly].Material = Poly.Material;
+    VPolyFace& PolyFace = PolyList[NumPoly];
+
+    PolyFace.State = Poly.State;
+    PolyFace.Material = Poly.Material;
+    PolyFace.NormalLength = Poly.NormalLength;
 
     for (i32f i = 0; i < 3; ++i)
     {
-        PolyList[NumPoly].TransVtx[i] = PolyList[NumPoly].LocalVtx[i] = VtxList[Poly.VtxIndices[i]];
-        PolyList[NumPoly].TransVtx[i].TextureCoords = PolyList[NumPoly].LocalVtx[i].TextureCoords = TextureCoordsList[Poly.TextureCoordsIndices[i]];
+        PolyFace.TransVtx[i] = PolyFace.LocalVtx[i] = VtxList[Poly.VtxIndices[i]];
+        PolyFace.TransVtx[i].TextureCoords = PolyFace.LocalVtx[i].TextureCoords = TextureCoordsList[Poly.TextureCoordsIndices[i]];
 
-        PolyList[NumPoly].LitColor[i] = Poly.LitColor[i];
+        PolyFace.LitColor[i] = Poly.LitColor[i];
     }
 
     ++NumPoly;
@@ -36,7 +36,6 @@ b32 VRenderList::InsertPolyFace(const VPolyFace& Poly)
     }
 
     PolyList[NumPoly] = Poly;
-
     ++NumPoly;
 
     return true;
@@ -84,7 +83,7 @@ void VRenderList::ResetStateAndSaveList()
         }
 
         Poly.State &= ~(EPolyState::Clipped | EPolyState::Backface | EPolyState::Lit);
-        Poly.LitColor[2] = Poly.LitColor[1] = Poly.LitColor[0] = Poly.OriginalColor;
+        Poly.LitColor[2] = Poly.LitColor[1] = Poly.LitColor[0] = Poly.Material->Color;
     }
 }
 
@@ -229,7 +228,7 @@ void VRenderList::RemoveBackfaces(const VCamera& Cam)
             if (~Poly->State & EPolyState::Active ||
                 Poly->State & EPolyState::Clipped ||
                 Poly->State & EPolyState::Backface ||
-                Poly->Attr & EPolyAttr::TwoSided)
+                Poly->Material->Attr & EMaterialAttr::TwoSided)
             {
                 continue;
             }
@@ -259,7 +258,7 @@ void VRenderList::RemoveBackfaces(const VCamera& Cam)
             if (~Poly->State & EPolyState::Active  ||
                 Poly->State & EPolyState::Clipped  ||
                 Poly->State & EPolyState::Backface ||
-                Poly->Attr & EPolyAttr::TwoSided)
+                Poly->Material->Attr & EMaterialAttr::TwoSided)
             {
                 continue;
             }
@@ -298,8 +297,11 @@ void VRenderList::Light(const VCamera& Cam, const TArray<VLight>& Lights)
         // Set lit flag
         Poly->State |= EPolyState::Lit;
 
+        // Get material color
+        VColorARGB OriginalColor = Poly->Material->Color;
+
         // Do lighting
-        if (Poly->Attr & EPolyAttr::ShadeModeFlat)
+        if (Poly->Material->Attr & EMaterialAttr::ShadeModeFlat)
         {
             u32 RSum = 0;
             u32 GSum = 0;
@@ -322,9 +324,9 @@ void VRenderList::Light(const VCamera& Cam, const TArray<VLight>& Lights)
                 {
                 case ELightType::Ambient:
                 {
-                    RSum += (Poly->OriginalColor.R * Light.Color.R) / 256;
-                    GSum += (Poly->OriginalColor.G * Light.Color.G) / 256;
-                    BSum += (Poly->OriginalColor.B * Light.Color.B) / 256;
+                    RSum += (OriginalColor.R * Light.Color.R) / 256;
+                    GSum += (OriginalColor.G * Light.Color.G) / 256;
+                    BSum += (OriginalColor.B * Light.Color.B) / 256;
                 } break;
 
                 case ELightType::Infinite:
@@ -334,9 +336,9 @@ void VRenderList::Light(const VCamera& Cam, const TArray<VLight>& Lights)
                     {
                         // 128 used for fixed point to don't lose accuracy with integers
                         const i32 Intensity = (i32)( 128.0f * (Math.Abs(Dot) / SurfaceNormalLength) );
-                        RSum += (Poly->OriginalColor.R * Light.Color.R * Intensity) / (256 * 128);
-                        GSum += (Poly->OriginalColor.G * Light.Color.G * Intensity) / (256 * 128);
-                        BSum += (Poly->OriginalColor.B * Light.Color.B * Intensity) / (256 * 128);
+                        RSum += (OriginalColor.R * Light.Color.R * Intensity) / (256 * 128);
+                        GSum += (OriginalColor.G * Light.Color.G * Intensity) / (256 * 128);
+                        BSum += (OriginalColor.B * Light.Color.B * Intensity) / (256 * 128);
                     }
                 } break;
 
@@ -357,9 +359,9 @@ void VRenderList::Light(const VCamera& Cam, const TArray<VLight>& Lights)
                             (128.0f * Math.Abs(Dot)) / (SurfaceNormalLength * Distance * Atten)
                         );
 
-                        RSum += (Poly->OriginalColor.R * Light.Color.R * Intensity) / (256 * 128);
-                        GSum += (Poly->OriginalColor.G * Light.Color.G * Intensity) / (256 * 128);
-                        BSum += (Poly->OriginalColor.B * Light.Color.B * Intensity) / (256 * 128);
+                        RSum += (OriginalColor.R * Light.Color.R * Intensity) / (256 * 128);
+                        GSum += (OriginalColor.G * Light.Color.G * Intensity) / (256 * 128);
+                        BSum += (OriginalColor.B * Light.Color.B * Intensity) / (256 * 128);
                     }
                 } break;
 
@@ -379,9 +381,9 @@ void VRenderList::Light(const VCamera& Cam, const TArray<VLight>& Lights)
                             (128.0f * Math.Abs(Dot)) / (SurfaceNormalLength * Atten)
                         );
 
-                        RSum += (Poly->OriginalColor.R * Light.Color.R * Intensity) / (256 * 128);
-                        GSum += (Poly->OriginalColor.G * Light.Color.G * Intensity) / (256 * 128);
-                        BSum += (Poly->OriginalColor.B * Light.Color.B * Intensity) / (256 * 128);
+                        RSum += (OriginalColor.R * Light.Color.R * Intensity) / (256 * 128);
+                        GSum += (OriginalColor.G * Light.Color.G * Intensity) / (256 * 128);
+                        BSum += (OriginalColor.B * Light.Color.B * Intensity) / (256 * 128);
                     }
                 } break;
 
@@ -415,9 +417,9 @@ void VRenderList::Light(const VCamera& Cam, const TArray<VLight>& Lights)
                                 (SurfaceNormalLength * Atten)
                             );
 
-                            RSum += (Poly->OriginalColor.R * Light.Color.R * Intensity) / (256 * 128);
-                            GSum += (Poly->OriginalColor.G * Light.Color.G * Intensity) / (256 * 128);
-                            BSum += (Poly->OriginalColor.B * Light.Color.B * Intensity) / (256 * 128);
+                            RSum += (OriginalColor.R * Light.Color.R * Intensity) / (256 * 128);
+                            GSum += (OriginalColor.G * Light.Color.G * Intensity) / (256 * 128);
+                            BSum += (OriginalColor.B * Light.Color.B * Intensity) / (256 * 128);
                         }
                     }
                 } break;
@@ -430,9 +432,9 @@ void VRenderList::Light(const VCamera& Cam, const TArray<VLight>& Lights)
             if (BSum > 255) BSum = 255;
 
             // Put final color
-            Poly->LitColor[0] = MAP_ARGB32(Poly->OriginalColor.A, RSum, GSum, BSum);
+            Poly->LitColor[0] = MAP_ARGB32(OriginalColor.A, RSum, GSum, BSum);
         }
-        else if (Poly->Attr & EPolyAttr::ShadeModeGouraud)
+        else if (Poly->Material->Attr & EMaterialAttr::ShadeModeGouraud)
         {
             u32 RSum0 = 0;
             u32 RSum1 = 0;
@@ -463,9 +465,9 @@ void VRenderList::Light(const VCamera& Cam, const TArray<VLight>& Lights)
                 {
                 case ELightType::Ambient:
                 {
-                    const i32 RIntensity = (Poly->OriginalColor.R * Light.Color.R) / 256;
-                    const i32 GIntensity = (Poly->OriginalColor.G * Light.Color.G) / 256;
-                    const i32 BIntensity = (Poly->OriginalColor.B * Light.Color.B) / 256;
+                    const i32 RIntensity = (OriginalColor.R * Light.Color.R) / 256;
+                    const i32 GIntensity = (OriginalColor.G * Light.Color.G) / 256;
+                    const i32 BIntensity = (OriginalColor.B * Light.Color.B) / 256;
 
                     RSum0 += RIntensity;
                     RSum1 += RIntensity;
@@ -487,9 +489,9 @@ void VRenderList::Light(const VCamera& Cam, const TArray<VLight>& Lights)
                     {
                         // 128 used for fixed point to don't lose accuracy with integers
                         const i32 Intensity = (i32)(128.0f * Math.Abs(Dot));
-                        RSum0 += (Poly->OriginalColor.R * Light.Color.R * Intensity) / (256 * 128);
-                        GSum0 += (Poly->OriginalColor.G * Light.Color.G * Intensity) / (256 * 128);
-                        BSum0 += (Poly->OriginalColor.B * Light.Color.B * Intensity) / (256 * 128);
+                        RSum0 += (OriginalColor.R * Light.Color.R * Intensity) / (256 * 128);
+                        GSum0 += (OriginalColor.G * Light.Color.G * Intensity) / (256 * 128);
+                        BSum0 += (OriginalColor.B * Light.Color.B * Intensity) / (256 * 128);
                     }
 
                     Dot = VVector4::Dot(Poly->TransVtx[1].Normal, Light.TransDirection);
@@ -497,9 +499,9 @@ void VRenderList::Light(const VCamera& Cam, const TArray<VLight>& Lights)
                     {
                         // 128 used for fixed point to don't lose accuracy with integers
                         const i32 Intensity = (i32)(128.0f * Math.Abs(Dot));
-                        RSum1 += (Poly->OriginalColor.R * Light.Color.R * Intensity) / (256 * 128);
-                        GSum1 += (Poly->OriginalColor.G * Light.Color.G * Intensity) / (256 * 128);
-                        BSum1 += (Poly->OriginalColor.B * Light.Color.B * Intensity) / (256 * 128);
+                        RSum1 += (OriginalColor.R * Light.Color.R * Intensity) / (256 * 128);
+                        GSum1 += (OriginalColor.G * Light.Color.G * Intensity) / (256 * 128);
+                        BSum1 += (OriginalColor.B * Light.Color.B * Intensity) / (256 * 128);
                     }
 
                     Dot = VVector4::Dot(Poly->TransVtx[2].Normal, Light.TransDirection);
@@ -507,9 +509,9 @@ void VRenderList::Light(const VCamera& Cam, const TArray<VLight>& Lights)
                     {
                         // 128 used for fixed point to don't lose accuracy with integers
                         const i32 Intensity = (i32)(128.0f * Math.Abs(Dot));
-                        RSum2 += (Poly->OriginalColor.R * Light.Color.R * Intensity) / (256 * 128);
-                        GSum2 += (Poly->OriginalColor.G * Light.Color.G * Intensity) / (256 * 128);
-                        BSum2 += (Poly->OriginalColor.B * Light.Color.B * Intensity) / (256 * 128);
+                        RSum2 += (OriginalColor.R * Light.Color.R * Intensity) / (256 * 128);
+                        GSum2 += (OriginalColor.G * Light.Color.G * Intensity) / (256 * 128);
+                        BSum2 += (OriginalColor.B * Light.Color.B * Intensity) / (256 * 128);
                     }
                 } break;
 
@@ -530,9 +532,9 @@ void VRenderList::Light(const VCamera& Cam, const TArray<VLight>& Lights)
                             (128.0f * Math.Abs(Dot)) / (Distance * Atten)
                         );
 
-                        RSum0 += (Poly->OriginalColor.R * Light.Color.R * Intensity) / (256 * 128);
-                        GSum0 += (Poly->OriginalColor.G * Light.Color.G * Intensity) / (256 * 128);
-                        BSum0 += (Poly->OriginalColor.B * Light.Color.B * Intensity) / (256 * 128);
+                        RSum0 += (OriginalColor.R * Light.Color.R * Intensity) / (256 * 128);
+                        GSum0 += (OriginalColor.G * Light.Color.G * Intensity) / (256 * 128);
+                        BSum0 += (OriginalColor.B * Light.Color.B * Intensity) / (256 * 128);
                     }
 
                     Dot = VVector4::Dot(Poly->TransVtx[1].Normal, Direction);
@@ -543,9 +545,9 @@ void VRenderList::Light(const VCamera& Cam, const TArray<VLight>& Lights)
                             (128.0f * Math.Abs(Dot)) / (Distance * Atten)
                         );
 
-                        RSum1 += (Poly->OriginalColor.R * Light.Color.R * Intensity) / (256 * 128);
-                        GSum1 += (Poly->OriginalColor.G * Light.Color.G * Intensity) / (256 * 128);
-                        BSum1 += (Poly->OriginalColor.B * Light.Color.B * Intensity) / (256 * 128);
+                        RSum1 += (OriginalColor.R * Light.Color.R * Intensity) / (256 * 128);
+                        GSum1 += (OriginalColor.G * Light.Color.G * Intensity) / (256 * 128);
+                        BSum1 += (OriginalColor.B * Light.Color.B * Intensity) / (256 * 128);
                     }
 
                     Dot = VVector4::Dot(Poly->TransVtx[2].Normal, Direction);
@@ -556,9 +558,9 @@ void VRenderList::Light(const VCamera& Cam, const TArray<VLight>& Lights)
                             (128.0f * Math.Abs(Dot)) / (Distance * Atten)
                         );
 
-                        RSum2 += (Poly->OriginalColor.R * Light.Color.R * Intensity) / (256 * 128);
-                        GSum2 += (Poly->OriginalColor.G * Light.Color.G * Intensity) / (256 * 128);
-                        BSum2 += (Poly->OriginalColor.B * Light.Color.B * Intensity) / (256 * 128);
+                        RSum2 += (OriginalColor.R * Light.Color.R * Intensity) / (256 * 128);
+                        GSum2 += (OriginalColor.G * Light.Color.G * Intensity) / (256 * 128);
+                        BSum2 += (OriginalColor.B * Light.Color.B * Intensity) / (256 * 128);
                     }
                 } break;
 
@@ -578,9 +580,9 @@ void VRenderList::Light(const VCamera& Cam, const TArray<VLight>& Lights)
                             (128.0f * Math.Abs(Dot)) / Atten
                         );
 
-                        RSum0 += (Poly->OriginalColor.R * Light.Color.R * Intensity) / (256 * 128);
-                        GSum0 += (Poly->OriginalColor.G * Light.Color.G * Intensity) / (256 * 128);
-                        BSum0 += (Poly->OriginalColor.B * Light.Color.B * Intensity) / (256 * 128);
+                        RSum0 += (OriginalColor.R * Light.Color.R * Intensity) / (256 * 128);
+                        GSum0 += (OriginalColor.G * Light.Color.G * Intensity) / (256 * 128);
+                        BSum0 += (OriginalColor.B * Light.Color.B * Intensity) / (256 * 128);
                     }
 
                     Dot = VVector4::Dot(Poly->TransVtx[1].Normal, Light.TransDirection);
@@ -591,9 +593,9 @@ void VRenderList::Light(const VCamera& Cam, const TArray<VLight>& Lights)
                             (128.0f * Math.Abs(Dot)) / Atten
                         );
 
-                        RSum1 += (Poly->OriginalColor.R * Light.Color.R * Intensity) / (256 * 128);
-                        GSum1 += (Poly->OriginalColor.G * Light.Color.G * Intensity) / (256 * 128);
-                        BSum1 += (Poly->OriginalColor.B * Light.Color.B * Intensity) / (256 * 128);
+                        RSum1 += (OriginalColor.R * Light.Color.R * Intensity) / (256 * 128);
+                        GSum1 += (OriginalColor.G * Light.Color.G * Intensity) / (256 * 128);
+                        BSum1 += (OriginalColor.B * Light.Color.B * Intensity) / (256 * 128);
                     }
 
                     Dot = VVector4::Dot(Poly->TransVtx[2].Normal, Light.TransDirection);
@@ -604,9 +606,9 @@ void VRenderList::Light(const VCamera& Cam, const TArray<VLight>& Lights)
                             (128.0f * Math.Abs(Dot)) / Atten
                         );
 
-                        RSum2 += (Poly->OriginalColor.R * Light.Color.R * Intensity) / (256 * 128);
-                        GSum2 += (Poly->OriginalColor.G * Light.Color.G * Intensity) / (256 * 128);
-                        BSum2 += (Poly->OriginalColor.B * Light.Color.B * Intensity) / (256 * 128);
+                        RSum2 += (OriginalColor.R * Light.Color.R * Intensity) / (256 * 128);
+                        GSum2 += (OriginalColor.G * Light.Color.G * Intensity) / (256 * 128);
+                        BSum2 += (OriginalColor.B * Light.Color.B * Intensity) / (256 * 128);
                     }
                 } break;
 
@@ -639,9 +641,9 @@ void VRenderList::Light(const VCamera& Cam, const TArray<VLight>& Lights)
                                 (128.0f * Math.Abs(DotNormalDirection) * DotDistanceDirectionExp) / Atten
                             );
 
-                            RSum0 += (Poly->OriginalColor.R * Light.Color.R * Intensity) / (256 * 128);
-                            GSum0 += (Poly->OriginalColor.G * Light.Color.G * Intensity) / (256 * 128);
-                            BSum0 += (Poly->OriginalColor.B * Light.Color.B * Intensity) / (256 * 128);
+                            RSum0 += (OriginalColor.R * Light.Color.R * Intensity) / (256 * 128);
+                            GSum0 += (OriginalColor.G * Light.Color.G * Intensity) / (256 * 128);
+                            BSum0 += (OriginalColor.B * Light.Color.B * Intensity) / (256 * 128);
                         }
                     }
 
@@ -672,9 +674,9 @@ void VRenderList::Light(const VCamera& Cam, const TArray<VLight>& Lights)
                                 (128.0f * Math.Abs(DotNormalDirection) * DotDistanceDirectionExp) / Atten
                             );
 
-                            RSum1 += (Poly->OriginalColor.R * Light.Color.R * Intensity) / (256 * 128);
-                            GSum1 += (Poly->OriginalColor.G * Light.Color.G * Intensity) / (256 * 128);
-                            BSum1 += (Poly->OriginalColor.B * Light.Color.B * Intensity) / (256 * 128);
+                            RSum1 += (OriginalColor.R * Light.Color.R * Intensity) / (256 * 128);
+                            GSum1 += (OriginalColor.G * Light.Color.G * Intensity) / (256 * 128);
+                            BSum1 += (OriginalColor.B * Light.Color.B * Intensity) / (256 * 128);
                         }
                     }
 
@@ -705,9 +707,9 @@ void VRenderList::Light(const VCamera& Cam, const TArray<VLight>& Lights)
                                 (128.0f * Math.Abs(DotNormalDirection) * DotDistanceDirectionExp) / Atten
                             );
 
-                            RSum2 += (Poly->OriginalColor.R * Light.Color.R * Intensity) / (256 * 128);
-                            GSum2 += (Poly->OriginalColor.G * Light.Color.G * Intensity) / (256 * 128);
-                            BSum2 += (Poly->OriginalColor.B * Light.Color.B * Intensity) / (256 * 128);
+                            RSum2 += (OriginalColor.R * Light.Color.R * Intensity) / (256 * 128);
+                            GSum2 += (OriginalColor.G * Light.Color.G * Intensity) / (256 * 128);
+                            BSum2 += (OriginalColor.B * Light.Color.B * Intensity) / (256 * 128);
                         }
                     }
                 } break;
@@ -728,9 +730,9 @@ void VRenderList::Light(const VCamera& Cam, const TArray<VLight>& Lights)
             if (BSum2 > 255) BSum2 = 255;
 
             // Put final color
-            Poly->LitColor[0] = MAP_ARGB32(Poly->OriginalColor.A, RSum0, GSum0, BSum0);
-            Poly->LitColor[1] = MAP_ARGB32(Poly->OriginalColor.A, RSum1, GSum1, BSum1);
-            Poly->LitColor[2] = MAP_ARGB32(Poly->OriginalColor.A, RSum2, GSum2, BSum2);
+            Poly->LitColor[0] = MAP_ARGB32(OriginalColor.A, RSum0, GSum0, BSum0);
+            Poly->LitColor[1] = MAP_ARGB32(OriginalColor.A, RSum1, GSum1, BSum1);
+            Poly->LitColor[2] = MAP_ARGB32(OriginalColor.A, RSum2, GSum2, BSum2);
         }
     }
 }
@@ -1002,7 +1004,7 @@ void VRenderList::Clip(const VCamera& Camera, EClipFlags::Type Flags)
                     NewPoly.TransVtx[V2].Z = Camera.ZNearClip;
 
                     // Recompute texture coords
-                    if (NewPoly.Attr & EPolyAttr::ShadeModeTexture)
+                    if (NewPoly.Material->Attr & EMaterialAttr::ShadeModeTexture)
                     {
                         VPoint2 TextureDirection = NewPoly.TransVtx[V1].TextureCoords - NewPoly.TransVtx[V0].TextureCoords;
 
@@ -1081,7 +1083,7 @@ void VRenderList::Clip(const VCamera& Camera, EClipFlags::Type Flags)
                     NewPoly2.TransVtx[V1].Z = Camera.ZNearClip;
 
                     // Recompute texture coords
-                    if (NewPoly1.Attr & EPolyAttr::ShadeModeTexture)
+                    if (NewPoly1.Material->Attr & EMaterialAttr::ShadeModeTexture)
                     {
                         VPoint2 TextureDirection = NewPoly1.TransVtx[V1].TextureCoords - NewPoly1.TransVtx[V0].TextureCoords;
 

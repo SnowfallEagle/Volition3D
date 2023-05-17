@@ -6,8 +6,8 @@ namespace Volition
 void VMaterial::Init()
 {
     Attr = 0;
-    RAmbient = RDiffuse = RSpecular = Color = VColorARGB::White;
-    KAmbient = KDiffuse = KSpecular = Power = 1.0f;
+    RAmbient = RDiffuse = Color = VColorARGB::White;
+    KAmbient = KDiffuse = Power = 1.0f;
     Texture.Destroy();
 }
 

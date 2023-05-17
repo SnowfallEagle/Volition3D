@@ -59,9 +59,9 @@ namespace ECOBFlags
 
 enum class EShadeMode
 {
-    Emissive = EPolyAttr::ShadeModeEmissive,
-    Flat     = EPolyAttr::ShadeModeFlat,
-    Gouraud  = EPolyAttr::ShadeModeGouraud,
+    Emissive = EMaterialAttr::ShadeModeEmissive,
+    Flat     = EMaterialAttr::ShadeModeFlat,
+    Gouraud  = EMaterialAttr::ShadeModeGouraud,
 };
 
 enum class EMD2AnimationId : u8

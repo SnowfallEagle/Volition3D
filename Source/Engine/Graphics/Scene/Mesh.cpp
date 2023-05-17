@@ -77,7 +77,7 @@ void VMesh::ResetRenderState()
         }
 
         Poly.State &= ~(EPolyState::Clipped | EPolyState::Backface | EPolyState::Lit);
-        Poly.LitColor[2] = Poly.LitColor[1] = Poly.LitColor[0] = Poly.OriginalColor;
+        Poly.LitColor[2] = Poly.LitColor[1] = Poly.LitColor[0] = Poly.Material->Color;
     }
 }
 
@@ -132,7 +132,7 @@ void VMesh::ComputeVertexNormals()
 
     for (i32f PolyIndex = 0; PolyIndex < NumPoly; ++PolyIndex)
     {
-        if (PolyList[PolyIndex].Attr & EPolyAttr::ShadeModeGouraud)
+        if (PolyList[PolyIndex].Material->Attr & EMaterialAttr::ShadeModeGouraud)
         {
             i32f V0 = PolyList[PolyIndex].VtxIndices[0];
             i32f V1 = PolyList[PolyIndex].VtxIndices[1];
@@ -619,9 +619,11 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                     );
 
                     // Material parameters
+                    f32 DummyFloat;
+
                     Line = FindLineCOB("alpha", File, Buffer, BufferSize);
                     std::sscanf(Line, "alpha %f ka %f ks %f exp %f",
-                        &A, &CurrentMaterial->KAmbient, &CurrentMaterial->KSpecular, &CurrentMaterial->Power
+                        &A, &CurrentMaterial->KAmbient, &DummyFloat, &CurrentMaterial->Power
                     );
                     // @NOTE: We try to find diffuse factor below, 1.0f by default in VMaterial::Init()
 
@@ -658,7 +660,7 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
 
                         // Load texture in material
                         CurrentMaterial->Texture.Load(TexturePath);
-                        CurrentMaterial->Attr |= EPolyAttr::ShadeModeTexture;
+                        CurrentMaterial->Attr |= EMaterialAttr::ShadeModeTexture;
 
                         // Texture in object
                         Attr |= EMeshAttr::HasTexture;
@@ -684,7 +686,7 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                         std::sscanf(Buffer, "colour: color (%d, %d, %d)", &AlphaRed, &AlphaGreen, &AlphaBlue);
 
                         CurrentMaterial->Color.A = VLN_MAX(AlphaRed, VLN_MAX(AlphaGreen, AlphaBlue));
-                        CurrentMaterial->Attr |= EPolyAttr::Transparent;
+                        CurrentMaterial->Attr |= EMaterialAttr::Transparent;
 
                         VLN_LOG_VERBOSE("\tAlpha channel: %d\n", CurrentMaterial.Color.A);
                     }
@@ -700,21 +702,21 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
 
                     if (0 == strncmp(ShaderName, "constant", ShaderNameSize))
                     {
-                        CurrentMaterial->Attr |= EPolyAttr::ShadeModeEmissive;
+                        CurrentMaterial->Attr |= EMaterialAttr::ShadeModeEmissive;
                     }
                     else if (0 == strncmp(ShaderName, "matte", ShaderNameSize))
                     {
-                        CurrentMaterial->Attr |= EPolyAttr::ShadeModeFlat;
+                        CurrentMaterial->Attr |= EMaterialAttr::ShadeModeFlat;
                     }
                     else if (0 == strncmp(ShaderName, "plastic", ShaderNameSize) ||
                              0 == strncmp(ShaderName, "phong", ShaderNameSize))
                     {
                         // We have no phong support, so we use gouraud for phong too
-                        CurrentMaterial->Attr |= EPolyAttr::ShadeModeGouraud;
+                        CurrentMaterial->Attr |= EMaterialAttr::ShadeModeGouraud;
                     }
                     else
                     {
-                        CurrentMaterial->Attr |= EPolyAttr::ShadeModeEmissive;
+                        CurrentMaterial->Attr |= EMaterialAttr::ShadeModeEmissive;
                     }
 
                     VLN_LOG_VERBOSE("\tShader name: %s\n", ShaderName);
@@ -746,7 +748,6 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                     // @TODO: Check overflow
                     CurrentMaterial->RAmbient.C[RGBIndex]  = (u8)(CurrentMaterial->KAmbient * CurrentMaterial->Color.C[RGBIndex]);
                     CurrentMaterial->RDiffuse.C[RGBIndex]  = (u8)(CurrentMaterial->KDiffuse * CurrentMaterial->Color.C[RGBIndex]);
-                    CurrentMaterial->RSpecular.C[RGBIndex] = (u8)(CurrentMaterial->RSpecular * CurrentMaterial->Color.C[RGBIndex]);
 
                     // Log precomputed colors and factors
                     VLN_LOG_VERBOSE("\tRa [%d]: %d\n", RGBIndex, CurrentMaterial.RAmbient.C[RGBIndex]);
@@ -755,58 +756,37 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                 }
 
                 // Log factors
-                VLN_LOG_VERBOSE("\tKa %f Kd %f Ks %f Exp %f\n",
+                VLN_LOG_VERBOSE("\tKa %.3f Kd %.3f Ks 1.000 Exp %.3f\n",
                     CurrentMaterial.KAmbient,
                     CurrentMaterial.KDiffuse,
-                    CurrentMaterial.KSpecular,
                     CurrentMaterial.Power
                 );
             }
         }
 
-        // Apply materials for polygons
+        // Process material
         {
             for (i32f i = 0; i < NumPoly; ++i)
             {
                 VPoly& Poly = PolyList[i];
-                const VMaterial* PolyMaterial = MaterialInfoByIndex[MaterialIndexByPolyIndex[i]].Material;
+                VMaterial* PolyMaterial = MaterialInfoByIndex[MaterialIndexByPolyIndex[i]].Material;
 
-                // Set color
-                if (PolyMaterial->Attr & EPolyAttr::ShadeModeTexture)
+                // White color if use texture
+                // @TODO: Do we need it?
+                if (PolyMaterial->Attr & EMaterialAttr::ShadeModeTexture)
                 {
-                    Poly.OriginalColor = MAP_ARGB32(PolyMaterial->Color.A, 255, 255, 255);
-                }
-                else
-                {
-                    Poly.OriginalColor = PolyMaterial->Color;
+                    PolyMaterial->Color = MAP_ARGB32(PolyMaterial->Color.A, 255, 255, 255);
                 }
 
                 // Set shade mode and params
                 if (Flags & ECOBFlags::OverrideShadeMode)
                 {
-                    Poly.Attr |= (u32)OverrideShadeMode;
-                }
-                else
-                {
-                    if (PolyMaterial->Attr & EPolyAttr::ShadeModeEmissive)
-                    {
-                        Poly.Attr |= EPolyAttr::ShadeModeEmissive;
-                    }
-                    else if (PolyMaterial->Attr & EPolyAttr::ShadeModeFlat)
-                    {
-                        Poly.Attr |= EPolyAttr::ShadeModeFlat;
-                    }
-                    else if (PolyMaterial->Attr & EPolyAttr::ShadeModeGouraud ||
-                             PolyMaterial->Attr & EPolyAttr::ShadeModePhong)
-                    {
-                        Poly.Attr |= EPolyAttr::ShadeModeGouraud;
-                    }
+                    PolyMaterial->Attr &= ~((u32)EShadeMode::Emissive | (u32)EShadeMode::Flat | (u32)EShadeMode::Gouraud);
+                    PolyMaterial->Attr |= (u32)OverrideShadeMode;
                 }
 
-                if (PolyMaterial->Attr & EPolyAttr::ShadeModeTexture)
+                if (PolyMaterial->Attr & EMaterialAttr::ShadeModeTexture)
                 {
-                    Poly.Attr |= EPolyAttr::ShadeModeTexture;
-
                     TransVtxList[Poly.VtxIndices[0]].Attr =
                         LocalVtxList[Poly.VtxIndices[0]].Attr |= EVertexAttr::HasTextureCoords;
                     TransVtxList[Poly.VtxIndices[1]].Attr =
@@ -815,14 +795,7 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                         LocalVtxList[Poly.VtxIndices[2]].Attr |= EVertexAttr::HasTextureCoords;
                 }
 
-                // Set transparent flag
-                if (PolyMaterial->Attr & EPolyAttr::Transparent)
-                {
-                    Poly.Attr |= EPolyAttr::Transparent;
-                }
-
                 // Set poly material
-                Poly.Attr |= EPolyAttr::UsesMaterial;
                 Poly.Material = PolyMaterial;
             }
         }
@@ -872,9 +845,10 @@ void VMesh::GenerateTerrain(const char* HeightMap, const char* Texture, f32 Size
 {
     Destroy();
 
-    // Load texture in terrain material
+    // Prepare material
     VMaterial* Material = World.AddMaterial();
     Material->Texture.Load(Texture, { 1.0f, 1.0f, 1.0f }, 1);
+    Material->Attr |= EMaterialAttr::Terrain | (u32)ShadeMode | EMaterialAttr::ShadeModeTexture;
 
     // Load height map
     VSurface MapSurface;
@@ -930,10 +904,8 @@ void VMesh::GenerateTerrain(const char* HeightMap, const char* Texture, f32 Size
             VPoly& Poly1 = PolyList[PolyIndex];
             VPoly& Poly2 = PolyList[PolyIndex + 1];
 
-            Poly2.State         = Poly1.State        |= EPolyState::Active;
-            Poly2.Attr          = Poly1.Attr         |= EPolyAttr::Terrain | (u32)ShadeMode | EPolyAttr::ShadeModeTexture;
-            Poly2.OriginalColor = Poly1.OriginalColor = VColorARGB(0xFF, 0xFF, 0xFF, 0xFF);
-            Poly2.Material      = Poly1.Material      = Material;
+            Poly2.State    = Poly1.State   |= EPolyState::Active;
+            Poly2.Material = Poly1.Material = Material;
 
             Poly1.TextureCoordsIndices[0] = Poly1.VtxIndices[0] = Y*VerticesInRow + X;
             Poly1.TextureCoordsIndices[1] = Poly1.VtxIndices[1] = (Y + 1)*VerticesInRow + X;
@@ -1287,6 +1259,7 @@ b32 VMesh::LoadMD2(const char* Path, const char* InSkinPath, i32 SkinIndex, VVec
 
     // Set up material
     VMaterial* Material = World.AddMaterial();
+    Material->Attr = (u32)ShadeMode | EMaterialAttr::ShadeModeTexture;
 
     if (InSkinPath)
     {
@@ -1328,9 +1301,6 @@ b32 VMesh::LoadMD2(const char* Path, const char* InSkinPath, i32 SkinIndex, VVec
         HeadTransVtxList[Poly.VtxIndices[2]].Attr = HeadLocalVtxList[Poly.VtxIndices[2]].Attr |= EVertexAttr::HasTextureCoords;
 
         Poly.State = EPolyState::Active;
-        Poly.Attr = (u32)ShadeMode | EPolyAttr::RGB32 | EPolyAttr::ShadeModeTexture | EPolyAttr::UsesMaterial;
-        Poly.OriginalColor = MAP_XRGB32(0xFF, 0xFF, 0xFF);
-
         Poly.Material = Material;
     }
 

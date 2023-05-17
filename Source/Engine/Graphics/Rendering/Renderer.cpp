@@ -209,6 +209,8 @@ void VRenderer::Render()
             BaseRenderList->InsertMesh(*Mesh, false);
 
             // Make shadow
+            // @TODO: Use shadow material
+            #if 0
             if (~Mesh->Attr & EMeshAttr::CastShadow || !OccluderLight)
             {
                 continue;
@@ -232,7 +234,7 @@ void VRenderer::Render()
                 PolyList[i].LitColor[2] = ShadowColor;
 
                 PolyList[i].OriginalColor = ShadowColor;
-                PolyList[i].Attr          = EPolyAttr::ShadeModeEmissive;
+                PolyList[i].Attr          = EMaterialAttr::ShadeModeEmissive;
             }
 
             // Compute shadow vertex positions
@@ -265,6 +267,7 @@ void VRenderer::Render()
                 PolyList[i].OriginalColor = OriginalColors[i];
                 PolyList[i].Attr          = OriginalAttrs[i];
             }
+            #endif
         }
     }
 
@@ -1611,8 +1614,7 @@ void VRenderer::SetInterpolators()
 {
     InterpolationContext.NumInterpolators = 0;
 
-    if (InterpolationContext.PolyAttr & EPolyAttr::ShadeModeGouraud ||
-        InterpolationContext.PolyAttr & EPolyAttr::ShadeModePhong)
+    if (InterpolationContext.PolyAttr & EMaterialAttr::ShadeModeGouraud)
     {
         InterpolationContext.Interpolators[InterpolationContext.NumInterpolators] = &InterpolationContext.GouraudInterpolator;
     }
@@ -1622,7 +1624,7 @@ void VRenderer::SetInterpolators()
     }
     ++InterpolationContext.NumInterpolators;
 
-    if (InterpolationContext.PolyAttr & EPolyAttr::ShadeModeTexture)
+    if (InterpolationContext.PolyAttr & EMaterialAttr::ShadeModeTexture)
     {
         const i32 MaxMipMaps = Config.RenderSpec.MaxMipMaps;
 
@@ -1634,7 +1636,7 @@ void VRenderer::SetInterpolators()
                 Distance / (World.Camera->ZFarClip / (f32)MaxMipMaps)
             );
 
-            if (InterpolationContext.PolyAttr & EPolyAttr::Terrain)
+            if (InterpolationContext.PolyAttr & EMaterialAttr::Terrain)
             {
                 if (Distance < 25000.0f)
                 {
@@ -1675,7 +1677,7 @@ void VRenderer::SetInterpolators()
         ++InterpolationContext.NumInterpolators;
     }
 
-    if (InterpolationContext.PolyAttr & EPolyAttr::Transparent)
+    if (InterpolationContext.PolyAttr & EMaterialAttr::Transparent)
     {
         InterpolationContext.Interpolators[InterpolationContext.NumInterpolators] = &InterpolationContext.AlphaInterpolator;
         ++InterpolationContext.NumInterpolators;
@@ -1698,13 +1700,12 @@ void VRenderer::RenderSolid(const VRenderList* RenderList)
         InterpolationContext.Vtx = Poly->TransVtx;
         InterpolationContext.Material = Poly->Material;
 
-        InterpolationContext.OriginalColor = Poly->OriginalColor;
+        InterpolationContext.OriginalColor = Poly->Material->Color;
         InterpolationContext.LitColor[0] = Poly->LitColor[0];
         InterpolationContext.LitColor[1] = Poly->LitColor[1];
         InterpolationContext.LitColor[2] = Poly->LitColor[2];
 
-        InterpolationContext.PolyAttr = Poly->Attr;
-
+        InterpolationContext.PolyAttr = Poly->Material->Attr;
         InterpolationContext.Distance = Poly->TransVtx[0].Z;
 
         Renderer.DrawTriangle(InterpolationContext);
