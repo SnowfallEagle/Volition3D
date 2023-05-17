@@ -596,6 +596,7 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
             for (i32f i = 0; i < NumMaterialsInModel; ++i)
             {
                 VMaterial* CurrentMaterial = World.AddMaterial();
+                MaterialInfoByIndex[i].Material = CurrentMaterial;
 
                 static constexpr i32f FormatSize = 256;
                 char Format[FormatSize];
@@ -743,17 +744,11 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                 }
 
                 // Precompute reflectivities for engine
-                for (i32f RGBIndex = 1; RGBIndex < 4; ++RGBIndex)
-                {
-                    // @TODO: Check overflow
-                    CurrentMaterial->RAmbient.C[RGBIndex]  = (u8)(CurrentMaterial->KAmbient * CurrentMaterial->Color.C[RGBIndex]);
-                    CurrentMaterial->RDiffuse.C[RGBIndex]  = (u8)(CurrentMaterial->KDiffuse * CurrentMaterial->Color.C[RGBIndex]);
+                CurrentMaterial->ComputeReflectiveColors();
 
-                    // Log precomputed colors and factors
-                    VLN_LOG_VERBOSE("\tRa [%d]: %d\n", RGBIndex, CurrentMaterial.RAmbient.C[RGBIndex]);
-                    VLN_LOG_VERBOSE("\tRd [%d]: %d\n", RGBIndex, CurrentMaterial.RDiffuse.C[RGBIndex]);
-                    VLN_LOG_VERBOSE("\tRs [%d]: %d\n", RGBIndex, CurrentMaterial.RSpecular.C[RGBIndex]);
-                }
+                // Log precomputed colors and factors
+                VLN_LOG_VERBOSE("\tRa [%d]: %d\n", RGBIndex, CurrentMaterial.RAmbient.C[RGBIndex]);
+                VLN_LOG_VERBOSE("\tRd [%d]: %d\n", RGBIndex, CurrentMaterial.RDiffuse.C[RGBIndex]);
 
                 // Log factors
                 VLN_LOG_VERBOSE("\tKa %.3f Kd %.3f Ks 1.000 Exp %.3f\n",
@@ -770,13 +765,6 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
             {
                 VPoly& Poly = PolyList[i];
                 VMaterial* PolyMaterial = MaterialInfoByIndex[MaterialIndexByPolyIndex[i]].Material;
-
-                // White color if use texture
-                // @TODO: Do we need it?
-                if (PolyMaterial->Attr & EMaterialAttr::ShadeModeTexture)
-                {
-                    PolyMaterial->Color = MAP_ARGB32(PolyMaterial->Color.A, 255, 255, 255);
-                }
 
                 // Set shade mode and params
                 if (Flags & ECOBFlags::OverrideShadeMode)

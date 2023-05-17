@@ -233,7 +233,6 @@ void VRenderer::Render()
 
                 // Insert shadow mesh
                 Mesh->State &= ~EMeshState::Culled;
-                Mesh->Cull(Camera);
                 BaseRenderList->InsertMesh(*Mesh, false, &ShadowMaterial);
             }
         }

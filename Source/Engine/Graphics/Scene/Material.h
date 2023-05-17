@@ -30,9 +30,6 @@ public:
 
     VColorARGB Color;
     f32 KAmbient, KDiffuse, Power;
-    // @TODO: Do we check overflow?
-    // @TODO: We need to compute RColors every changing of K or Color
-    // @TODO: Use it in lighting
     VColorARGB RAmbient, RDiffuse; /** K*Color */
 
     VTexture Texture;
@@ -40,6 +37,8 @@ public:
 public:
     void Init();
     void Destroy();
+
+    void ComputeReflectiveColors();
 };
 
 }

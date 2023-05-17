@@ -20,6 +20,8 @@ class GTestGameState : public VGameState
 public:
     virtual void StartUp() override
     {
+        const auto COBEntity = World.SpawnEntity()->Mesh->LoadCOB("Assets/Models/jetski05.cob", { 1000.0f, 1000.0f, 0.0f }, { 100.0f, 100.0f, 100.0f }, ECOBFlags::Default | ECOBFlags::InvertV /* | ECOBFlags::OverrideShadeMode */, EShadeMode::Gouraud);
+
         Entity = World.SpawnEntity<VEntity>();
         LightEntity = World.SpawnEntity<VEntity>();
 
@@ -260,5 +262,5 @@ void GGameState::ProcessInput(f32 DeltaTime)
 
 int main(int Argc, char** Argv)
 {
-    return Engine.Run<Game::GTestGameState>(Argc, Argv);
+    return Engine.Run<Game::GGrandTerrainScene>(Argc, Argv);
 }
