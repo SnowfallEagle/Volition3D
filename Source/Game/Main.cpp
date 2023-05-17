@@ -193,7 +193,7 @@ protected:
         Camera->Direction = { 15.0f, 180.0f, 0.0f };
         Camera->ZFarClip = 3000000.0f;
 
-        World.GetTerrain()->GenerateTerrain("Assets/Terrains/Large/Heightmap.jpg", "Assets/Terrains/RockyLand/Texture.bmp", 1000000.0f, 250000.0f, EShadeMode::Gouraud);
+        World.GetTerrain()->GenerateTerrain("Assets/Terrains/Large/Heightmap.bmp", "Assets/Terrains/RockyLand/Texture.bmp", 1000000.0f, 250000.0f, EShadeMode::Gouraud);
     }
 };
 

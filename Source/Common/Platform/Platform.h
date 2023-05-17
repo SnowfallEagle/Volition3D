@@ -6,6 +6,12 @@
 namespace Volition
 {
 
+#define VLN_MODE_SAFE 0 // May be slow
+#define VLN_MODE_FAST 1 // May crash sometimes, but faster
+#define VLN_MODE VLN_MODE_SAFE
+
+#define VLN_SSE 1
+
 #define VLN_PLATFORM_WIN 1
 #define VLN_COMPILER_MSVC 1
 
@@ -16,8 +22,6 @@ namespace Volition
 #define VLN_LITTLE_ENDIAN 1
 #define VLN_BIG_ENDIAN 0
 #define VLN_ENDIANNESS VLN_LITTLE_ENDIAN
-
-#define VLN_SSE 1
 
 #define VLN_DEBUG_BREAK() __debugbreak()
 #define VLN_PAUSE() _mm_pause()

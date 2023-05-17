@@ -12,7 +12,9 @@ static void StartFun(VPerspectiveCorrectTextureInterpolator* Self)
 
     Self->TextureBuffer = Texture->GetBuffer();
     Self->TexturePitch = Texture->GetPitch();
+
     const VVector2 TextureSize = { (f32)Texture->GetWidth(), (f32)Texture->GetHeight() };
+    Self->TextureSize = { (i32)TextureSize.X, (i32)TextureSize.Y };
 
     for (i32f i = 0; i < 3; ++i)
     {
@@ -76,12 +78,27 @@ static void ComputeXStartsAndDeltasFun(VPerspectiveCorrectTextureInterpolator* S
 
 static void ProcessPixelFun(VPerspectiveCorrectTextureInterpolator* Self)
 {
-    const VColorARGB Pixel = Self->InterpolationContext->Pixel;
+    i32 U = (Self->U << (Fx28Shift - Fx22Shift)) / Self->InterpolationContext->Z;
+    i32 V = (Self->V << (Fx28Shift - Fx22Shift)) / Self->InterpolationContext->Z;
+
+    // @NOTE: Crash may occur if something happened with poly's Z
+#if VLN_MODE == VLN_MODE_SAFE
+    if (U > Self->TextureSize.X)
+    {
+        U = Self->TextureSize.X;
+    }
+    if (V > Self->TextureSize.Y)
+    {
+        V = Self->TextureSize.Y;
+    }
+#endif
+
     const VColorARGB TextureColor = Self->TextureBuffer[
-        ((Self->V << (Fx28Shift - Fx22Shift)) / Self->InterpolationContext->Z) * Self->TexturePitch +
+        V * Self->TexturePitch +
         ((Self->U << (Fx28Shift - Fx22Shift)) / Self->InterpolationContext->Z)
     ];
 
+    const VColorARGB Pixel = Self->InterpolationContext->Pixel;
     Self->InterpolationContext->Pixel = MAP_XRGB32(
         (TextureColor.R * Pixel.R) >> 8,
         (TextureColor.G * Pixel.G) >> 8,

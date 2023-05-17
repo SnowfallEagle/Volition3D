@@ -22,6 +22,7 @@ public:
 
     const u32* TextureBuffer;
     i32 TexturePitch;
+    VVector2i TextureSize;
 
 public:
     VPerspectiveCorrectTextureInterpolator();
