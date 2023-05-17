@@ -33,7 +33,7 @@ public:
     VColorARGB OriginalColor;
     VColorARGB LitColor[3];
 
-    u32 PolyAttr;
+    u32 MaterialAttr;
 
     f32 Distance;
     i32 MipMappingLevel;

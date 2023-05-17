@@ -1582,11 +1582,11 @@ void VRenderer::SetInterpolators()
 {
     InterpolationContext.NumInterpolators = 0;
 
-    if (InterpolationContext.PolyAttr & EMaterialAttr::ShadeModeGouraud)
+    if (InterpolationContext.MaterialAttr & EMaterialAttr::ShadeModeGouraud)
     {
         InterpolationContext.Interpolators[InterpolationContext.NumInterpolators] = &InterpolationContext.GouraudInterpolator;
     }
-    else if (InterpolationContext.PolyAttr & EMaterialAttr::ShadeModeFlat)
+    else if (InterpolationContext.MaterialAttr & EMaterialAttr::ShadeModeFlat)
     {
         InterpolationContext.Interpolators[InterpolationContext.NumInterpolators] = &InterpolationContext.FlatInterpolator;
     }
@@ -1596,7 +1596,7 @@ void VRenderer::SetInterpolators()
     }
     ++InterpolationContext.NumInterpolators;
 
-    if (InterpolationContext.PolyAttr & EMaterialAttr::ShadeModeTexture)
+    if (InterpolationContext.MaterialAttr & EMaterialAttr::ShadeModeTexture)
     {
         const i32 MaxMipMaps = Config.RenderSpec.MaxMipMaps;
 
@@ -1608,7 +1608,7 @@ void VRenderer::SetInterpolators()
                 Distance / (World.Camera->ZFarClip / (f32)MaxMipMaps)
             );
 
-            if (InterpolationContext.PolyAttr & EMaterialAttr::Terrain)
+            if (InterpolationContext.MaterialAttr & EMaterialAttr::Terrain)
             {
                 if (Distance < 25000.0f)
                 {
@@ -1649,7 +1649,7 @@ void VRenderer::SetInterpolators()
         ++InterpolationContext.NumInterpolators;
     }
 
-    if (InterpolationContext.PolyAttr & EMaterialAttr::Transparent)
+    if (InterpolationContext.MaterialAttr & EMaterialAttr::Transparent)
     {
         InterpolationContext.Interpolators[InterpolationContext.NumInterpolators] = &InterpolationContext.AlphaInterpolator;
         ++InterpolationContext.NumInterpolators;
@@ -1677,7 +1677,7 @@ void VRenderer::RenderSolid(const VRenderList* RenderList)
         InterpolationContext.LitColor[1] = Poly->LitColor[1];
         InterpolationContext.LitColor[2] = Poly->LitColor[2];
 
-        InterpolationContext.PolyAttr = Poly->Material->Attr;
+        InterpolationContext.MaterialAttr = Poly->Material->Attr;
         InterpolationContext.Distance = Poly->TransVtx[0].Z;
 
         Renderer.DrawTriangle(InterpolationContext);
