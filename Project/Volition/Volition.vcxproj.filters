@@ -129,9 +129,6 @@
     <ClInclude Include="..\..\Source\Engine\Graphics\Scene\Mesh.h">
       <Filter>Engine\Graphics\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Graphics\Scene\TransformType.h">
-      <Filter>Engine\Graphics\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Core\Config\Arguments.h">
       <Filter>Engine\Core\Config</Filter>
     </ClInclude>
@@ -140,6 +137,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Graphics\Interpolators\EmissiveInterpolator.h">
       <Filter>Engine\Graphics\Interpolators</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Graphics\Types\TransformType.h">
+      <Filter>Engine\Graphics\Types</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -4,7 +4,7 @@
 #include "Common/Math/Minimal.h"
 #include "Engine/Graphics/Types/Polygon.h"
 #include "Engine/Graphics/Scene/Camera.h"
-#include "Engine/Graphics/Scene/TransformType.h"
+#include "Engine/Graphics/Types/TransformType.h"
 #include "Engine/Graphics/Scene/Mesh.h"
 #include "Engine/Graphics/Scene/Light.h"
 

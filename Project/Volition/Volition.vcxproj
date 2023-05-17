@@ -239,9 +239,9 @@
     <ClInclude Include="..\..\Source\Engine\Graphics\Scene\Light.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\Scene\Material.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\Scene\Mesh.h" />
-    <ClInclude Include="..\..\Source\Engine\Graphics\Scene\TransformType.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\Types\Color.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\Types\Polygon.h" />
+    <ClInclude Include="..\..\Source\Engine\Graphics\Types\TransformType.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\Types\Vertex.h" />
     <ClInclude Include="..\..\Source\Engine\Input\Input.h" />
     <ClInclude Include="..\..\Source\Engine\World\Entity.h" />
