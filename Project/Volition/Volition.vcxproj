@@ -222,6 +222,7 @@
     <ClInclude Include="..\..\Source\Engine\Core\Window.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\Interpolators\AlphaInterpolator.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\Interpolators\BillinearPerspectiveTextureInterpolator.h" />
+    <ClInclude Include="..\..\Source\Engine\Graphics\Interpolators\EmissiveInterpolator.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\Interpolators\FlatInterpolator.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\Interpolators\GouraudInterpolator.h" />
     <ClInclude Include="..\..\Source\Engine\Graphics\Interpolators\IInterpolator.h" />
@@ -257,6 +258,7 @@
     <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\AffineTextureInterpolator.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\AlphaInterpolator.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\BillinearPerspectiveTextureInterpolator.cpp" />
+    <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\EmissiveInterpolator.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\FlatInterpolator.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\GouraudInterpolator.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\IInterpolator.cpp" />

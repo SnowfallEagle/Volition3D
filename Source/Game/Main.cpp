@@ -260,5 +260,5 @@ void GGameState::ProcessInput(f32 DeltaTime)
 
 int main(int Argc, char** Argv)
 {
-    return Engine.Run<Game::GLargeTerrainScene>(Argc, Argv);
+    return Engine.Run<Game::GTestGameState>(Argc, Argv);
 }

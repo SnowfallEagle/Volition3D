@@ -3,7 +3,7 @@
 namespace Volition
 {
 
-b32 VRenderList::InsertPoly(const VPoly& Poly, const VVertex* VtxList, const VPoint2* TextureCoordsList)
+b32 VRenderList::InsertPoly(const VPoly& Poly, const VVertex* VtxList, const VPoint2* TextureCoordsList, const VMaterial* Material)
 {
     if (NumPoly >= MaxPoly)
     {
@@ -13,7 +13,7 @@ b32 VRenderList::InsertPoly(const VPoly& Poly, const VVertex* VtxList, const VPo
     VPolyFace& PolyFace = PolyList[NumPoly];
 
     PolyFace.State = Poly.State;
-    PolyFace.Material = Poly.Material;
+    PolyFace.Material = Material;
     PolyFace.NormalLength = Poly.NormalLength;
 
     for (i32f i = 0; i < 3; ++i)
@@ -41,7 +41,7 @@ b32 VRenderList::InsertPolyFace(const VPolyFace& Poly)
     return true;
 }
 
-void VRenderList::InsertMesh(VMesh& Mesh, b32 bInsertLocal)
+void VRenderList::InsertMesh(VMesh& Mesh, b32 bInsertLocal, const VMaterial* OverrideMaterial)
 {
     if (~Mesh.State & EMeshState::Active  ||
         ~Mesh.State & EMeshState::Visible ||
@@ -61,7 +61,8 @@ void VRenderList::InsertMesh(VMesh& Mesh, b32 bInsertLocal)
             continue;
         }
 
-        if (!InsertPoly(Poly, bInsertLocal ? Mesh.LocalVtxList : Mesh.TransVtxList, Mesh.TextureCoordsList))
+        // @TODO: Optimization: InsertMesh() param for VtxList
+        if (!InsertPoly(Poly, bInsertLocal ? Mesh.LocalVtxList : Mesh.TransVtxList, Mesh.TextureCoordsList, OverrideMaterial ? OverrideMaterial : Poly.Material))
         {
             return;
         }

@@ -49,9 +49,9 @@ public:
         delete[] PolyList;
     }
 
-    b32 InsertPoly(const VPoly& Poly, const VVertex* VtxList, const VPoint2* TextureCoordsList);
+    b32 InsertPoly(const VPoly& Poly, const VVertex* VtxList, const VPoint2* TextureCoordsList, const VMaterial* Material);
     b32 InsertPolyFace(const VPolyFace& Poly);
-    void InsertMesh(VMesh& Mesh, b32 bInsertLocal);
+    void InsertMesh(VMesh& Mesh, b32 bInsertLocal, const VMaterial* OverrideMaterial = nullptr);
 
     void Transform(const VMatrix44& M, ETransformType Type);
 

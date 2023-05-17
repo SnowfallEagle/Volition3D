@@ -59,10 +59,7 @@ private:
     i32 DebugTextY;
     TArray<VTextElement> TextQueue;
 
-private:
-    VColorARGB (*OriginalLitColors)[3]; /** [MaxPoly][3] */
-    VColorARGB* OriginalColors;         /** [MaxPoly] */
-    u32* OriginalAttrs;                 /** [MaxPoly] */
+    VMaterial ShadowMaterial;
 
 public:
     void StartUp();

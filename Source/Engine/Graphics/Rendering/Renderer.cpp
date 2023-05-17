@@ -78,11 +78,11 @@ void VRenderer::StartUp()
         ZBuffer.Create(Config.RenderSpec.TargetSize.X, Config.RenderSpec.TargetSize.Y);
     }
 
-    // Allocate memory
+    // Set up shadow material
     {
-        OriginalLitColors = new VColorARGB[MaxCachedRenderListPoly][3];
-        OriginalColors    = new VColorARGB[MaxCachedRenderListPoly];
-        OriginalAttrs     = new u32[MaxCachedRenderListPoly];
+        ShadowMaterial.Init();
+        ShadowMaterial.Attr = EMaterialAttr::ShadeModeEmissive;
+        ShadowMaterial.Color = VColorARGB::Black;
     }
 
     // Log
@@ -104,16 +104,14 @@ void VRenderer::ShutDown()
 
     // Free renderer stuff
     {
+        ShadowMaterial.Destroy();
+
         ZBuffer.Destroy();
         delete TerrainRenderList;
         delete BaseRenderList;
 
         // Don't destroy VideoSurface
         BackSurface.Destroy();
-
-        delete[] OriginalAttrs;
-        delete[] OriginalColors;
-        delete[] OriginalLitColors;
     }
 }
 
@@ -195,79 +193,49 @@ void VRenderer::Render()
         {
             VMesh* Mesh = Entity->Mesh;
 
-            Mesh->ResetRenderState();
-            if (Mesh->Attr & EMeshAttr::MultiFrame)
+            // Insert mesh
             {
-                Mesh->UpdateAnimationAndTransformModelToWorld(Time.GetDeltaTime());
-            }
-            else
-            {
-                Mesh->TransformModelToWorld();
-            }
-            Mesh->Cull(Camera);
+                Mesh->ResetRenderState();
+                if (Mesh->Attr & EMeshAttr::MultiFrame)
+                {
+                    Mesh->UpdateAnimationAndTransformModelToWorld(Time.GetDeltaTime());
+                }
+                else
+                {
+                    Mesh->TransformModelToWorld();
+                }
+                Mesh->Cull(Camera);
 
-            BaseRenderList->InsertMesh(*Mesh, false);
+                BaseRenderList->InsertMesh(*Mesh, false);
+            }
 
             // Make shadow
-            // @TODO: Use shadow material
-            #if 0
-            if (~Mesh->Attr & EMeshAttr::CastShadow || !OccluderLight)
             {
-                continue;
+                if (~Mesh->Attr & EMeshAttr::CastShadow || !OccluderLight)
+                {
+                    continue;
+                }
+
+                // Compute shadow vertex positions
+                // @TODO: Figure out
+                static constexpr f32 YShadowPosition = -25.0f;
+
+                VVertex* VtxList = Mesh->TransVtxList;
+                for (i32f i = 0; i < Mesh->NumVtx; ++i)
+                {
+                    VVector4 Direction = (VtxList[i].Position - OccluderLight->Position);
+                    f32 T = (YShadowPosition - OccluderLight->Position.Y) / Direction.Y;
+
+                    VtxList[i].X = OccluderLight->Position.X + T * Direction.X;
+                    VtxList[i].Y = YShadowPosition;
+                    VtxList[i].Z = OccluderLight->Position.Z + T * Direction.Z;
+                }
+
+                // Insert shadow mesh
+                Mesh->State &= ~EMeshState::Culled;
+                Mesh->Cull(Camera);
+                BaseRenderList->InsertMesh(*Mesh, false, &ShadowMaterial);
             }
-
-            VPoly* PolyList = Mesh->PolyList;
-            static constexpr VColorARGB ShadowColor = VColorARGB(0xFF, 0x00, 0x00, 0x00);
-
-            // Set new color and attributes for mesh
-            for (i32f i = 0; i < Mesh->NumPoly; ++i)
-            {
-                OriginalLitColors[i][0] = PolyList[i].LitColor[0];
-                OriginalLitColors[i][1] = PolyList[i].LitColor[1];
-                OriginalLitColors[i][2] = PolyList[i].LitColor[2];
-
-                OriginalColors[i] = PolyList[i].OriginalColor;
-                OriginalAttrs[i]  = PolyList[i].Attr;
-
-                PolyList[i].LitColor[0] = ShadowColor;
-                PolyList[i].LitColor[1] = ShadowColor;
-                PolyList[i].LitColor[2] = ShadowColor;
-
-                PolyList[i].OriginalColor = ShadowColor;
-                PolyList[i].Attr          = EMaterialAttr::ShadeModeEmissive;
-            }
-
-            // Compute shadow vertex positions
-            // @TODO: Figure out
-            static constexpr f32 YShadowPosition = -25.0f;
-            static constexpr f32 MaxShadowOffset = 5000.0f;
-
-            VVertex* VtxList = Mesh->TransVtxList;
-            for (i32f i = 0; i < Mesh->NumVtx; ++i)
-            {
-                VVector4 Direction = (VtxList[i].Position - OccluderLight->Position);
-                f32 T = (YShadowPosition - OccluderLight->Position.Y) / Direction.Y;
-
-                VtxList[i].X = OccluderLight->Position.X + T * Direction.X;
-                VtxList[i].Y = YShadowPosition;
-                VtxList[i].Z = OccluderLight->Position.Z + T * Direction.Z;
-            }
-
-            // Insert shadow mesh
-            Mesh->State &= ~EMeshState::Culled;
-            BaseRenderList->InsertMesh(*Mesh, false);
-
-            // Restore mesh color and attributes
-            for (i32f i = 0; i < Mesh->NumPoly; ++i)
-            {
-                PolyList[i].LitColor[0] = OriginalLitColors[i][0];
-                PolyList[i].LitColor[1] = OriginalLitColors[i][1];
-                PolyList[i].LitColor[2] = OriginalLitColors[i][2];
-
-                PolyList[i].OriginalColor = OriginalColors[i];
-                PolyList[i].Attr          = OriginalAttrs[i];
-            }
-            #endif
         }
     }
 
@@ -1618,9 +1586,13 @@ void VRenderer::SetInterpolators()
     {
         InterpolationContext.Interpolators[InterpolationContext.NumInterpolators] = &InterpolationContext.GouraudInterpolator;
     }
-    else
+    else if (InterpolationContext.PolyAttr & EMaterialAttr::ShadeModeFlat)
     {
         InterpolationContext.Interpolators[InterpolationContext.NumInterpolators] = &InterpolationContext.FlatInterpolator;
+    }
+    else
+    {
+        InterpolationContext.Interpolators[InterpolationContext.NumInterpolators] = &InterpolationContext.EmissiveInterpolator;
     }
     ++InterpolationContext.NumInterpolators;
 

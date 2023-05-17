@@ -138,6 +138,9 @@
     <ClInclude Include="..\..\Source\Engine\Graphics\Scene\Material.h">
       <Filter>Engine\Graphics\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Graphics\Interpolators\EmissiveInterpolator.h">
+      <Filter>Engine\Graphics\Interpolators</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Engine\Core\DebugLog.cpp">
@@ -211,6 +214,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Graphics\Scene\Material.cpp">
       <Filter>Engine\Graphics\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\EmissiveInterpolator.cpp">
+      <Filter>Engine\Graphics\Interpolators</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -6,6 +6,7 @@
 #include "Engine/Graphics/Types/Polygon.h"
 #include "Engine/Graphics/Scene/Material.h"
 #include "Engine/Graphics/Interpolators/IInterpolator.h"
+#include "Engine/Graphics/Interpolators/EmissiveInterpolator.h"
 #include "Engine/Graphics/Interpolators/FlatInterpolator.h"
 #include "Engine/Graphics/Interpolators/GouraudInterpolator.h"
 #include "Engine/Graphics/Interpolators/AffineTextureInterpolator.h"
@@ -46,6 +47,7 @@ public:
     IInterpolator* Interpolators[MaxInterpolators];
     i32 NumInterpolators;
 
+    VEmissiveInterpolator EmissiveInterpolator;
     VFlatInterpolator FlatInterpolator;
     VGouraudInterpolator GouraudInterpolator;
     VAffineTextureInterpolator AffineTextureInterpolator;
