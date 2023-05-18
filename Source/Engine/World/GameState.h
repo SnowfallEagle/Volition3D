@@ -13,7 +13,9 @@ public:
 
     virtual void StartUp() {}
     virtual void ShutDown() {}
+
     virtual void Update(f32 DeltaTime) {}
+    virtual void FixedUpdate(f32 FixedDeltaTime) {}
 };
 
 }

@@ -59,7 +59,7 @@ void VWorld::Update(f32 DeltaTime)
     // Update world stuff
     GameState->Update(DeltaTime);
 
-    // @TODO: Camera->Update()
+    // @TODO: Camera->FixedUpdate()
     {
         Camera->Direction.Y = Math.Mod(Camera->Direction.Y, 360.0f);
         if (Camera->Direction.Y < 0.0f)
@@ -79,6 +79,9 @@ void VWorld::Update(f32 DeltaTime)
 
 void VWorld::FixedUpdate(f32 FixedDeltaTime)
 {
+    GameState->FixedUpdate(FixedDeltaTime);
+
+    // @TODO: Environment2D->FixedUpdate()
     static constexpr f32 Environment2DMovementEffectSpeed = 0.00175f;
     Environment2DMovementEffectAngle = Math.Mod(Environment2DMovementEffectAngle + (Environment2DMovementEffectSpeed * FixedDeltaTime), 360.0f);
     if (Environment2DMovementEffectAngle < 0.0f)

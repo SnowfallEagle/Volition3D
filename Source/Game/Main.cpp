@@ -139,6 +139,9 @@ public:
 class GGameState : public VGameState
 {
 protected:
+    VVector2i MouseMoveAccum = { 0, 0 };
+
+protected:
     virtual void StartUp() override
     {
         World.SetEnvironment2D("Assets/Environment2D/Texture.png");
@@ -177,7 +180,26 @@ protected:
         World.SetEnvironment3D("Assets/Environment3D/Sky/null_plainsky256_ft.pcx", nullptr, nullptr, nullptr, nullptr, nullptr);
         #endif
 
-        World.GetCamera()->ZFarClip = 1000000000.0f;
+        VCamera* Camera = World.GetCamera();
+        Camera->ZFarClip = 1000000000.0f;
+
+        const auto COBEntity = World.SpawnEntity()->Mesh->LoadCOB("Assets/Models/jetski05.cob", { 1000.0f, 1000.0f, 0.0f }, { 100.0f, 100.0f, 100.0f }, ECOBFlags::Default | ECOBFlags::InvertV /* | ECOBFlags::OverrideShadeMode */, EShadeMode::Gouraud);
+
+        auto Entity = World.SpawnEntity<VEntity>();
+        auto LightEntity = World.SpawnEntity<VEntity>();
+
+        // Entity->Mesh->LoadMD2("Assets/Models/tekkblade/tris.md2", nullptr, 0, {0.0f, 0.0f, 0.0f}, {10.0f, 10.0f, 10.0f}, EShadeMode::Gouraud);
+        Entity->Mesh->LoadMD2("Assets/Models/monsters/brain/tris.md2", nullptr, 0, {0.0f, 0.0f, 0.0f}, {10.0f, 10.0f, 10.0f}, EShadeMode::Gouraud, { 1.5f, 2.0f, 1.5f });
+        // Entity->Mesh->LoadMD2("Assets/Models/boss3/tris.md2", "Assets/Models/boss3/rider.pcx", 0, {0.0f, 0.0f, 0.0f}, {10.0f, 10.0f, 10.0f}, EShadeMode::Gouraud, { 1.5f, 2.0f, 1.5f });
+        // Entity->Mesh->LoadMD2("Assets/Models/marine/tris.md2", "Assets/Models/marine/Centurion.pcx", 0, {0.0f, 0.0f, 0.0f}, {10.0f, 10.0f, 10.0f}, EShadeMode::Gouraud, { 1.5f, 2.0f, 1.5f });
+
+        Camera = World.GetCamera();
+        Camera->Init(ECameraAttr::Euler, { 0.0f, 1000.0f, 1500.0f }, { 25.0f, 180.0f, 0 }, VVector4(), 75, 100, 1000000);
+
+        World.SetEnvironment2D("Assets/Environment2D/Texture.png");
+        // World.GetTerrain()->GenerateTerrain("Assets/Terrains/Large/Heightmap.bmp", "Assets/Terrains/RockyLand/Texture.bmp", 1000000.0f, 250000.0f, EShadeMode::Gouraud);
+        World.GetTerrain()->GenerateTerrain("Assets/Terrains/Medium/Heightmap.bmp", "Assets/Terrains/Common/Texture.bmp", 10000.0f, 2500.0f, EShadeMode::Gouraud);
+
     }
 
     virtual void Update(f32 DeltaTime) override
@@ -232,11 +254,13 @@ void GGameState::ProcessInput(f32 DeltaTime)
     if (Input.IsKeyDown(EKeycode::W))
     {
         Camera->Position.X += Math.FastSin(Camera->Direction.Y) * CamPosSpeed;
+        Camera->Position.Y -= Math.FastSin(Camera->Direction.X) * CamPosSpeed;
         Camera->Position.Z += Math.FastCos(Camera->Direction.Y) * CamPosSpeed;
     }
     if (Input.IsKeyDown(EKeycode::S))
     {
         Camera->Position.X -= Math.FastSin(Camera->Direction.Y) * CamPosSpeed;
+        Camera->Position.Y += Math.FastSin(Camera->Direction.X) * CamPosSpeed;
         Camera->Position.Z -= Math.FastCos(Camera->Direction.Y) * CamPosSpeed;
     }
 
@@ -249,14 +273,23 @@ void GGameState::ProcessInput(f32 DeltaTime)
     if (Input.IsKeyDown(EKeycode::Up))    Camera->Direction.X -= CamDirSpeed;
     if (Input.IsKeyDown(EKeycode::Down))  Camera->Direction.X += CamDirSpeed;
 
+    MouseMoveAccum += Input.GetMouseRelativePosition();
+
+    static constexpr f32 Divider = 2.0f;
+    VVector2i MouseMoveInt = { (i32)((f32)MouseMoveAccum.X / Divider), (i32)((f32)MouseMoveAccum.Y / Divider) };
+
     f32 Multiplier = DeltaTime * 0.1f;
-    VVector2 MouseMove = { Input.GetMouseRelativePosition().Y * Multiplier, Input.GetMouseRelativePosition().X * Multiplier };
-    Camera->Direction.X += MouseMove.X;
-    Camera->Direction.Y += MouseMove.Y;
-    if (MouseMove.X != 0.0f && MouseMove.Y != 0.0f)
+    VVector2 MouseMoveFloat = { MouseMoveInt.X * Multiplier, MouseMoveInt.Y * Multiplier };
+
+    Camera->Direction.X += MouseMoveFloat.Y * 0.4f; // Pitch = Y
+    Camera->Direction.Y += MouseMoveFloat.X * 0.5f; // Yaw   = X
+
+    if (MouseMoveInt.X != 0 || MouseMoveInt.Y != 0)
     {
-        VLN_LOG("%.3f %.3f\n", MouseMove.X, MouseMove.Y);
+        VLN_LOG("%d %d\n", MouseMoveInt.X, MouseMoveInt.Y);
     }
+
+    MouseMoveAccum -= MouseMoveInt;
 
     if (Input.IsKeyDown(EKeycode::Backspace)) Config.RenderSpec.bRenderSolid ^= true;
 

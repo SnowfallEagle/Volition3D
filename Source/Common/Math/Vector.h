@@ -30,6 +30,20 @@ public:
         };
     }
 
+    VLN_FINLINE const TVector2<T>& operator+=(const TVector2<T>& Point)
+    {
+        X += Point.X;
+        Y += Point.Y;
+        return *this;
+    }
+
+    VLN_FINLINE const TVector2<T>& operator-=(const TVector2<T>& Point)
+    {
+        X -= Point.X;
+        Y -= Point.Y;
+        return *this;
+    }
+
     VLN_FINLINE void Zero()
     {
         X = Y = 0;
