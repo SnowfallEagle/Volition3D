@@ -663,9 +663,6 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                         CurrentMaterial->Texture.Load(TexturePath);
                         CurrentMaterial->Attr |= EMaterialAttr::ShadeModeTexture;
 
-                        // Texture in object
-                        Attr |= EMeshAttr::HasTexture;
-
                         VLN_LOG_VERBOSE("\tMaterial has texture, file path: %s\n", TexturePath);
                     }
                 }
@@ -790,22 +787,19 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
 
         // Fix texture coords
         {
-            if (Attr & EMeshAttr::HasTexture)
+            for (i32f i = 0; i < NumTextureCoords; ++i)
             {
-                for (i32f i = 0; i < NumTextureCoords; ++i)
+                if (Flags & ECOBFlags::InvertU)
                 {
-                    if (Flags & ECOBFlags::InvertU)
-                    {
-                        TextureCoordsList[i].X = 1 - TextureCoordsList[i].X;
-                    }
-                    if (Flags & ECOBFlags::InvertV)
-                    {
-                        TextureCoordsList[i].Y = 1 - TextureCoordsList[i].Y;
-                    }
-                    if (Flags & ECOBFlags::SwapUV)
-                    {
-                        VLN_SWAP(TextureCoordsList[i].X, TextureCoordsList[i].Y, TempFloat);
-                    }
+                    TextureCoordsList[i].X = 1 - TextureCoordsList[i].X;
+                }
+                if (Flags & ECOBFlags::InvertV)
+                {
+                    TextureCoordsList[i].Y = 1 - TextureCoordsList[i].Y;
+                }
+                if (Flags & ECOBFlags::SwapUV)
+                {
+                    VLN_SWAP(TextureCoordsList[i].X, TextureCoordsList[i].Y, TempFloat);
                 }
             }
         }
@@ -1213,7 +1207,7 @@ b32 VMesh::LoadMD2(const char* Path, const char* InSkinPath, i32 SkinIndex, VVec
     );
 
     // Initialize model 
-    Attr = EMeshAttr::CanBeCulled | EMeshAttr::CastShadow | EMeshAttr::HasTexture | EMeshAttr::MultiFrame;
+    Attr = EMeshAttr::CanBeCulled | EMeshAttr::CastShadow | EMeshAttr::MultiFrame;
     Position = InPosition;
     Allocate(Header->NumVtx, Header->NumPoly, Header->NumFrames, Header->NumTextureCoords);
 

@@ -171,6 +171,13 @@ protected:
     virtual void StartUp() override
     {
         Super::StartUp();
+
+        // @TODO: Clean up
+        #if 0
+        World.SetEnvironment3D("Assets/Environment3D/Sky/null_plainsky256_ft.pcx", nullptr, nullptr, nullptr, nullptr, nullptr);
+        #endif
+
+        World.GetCamera()->ZFarClip = 1000000000.0f;
     }
 
     virtual void Update(f32 DeltaTime) override
@@ -263,5 +270,5 @@ void GGameState::ProcessInput(f32 DeltaTime)
 
 int main(int Argc, char** Argv)
 {
-    return Engine.Run<Game::GGrandTerrainScene>(Argc, Argv);
+    return Engine.Run<Game::GModelsScene>(Argc, Argv);
 }

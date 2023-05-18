@@ -23,10 +23,9 @@ namespace EMeshAttr
     enum
     {
         MultiFrame  = VLN_BIT(1),
-        HasTexture  = VLN_BIT(2),
-        CanBeCulled = VLN_BIT(3),
-        CastShadow  = VLN_BIT(4),
-        TerrainMesh = VLN_BIT(5),
+        CanBeCulled = VLN_BIT(2),
+        CastShadow  = VLN_BIT(3),
+        TerrainMesh = VLN_BIT(4),
     };
 }
 

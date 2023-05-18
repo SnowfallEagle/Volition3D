@@ -52,7 +52,9 @@ public:
     void DestroyEntity(VEntity* Entity);
 
     VLight* SpawnLight(ELightType Type);
+
     void SetEnvironment2D(const char* Path);
+    void SetEnvironment3D(const char* Front, const char* Back, const char* Top, const char* Bottom, const char* Left, const char* Right);
 
     VMaterial* AddMaterial();
 
