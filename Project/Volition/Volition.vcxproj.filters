@@ -31,6 +31,9 @@
     <Filter Include="Engine\Graphics\Rendering">
       <UniqueIdentifier>{d174c067-2237-46a4-a64e-f1f90baea050}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Core\Events">
+      <UniqueIdentifier>{35413cf7-33bb-4553-8bf8-7bde49b09ae2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\Engine\Core\DebugLog.h">
@@ -141,6 +144,12 @@
     <ClInclude Include="..\..\Source\Engine\Graphics\Types\TransformType.h">
       <Filter>Engine\Graphics\Types</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Core\Events\Event.h">
+      <Filter>Engine\Core\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Engine\Core\Events\EventBus.h">
+      <Filter>Engine\Core\Events</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Engine\Core\DebugLog.cpp">
@@ -217,6 +226,12 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\EmissiveInterpolator.cpp">
       <Filter>Engine\Graphics\Interpolators</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Core\Events\Event.cpp">
+      <Filter>Engine\Core\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Engine\Core\Events\EventBus.cpp">
+      <Filter>Engine\Core\Events</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

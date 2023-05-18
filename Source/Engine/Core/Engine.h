@@ -6,6 +6,7 @@
 #include "Engine/Core/DebugLog.h"
 #include "Engine/Core/Window.h"
 #include "Engine/Core/Time.h"
+#include "Engine/Core/Events/EventBus.h"
 #include "Engine/World/World.h"
 #include "Engine/Input/Input.h"
 #include "Engine/Graphics/Rendering/Renderer.h"
@@ -35,6 +36,7 @@ inline void VEngine::StartUp(i32 Argc, char** Argv)
 {
     DebugLog.StartUp();
     Config.StartUp(Argc, Argv);
+    EventBus.StartUp();
     Window.StartUp();
     Math.StartUp();
     Renderer.StartUp();
@@ -56,6 +58,7 @@ inline i32 VEngine::Run(i32 Argc, char** Argv)
         Time.TickFrame();
 
         // Process all events
+        EventBus.Update();
         Window.ProcessEvents();
         Input.ProcessEvents();
 

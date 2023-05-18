@@ -217,6 +217,8 @@
     <ClInclude Include="..\..\Source\Engine\Core\Config\RenderSpecification.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Config\WindowSpecification.h" />
     <ClInclude Include="..\..\Source\Engine\Core\DebugLog.h" />
+    <ClInclude Include="..\..\Source\Engine\Core\Events\Event.h" />
+    <ClInclude Include="..\..\Source\Engine\Core\Events\EventBus.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Time.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Engine.h" />
     <ClInclude Include="..\..\Source\Engine\Core\Window.h" />
@@ -252,6 +254,8 @@
   <ItemGroup>
     <ClCompile Include="..\..\Source\Engine\Core\Config\Config.cpp" />
     <ClCompile Include="..\..\Source\Engine\Core\DebugLog.cpp" />
+    <ClCompile Include="..\..\Source\Engine\Core\Events\Event.cpp" />
+    <ClCompile Include="..\..\Source\Engine\Core\Events\EventBus.cpp" />
     <ClCompile Include="..\..\Source\Engine\Core\Time.cpp" />
     <ClCompile Include="..\..\Source\Engine\Core\Engine.cpp" />
     <ClCompile Include="..\..\Source\Engine\Core\Window.cpp" />

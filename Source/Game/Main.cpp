@@ -249,6 +249,15 @@ void GGameState::ProcessInput(f32 DeltaTime)
     if (Input.IsKeyDown(EKeycode::Up))    Camera->Direction.X -= CamDirSpeed;
     if (Input.IsKeyDown(EKeycode::Down))  Camera->Direction.X += CamDirSpeed;
 
+    f32 Multiplier = DeltaTime * 0.1f;
+    VVector2 MouseMove = { Input.GetMouseRelativePosition().Y * Multiplier, Input.GetMouseRelativePosition().X * Multiplier };
+    Camera->Direction.X += MouseMove.X;
+    Camera->Direction.Y += MouseMove.Y;
+    if (MouseMove.X != 0.0f && MouseMove.Y != 0.0f)
+    {
+        VLN_LOG("%.3f %.3f\n", MouseMove.X, MouseMove.Y);
+    }
+
     if (Input.IsKeyDown(EKeycode::Backspace)) Config.RenderSpec.bRenderSolid ^= true;
 
     if (Input.IsKeyDown(EKeycode::F1)) World.ChangeState<GLargeTerrainScene>();

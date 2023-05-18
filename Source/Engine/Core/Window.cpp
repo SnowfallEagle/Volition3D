@@ -2,6 +2,7 @@
 #include "Common/Platform/Assert.h"
 #include "Engine/Core/Engine.h"
 #include "Engine/Core/Config/Config.h"
+#include "Engine/Core/Events/EventBus.h"
 #include "Engine/Core/Window.h"
 
 namespace Volition
@@ -48,27 +49,14 @@ void VWindow::ShutDown()
 
 void VWindow::ProcessEvents()
 {
-    SDL_Event Event;
-
-    while (SDL_PollEvent(&Event))
+    if (EventBus.GetEventById(EEventId::Quit))
     {
-        switch (Event.type)
-        {
-        case SDL_QUIT:
-        {
-            Engine.Stop();
-        } break;
+        Engine.Stop();
+    }
 
-        case SDL_WINDOWEVENT:
-        {
-            if (Event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
-            {
-                Renderer.RefreshWindowSurface();
-            }
-        } break;
-
-        default: {} break;
-        }
+    if (EventBus.GetEventById(EEventId::WindowSizeChanged))
+    {
+        Renderer.RefreshWindowSurface();
     }
 }
 
