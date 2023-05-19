@@ -97,10 +97,7 @@ void VRenderList::Transform(const VMatrix44& M, ETransformType Type)
         for (i32f i = 0; i < NumPoly; ++i)
         {
             VPolyFace* Poly = &PolyList[i];
-            if (!Poly ||
-                ~Poly->State & EPolyState::Active ||
-                Poly->State & EPolyState::Clipped ||
-                Poly->State & EPolyState::Backface)
+            if (~Poly->State & EPolyState::Active || Poly->State & EPolyState::NotRenderTest)
             {
                 continue;
             }
@@ -124,10 +121,8 @@ void VRenderList::Transform(const VMatrix44& M, ETransformType Type)
         for (i32f i = 0; i < NumPoly; ++i)
         {
             VPolyFace* Poly = &PolyList[i];
-            if (!Poly ||
-                ~Poly->State & EPolyState::Active ||
-                Poly->State & EPolyState::Clipped ||
-                Poly->State & EPolyState::Backface)
+            if (~Poly->State & EPolyState::Active || Poly->State & EPolyState::NotRenderTest)
+
             {
                 continue;
             }
@@ -151,10 +146,7 @@ void VRenderList::Transform(const VMatrix44& M, ETransformType Type)
         for (i32f i = 0; i < NumPoly; ++i)
         {
             VPolyFace* Poly = &PolyList[i];
-            if (!Poly ||
-                ~Poly->State & EPolyState::Active ||
-                Poly->State & EPolyState::Clipped ||
-                Poly->State & EPolyState::Backface)
+            if (~Poly->State & EPolyState::Active || Poly->State & EPolyState::NotRenderTest)
             {
                 continue;
             }
@@ -181,10 +173,7 @@ void VRenderList::TransformModelToWorld(const VPoint4& WorldPos, ETransformType 
         for (i32f i = 0; i < NumPoly; ++i)
         {
             VPolyFace* Poly = &PolyList[i];
-            if (!Poly ||
-                ~Poly->State & EPolyState::Active ||
-                Poly->State & EPolyState::Clipped ||
-                Poly->State & EPolyState::Backface)
+            if (~Poly->State & EPolyState::Active || Poly->State & EPolyState::NotRenderTest)
             {
                 continue;
             }
@@ -200,10 +189,7 @@ void VRenderList::TransformModelToWorld(const VPoint4& WorldPos, ETransformType 
         for (i32f i = 0; i < NumPoly; ++i)
         {
             VPolyFace* Poly = &PolyList[i];
-            if (!Poly ||
-                ~Poly->State & EPolyState::Active ||
-                Poly->State & EPolyState::Clipped ||
-                Poly->State & EPolyState::Backface)
+            if (~Poly->State & EPolyState::Active || Poly->State & EPolyState::NotRenderTest)
             {
                 continue;
             }
@@ -739,10 +725,7 @@ void VRenderList::TransformWorldToCamera(const VCamera& Camera)
     for (i32f i = 0; i < NumPoly; ++i)
     {
         VPolyFace* Poly = &PolyList[i];
-        if (!Poly ||
-            ~Poly->State & EPolyState::Active ||
-            Poly->State & EPolyState::Clipped ||
-            Poly->State & EPolyState::Backface)
+        if (~Poly->State & EPolyState::Active || Poly->State & EPolyState::NotRenderTest)
         {
             continue;
         }
@@ -1129,10 +1112,7 @@ void VRenderList::TransformCameraToPerspective(const VCamera& Cam)
     for (i32f i = 0; i < NumPoly; ++i)
     {
         VPolyFace* Poly = &PolyList[i];
-        if (!Poly ||
-            ~Poly->State & EPolyState::Active ||
-            Poly->State & EPolyState::Clipped ||
-            Poly->State & EPolyState::Backface)
+        if (~Poly->State & EPolyState::Active || Poly->State & EPolyState::NotRenderTest)
         {
             continue;
         }
@@ -1150,10 +1130,7 @@ void VRenderList::ConvertFromHomogeneous()
     for (i32f i = 0; i < NumPoly; ++i)
     {
         VPolyFace* Poly = &PolyList[i];
-        if (!Poly ||
-            ~Poly->State & EPolyState::Active ||
-            Poly->State & EPolyState::Clipped ||
-            Poly->State & EPolyState::Backface)
+        if (~Poly->State & EPolyState::Active || Poly->State & EPolyState::NotRenderTest)
         {
             continue;
         }
@@ -1173,10 +1150,7 @@ void VRenderList::TransformPerspectiveToScreen(const VCamera& Cam)
     for (i32f i = 0; i < NumPoly; ++i)
     {
         VPolyFace* Poly = &PolyList[i];
-        if (!Poly ||
-            ~Poly->State & EPolyState::Active ||
-            Poly->State & EPolyState::Clipped ||
-            Poly->State & EPolyState::Backface)
+        if (~Poly->State & EPolyState::Active || Poly->State & EPolyState::NotRenderTest)
         {
             continue;
         }
@@ -1197,10 +1171,7 @@ void VRenderList::TransformCameraToScreen(const VCamera& Cam)
     for (i32f i = 0; i < NumPoly; ++i)
     {
         VPolyFace* Poly = &PolyList[i];
-        if (!Poly ||
-            ~Poly->State & EPolyState::Active ||
-            Poly->State & EPolyState::Clipped ||
-            Poly->State & EPolyState::Backface)
+        if (~Poly->State & EPolyState::Active || Poly->State & EPolyState::NotRenderTest)
         {
             continue;
         }
