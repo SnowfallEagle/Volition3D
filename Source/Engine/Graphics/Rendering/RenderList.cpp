@@ -41,7 +41,7 @@ b32 VRenderList::InsertPolyFace(const VPolyFace& Poly)
     return true;
 }
 
-void VRenderList::InsertMesh(VMesh& Mesh, b32 bInsertLocal, const VMaterial* OverrideMaterial)
+void VRenderList::InsertMesh(VMesh& Mesh, const VVertex* VtxList, const VMaterial* OverrideMaterial)
 {
     if (~Mesh.State & EMeshState::Active  ||
         ~Mesh.State & EMeshState::Visible ||
@@ -59,8 +59,7 @@ void VRenderList::InsertMesh(VMesh& Mesh, b32 bInsertLocal, const VMaterial* Ove
             continue;
         }
 
-        // @TODO: Optimization: InsertMesh() param for VtxList
-        if (!InsertPoly(Poly, bInsertLocal ? Mesh.LocalVtxList : Mesh.TransVtxList, Mesh.TextureCoordsList, OverrideMaterial ? OverrideMaterial : Poly.Material))
+        if (!InsertPoly(Poly, VtxList, Mesh.TextureCoordsList, OverrideMaterial ? OverrideMaterial : Poly.Material))
         {
             return;
         }

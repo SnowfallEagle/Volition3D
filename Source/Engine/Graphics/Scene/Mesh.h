@@ -105,7 +105,7 @@ public:
     static constexpr i32f MaxMaterialsPerModel = 256;
 
 public:
-    char Name[64]; // @TODO: -> VString
+    char Name[64];
 
     u32 State;
     u32 Attr;

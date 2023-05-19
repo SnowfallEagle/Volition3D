@@ -138,7 +138,7 @@ void VRenderer::SetTerrain(VMesh& TerrainMesh)
     TerrainRenderList->ResetList();
     TerrainMesh.ResetRenderState();
     TerrainMesh.TransformModelToWorld();
-    TerrainRenderList->InsertMesh(TerrainMesh, false);
+    TerrainRenderList->InsertMesh(TerrainMesh, TerrainMesh.TransVtxList);
 }
 
 void VRenderer::Render()
@@ -209,7 +209,7 @@ void VRenderer::Render()
                 }
                 Mesh->Cull(Camera);
 
-                BaseRenderList->InsertMesh(*Mesh, false);
+                BaseRenderList->InsertMesh(*Mesh, Mesh->TransVtxList);
             }
 
             // Make shadow
@@ -220,7 +220,6 @@ void VRenderer::Render()
                 }
 
                 // Compute shadow vertex positions
-                // @TODO: Figure out
                 static constexpr f32 YShadowPosition = -25.0f;
 
                 VVertex* VtxList = Mesh->TransVtxList;
@@ -236,7 +235,7 @@ void VRenderer::Render()
 
                 // Insert shadow mesh
                 Mesh->State &= ~EMeshState::Culled;
-                BaseRenderList->InsertMesh(*Mesh, false, &ShadowMaterial);
+                BaseRenderList->InsertMesh(*Mesh, Mesh->TransVtxList, &ShadowMaterial);
             }
         }
     }
@@ -929,15 +928,8 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
         }
 
         // Clip bottom Y
-        // @TODO: Ternar
-        if (Y2 > Config.RenderSpec.MaxClip.Y)
-        {
-            YEnd = Config.RenderSpec.MaxClip.Y + 1; // + 1 because of top-left fill convention
-        }
-        else
-        {
-            YEnd = Y2 + 1;
-        }
+        // + 1 because of top-left fill convention
+        YEnd = Y2 > Config.RenderSpec.MaxClip.Y ? Config.RenderSpec.MaxClip.Y + 1 : Y2 + 1;
 
         // Test for clipping X
         if (X0 < Config.RenderSpec.MinClip.X || X1 < Config.RenderSpec.MinClip.X || X2 < Config.RenderSpec.MinClip.X ||
@@ -965,15 +957,7 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                     InterpolationContext.Interpolators[InterpIndex]->ComputeXStartsAndDeltas(InterpolationContext.Interpolators[InterpIndex], XDiff, ZLeft, ZRight);
                 }
 
-                // @TODO: Ternar
-                if (XDiff > 0)
-                {
-                    ZDeltaByX = (ZRight - ZLeft) / XDiff;
-                }
-                else
-                {
-                    ZDeltaByX = (ZRight - ZLeft);
-                }
+                ZDeltaByX = XDiff > 0 ? (ZRight - ZLeft) / XDiff : (ZRight - ZLeft); 
 
                 // X clipping
                 if (XStart < Config.RenderSpec.MinClip.X)
