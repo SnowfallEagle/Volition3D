@@ -12,11 +12,12 @@ static void StartFun(VFlatInterpolator* Self)
 static void ProcessPixelFun(VFlatInterpolator* Self)
 {
     const VColorARGB Pixel = Self->InterpolationContext->Pixel;
+    const VColorARGB Color = Self->Color;
 
     Self->InterpolationContext->Pixel = MAP_XRGB32(
-        (Self->Color.R * Pixel.R) >> 8,
-        (Self->Color.G * Pixel.G) >> 8,
-        (Self->Color.B * Pixel.B) >> 8
+        (Color.R * Pixel.R) >> 8,
+        (Color.G * Pixel.G) >> 8,
+        (Color.B * Pixel.B) >> 8
     );
 }
 

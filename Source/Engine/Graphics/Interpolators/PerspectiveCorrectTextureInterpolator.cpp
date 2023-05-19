@@ -97,8 +97,8 @@ static void ProcessPixelFun(VPerspectiveCorrectTextureInterpolator* Self)
         V * Self->TexturePitch +
         ((Self->U << (Fx28Shift - Fx22Shift)) / Self->InterpolationContext->Z)
     ];
-
     const VColorARGB Pixel = Self->InterpolationContext->Pixel;
+
     Self->InterpolationContext->Pixel = MAP_XRGB32(
         (TextureColor.R * Pixel.R) >> 8,
         (TextureColor.G * Pixel.G) >> 8,

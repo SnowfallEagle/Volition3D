@@ -16,10 +16,10 @@ static void StartFun(VBillinearPerspectiveTextureInterpolator* Self)
     for (i32f i = 0; i < 3; ++i)
     {
         Self->UVtx[i] =
-            IntToFx22((i32)(Self->InterpolationContext->Vtx[i].U * (f32)Self->TextureSize.X + 0.5f)) /
+            IntToFx22((i32)(Self->InterpolationContext->Vtx[i].U * Self->TextureSize.X + 0.5f)) /
             (i32)(Self->InterpolationContext->Vtx[i].Z + 0.5f);
         Self->VVtx[i] =
-            IntToFx22((i32)(Self->InterpolationContext->Vtx[i].V * (f32)Self->TextureSize.Y + 0.5f)) /
+            IntToFx22((i32)(Self->InterpolationContext->Vtx[i].V * Self->TextureSize.Y + 0.5f)) /
             (i32)(Self->InterpolationContext->Vtx[i].Z + 0.5f);
     }
 }
