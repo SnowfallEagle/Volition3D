@@ -911,13 +911,14 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
         }
 
         // Clip bottom Y
+        // @TODO: Ternar
         if (Y2 > Config.RenderSpec.MaxClip.Y)
         {
             YEnd = Config.RenderSpec.MaxClip.Y + 1; // + 1 because of top-left fill convention
         }
         else
         {
-            YEnd = Y2;
+            YEnd = Y2 + 1;
         }
 
         // Test for clipping X
@@ -929,11 +930,11 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
             ZBufferArray = (fx28*)ZBuffer.Buffer + (ZBuffer.Pitch * YStart);
 
             // Process each Y
-            for (InterpolationContext.Y = YStart; InterpolationContext.Y <= YEnd; ++InterpolationContext.Y)
+            for (InterpolationContext.Y = YStart; InterpolationContext.Y < YEnd; ++InterpolationContext.Y)
             {
                 // Compute starting values
                 i32f XStart = Fx16ToIntRounded(XLeft);
-                i32f XEnd = Fx16ToIntRounded(XRight);
+                i32f XEnd = Fx16ToIntRounded(XRight) + 1; // X < XEnd in loop so count last pixel
 
                 fx16 Z = ZLeft;
                 fx16 ZDeltaByX;
@@ -946,6 +947,7 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                     InterpolationContext.Interpolators[InterpIndex]->ComputeXStartsAndDeltas(InterpolationContext.Interpolators[InterpIndex], XDiff, ZLeft, ZRight);
                 }
 
+                // @TODO: Ternar
                 if (XDiff > 0)
                 {
                     ZDeltaByX = (ZRight - ZLeft) / XDiff;
@@ -974,7 +976,7 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                 }
 
                 // Process each X
-                for (i32f X = XStart; X <= XEnd; ++X)
+                for (i32f X = XStart; X < XEnd; ++X)
                 {
                     if (Z > ZBufferArray[X])
                     {
@@ -1024,11 +1026,11 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
             ZBufferArray = (fx28*)ZBuffer.Buffer + (ZBuffer.Pitch * YStart);
 
             // Process each Y
-            for (InterpolationContext.Y = YStart; InterpolationContext.Y <= YEnd; ++InterpolationContext.Y)
+            for (InterpolationContext.Y = YStart; InterpolationContext.Y < YEnd; ++InterpolationContext.Y)
             {
                 // Compute starting values
                 const i32f XStart = Fx16ToIntRounded(XLeft);
-                const i32f XEnd = Fx16ToIntRounded(XRight);
+                const i32f XEnd = Fx16ToIntRounded(XRight) + 1; // X < XEnd in loop so count last pixel
 
                 fx16 Z = ZLeft;
                 fx16 ZDeltaByX;
@@ -1051,7 +1053,7 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                 }
 
                 // Process each X
-                for (i32f X = XStart; X <= XEnd; ++X)
+                for (i32f X = XStart; X < XEnd; ++X)
                 {
                     if (Z > ZBufferArray[X])
                     {
@@ -1107,7 +1109,7 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
         }
         else
         {
-            YEnd = Y2;
+            YEnd = Y2 + 1;
         }
 
         // Clip top Y
@@ -1272,11 +1274,11 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
             ZBufferArray = (fx28*)ZBuffer.Buffer + (ZBuffer.Pitch * YStart);
 
             // Process each Y
-            for (InterpolationContext.Y = YStart; InterpolationContext.Y <= YEnd; ++InterpolationContext.Y)
+            for (InterpolationContext.Y = YStart; InterpolationContext.Y < YEnd; ++InterpolationContext.Y)
             {
                 // Compute starting values
                 i32f XStart = Fx16ToIntRounded(XLeft);
-                i32f XEnd = Fx16ToIntRounded(XRight);
+                i32f XEnd = Fx16ToIntRounded(XRight) + 1; // X < XEnd in loop so count last pixel
 
                 fx16 Z = ZLeft;
                 fx16 ZDeltaByX;
@@ -1317,7 +1319,7 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                 }
 
                 // Process each X
-                for (i32f X = XStart; X <= XEnd; ++X)
+                for (i32f X = XStart; X < XEnd; ++X)
                 {
                     if (Z > ZBufferArray[X])
                     {
@@ -1416,11 +1418,11 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
             ZBufferArray = (fx28*)ZBuffer.Buffer + (ZBuffer.Pitch * YStart);
 
             // Process each Y
-            for (InterpolationContext.Y = YStart; InterpolationContext.Y <= YEnd; ++InterpolationContext.Y)
+            for (InterpolationContext.Y = YStart; InterpolationContext.Y < YEnd; ++InterpolationContext.Y)
             {
                 // Compute starting values
                 const i32f XStart = Fx16ToIntRounded(XLeft);
-                const i32f XEnd = Fx16ToIntRounded(XRight);
+                const i32f XEnd = Fx16ToIntRounded(XRight) + 1; // X < XEnd in loop so count last pixel
 
                 fx16 Z = ZLeft;
                 fx16 ZDeltaByX;
@@ -1443,7 +1445,7 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
                 }
 
                 // Process each X
-                for (i32f X = XStart; X <= XEnd; ++X)
+                for (i32f X = XStart; X < XEnd; ++X)
                 {
                     if (Z > ZBufferArray[X])
                     {

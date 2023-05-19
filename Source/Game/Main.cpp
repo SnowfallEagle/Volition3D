@@ -284,10 +284,12 @@ void GGameState::ProcessInput(f32 DeltaTime)
     Camera->Direction.X += MouseMoveFloat.Y * 0.4f; // Pitch = Y
     Camera->Direction.Y += MouseMoveFloat.X * 0.5f; // Yaw   = X
 
+    #if 0
     if (MouseMoveInt.X != 0 || MouseMoveInt.Y != 0)
     {
         VLN_LOG("%d %d\n", MouseMoveInt.X, MouseMoveInt.Y);
     }
+    #endif
 
     MouseMoveAccum -= MouseMoveInt;
 
@@ -312,5 +314,5 @@ void GGameState::ProcessInput(f32 DeltaTime)
 
 int main(int Argc, char** Argv)
 {
-    return Engine.Run<Game::GModelsScene>(Argc, Argv);
+    return Engine.Run<Game::GLargeTerrainScene>(Argc, Argv);
 }
