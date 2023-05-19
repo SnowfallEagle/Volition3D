@@ -244,4 +244,16 @@ void VCamera::BuildNonHomogeneousPerspectiveToScreenMat44()
     };
 }
 
+void VCamera::Update(f32 DeltaTime)
+{
+    for (i32f i = 0; i < 3; ++i)
+    {
+        Direction.C[i] = Math.Mod(Direction.C[i], 360.0f);
+        if (Direction.C[i] < 0.0f)
+        {
+            Direction.C[i] += 360.0f;
+        }
+    }
+}
+
 }

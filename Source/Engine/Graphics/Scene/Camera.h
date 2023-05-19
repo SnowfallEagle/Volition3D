@@ -76,6 +76,8 @@ public:
     void BuildHomogeneousPerspectiveToScreenMat44();
     void BuildNonHomogeneousPerspectiveToScreenMat44();
 
+    void Update(f32 DeltaTime);
+
 private:
     void BuildWorldToCameraEulerMat44(ERotateSeq Seq = ERotateSeq::YXZ);
     void BuildWorldToCameraUVNMat44(EUVNMode Mode);

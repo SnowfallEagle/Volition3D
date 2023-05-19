@@ -238,6 +238,7 @@ protected:
         Camera->Position = { 50000.0f, 0.0f, -500000.0f };
         Camera->Direction = { 45.0f, -15.0f, 0.0f };
         Camera->ZFarClip = 5000000.0f;
+
         World.GenerateTerrain("Assets/Terrains/Grand/Heightmap.png", "Assets/Terrains/Grand/Texture.png", 2000000.0f, 2000000.0f, EShadeMode::Gouraud);
     }
 };
