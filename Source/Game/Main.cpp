@@ -38,10 +38,10 @@ public:
         World.GetTerrain()->GenerateTerrain("Assets/Terrains/Medium/Heightmap.bmp", "Assets/Terrains/Common/Texture.bmp", 10000.0f, 2500.0f, EShadeMode::Gouraud);
 
         World.SpawnLight(ELightType::Ambient);
-        const auto OccluderLight = World.SpawnLight(ELightType::Infinite);
+        const auto ShadowMakingLight = World.SpawnLight(ELightType::Infinite);
         World.SpawnLight(ELightType::Point);
 
-        World.SetOccluderLight(OccluderLight);
+        World.SetShadowMakingLight(ShadowMakingLight);
     }
 
     virtual void Update(f32 DeltaTime) override
@@ -145,12 +145,14 @@ protected:
     virtual void StartUp() override
     {
         World.SetEnvironment2D("Assets/Environment2D/Texture.png");
+        World.SetLensFlare("Assets/Textures/SunFlare.png");
 
         World.SpawnLight(ELightType::Ambient);
-        const auto OccluderLight = World.SpawnLight(ELightType::Infinite);
+        const auto SunLight = World.SpawnLight(ELightType::Infinite);
         World.SpawnLight(ELightType::Point);
 
-        World.SetOccluderLight(OccluderLight);
+        World.SetShadowMakingLight(SunLight);
+        World.SetLensFlareLight(SunLight);
 
         Config.RenderSpec.PostProcessColorCorrection = { 1.25f, 1.1f, 1.0f };
     }
@@ -276,10 +278,10 @@ void GGameState::ProcessInput(f32 DeltaTime)
     MouseMoveAccum += Input.GetMouseRelativePosition();
 
     static constexpr f32 Divider = 2.0f;
-    VVector2i MouseMoveInt = { (i32)((f32)MouseMoveAccum.X / Divider), (i32)((f32)MouseMoveAccum.Y / Divider) };
+    const VVector2i MouseMoveInt = { (i32)((f32)MouseMoveAccum.X / Divider), (i32)((f32)MouseMoveAccum.Y / Divider) };
 
-    f32 Multiplier = DeltaTime * 0.1f;
-    VVector2 MouseMoveFloat = { MouseMoveInt.X * Multiplier, MouseMoveInt.Y * Multiplier };
+    const f32 Multiplier = DeltaTime * 0.1f;
+    const VVector2 MouseMoveFloat = { MouseMoveInt.X * Multiplier, MouseMoveInt.Y * Multiplier };
 
     Camera->Direction.X += MouseMoveFloat.Y * 0.4f; // Pitch = Y
     Camera->Direction.Y += MouseMoveFloat.X * 0.5f; // Yaw   = X

@@ -31,7 +31,10 @@ private:
     TArray<VMaterial> Materials;
 
     TArray<VLight> Lights;
-    VLight* OccluderLight;
+    VLight* ShadowMakingLight;
+
+    VLight* LensFlareLight;
+    VSurface LensFlare;
 
     VSurface Environment2D;
     f32 Environment2DMovementEffectAngle = 0.0f;
@@ -71,9 +74,20 @@ public:
         return Terrain;
     }
 
-    VLN_FINLINE void SetOccluderLight(VLight* Light)
+    VLN_FINLINE void SetShadowMakingLight(VLight* Light)
     {
-        OccluderLight = Light;
+        ShadowMakingLight = Light;
+    }
+
+    VLN_FINLINE void SetLensFlareLight(VLight* Light)
+    {
+        LensFlareLight = Light;
+    }
+
+    VLN_FINLINE void SetLensFlare(const char* Path)
+    {
+        LensFlare.Load(Path);
+        LensFlare.SetAlphaMode(true);
     }
 
 private:

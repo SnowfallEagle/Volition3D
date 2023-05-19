@@ -36,9 +36,11 @@ public:
     void Lock(u32*& OutBuffer, i32& OutPitch);
     void Unlock();
 
-    // For textures
+    /** For textures */
     void CorrectColorsSlow(const VVector3& ColorCorrection = { 1.0f, 1.0f, 1.0f });
     void CorrectColorsFast(const VVector3& ColorCorrection = { 1.0f, 1.0f, 1.0f });
+
+    void SetAlphaMode(b32 bMode);
 
     VLN_FINLINE u32* GetBuffer()
     {
@@ -73,12 +75,12 @@ public:
         return Height;
     }
 
-    VLN_FINLINE void BlitHW(VRelativeRectInt* SourceRect, VSurface* Dest, VRelativeRectInt* DestRect)
+    VLN_FINLINE void Blit(VRelativeRectInt* SourceRect, VSurface* Dest, VRelativeRectInt* DestRect)
     {
         SDL_BlitScaled(SDLSurface, (SDL_Rect*)SourceRect, Dest->SDLSurface, (SDL_Rect*)DestRect);
     }
 
-    VLN_FINLINE void FillRectHW(VRelativeRectInt* Rect, u32 Color)
+    VLN_FINLINE void FillRect(VRelativeRectInt* Rect, u32 Color)
     {
         SDL_FillRect(SDLSurface, (SDL_Rect*)Rect, Color); // SDL_Rect has the same footprint as VRelativeRectInt
     }

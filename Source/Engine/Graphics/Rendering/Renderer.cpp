@@ -130,7 +130,7 @@ void VRenderer::PreRender()
     BaseRenderList->ResetList();
     TerrainRenderList->ResetStateAndSaveList();
 
-    BackSurface.FillRectHW(nullptr, MAP_XRGB32(0x00, 0x00, 0x00));
+    BackSurface.FillRect(nullptr, MAP_XRGB32(0x00, 0x00, 0x00));
 }
 
 void VRenderer::SetTerrain(VMesh& TerrainMesh)
@@ -147,7 +147,7 @@ void VRenderer::Render()
     VCamera& Camera = *World.Camera;
     Camera.BuildWorldToCameraMat44();
 
-    f32 CameraAngle = Math.Mod(Camera.Direction.Y + World.Environment2DMovementEffectAngle, 360.0f);
+    const f32 CameraAngle = Math.Mod(Camera.Direction.Y + World.Environment2DMovementEffectAngle, 360.0f);
 
     // Process 2D environment
     VSurface& Environment2D = World.Environment2D;
@@ -160,7 +160,7 @@ void VRenderer::Render()
         Src.W = GetScreenWidth();
         Src.H = Environment2D.Height;
 
-        Environment2D.BlitHW(&Src, &BackSurface, nullptr);
+        Environment2D.Blit(&Src, &BackSurface, nullptr);
 
         // If we have empty space on screen on right - blit this area
         i32f Remainder = Environment2D.Width - Src.X;
@@ -174,12 +174,12 @@ void VRenderer::Render()
             Dest.Y = 0;
             Dest.W = GetScreenWidth();
             Dest.H = GetScreenHeight();
-            Environment2D.BlitHW(&Src, &BackSurface, &Dest);
+            Environment2D.Blit(&Src, &BackSurface, &Dest);
         }
     }
 
-    // Get occluder light
-    VLight* OccluderLight = World.OccluderLight;
+    // Get shadow making light
+    const VLight* ShadowMakingLight = World.ShadowMakingLight;
 
     // Get buffer
     u32* Buffer;
@@ -211,7 +211,7 @@ void VRenderer::Render()
 
             // Make shadow
             {
-                if (~Mesh->Attr & EMeshAttr::CastShadow || !OccluderLight)
+                if (~Mesh->Attr & EMeshAttr::CastShadow || !ShadowMakingLight)
                 {
                     continue;
                 }
@@ -223,12 +223,12 @@ void VRenderer::Render()
                 VVertex* VtxList = Mesh->TransVtxList;
                 for (i32f i = 0; i < Mesh->NumVtx; ++i)
                 {
-                    VVector4 Direction = (VtxList[i].Position - OccluderLight->Position);
-                    f32 T = (YShadowPosition - OccluderLight->Position.Y) / Direction.Y;
+                    VVector4 Direction = (VtxList[i].Position - ShadowMakingLight->Position);
+                    f32 T = (YShadowPosition - ShadowMakingLight->Position.Y) / Direction.Y;
 
-                    VtxList[i].X = OccluderLight->Position.X + T * Direction.X;
+                    VtxList[i].X = ShadowMakingLight->Position.X + T * Direction.X;
                     VtxList[i].Y = YShadowPosition;
-                    VtxList[i].Z = OccluderLight->Position.Z + T * Direction.Z;
+                    VtxList[i].Z = ShadowMakingLight->Position.Z + T * Direction.Z;
                 }
 
                 // Insert shadow mesh
@@ -277,6 +277,21 @@ void VRenderer::Render()
 
     // Unlock buffer
     BackSurface.Unlock();
+
+    // Make lens flare effect
+    /* @TODO
+    const VLight* LensFlareLight = World.LensFlareLight;
+    const VSurface* LensFlare = &World.LensFlare;
+
+    // If light directed on us and lens flare texture is loaded
+    if (LensFlareLight && LensFlareLight->TransPosition.Z > 0.0f && LensFlare->SDLSurface && LensFlare->SDLSurface->pixels)
+    {
+        // @TODO: Check it only if light is directional, maybe make field bDirectional??
+        const f32 DirectionDot = VVector4::Dot(LensFlareLight->TransDirection, { 0.0f, 0.0f, -1.0f });
+
+        World.LensFlare.Blit(nullptr, &BackSurface, nullptr);
+    }
+    */
 }
 
 void VRenderer::PostProcess()
@@ -319,7 +334,7 @@ void VRenderer::RenderUI()
 
 void VRenderer::PostRender()
 {
-    BackSurface.BlitHW(nullptr, &VideoSurface, nullptr);
+    BackSurface.Blit(nullptr, &VideoSurface, nullptr);
     SDL_UpdateWindowSurface(Window.SDLWindow);
 
     TextQueue.Clear();

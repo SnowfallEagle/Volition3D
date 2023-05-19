@@ -117,6 +117,14 @@ void VSurface::CorrectColorsFast(const VVector3& ColorCorrection)
     Unlock();
 }
 
+void VSurface::SetAlphaMode(b32 bMode)
+{
+    if (SDLSurface)
+    {
+        SDL_SetSurfaceBlendMode(SDLSurface, bMode ? SDL_BLENDMODE_ADD : SDL_BLENDMODE_NONE);
+    }
+}
+
 void VSurface::CorrectColorsSlow(const VVector3& ColorCorrection)
 {
     u32* Buffer;
