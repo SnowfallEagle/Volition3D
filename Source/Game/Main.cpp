@@ -191,6 +191,13 @@ protected:
         World.GetTerrain()->GenerateTerrain("Assets/Terrains/Medium/Heightmap.bmp", "Assets/Terrains/Common/Texture.bmp", 10000.0f, 2500.0f, EShadeMode::Gouraud);
 
         const auto Spotlight = World.SpawnLight(ELightType::ComplexSpotlight);
+        Spotlight->Position = { 0.0f, 1500.0f, -100.0f };
+        Spotlight->Color = MAP_XRGB32(0xFF, 0x00, 0x11);
+        Spotlight->KQuad = 0.0000001f;
+        Spotlight->KLinear = 0.0f;
+        Spotlight->FalloffPower = 5.0f;
+
+        World.SetShadowMakingLight(Spotlight);
     }
 
     virtual void Update(f32 DeltaTime) override
@@ -270,11 +277,11 @@ void GGameState::ProcessInput(f32 DeltaTime)
     if (Input.IsKeyDown(EKeycode::Space)) Camera->Position.Y += CamPosSpeed * 5.0f;
     if (Input.IsKeyDown(EKeycode::C))     Camera->Position.Y -= CamPosSpeed * 5.0f;
 
-    f32 CamDirSpeed = 0.1f * DeltaTime;
-    if (Input.IsKeyDown(EKeycode::Left))  Camera->Direction.Y -= CamDirSpeed;
-    if (Input.IsKeyDown(EKeycode::Right)) Camera->Direction.Y += CamDirSpeed;
-    if (Input.IsKeyDown(EKeycode::Up))    Camera->Direction.X -= CamDirSpeed;
-    if (Input.IsKeyDown(EKeycode::Down))  Camera->Direction.X += CamDirSpeed;
+    i32 CamDirSpeed = (i32)DeltaTime;
+    if (Input.IsKeyDown(EKeycode::Left))  MouseMoveAccum.X -= CamDirSpeed;
+    if (Input.IsKeyDown(EKeycode::Right)) MouseMoveAccum.X += CamDirSpeed;
+    if (Input.IsKeyDown(EKeycode::Up))    MouseMoveAccum.Y -= CamDirSpeed;
+    if (Input.IsKeyDown(EKeycode::Down))  MouseMoveAccum.Y += CamDirSpeed;
 
     MouseMoveAccum += Input.GetMouseRelativePosition();
 

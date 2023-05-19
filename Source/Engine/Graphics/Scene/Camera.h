@@ -20,7 +20,7 @@ enum class EUVNMode
 
 namespace ECameraAttr
 {
-    enum
+    enum Type
     {
         Euler = VLN_BIT(1),
         UVN = VLN_BIT(2)

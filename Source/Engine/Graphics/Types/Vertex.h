@@ -9,7 +9,7 @@ namespace Volition
 
 namespace EVertexAttr
 {
-	enum
+	enum Type
 	{
 		HasNormal        = VLN_BIT(1),
 		HasTextureCoords = VLN_BIT(2),

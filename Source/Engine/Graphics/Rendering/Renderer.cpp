@@ -1680,10 +1680,7 @@ void VRenderer::RenderSolid(const VRenderList* RenderList)
     for (i32f i = 0; i < RenderList->NumPoly; ++i)
     {
         const VPolyFace* Poly = &RenderList->PolyList[i];
-        if (!Poly ||
-            ~Poly->State & EPolyState::Active ||
-            Poly->State & EPolyState::Backface ||
-            Poly->State & EPolyState::Clipped)
+        if (~Poly->State & EPolyState::Active || Poly->State & EPolyState::NotRenderTest)
         {
             continue;
         }
@@ -1708,10 +1705,7 @@ void VRenderer::RenderWire(const VRenderList* RenderList)
     for (i32f i = 0; i < RenderList->NumPoly; ++i)
     {
         const VPolyFace* Poly = &RenderList->PolyList[i];
-        if (!Poly ||
-            ~Poly->State & EPolyState::Active ||
-            Poly->State & EPolyState::Backface ||
-            Poly->State & EPolyState::Clipped)
+        if (~Poly->State & EPolyState::Active || Poly->State & EPolyState::NotRenderTest)
         {
             continue;
         }

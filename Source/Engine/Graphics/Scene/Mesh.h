@@ -10,7 +10,7 @@ namespace Volition
 
 namespace EMeshState
 {
-    enum
+    enum Type
     {
         Active   = VLN_BIT(1),
         Visible  = VLN_BIT(2),
@@ -20,7 +20,7 @@ namespace EMeshState
 
 namespace EMeshAttr
 {
-    enum
+    enum Type
     {
         MultiFrame  = VLN_BIT(1),
         CanBeCulled = VLN_BIT(2),
@@ -31,7 +31,7 @@ namespace EMeshAttr
 
 namespace ECullType
 {
-    enum
+    enum Type
     {
         X = VLN_BIT(1),
         Y = VLN_BIT(2),
@@ -43,7 +43,7 @@ namespace ECullType
 
 namespace ECOBFlags
 {
-    enum
+    enum Type
     {
         SwapYZ  = VLN_BIT(1),
         SwapUV  = VLN_BIT(2),

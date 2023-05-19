@@ -698,16 +698,16 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                     std::snprintf(Format, FormatSize, "Shader name: \"%%%d[a-z ]\"", ShaderNameSize - 1);
                     std::sscanf(Line, Format, ShaderName);
 
-                    if (0 == strncmp(ShaderName, "constant", ShaderNameSize))
+                    if (0 == std::strncmp(ShaderName, "constant", ShaderNameSize))
                     {
                         CurrentMaterial->Attr |= EMaterialAttr::ShadeModeEmissive;
                     }
-                    else if (0 == strncmp(ShaderName, "matte", ShaderNameSize))
+                    else if (0 == std::strncmp(ShaderName, "matte", ShaderNameSize))
                     {
                         CurrentMaterial->Attr |= EMaterialAttr::ShadeModeFlat;
                     }
-                    else if (0 == strncmp(ShaderName, "plastic", ShaderNameSize) ||
-                             0 == strncmp(ShaderName, "phong", ShaderNameSize))
+                    else if (0 == std::strncmp(ShaderName, "plastic", ShaderNameSize) ||
+                             0 == std::strncmp(ShaderName, "phong", ShaderNameSize))
                     {
                         // We have no phong support, so we use gouraud for phong too
                         CurrentMaterial->Attr |= EMaterialAttr::ShadeModeGouraud;

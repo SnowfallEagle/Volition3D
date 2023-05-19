@@ -5,7 +5,7 @@ namespace Volition
 
 namespace EAnsiAttr
 {
-    enum
+    enum Type
     {
         None   = 0,
         FgGrey = 90,

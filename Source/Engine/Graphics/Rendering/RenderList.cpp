@@ -54,9 +54,7 @@ void VRenderList::InsertMesh(VMesh& Mesh, b32 bInsertLocal, const VMaterial* Ove
     {
         const VPoly& Poly = Mesh.PolyList[i];
 
-        if (~Poly.State & EPolyState::Active ||
-            Poly.State & EPolyState::Clipped ||
-            Poly.State & EPolyState::Backface)
+        if (~Poly.State & EPolyState::Active || Poly.State & EPolyState::NotRenderTest)
         {
             continue;
         }
@@ -227,8 +225,7 @@ void VRenderList::RemoveBackfaces(const VCamera& Cam)
             VPolyFace* Poly = &PolyList[i];
 
             if (~Poly->State & EPolyState::Active ||
-                Poly->State & EPolyState::Clipped ||
-                Poly->State & EPolyState::Backface ||
+                Poly->State & EPolyState::NotRenderTest ||
                 Poly->Material->Attr & EMaterialAttr::TwoSided)
             {
                 continue;
@@ -257,8 +254,7 @@ void VRenderList::RemoveBackfaces(const VCamera& Cam)
             VPolyFace* Poly = &PolyList[i];
 
             if (~Poly->State & EPolyState::Active  ||
-                Poly->State & EPolyState::Clipped  ||
-                Poly->State & EPolyState::Backface ||
+                Poly->State & EPolyState::NotRenderTest ||
                 Poly->Material->Attr & EMaterialAttr::TwoSided)
             {
                 continue;
@@ -281,7 +277,6 @@ void VRenderList::RemoveBackfaces(const VCamera& Cam)
     }
 }
 
-// @TODO: Fix spotlight
 void VRenderList::Light(const VCamera& Cam, const TArray<VLight>& Lights)
 {
     for (i32f PolyIndex = 0; PolyIndex < NumPoly; ++PolyIndex)
@@ -289,8 +284,7 @@ void VRenderList::Light(const VCamera& Cam, const TArray<VLight>& Lights)
         // Check if we need to draw this poly
         VPolyFace* Poly = &PolyList[PolyIndex];
 
-        if (~Poly->State & EPolyState::Active ||
-            Poly->State & EPolyState::NotLightTest)
+        if (~Poly->State & EPolyState::Active || Poly->State & EPolyState::NotLightTest)
         {
             continue;
         }
@@ -786,9 +780,7 @@ void VRenderList::Clip(const VCamera& Camera, EClipFlags::Type Flags)
     {
         VPolyFace& Poly = PolyList[PolyIndex];
 
-        if (~Poly.State & EPolyState::Active  ||
-            Poly.State & EPolyState::Backface ||
-            Poly.State & EPolyState::Clipped)
+        if (~Poly.State & EPolyState::Active  || Poly.State & EPolyState::NotRenderTest)
         {
             continue;
         }

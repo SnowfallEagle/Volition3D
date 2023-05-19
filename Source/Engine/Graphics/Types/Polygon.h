@@ -12,14 +12,15 @@ namespace Volition
 
 namespace EPolyState
 {
-	enum
+	enum Type
 	{
 		Active   = VLN_BIT(1),
 		Clipped  = VLN_BIT(2),
 		Backface = VLN_BIT(3),
 		Lit      = VLN_BIT(4),
 
-        NotLightTest = Clipped | Backface | Lit
+        NotRenderTest = Clipped | Backface,
+        NotLightTest  = NotRenderTest | Lit,
 	};
 }
 

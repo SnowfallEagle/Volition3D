@@ -39,7 +39,7 @@ void VLight::Init(ELightType InType)
         Direction = { 0.0f, -1.0f, 0.0f };
 
         KConst  = 0.0f;
-        KLinear = 1.0f;
+        KLinear = 0.0001f;
         KQuad   = 0.0f;
     } break;
 
@@ -50,7 +50,7 @@ void VLight::Init(ELightType InType)
         Direction = { 0.0f, -1.0f, 0.0f };
 
         KConst  = 0.0f;
-        KLinear = 1.0f;
+        KLinear = 0.0001f;
         KQuad   = 0.0f;
 
         FalloffPower = 1.0f;

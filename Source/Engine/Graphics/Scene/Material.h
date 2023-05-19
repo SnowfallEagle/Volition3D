@@ -10,7 +10,7 @@ namespace Volition
 
 namespace EMaterialAttr
 {
-	enum
+	enum Type
 	{
 		TwoSided    = VLN_BIT(1),
 		Transparent = VLN_BIT(2),
