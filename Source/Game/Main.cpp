@@ -177,31 +177,20 @@ protected:
     {
         Super::StartUp();
 
-        // @TODO: Clean up
-        #if 0
-        World.SetEnvironment3D("Assets/Environment3D/Sky/null_plainsky256_ft.pcx", nullptr, nullptr, nullptr, nullptr, nullptr);
-        #endif
-
         VCamera* Camera = World.GetCamera();
         Camera->ZFarClip = 1000000000.0f;
 
         const auto COBEntity = World.SpawnEntity()->Mesh->LoadCOB("Assets/Models/jetski05.cob", { 1000.0f, 1000.0f, 0.0f }, { 100.0f, 100.0f, 100.0f }, ECOBFlags::Default | ECOBFlags::InvertV /* | ECOBFlags::OverrideShadeMode */, EShadeMode::Gouraud);
 
         auto Entity = World.SpawnEntity<VEntity>();
-        auto LightEntity = World.SpawnEntity<VEntity>();
-
-        // Entity->Mesh->LoadMD2("Assets/Models/tekkblade/tris.md2", nullptr, 0, {0.0f, 0.0f, 0.0f}, {10.0f, 10.0f, 10.0f}, EShadeMode::Gouraud);
         Entity->Mesh->LoadMD2("Assets/Models/monsters/brain/tris.md2", nullptr, 0, {0.0f, 0.0f, 0.0f}, {10.0f, 10.0f, 10.0f}, EShadeMode::Gouraud, { 1.5f, 2.0f, 1.5f });
-        // Entity->Mesh->LoadMD2("Assets/Models/boss3/tris.md2", "Assets/Models/boss3/rider.pcx", 0, {0.0f, 0.0f, 0.0f}, {10.0f, 10.0f, 10.0f}, EShadeMode::Gouraud, { 1.5f, 2.0f, 1.5f });
-        // Entity->Mesh->LoadMD2("Assets/Models/marine/tris.md2", "Assets/Models/marine/Centurion.pcx", 0, {0.0f, 0.0f, 0.0f}, {10.0f, 10.0f, 10.0f}, EShadeMode::Gouraud, { 1.5f, 2.0f, 1.5f });
 
         Camera = World.GetCamera();
-        Camera->Init(ECameraAttr::Euler, { 0.0f, 1000.0f, 1500.0f }, { 25.0f, 180.0f, 0 }, VVector4(), 75, 100, 1000000);
+        Camera->Init(ECameraAttr::Euler, { 0.0f, 1000.0f, 1500.0f }, { 25.0f, 180.0f, 0.0f }, VVector4(), 90.0f, 100.0f, 1000000.0f);
 
-        World.SetEnvironment2D("Assets/Environment2D/Texture.png");
-        // World.GetTerrain()->GenerateTerrain("Assets/Terrains/Large/Heightmap.bmp", "Assets/Terrains/RockyLand/Texture.bmp", 1000000.0f, 250000.0f, EShadeMode::Gouraud);
         World.GetTerrain()->GenerateTerrain("Assets/Terrains/Medium/Heightmap.bmp", "Assets/Terrains/Common/Texture.bmp", 10000.0f, 2500.0f, EShadeMode::Gouraud);
 
+        const auto Spotlight = World.SpawnLight(ELightType::ComplexSpotlight);
     }
 
     virtual void Update(f32 DeltaTime) override
@@ -250,9 +239,9 @@ void GGameState::ProcessInput(f32 DeltaTime)
 {
     VCamera* Camera = World.GetCamera();
 
-    f32 ShiftModifier = (Input.IsKeyDown(EKeycode::LShift) ? 150.0f : 1.0f);
+    f32 ShiftModifier = (Input.IsKeyDown(EKeycode::LShift) ? 10.0f : 1.0f);
 
-    f32 CamPosSpeed = 0.5f * DeltaTime * ShiftModifier;
+    f32 CamPosSpeed = 2.5f * DeltaTime * ShiftModifier;
     if (Input.IsKeyDown(EKeycode::W))
     {
         Camera->Position.X += Math.FastSin(Camera->Direction.Y) * CamPosSpeed;
@@ -264,6 +253,18 @@ void GGameState::ProcessInput(f32 DeltaTime)
         Camera->Position.X -= Math.FastSin(Camera->Direction.Y) * CamPosSpeed;
         Camera->Position.Y += Math.FastSin(Camera->Direction.X) * CamPosSpeed;
         Camera->Position.Z -= Math.FastCos(Camera->Direction.Y) * CamPosSpeed;
+    }
+    if (Input.IsKeyDown(EKeycode::A))
+    {
+        const f32 Angle = Camera->Direction.Y - 90.0f;
+        Camera->Position.X += Math.FastSin(Angle) * CamPosSpeed;
+        Camera->Position.Z += Math.FastCos(Angle) * CamPosSpeed;
+    }
+    if (Input.IsKeyDown(EKeycode::D))
+    {
+        const f32 Angle = Camera->Direction.Y + 90.0f;
+        Camera->Position.X += Math.FastSin(Angle) * CamPosSpeed;
+        Camera->Position.Z += Math.FastCos(Angle) * CamPosSpeed;
     }
 
     if (Input.IsKeyDown(EKeycode::Space)) Camera->Position.Y += CamPosSpeed * 5.0f;
@@ -277,6 +278,7 @@ void GGameState::ProcessInput(f32 DeltaTime)
 
     MouseMoveAccum += Input.GetMouseRelativePosition();
 
+    #if 0
     static constexpr f32 Divider = 2.0f;
     const VVector2i MouseMoveInt = { (i32)((f32)MouseMoveAccum.X / Divider), (i32)((f32)MouseMoveAccum.Y / Divider) };
 
@@ -311,6 +313,42 @@ void GGameState::ProcessInput(f32 DeltaTime)
     #endif
 
     MouseMoveAccum -= MouseMoveInt;
+    #else
+    static constexpr f32 Divider = 0.5f;
+    const VVector2i MouseMoveInt = { (i32)((f32)MouseMoveAccum.X / Divider), (i32)((f32)MouseMoveAccum.Y / Divider) };
+
+    const f32 Multiplier = DeltaTime * 0.05f;
+    const VVector2 MouseMoveFloat = { MouseMoveInt.X * Multiplier, MouseMoveInt.Y * Multiplier };
+
+    Camera->Direction.Y += MouseMoveFloat.X * 0.5f; // Yaw = X
+
+    const f32 PitchDirectionDelta = MouseMoveFloat.Y * 0.4f; // Pitch = Y
+    Camera->Direction.X += PitchDirectionDelta;
+
+    if (PitchDirectionDelta < 0.0f)
+    {
+        if ((Camera->Direction.X < -90.0f) || (Camera->Direction.X > 90.0f && Camera->Direction.X < 270.0f))
+        {
+            Camera->Direction.X = 270.0f;
+        }
+    }
+    else if (PitchDirectionDelta > 0.0f)
+    {
+        if (Camera->Direction.X > 90.0f && Camera->Direction.X < 270.0f)
+        {
+            Camera->Direction.X = 90.0f;
+        }
+    }
+
+    #if 0
+    if (MouseMoveInt.X != 0 || MouseMoveInt.Y != 0)
+    {
+        VLN_LOG("%d %d\n", MouseMoveInt.X, MouseMoveInt.Y);
+    }
+    #endif
+
+    MouseMoveAccum = { 0, 0 };
+    #endif
 
     if (Input.IsKeyDown(EKeycode::Backspace)) Config.RenderSpec.bRenderSolid ^= true;
 
@@ -333,5 +371,5 @@ void GGameState::ProcessInput(f32 DeltaTime)
 
 int main(int Argc, char** Argv)
 {
-    return Engine.Run<Game::GLargeTerrainScene>(Argc, Argv);
+    return Engine.Run<Game::GModelsScene>(Argc, Argv);
 }
