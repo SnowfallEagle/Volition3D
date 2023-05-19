@@ -74,14 +74,7 @@ void VWorld::Update(f32 DeltaTime)
 void VWorld::FixedUpdate(f32 FixedDeltaTime)
 {
     GameState->FixedUpdate(FixedDeltaTime);
-
-    // @TODO: Environment2D->FixedUpdate()
-    static constexpr f32 Environment2DMovementEffectSpeed = 0.00175f;
-    Environment2DMovementEffectAngle = Math.Mod(Environment2DMovementEffectAngle + (Environment2DMovementEffectSpeed * FixedDeltaTime), 360.0f);
-    if (Environment2DMovementEffectAngle < 0.0f)
-    {
-        Environment2DMovementEffectAngle += 360.0f;
-    }
+    FixedUpdateEnvironment(FixedDeltaTime);
 }
 
 void VWorld::DestroyEntity(VEntity* Entity)
@@ -130,6 +123,17 @@ void VWorld::StartUp(VGameState* InGameState)
     GameState = InGameState;
     GameState->StartUp();
     NextGameState = nullptr;
+}
+
+void VWorld::FixedUpdateEnvironment(f32 FixedDeltaTime)
+{
+    static constexpr f32 Environment2DMovementEffectSpeed = 0.00175f;
+
+    Environment2DMovementEffectAngle = Math.Mod(Environment2DMovementEffectAngle + (Environment2DMovementEffectSpeed * FixedDeltaTime), 360.0f);
+    if (Environment2DMovementEffectAngle < 0.0f)
+    {
+        Environment2DMovementEffectAngle += 360.0f;
+    }
 }
 
 }

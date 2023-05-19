@@ -90,6 +90,8 @@ public:
 private:
     void StartUp(VGameState* InGameState);
 
+    void FixedUpdateEnvironment(f32 FixedDeltaTime);
+
     friend class VRenderer;
 };
 
