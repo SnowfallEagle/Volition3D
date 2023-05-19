@@ -147,18 +147,21 @@ void VRenderer::Render()
     VCamera& Camera = *World.Camera;
     Camera.BuildWorldToCameraMat44();
 
-    const f32 CameraAngle = Math.Mod(Camera.Direction.Y + World.Environment2DMovementEffectAngle, 360.0f);
-
     // Process 2D environment
     VSurface& Environment2D = World.Environment2D;
     if (Environment2D.SDLSurface && Environment2D.SDLSurface->pixels)
     {
-        // Blit first environment
+        // Blit first part
         VRelativeRectInt Src;
-        Src.X = (i32)((CameraAngle / 360.0f) * (f32)World.Environment2D.Width + 0.5f);
-        Src.Y = 0;
+
+        const f32 YCameraAngle = Math.Mod(Camera.Direction.Y + World.Environment2DMovementEffectAngle, 360.0f);
+        const i32 HeightPart = Environment2D.Height / 3;
+
+        Src.X = (i32)((YCameraAngle / 360.0f) * (f32)World.Environment2D.Width + 0.5f);
+        Src.Y = HeightPart + (i32)((f32)HeightPart * Math.Sin(Camera.Direction.X));
+
         Src.W = GetScreenWidth();
-        Src.H = Environment2D.Height;
+        Src.H = HeightPart;
 
         Environment2D.Blit(&Src, &BackSurface, nullptr);
 
@@ -169,11 +172,11 @@ void VRenderer::Render()
             Src.X = 0;
 
             VRelativeRectInt Dest;
-
             Dest.X = Remainder;
             Dest.Y = 0;
             Dest.W = GetScreenWidth();
             Dest.H = GetScreenHeight();
+
             Environment2D.Blit(&Src, &BackSurface, &Dest);
         }
     }

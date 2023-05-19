@@ -60,12 +60,15 @@ void VWorld::Update(f32 DeltaTime)
     // Update world stuff
     GameState->Update(DeltaTime);
 
-    // @TODO: Camera->FixedUpdate()
+    // @TODO: Camera->Update()
     {
-        Camera->Direction.Y = Math.Mod(Camera->Direction.Y, 360.0f);
-        if (Camera->Direction.Y < 0.0f)
+        for (i32f i = 0; i < 3; ++i)
         {
-            Camera->Direction.Y += 360.0f;
+            Camera->Direction.C[i] = Math.Mod(Camera->Direction.C[i], 360.0f);
+            if (Camera->Direction.C[i] < 0.0f)
+            {
+                Camera->Direction.C[i] += 360.0f;
+            }
         }
     }
 

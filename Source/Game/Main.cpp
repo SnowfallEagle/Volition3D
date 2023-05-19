@@ -283,8 +283,25 @@ void GGameState::ProcessInput(f32 DeltaTime)
     const f32 Multiplier = DeltaTime * 0.1f;
     const VVector2 MouseMoveFloat = { MouseMoveInt.X * Multiplier, MouseMoveInt.Y * Multiplier };
 
-    Camera->Direction.X += MouseMoveFloat.Y * 0.4f; // Pitch = Y
-    Camera->Direction.Y += MouseMoveFloat.X * 0.5f; // Yaw   = X
+    Camera->Direction.Y += MouseMoveFloat.X * 0.5f; // Yaw = X
+
+    const f32 PitchDirectionDelta = MouseMoveFloat.Y * 0.4f; // Pitch = Y
+    Camera->Direction.X += PitchDirectionDelta;
+
+    if (PitchDirectionDelta < 0.0f)
+    {
+        if ((Camera->Direction.X < -90.0f) || (Camera->Direction.X > 90.0f && Camera->Direction.X < 270.0f))
+        {
+            Camera->Direction.X = 270.0f;
+        }
+    }
+    else if (PitchDirectionDelta > 0.0f)
+    {
+        if (Camera->Direction.X > 90.0f && Camera->Direction.X < 270.0f)
+        {
+            Camera->Direction.X = 90.0f;
+        }
+    }
 
     #if 0
     if (MouseMoveInt.X != 0 || MouseMoveInt.Y != 0)
