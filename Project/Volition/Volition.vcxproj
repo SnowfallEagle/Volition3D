@@ -248,7 +248,6 @@
     <ClInclude Include="..\..\Source\Engine\Input\Input.h" />
     <ClInclude Include="..\..\Source\Engine\World\Entity.h" />
     <ClInclude Include="..\..\Source\Engine\World\GameState.h" />
-    <ClInclude Include="..\..\Source\Engine\World\Terrain.h" />
     <ClInclude Include="..\..\Source\Engine\World\World.h" />
   </ItemGroup>
   <ItemGroup>
@@ -277,7 +276,6 @@
     <ClCompile Include="..\..\Source\Engine\Graphics\Scene\Material.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Scene\Mesh.cpp" />
     <ClCompile Include="..\..\Source\Engine\World\Entity.cpp" />
-    <ClCompile Include="..\..\Source\Engine\World\Terrain.cpp" />
     <ClCompile Include="..\..\Source\Engine\World\World.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -3,7 +3,6 @@
 #include "Common/Types/Array.h"
 #include "Engine/Graphics/Scene/Light.h"
 #include "Engine/Graphics/Scene/Material.h"
-#include "Engine/World/Terrain.h"
 #include "Engine/World/Entity.h"
 #include "Engine/World/GameState.h"
 
@@ -40,7 +39,7 @@ private:
     f32 Environment2DMovementEffectAngle = 0.0f;
 
     VCamera* Camera;
-    VTerrain* Terrain;
+    VMesh* TerrainMesh;
 
 public:
     template<typename GameStateT = VGameState>
@@ -67,9 +66,9 @@ public:
         return Camera;
     }
 
-    VLN_FINLINE VTerrain* GetTerrain() const
+    VLN_FINLINE void GenerateTerrain(const char* HeightMap, const char* Texture, f32 Size = 15000.0f, f32 Height = 1000.0f, EShadeMode ShadeMode = EShadeMode::Gouraud)
     {
-        return Terrain;
+        TerrainMesh->GenerateTerrain(HeightMap, Texture, Size, Height, ShadeMode);
     }
 
     VLN_FINLINE void SetShadowMakingLight(VLight* Light)

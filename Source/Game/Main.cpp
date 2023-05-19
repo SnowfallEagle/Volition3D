@@ -35,7 +35,7 @@ public:
 
         World.SetEnvironment2D("Assets/Environment2D/Texture.png");
         // World.GetTerrain()->GenerateTerrain("Assets/Terrains/Large/Heightmap.bmp", "Assets/Terrains/RockyLand/Texture.bmp", 1000000.0f, 250000.0f, EShadeMode::Gouraud);
-        World.GetTerrain()->GenerateTerrain("Assets/Terrains/Medium/Heightmap.bmp", "Assets/Terrains/Common/Texture.bmp", 10000.0f, 2500.0f, EShadeMode::Gouraud);
+        World.GenerateTerrain("Assets/Terrains/Medium/Heightmap.bmp", "Assets/Terrains/Common/Texture.bmp", 10000.0f, 2500.0f, EShadeMode::Gouraud);
 
         World.SpawnLight(ELightType::Ambient);
         const auto ShadowMakingLight = World.SpawnLight(ELightType::Infinite);
@@ -188,7 +188,7 @@ protected:
         Camera = World.GetCamera();
         Camera->Init(ECameraAttr::Euler, { 0.0f, 1000.0f, 1500.0f }, { 25.0f, 180.0f, 0.0f }, VVector4(), 90.0f, 100.0f, 1000000.0f);
 
-        World.GetTerrain()->GenerateTerrain("Assets/Terrains/Medium/Heightmap.bmp", "Assets/Terrains/Common/Texture.bmp", 10000.0f, 2500.0f, EShadeMode::Gouraud);
+        World.GenerateTerrain("Assets/Terrains/Medium/Heightmap.bmp", "Assets/Terrains/Common/Texture.bmp", 10000.0f, 2500.0f, EShadeMode::Gouraud);
 
         const auto Spotlight = World.SpawnLight(ELightType::ComplexSpotlight);
         Spotlight->Position = { 0.0f, 1500.0f, -100.0f };
@@ -220,7 +220,7 @@ protected:
         Camera->Direction = { 15.0f, 180.0f, 0.0f };
         Camera->ZFarClip = 3000000.0f;
 
-        World.GetTerrain()->GenerateTerrain("Assets/Terrains/Large/Heightmap.bmp", "Assets/Terrains/RockyLand/Texture.bmp", 1000000.0f, 250000.0f, EShadeMode::Gouraud);
+        World.GenerateTerrain("Assets/Terrains/Large/Heightmap.bmp", "Assets/Terrains/RockyLand/Texture.bmp", 1000000.0f, 250000.0f, EShadeMode::Gouraud);
     }
 };
 
@@ -238,7 +238,7 @@ protected:
         Camera->Position = { 50000.0f, 0.0f, -500000.0f };
         Camera->Direction = { 45.0f, -15.0f, 0.0f };
         Camera->ZFarClip = 5000000.0f;
-        World.GetTerrain()->GenerateTerrain("Assets/Terrains/Grand/Heightmap.png", "Assets/Terrains/Grand/Texture.png", 2000000.0f, 2000000.0f, EShadeMode::Gouraud);
+        World.GenerateTerrain("Assets/Terrains/Grand/Heightmap.png", "Assets/Terrains/Grand/Texture.png", 2000000.0f, 2000000.0f, EShadeMode::Gouraud);
     }
 };
 

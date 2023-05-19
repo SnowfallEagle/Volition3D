@@ -90,9 +90,6 @@
     <ClInclude Include="..\..\Source\Engine\World\GameState.h">
       <Filter>Engine\World</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\World\Terrain.h">
-      <Filter>Engine\World</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Engine\World\World.h">
       <Filter>Engine\World</Filter>
     </ClInclude>
@@ -189,9 +186,6 @@
       <Filter>Engine\Core\Config</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\World\Entity.cpp">
-      <Filter>Engine\World</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Engine\World\Terrain.cpp">
       <Filter>Engine\World</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\World\World.cpp">

@@ -183,7 +183,7 @@ public:
     void Transform(const VMatrix44& M, ETransformType Type, b32 bTransBasis);
     b32 Cull(const VCamera& Cam, u32 CullType = ECullType::XYZ);
 
-    void GenerateTerrain(const char* HeightMap, const char* Texture, f32 Size, f32 Height, EShadeMode ShadeMode = EShadeMode::Gouraud);
+    void GenerateTerrain(const char* HeightMap, const char* Texture, f32 Size, f32 Height, EShadeMode ShadeMode);
 
     VLN_FINLINE f32 GetAverageRadius()
     {

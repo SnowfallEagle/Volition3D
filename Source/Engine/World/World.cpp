@@ -19,11 +19,11 @@ void VWorld::ShutDown(EWorldShutDownReason Reason)
         VLN_SAFE_DELETE(Camera);
     }
 
-    if (Terrain)
+    if (TerrainMesh)
     {
-        Terrain->Destroy();
-        delete Terrain;
-        Terrain = nullptr;
+        TerrainMesh->Destroy();
+        delete TerrainMesh;
+        TerrainMesh = nullptr;
 
         Renderer.RemoveTerrain();
     }
@@ -135,7 +135,7 @@ void VWorld::StartUp(VGameState* InGameState)
     Camera = new VCamera();
     Camera->Init(ECameraAttr::Euler, { 0.0f, 1000.0f, 1500.0f }, { 0.0f, 0.0f, 0.0f }, VVector4(), 90.0f, 250.0f, 1000000.0f);
 
-    Terrain = new VTerrain();
+    TerrainMesh = new VMesh();
 
     GameState = InGameState;
     GameState->StartUp();

@@ -827,6 +827,8 @@ void VMesh::GenerateTerrain(const char* HeightMap, const char* Texture, f32 Size
 {
     Destroy();
 
+    Attr = EMeshAttr::TerrainMesh;
+
     // Prepare material
     VMaterial* Material = World.AddMaterial();
     Material->Texture.Load(Texture, { 1.0f, 1.0f, 1.0f }, 1);
@@ -911,6 +913,8 @@ void VMesh::GenerateTerrain(const char* HeightMap, const char* Texture, f32 Size
     ComputeVertexNormals();
 
     Position = { -Size / 2.0f, -Height / 2.0f, -Size / 2.0f };
+
+    Renderer.SetTerrain(*this);
 }
 
 /******************************************************
