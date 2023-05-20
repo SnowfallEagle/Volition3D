@@ -116,7 +116,7 @@ void VWorld::StartUp(VGameState* InGameState)
     LensFlareLight = nullptr;
 
     Camera = new VCamera();
-    Camera->Init(ECameraAttr::Euler, { 0.0f, 1000.0f, 1500.0f }, { 0.0f, 0.0f, 0.0f }, VVector4(), 80.0f, 250.0f, 1000000.0f);
+    Camera->Init(ECameraAttr::Euler, { 0.0f, 1000.0f, 1500.0f }, { 0.0f, 0.0f, 0.0f }, VVector4(), 80.0f, 100.0f, 1000000.0f);
 
     TerrainMesh = new VMesh();
 

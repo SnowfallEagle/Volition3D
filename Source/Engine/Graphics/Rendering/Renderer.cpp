@@ -220,13 +220,13 @@ void VRenderer::Render()
                 }
 
                 // Compute shadow vertex positions
-                static constexpr f32 YShadowPosition = -25.0f;
+                const f32 YShadowPosition = World.YShadowPosition;
 
                 VVertex* VtxList = Mesh->TransVtxList;
                 for (i32f i = 0; i < Mesh->NumVtx; ++i)
                 {
-                    VVector4 Direction = (VtxList[i].Position - ShadowMakingLight->Position);
-                    f32 T = (YShadowPosition - ShadowMakingLight->Position.Y) / Direction.Y;
+                    const VVector4 Direction = (VtxList[i].Position - ShadowMakingLight->Position);
+                    const f32 T = (YShadowPosition - ShadowMakingLight->Position.Y) / Direction.Y;
 
                     VtxList[i].X = ShadowMakingLight->Position.X + T * Direction.X;
                     VtxList[i].Y = YShadowPosition;

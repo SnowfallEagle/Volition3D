@@ -41,6 +41,8 @@ private:
     VCamera* Camera;
     VMesh* TerrainMesh;
 
+    f32 YShadowPosition = -25.0f;
+
 public:
     template<typename GameStateT = VGameState>
     void StartUp();
@@ -60,6 +62,11 @@ public:
 
     template<typename GameStateT = VGameState>
     void ChangeState();
+
+    VLN_FINLINE void SetYShadowPosition(f32 NewY)
+    {
+        YShadowPosition = NewY;
+    }
 
     VLN_FINLINE VCamera* GetCamera() const
     {

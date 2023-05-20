@@ -1,4 +1,5 @@
 #include "SDL.h"
+#include "Engine/Core/DebugLog.h"
 #include "Engine/Core/Events/EventBus.h"
 
 namespace Volition
