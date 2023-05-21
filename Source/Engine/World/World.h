@@ -94,9 +94,13 @@ public:
         LensFlare.SetAlphaMode(true);
     }
 
+    VLN_FINLINE f32 GetEnvironment2DAngle()
+    {
+        return Environment2DMovementEffectAngle;
+    }
+
 private:
     void StartUp(VGameState* InGameState);
-
     void FixedUpdateEnvironment(f32 FixedDeltaTime);
 
     friend class VRenderer;

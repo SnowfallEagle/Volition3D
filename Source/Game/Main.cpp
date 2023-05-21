@@ -142,11 +142,14 @@ protected:
     VVector2 MouseMoveAccum = { 0.0f, 0.0f };
 
     f32 ShiftCamPosSpeedModifier = 5.0f;
-    f32 CamPosSpeedModifier = 2.5f;
-    f32 CamDirSpeedModifier = 0.5f;
+    f32 CamPosSpeedModifier      = 2.5f;
+    f32 CamDirSpeedModifier      = 0.5f;
 
     f32 MouseSensivity = 0.05f;
-    f32 MaxMouseDelta = 30.0f;
+    f32 MaxMouseDelta  = 30.0f;
+
+    VLight* SunLight;
+    VVector4 StartSunLightPosition;
 
 protected:
     virtual void StartUp() override
@@ -155,8 +158,10 @@ protected:
         World.SetLensFlare("Assets/Textures/SunFlare.png");
 
         World.SpawnLight(ELightType::Ambient);
-        const auto SunLight = World.SpawnLight(ELightType::Infinite);
         World.SpawnLight(ELightType::Point);
+
+        SunLight = World.SpawnLight(ELightType::Infinite);
+        StartSunLightPosition = SunLight->Position;
 
         World.SetShadowMakingLight(SunLight);
         World.SetLensFlareLight(SunLight);
@@ -169,6 +174,16 @@ protected:
         ProcessInput(DeltaTime);
 
         Renderer.DrawDebugText("FPS: %.2f", 1000.0f / DeltaTime);
+    }
+
+
+    virtual void FixedUpdate(f32 FixedDeltaTime) override
+    {
+        // Rotate sun light
+        VMatrix44 MatRotation;
+        MatRotation.BuildRotationXYZ(0.0f, -World.GetEnvironment2DAngle(), 0.0f);
+
+        VMatrix44::MulVecMat(StartSunLightPosition, MatRotation, SunLight->Position);
     }
 
     virtual void ProcessInput(f32 DeltaTime);
@@ -232,7 +247,7 @@ protected:
         Agent->Mesh->Rotation = { 0.0f, 180.0f, 0.0f };
 
         const auto AgentWeapon = World.SpawnEntity<VEntity>();
-        AgentWeapon->Mesh->LoadMD2("Assets/Models/0069/weapon.md2", "Assets/Models/0069/weapon.pcx", 0, {-45.0f, -12000.0f + 600.0f, 580.0f}, { 20.0f, 20.0f, 20.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
+        AgentWeapon->Mesh->LoadMD2("Assets/Models/0069/weapon.md2", "Assets/Models/0069/weapon.pcx", 0, {70.0f, -12000.0f + 600.0f, 420.0f}, { 20.0f, 20.0f, 20.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
         AgentWeapon->Mesh->PlayAnimation(EMD2AnimationId::StandingIdle, true);
         AgentWeapon->Mesh->Rotation = { 0.0f, 180.0f, 0.0f };
 
