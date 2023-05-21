@@ -336,7 +336,14 @@ protected:
 class GRaidScene : public GGameState
 {
 public:
+    static constexpr i32f MaxTroopers = 48;
+    static constexpr i32f MaxAirplanes = 4;
+
     using Super = GGameState;
+
+private:
+    VEntity* Troopers[MaxTroopers];
+    VEntity* Airplane[MaxAirplanes];
 
 protected:
     virtual void StartUp() override
@@ -373,17 +380,45 @@ protected:
         World.GenerateTerrain("Assets/Terrains/RockyLand/Heightmap.bmp", "Assets/Terrains/RockyLand/Texture.bmp", 500000.0f, 50000.0f, EShadeMode::Gouraud);
         StartSunLightPosition = {1000000.0f, 1000000.0f, 1000000.0f};
 
-        const auto Trooper = World.SpawnEntity<VEntity>();
-        Trooper->Mesh->LoadMD2("Assets/Models/bobafett/tris.md2", "Assets/Models/bobafett/rotj_fett.pcx", 0, {-8000.0f, -6000.0f, -15000.0f}, { 20.0f, 20.0f, 20.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
-        Trooper->Mesh->PlayAnimation(EMD2AnimationId::Run, true);
-        Trooper->Mesh->Rotation = { 0.0f, 30.0f, 0.0f };
+        for (i32f i = 0; i < MaxTroopers; ++i)
+        {
+            Troopers[i] = World.SpawnEntity<VEntity>();
+            Troopers[i]->Mesh->LoadMD2("Assets/Models/bobafett/tris.md2", "Assets/Models/bobafett/rotj_fett.pcx", 0, {-11000.0f + 500.0f * (f32)(i % 4), -6000.0f, -17500.0f - ((f32)(i/4) * 1000.0f)}, {20.0f, 20.0f, 20.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
+            Troopers[i]->Mesh->PlayAnimation(EMD2AnimationId::Run, true);
+        }
 
-        World.GetCamera()->Init(ECameraAttr::Euler, {-10000.0f, -5500.0f, 1500.0f}, {-15.0f, 180.0f, 0.0f}, VVector4(), 90.0f, 75.0f, 1000000.0f);
+        Airplane[0] = World.SpawnEntity<VEntity>();
+        Airplane[0]->Mesh->LoadMD2("Assets/Models/viper/tris.md2", nullptr, 0, { -5000.0f, 5000.0f, -40000 }, {100.0f, 100.0f, 100.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
+        Airplane[0]->Mesh->Rotation.X = 30.0f;
+
+        Airplane[1] = World.SpawnEntity<VEntity>();
+        Airplane[1]->Mesh->LoadMD2("Assets/Models/viper/tris.md2", nullptr, 0, { -20000.0f, 5000.0f, -40000 }, { 100.0f, 100.0f, 100.0f }, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
+        Airplane[1]->Mesh->Rotation.X = 30.0f;
+
+        Airplane[2] = World.SpawnEntity<VEntity>();
+        Airplane[2]->Mesh->LoadMD2("Assets/Models/strogg1/tris.md2", nullptr, 0, { -15000.0f, -5000.0f, -25000 }, {20.0f, 20.0f, 20.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
+        Airplane[2]->Mesh->Rotation.X = 15.0f;
+
+        Airplane[3] = World.SpawnEntity<VEntity>();
+        Airplane[3]->Mesh->LoadMD2("Assets/Models/strogg1/tris.md2", nullptr, 0, { -7500.0f, -5000.0f, -25000 }, {20.0f, 20.0f, 20.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
+        Airplane[3]->Mesh->Rotation.X = 15.0f;
+
+        World.GetCamera()->Init(ECameraAttr::Euler, {-10000.0f, -5500.0f, -10000.0f}, {-15.0f, 180.0f, 0.0f}, VVector4(), 90.0f, 250.0f, 1000000.0f);
     }
 
     virtual void Update(f32 DeltaTime) override
     {
         Super::Update(DeltaTime);
+
+        for (i32f i = 0; i < MaxTroopers; ++i)
+        {
+            Troopers[i]->Mesh->Position.Z += 2.0f *  DeltaTime;
+        }
+
+        for (i32f i = 0; i < MaxAirplanes; ++i)
+        {
+            Airplane[i]->Mesh->Position.Z += (i < 2 ? 1.0f : 2.0f) * DeltaTime;
+        }
     }
 };
 

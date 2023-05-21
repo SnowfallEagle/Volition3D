@@ -28,7 +28,7 @@ class VRenderList;
 class VRenderer
 {
 public:
-    static constexpr i32f MaxBaseRenderListPoly    = 32'768;
+    static constexpr i32f MaxBaseRenderListPoly    = 524'288;
     static constexpr i32f MaxTerrainRenderListPoly = 524'288;
     static constexpr i32f MaxCachedRenderListPoly  = MaxTerrainRenderListPoly;
 
