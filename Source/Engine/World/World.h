@@ -22,6 +22,9 @@ private:
     static constexpr i32f MinMaterialsCapacity = 128;
     static constexpr i32f MinLightsCapacity    = 128;
 
+public:
+    f32 Environment2DMovementEffectAngle = 0.0f;
+
 private:
     VGameState* GameState;
     VGameState* NextGameState;
@@ -36,7 +39,6 @@ private:
     VSurface LensFlare;
 
     VSurface Environment2D;
-    f32 Environment2DMovementEffectAngle = 0.0f;
 
     VCamera* Camera;
     VMesh* TerrainMesh;
@@ -92,11 +94,6 @@ public:
     {
         LensFlare.Load(Path);
         LensFlare.SetAlphaMode(true);
-    }
-
-    VLN_FINLINE f32 GetEnvironment2DAngle()
-    {
-        return Environment2DMovementEffectAngle;
     }
 
 private:

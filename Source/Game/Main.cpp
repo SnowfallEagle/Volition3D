@@ -148,8 +148,11 @@ protected:
     f32 MouseSensivity = 0.05f;
     f32 MaxMouseDelta  = 30.0f;
 
-    VLight* SunLight;
     VVector4 StartSunLightPosition;
+
+    VLight* AmbientLight;
+    VLight* PointLight;
+    VLight* SunLight;
 
 protected:
     virtual void StartUp() override
@@ -157,14 +160,15 @@ protected:
         World.SetEnvironment2D("Assets/Environment2D/Texture.png");
         World.SetLensFlare("Assets/Textures/SunFlare.png");
 
-        World.SpawnLight(ELightType::Ambient);
-        World.SpawnLight(ELightType::Point);
+        AmbientLight = World.SpawnLight(ELightType::Ambient);
+        PointLight = World.SpawnLight(ELightType::Point);
 
         SunLight = World.SpawnLight(ELightType::Infinite);
         StartSunLightPosition = SunLight->Position;
 
         World.SetShadowMakingLight(SunLight);
         World.SetLensFlareLight(SunLight);
+        World.Environment2DMovementEffectAngle = 165.0f;
 
         Config.RenderSpec.PostProcessColorCorrection = { 1.25f, 1.1f, 1.0f };
     }
@@ -181,7 +185,7 @@ protected:
     {
         // Rotate sun light
         VMatrix44 MatRotation;
-        MatRotation.BuildRotationXYZ(0.0f, -World.GetEnvironment2DAngle(), 0.0f);
+        MatRotation.BuildRotationXYZ(0.0f, -World.Environment2DMovementEffectAngle, 0.0f);
 
         VMatrix44::MulVecMat(StartSunLightPosition, MatRotation, SunLight->Position);
     }
@@ -241,32 +245,140 @@ protected:
     {
         Super::StartUp();
 
-        const auto Agent = World.SpawnEntity<VEntity>();
-        Agent->Mesh->LoadMD2("Assets/Models/0069/tris.md2", "Assets/Models/0069/actionbond.pcx", 0, {0.0f, -12000.0f, 500.0f}, { 20.0f, 20.0f, 20.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
-        Agent->Mesh->PlayAnimation(EMD2AnimationId::StandingIdle, true);
-        Agent->Mesh->Rotation = { 0.0f, 180.0f, 0.0f };
+        Config.RenderSpec.PostProcessColorCorrection = { 0.6f, 0.6f, 1.0f };
+        Config.RenderSpec.bRenderUI = false;
 
-        const auto AgentWeapon = World.SpawnEntity<VEntity>();
-        AgentWeapon->Mesh->LoadMD2("Assets/Models/0069/weapon.md2", "Assets/Models/0069/weapon.pcx", 0, {70.0f, -12000.0f + 600.0f, 420.0f}, { 20.0f, 20.0f, 20.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
-        AgentWeapon->Mesh->PlayAnimation(EMD2AnimationId::StandingIdle, true);
-        AgentWeapon->Mesh->Rotation = { 0.0f, 180.0f, 0.0f };
-
-        const auto Blade = World.SpawnEntity<VEntity>();
-        Blade->Mesh->LoadMD2("Assets/Models/blade/tris.md2", "Assets/Models/blade/blade.pcx", 0, {0.0f, -12000.0f, 0.0f}, {20.0f, 20.0f, 20.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
-        Blade->Mesh->PlayAnimation(EMD2AnimationId::StandingIdle, true);
-
-        const auto Dead = World.SpawnEntity<VEntity>();
-        Dead->Mesh->LoadMD2("Assets/Models/deadbods/dude/tris.md2", "Assets/Models/deadbods/dude/dead1.pcx", 0, { 5000.0f, -12000.0f, 5000.0f }, { 15.0f, 15.0f, 15.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
+        PointLight->bActive = false;
+        SunLight->Color.R -= 0x11;
+        SunLight->Color.G -= 0x11;
 
         const auto Spotlight = World.SpawnLight(ELightType::ComplexSpotlight);
-        Spotlight->Position = { 0.0f, 1500.0f, -100.0f };
-        Spotlight->Color = MAP_XRGB32(0xFF, 0x00, 0x11);
+        Spotlight->Position = { 0.0f, -10000.0f, 250.0f };
+        Spotlight->Direction = VVector4{ 0.0f, -0.75f, -0.5f }.GetNormalized();
+        Spotlight->Color = MAP_XRGB32(0x88, 0x88, 0xAA);
         Spotlight->KQuad = 0.0000001f;
         Spotlight->KLinear = 0.0f;
         Spotlight->FalloffPower = 5.0f;
 
-        World.SetYShadowPosition(-12000.0f);
-        World.GenerateTerrain("Assets/Terrains/Medium/Heightmap.bmp", "Assets/Terrains/Common/Texture.bmp", 50000.0f, 25000.0f, EShadeMode::Gouraud);
+        const auto Spotlight2 = World.SpawnLight(ELightType::ComplexSpotlight);
+        Spotlight2->Position = { 0.0f, -10000.0f, -250.0f };
+        Spotlight2->Direction = VVector4{ 0.0f, -0.5f, 1.0f }.GetNormalized();
+        Spotlight2->Color = MAP_XRGB32(0xAA, 0x22, 0x22);
+        Spotlight2->KQuad = 0.00000005f;
+        Spotlight2->KLinear = 0.0f;
+        Spotlight2->FalloffPower = 5.0f;
+
+        const auto CornerLight = World.SpawnLight(ELightType::ComplexSpotlight);
+        CornerLight->Position = { -7500.0f, -5000.0f, -10500.0f };
+        CornerLight->Direction = VVector4{ -0.25f, -1.0f, -1.0f }.GetNormalized();
+        CornerLight->Color = MAP_XRGB32(0xAA, 0x33, 0x33);
+        CornerLight->KQuad = 0.0000000000005f;
+        CornerLight->FalloffPower = 5.0f;
+
+        World.SetYShadowPosition(-12200.0f);
+        World.GenerateTerrain("Assets/Terrains/Medium/Heightmap.bmp", "Assets/Terrains/Common/Blue.bmp", 50000.0f, 25000.0f, EShadeMode::Gouraud);
+
+        const auto Agent = World.SpawnEntity<VEntity>();
+        Agent->Mesh->LoadMD2("Assets/Models/0069/tris.md2", "Assets/Models/0069/actionbond.pcx", 0, {260.0f, -12200.0f, 1000.0f}, { 20.0f, 20.0f, 20.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
+        Agent->Mesh->PlayAnimation(EMD2AnimationId::StandingIdle, true);
+        Agent->Mesh->Rotation = { 0.0f, 180.0f, 0.0f };
+
+        const auto AgentWeapon = World.SpawnEntity<VEntity>();
+        AgentWeapon->Mesh->LoadMD2("Assets/Models/0069/weapon.md2", "Assets/Models/0069/weapon.pcx", 0, {Agent->Mesh->Position.X + 40.0f, Agent->Mesh->Position.Y + 600.0f, Agent->Mesh->Position.Z - 80.0f}, { 20.0f, 20.0f, 20.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
+        AgentWeapon->Mesh->PlayAnimation(EMD2AnimationId::StandingIdle, true);
+        AgentWeapon->Mesh->Rotation = { 0.0f, 180.0f, 0.0f };
+
+        const auto Trooper1 = World.SpawnEntity<VEntity>();
+        Trooper1->Mesh->LoadMD2("Assets/Models/Marine/tris.md2", "Assets/Models/Marine/Centurion.pcx", 0, {0.0f, -12200.0f, 4000.0f}, { 20.0f, 20.0f, 20.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
+        Trooper1->Mesh->PlayAnimation(EMD2AnimationId::CrouchStand, true);
+        Trooper1->Mesh->Rotation = { 0.0f, 180.0f, 0.0f };
+
+        const auto Trooper2 = World.SpawnEntity<VEntity>();
+        Trooper2->Mesh->LoadMD2("Assets/Models/Marine/tris.md2", "Assets/Models/Marine/Centurion.pcx", 0, {1000.0f, -12200.0f, 4000.0f}, { 20.0f, 20.0f, 20.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
+        Trooper2->Mesh->PlayAnimation(EMD2AnimationId::StandingIdle, true);
+        Trooper2->Mesh->Rotation = { 0.0f, 210.0f, 0.0f };
+
+        const auto Trooper3 = World.SpawnEntity<VEntity>();
+        Trooper3->Mesh->LoadMD2("Assets/Models/Marine/tris.md2", "Assets/Models/Marine/Centurion.pcx", 0, {-1000.0f, -12200.0f, 4000.0f}, { 20.0f, 20.0f, 20.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
+        Trooper3->Mesh->PlayAnimation(EMD2AnimationId::StandingIdle, true);
+        Trooper3->Mesh->AnimationTimeAccum += 1.0f;
+        Trooper3->Mesh->Rotation = { 0.0f, 150.0f, 0.0f };
+
+        const auto Trooper4 = World.SpawnEntity<VEntity>();
+        Trooper4->Mesh->LoadMD2("Assets/Models/Marine/tris.md2", "Assets/Models/Marine/Centurion.pcx", 0, {-8000.0f, -12200.0f, -15000.0f}, { 20.0f, 20.0f, 20.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
+        Trooper4->Mesh->PlayAnimation(EMD2AnimationId::Wave, true);
+        Trooper4->Mesh->Rotation = { 0.0f, 30.0f, 0.0f };
+
+        const auto Trooper5 = World.SpawnEntity<VEntity>();
+        Trooper5->Mesh->LoadMD2("Assets/Models/Marine/tris.md2", "Assets/Models/Marine/Centurion.pcx", 0, {-6000.0f, -12200.0f, -15000.0f}, { 20.0f, 20.0f, 20.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
+        Trooper5->Mesh->PlayAnimation(EMD2AnimationId::Salute, true);
+        Trooper5->Mesh->Rotation = { 0.0f, 00.0f, 0.0f };
+
+        const auto Blade = World.SpawnEntity<VEntity>();
+        Blade->Mesh->LoadMD2("Assets/Models/blade/tris.md2", "Assets/Models/blade/blade.pcx", 0, {0.0f, -12200.0f, 0.0f}, {20.0f, 20.0f, 20.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
+        Blade->Mesh->PlayAnimation(EMD2AnimationId::StandingIdle, true);
+
+        const auto Dead = World.SpawnEntity<VEntity>();
+        Dead->Mesh->LoadMD2("Assets/Models/deadbods/dude/tris.md2", "Assets/Models/deadbods/dude/dead1.pcx", 0, { 5000.0f, -12200.0f, 4750.0f }, { 15.0f, 15.0f, 15.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
+        Dead->Mesh->Rotation.Y = 90.0f;
+
+        World.GetCamera()->Init(ECameraAttr::Euler, {0.0f, 1000.0f, 1500.0f}, {25.0f, 180.0f, 0.0f}, VVector4(), 90.0f, 75.0f, 1000000.0f);
+
+        CamPosSpeedModifier *= 0.25f;
+    }
+
+    virtual void Update(f32 DeltaTime) override
+    {
+        Super::Update(DeltaTime);
+    }
+};
+
+class GRaidScene : public GGameState
+{
+public:
+    using Super = GGameState;
+
+protected:
+    virtual void StartUp() override
+    {
+        Super::StartUp();
+
+        Config.RenderSpec.PostProcessColorCorrection = { 1.0f, 1.0f, 1.1f };
+        Config.RenderSpec.bRenderUI = false;
+
+        const auto Spotlight = World.SpawnLight(ELightType::ComplexSpotlight);
+        Spotlight->Position = { 0.0f, -10000.0f, 250.0f };
+        Spotlight->Direction = VVector4{ 0.0f, -0.75f, -0.5f }.GetNormalized();
+        Spotlight->Color = MAP_XRGB32(0x88, 0x88, 0xAA);
+        Spotlight->KQuad = 0.0000001f;
+        Spotlight->KLinear = 0.0f;
+        Spotlight->FalloffPower = 5.0f;
+
+        const auto Spotlight2 = World.SpawnLight(ELightType::ComplexSpotlight);
+        Spotlight2->Position = { 0.0f, -10000.0f, -250.0f };
+        Spotlight2->Direction = VVector4{ 0.0f, -0.5f, 1.0f }.GetNormalized();
+        Spotlight2->Color = MAP_XRGB32(0xAA, 0x22, 0x22);
+        Spotlight2->KQuad = 0.00000005f;
+        Spotlight2->KLinear = 0.0f;
+        Spotlight2->FalloffPower = 5.0f;
+
+        const auto CornerLight = World.SpawnLight(ELightType::ComplexSpotlight);
+        CornerLight->Position = { -7500.0f, -5000.0f, -10500.0f };
+        CornerLight->Direction = VVector4{ -0.25f, -1.0f, -1.0f }.GetNormalized();
+        CornerLight->Color = MAP_XRGB32(0xAA, 0x33, 0x33);
+        CornerLight->KQuad = 0.0000000000005f;
+        CornerLight->FalloffPower = 5.0f;
+
+        World.SetYShadowPosition(-6000.0f);
+        World.GenerateTerrain("Assets/Terrains/RockyLand/Heightmap.bmp", "Assets/Terrains/RockyLand/Texture.bmp", 500000.0f, 50000.0f, EShadeMode::Gouraud);
+        StartSunLightPosition = {1000000.0f, 1000000.0f, 1000000.0f};
+
+        const auto Trooper = World.SpawnEntity<VEntity>();
+        Trooper->Mesh->LoadMD2("Assets/Models/bobafett/tris.md2", "Assets/Models/bobafett/rotj_fett.pcx", 0, {-8000.0f, -6000.0f, -15000.0f}, { 20.0f, 20.0f, 20.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
+        Trooper->Mesh->PlayAnimation(EMD2AnimationId::Run, true);
+        Trooper->Mesh->Rotation = { 0.0f, 30.0f, 0.0f };
+
+        World.GetCamera()->Init(ECameraAttr::Euler, {-10000.0f, -5500.0f, 1500.0f}, {-15.0f, 180.0f, 0.0f}, VVector4(), 90.0f, 75.0f, 1000000.0f);
     }
 
     virtual void Update(f32 DeltaTime) override
@@ -418,5 +530,5 @@ void GGameState::ProcessInput(f32 DeltaTime)
 
 int main(int Argc, char** Argv)
 {
-    return Engine.Run<Game::GAgentWithBladeScene>(Argc, Argv);
+    return Engine.Run<Game::GRaidScene>(Argc, Argv);
 }
