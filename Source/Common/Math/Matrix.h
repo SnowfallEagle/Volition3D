@@ -105,6 +105,7 @@ public:
         VMatrix44::Mul(MatTemp, MatZ, *this);
     }
 
+    /** Result vector mustn't be A */
     VLN_FINLINE static void MulVecMat(const VVector4& A, const VMatrix44& M, VVector4& R)
     {
 #if VLN_SSE
@@ -134,6 +135,7 @@ public:
 #endif
     }
 
+    /** Result matrix mustn't be A or B */
     VLN_FINLINE static void Mul(const VMatrix44& A, const VMatrix44& B, VMatrix44& R)
     {
 #ifdef VLN_SSE

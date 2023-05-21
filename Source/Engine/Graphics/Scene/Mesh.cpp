@@ -13,7 +13,6 @@ namespace Volition
 
 VMesh::VMesh()
 {
-    // @FIXME: VString Name
     Memory.MemSetByte(this, 0, sizeof(*this));
 
     State = EMeshState::Active | EMeshState::Visible;
@@ -183,19 +182,35 @@ void VMesh::ComputeVertexNormals()
 
 void VMesh::TransformModelToWorld(ETransformType Type)
 {
+    // @TODO: Two passes: Position, Normal?
+
+    VMatrix44 MatNormalTransform;
+    MatNormalTransform.BuildRotationXYZ(Rotation.X, Rotation.Y, Rotation.Z); // Rotation
+
+    VMatrix44 MatPositionTransform;
+    MatPositionTransform = MatNormalTransform;
+    MatPositionTransform.RowV[3] = Position; // Translation
+
     if (Type == ETransformType::LocalToTrans)
     {
         for (i32f i = 0; i < NumVtx; ++i)
         {
+            // Copy vertex data
             TransVtxList[i] = LocalVtxList[i];
-            TransVtxList[i].Position += Position;
+
+            VMatrix44::MulVecMat(LocalVtxList[i].Normal, MatNormalTransform, TransVtxList[i].Normal);
+            VMatrix44::MulVecMat(LocalVtxList[i].Position, MatPositionTransform, TransVtxList[i].Position);
         }
     }
     else // TransOnly
     {
         for (i32f i = 0; i < NumVtx; ++i)
         {
-            TransVtxList[i].Position += Position;
+            VMatrix44::MulVecMat(LocalVtxList[i].Normal, MatNormalTransform, TransVtxList[i].Normal);
+
+            VVector4 Result;
+            VMatrix44::MulVecMat(TransVtxList[i].Position, MatPositionTransform, Result);
+            TransVtxList[i].Position = Result;
         }
     }
 }
@@ -1035,6 +1050,13 @@ void VMesh::PlayAnimation(EMD2AnimationId AnimationId, b32 bLoop, EAnimationInte
 
 void VMesh::UpdateAnimationAndTransformModelToWorld(f32 DeltaTime)
 {
+    VMatrix44 MatNormalTransform;
+    MatNormalTransform.BuildRotationXYZ(Rotation.X, Rotation.Y, Rotation.Z); // Rotation
+
+    VMatrix44 MatPositionTransform;
+    MatPositionTransform = MatNormalTransform;
+    MatPositionTransform.RowV[3] = Position; // Translation
+
     i32f Frame1 = (i32f)CurrentFrame;
     i32f Frame2;
 
@@ -1049,29 +1071,37 @@ void VMesh::UpdateAnimationAndTransformModelToWorld(f32 DeltaTime)
         Frame2 = Frame1;
     }
 
-
     if (Frame2 < NumFrames) // Interpolate if we didn't overflow
     {
         f32 FrameInterp = CurrentFrame - Math.Floor(CurrentFrame);
 
         for (i32f VtxIndex = 0; VtxIndex < NumVtx; ++VtxIndex)
         {
-            i32f Frame1Index = (Frame1 * NumVtx) + VtxIndex;
-            TransVtxList[VtxIndex] = HeadLocalVtxList[Frame1Index]; // Copy other from position stuff
+            i32f Frame1VtxIndex = (Frame1 * NumVtx) + VtxIndex;
+            i32f Frame2VtxIndex = Frame1VtxIndex + NumVtx;
 
-            // Interpolate
-            i32f Frame2Index = Frame1Index + NumVtx;
-            TransVtxList[VtxIndex].Position = Position +
-                (1.0f - FrameInterp) * HeadLocalVtxList[Frame1Index].Position +
-                FrameInterp          * HeadLocalVtxList[Frame2Index].Position;
+            // Copy vertex data
+            TransVtxList[VtxIndex] = HeadLocalVtxList[Frame1VtxIndex];
+
+            // Interpolate position
+            VVector4 LocalPosition =
+                (1.0f - FrameInterp) * HeadLocalVtxList[Frame1VtxIndex].Position +
+                FrameInterp          * HeadLocalVtxList[Frame2VtxIndex].Position;
+
+            // Transform position and normal
+            VMatrix44::MulVecMat(LocalPosition, MatPositionTransform, TransVtxList[VtxIndex].Position);
+            VMatrix44::MulVecMat(HeadLocalVtxList[Frame1VtxIndex].Normal, MatNormalTransform, TransVtxList[VtxIndex].Normal);
         }
     }
     else // Get position from one frame on overflow
     {
         for (i32f VtxIndex = 0; VtxIndex < NumVtx; ++VtxIndex)
         {
-            TransVtxList[VtxIndex] = HeadLocalVtxList[(Frame1 * NumVtx) + VtxIndex]; // Copy other from position stuff
-            TransVtxList[VtxIndex].Position += Position;                             // Add world position
+            i32f LocalVtxIndex = (Frame1 * NumVtx) + VtxIndex;
+            TransVtxList[VtxIndex] = HeadLocalVtxList[LocalVtxIndex]; // Copy vertex data
+
+            VMatrix44::MulVecMat(HeadLocalVtxList[LocalVtxIndex].Position, MatPositionTransform, TransVtxList[VtxIndex].Position);
+            VMatrix44::MulVecMat(HeadLocalVtxList[LocalVtxIndex].Normal, MatNormalTransform, TransVtxList[VtxIndex].Normal);
         }
     }
 

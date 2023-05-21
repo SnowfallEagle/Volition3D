@@ -146,6 +146,7 @@ protected:
     f32 CamDirSpeedModifier = 0.5f;
 
     f32 MouseSensivity = 0.05f;
+    f32 MaxMouseDelta = 30.0f;
 
 protected:
     virtual void StartUp() override
@@ -225,19 +226,19 @@ protected:
     {
         Super::StartUp();
 
-        const auto Blade = World.SpawnEntity<VEntity>();
-        Blade->Mesh->LoadMD2("Assets/Models/blade/tris.md2", "Assets/Models/blade/blade.pcx", 0, {0.0f, -12000.0f, 0.0f}, {20.0f, 20.0f, 20.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
-        Blade->Mesh->PlayAnimation(EMD2AnimationId::StandingIdle, true);
-
         const auto Agent = World.SpawnEntity<VEntity>();
         Agent->Mesh->LoadMD2("Assets/Models/0069/tris.md2", "Assets/Models/0069/actionbond.pcx", 0, {0.0f, -12000.0f, 500.0f}, { 20.0f, 20.0f, 20.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
         Agent->Mesh->PlayAnimation(EMD2AnimationId::StandingIdle, true);
-        // @TODO: Agent->Mesh->Rotation = { 0.0f, 180.0f, 0.0f };
+        Agent->Mesh->Rotation = { 0.0f, 180.0f, 0.0f };
 
         const auto AgentWeapon = World.SpawnEntity<VEntity>();
         AgentWeapon->Mesh->LoadMD2("Assets/Models/0069/weapon.md2", "Assets/Models/0069/weapon.pcx", 0, {-45.0f, -12000.0f + 600.0f, 580.0f}, { 20.0f, 20.0f, 20.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
         AgentWeapon->Mesh->PlayAnimation(EMD2AnimationId::StandingIdle, true);
-        // @TODO: AgentWeapon->Mesh->Rotation = { 0.0f, 180.0f, 0.0f };
+        AgentWeapon->Mesh->Rotation = { 0.0f, 180.0f, 0.0f };
+
+        const auto Blade = World.SpawnEntity<VEntity>();
+        Blade->Mesh->LoadMD2("Assets/Models/blade/tris.md2", "Assets/Models/blade/blade.pcx", 0, {0.0f, -12000.0f, 0.0f}, {20.0f, 20.0f, 20.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
+        Blade->Mesh->PlayAnimation(EMD2AnimationId::StandingIdle, true);
 
         const auto Dead = World.SpawnEntity<VEntity>();
         Dead->Mesh->LoadMD2("Assets/Models/deadbods/dude/tris.md2", "Assets/Models/deadbods/dude/dead1.pcx", 0, { 5000.0f, -12000.0f, 5000.0f }, { 15.0f, 15.0f, 15.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
@@ -348,7 +349,16 @@ void GGameState::ProcessInput(f32 DeltaTime)
     const VVector2i MouseMoveInt = { (i32)((f32)MouseMoveAccum.X / Divider), (i32)((f32)MouseMoveAccum.Y / Divider) };
 
     const f32 Multiplier = DeltaTime * MouseSensivity; 
-    const VVector2 MouseMoveFloat = { MouseMoveInt.X * Multiplier, MouseMoveInt.Y * Multiplier };
+
+    VVector2 MouseMoveFloat = { MouseMoveInt.X * Multiplier, MouseMoveInt.Y * Multiplier };
+    if (Math.Abs(MouseMoveFloat.X) > MaxMouseDelta)
+    {
+        MouseMoveFloat.X = MaxMouseDelta * Math.Sign(MouseMoveFloat.X);
+    }
+    if (Math.Abs(MouseMoveFloat.Y) > MaxMouseDelta)
+    {
+        MouseMoveFloat.Y = MaxMouseDelta * Math.Sign(MouseMoveFloat.Y);
+    }
 
     Camera->Direction.Y += MouseMoveFloat.X * 0.5f; // Yaw = X
 

@@ -111,6 +111,9 @@ public:
     u32 Attr;
 
     VPoint4 Position;
+    VVector3 Rotation;
+
+    // @TODO: Do we need it?
     VVector4 UX, UY, UZ; /** Local axes to track full orientation */
 
     i32 NumFrames;
@@ -120,8 +123,8 @@ public:
     EAnimationInterpMode AnimationInterpMode;
     f32 AnimationTimeAccum;
 
-    b8 bLoopAnimation    : 1;
-    b8 bAnimationPlayed  : 1;
+    b8 bLoopAnimation    : 1; // @TODO: Put in attr
+    b8 bAnimationPlayed  : 1; // @TODO: Put in state
 
     i32 NumVtx;
     i32 TotalNumVtx;
