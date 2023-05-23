@@ -42,7 +42,7 @@ protected:
     f32 CamPosSpeedModifier      = 2.5f;
     f32 CamDirSpeedModifier      = 0.5f;
 
-    f32 MouseSensivity = 0.05f;
+    f32 MouseSensivity = 0.0475f;
     f32 MaxMouseDelta  = 30.0f;
 
     VVector4 StartSunLightPosition;
@@ -375,6 +375,43 @@ protected:
     }
 };
 
+class GAnimScene : public GGameState
+{
+public:
+    using Super = GGameState;
+
+protected:
+    virtual void StartUp() override
+    {
+        Super::StartUp();
+
+        Config.RenderSpec.PostProcessColorCorrection = { 1.1f, 0.9f, 0.9f };
+
+        VCamera* Camera = World.GetCamera();
+        Camera->Position = { 0.0f, 5000.0f, 20000.0f };
+        Camera->Direction = { 15.0f, 180.0f, 0.0f };
+
+        CamPosSpeedModifier = 25.0f;
+
+        World.GenerateTerrain("Assets/Terrains/Small/SmallHeightmap.bmp", "Assets/Terrains/Common/Green.bmp", 100000.0f, 2500.0f, EShadeMode::Gouraud);
+        World.SetYShadowPosition(-900.0f);
+
+        AmbientLight->Color = MAP_XRGB32(0x11, 0x11, 0x11);
+
+        StartSunLightPosition = { 10000.0f, 10000.0f, 10000.0f };
+        SunLight->Color = MAP_XRGB32(0xAA, 0x55, 0x99);
+        SunLight->Direction = VVector4{ -0.5f, -0.75f, -1.0f }.GetNormalized();
+
+        GCycleAnimatedEntity* Entity = World.SpawnEntity<GCycleAnimatedEntity>();
+        Entity->Mesh->LoadMD2("Assets/Models/droideka/tris.md2", "Assets/Models/droideka/droideka.pcx", 0, { 5000.0f, -900.0f, 0.0f}, {100.0f, 100.0f, 100.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
+        Entity->StartAnimationsCycle();
+
+        Entity = World.SpawnEntity<GCycleAnimatedEntity>();
+        Entity->Mesh->LoadMD2("Assets/Models/McClane/tris.md2", "Assets/Models/McClane/nakatomi1.pcx", 0, { -6000.0f, -900.0f, 0.0f}, {100.0f, 100.0f, 100.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
+        Entity->StartAnimationsCycle();
+    }
+};
+
 void GGameState::ProcessInput(f32 DeltaTime)
 {
     VCamera* Camera = World.GetCamera();
@@ -421,7 +458,7 @@ void GGameState::ProcessInput(f32 DeltaTime)
     static constexpr f32 Divider = 0.5f;
     const VVector2i MouseMoveInt = { (i32)((f32)MouseMoveAccum.X / Divider), (i32)((f32)MouseMoveAccum.Y / Divider) };
 
-    const f32 Multiplier = DeltaTime * MouseSensivity; 
+    const f32 Multiplier = DeltaTime * MouseSensivity / Renderer.GetScreenWidth() * 360.0f; 
 
     VVector2 MouseMoveFloat = { MouseMoveInt.X * Multiplier, MouseMoveInt.Y * Multiplier };
     if (Math.Abs(MouseMoveFloat.X) > MaxMouseDelta)
@@ -461,13 +498,14 @@ void GGameState::ProcessInput(f32 DeltaTime)
     if (Input.IsEventKeyDown(EKeycode::F2)) World.ChangeState<GRaidScene>();
     if (Input.IsEventKeyDown(EKeycode::F3)) World.ChangeState<GLargeTerrainScene>();
     if (Input.IsEventKeyDown(EKeycode::F4)) World.ChangeState<GGrandTerrainScene>();
+    if (Input.IsEventKeyDown(EKeycode::F5)) World.ChangeState<GAnimScene>();
 
-    if (Input.IsEventKeyDown(EKeycode::F12)) Config.RenderSpec.PostProcessColorCorrection = { 1.0f, 1.0f, 1.0f };
-    if (Input.IsEventKeyDown(EKeycode::F5)) Config.RenderSpec.PostProcessColorCorrection = { 1.25f, 1.1f, 1.0f };
-    if (Input.IsEventKeyDown(EKeycode::F6)) Config.RenderSpec.PostProcessColorCorrection = { 1.25f, 1.25f, 1.0f };
-    if (Input.IsEventKeyDown(EKeycode::F7)) Config.RenderSpec.PostProcessColorCorrection = { 1.0f, 1.25f, 1.0f };
-    if (Input.IsEventKeyDown(EKeycode::F8)) Config.RenderSpec.PostProcessColorCorrection = { 1.25f, 1.0f, 1.25f };
-    if (Input.IsEventKeyDown(EKeycode::F9)) Config.RenderSpec.PostProcessColorCorrection = { 1.0f, 1.0f, 1.25f };
+    if (Input.IsEventKeyDown(EKeycode::F7))  Config.RenderSpec.PostProcessColorCorrection = { 1.0f, 1.0f, 1.0f };
+    if (Input.IsEventKeyDown(EKeycode::F8))  Config.RenderSpec.PostProcessColorCorrection = { 1.25f, 1.1f, 1.0f };
+    if (Input.IsEventKeyDown(EKeycode::F9))  Config.RenderSpec.PostProcessColorCorrection = { 1.25f, 1.25f, 1.0f };
+    if (Input.IsEventKeyDown(EKeycode::F10)) Config.RenderSpec.PostProcessColorCorrection = { 1.0f, 1.25f, 1.0f };
+    if (Input.IsEventKeyDown(EKeycode::F11)) Config.RenderSpec.PostProcessColorCorrection = { 1.25f, 1.0f, 1.25f };
+    if (Input.IsEventKeyDown(EKeycode::F12)) Config.RenderSpec.PostProcessColorCorrection = { 1.0f, 1.0f, 1.25f };
 
     if (Input.IsEventKeyDown(EKeycode::Escape)) Engine.Stop();
 }
@@ -476,5 +514,5 @@ void GGameState::ProcessInput(f32 DeltaTime)
 
 int main(int Argc, char** Argv)
 {
-    return Engine.Run<Game::GRaidScene>(Argc, Argv);
+    return Engine.Run<Game::GAnimScene>(Argc, Argv);
 }
