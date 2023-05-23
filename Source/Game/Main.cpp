@@ -232,7 +232,7 @@ protected:
         CornerLight->FalloffPower = 5.0f;
 
         World.SetYShadowPosition(-6000.0f);
-        World.GenerateTerrain("Assets/Terrains/RockyLand/Heightmap.bmp", "Assets/Terrains/RockyLand/Texture.bmp", 500000.0f, 50000.0f, EShadeMode::Gouraud);
+        World.GenerateTerrain("Assets/Terrains/Raid/Heightmap.bmp", "Assets/Terrains/RockyLand/Texture.bmp", 500000.0f, 50000.0f, EShadeMode::Gouraud);
         StartSunLightPosition = {1000000.0f, 1000000.0f, 1000000.0f};
 
         for (i32f i = 0; i < MaxTroopers; ++i)
@@ -286,6 +286,7 @@ protected:
                 for (i32f i = 0; i < MaxTroopers; ++i)
                 {
                     Troopers[i]->Mesh->PlayAnimation(EMD2AnimationId::CrouchStand, true);
+                    Troopers[i]->Mesh->AnimationTimeAccum += (f32)Math.Random(0, 1000) / 1000.0f;
                 }
 
                 RaidState = ERaidState::Stop;
