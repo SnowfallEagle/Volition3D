@@ -6,6 +6,7 @@
 #include "Common/Math/Rect.h"
 #include "Common/Platform/Platform.h"
 #include "Common/Platform/Assert.h"
+#include "Engine/Core/Config/Config.h"
 
 namespace Volition
 {
@@ -30,7 +31,13 @@ public:
     void Create(i32 InWidth, i32 InHeight);
     void Create(SDL_Surface* InSDLSurface);
 
-    void Load(const char* Path);
+    void Load(const char* Path, u32 SDLPixelFormat);
+
+    VLN_FINLINE void Load(const char* Path)
+    {
+        Load(Path, Config.RenderSpec.SDLPixelFormatEnum);
+    }
+
     void Destroy();
 
     void Lock(u32*& OutBuffer, i32& OutPitch);

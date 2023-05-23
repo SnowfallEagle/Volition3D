@@ -124,6 +124,14 @@ void VRenderer::TransformLights(const VCamera& Camera)
     }
 }
 
+void VRenderer::SetTerrain(VMesh& TerrainMesh)
+{
+    TerrainRenderList->ResetList();
+    TerrainMesh.ResetRenderState();
+    TerrainMesh.TransformModelToWorld();
+    TerrainRenderList->InsertMesh(TerrainMesh, TerrainMesh.TransVtxList);
+}
+
 void VRenderer::PreRender()
 {
     ZBuffer.Clear();
@@ -131,14 +139,6 @@ void VRenderer::PreRender()
     TerrainRenderList->ResetStateAndSaveList();
 
     BackSurface.FillRect(nullptr, MAP_XRGB32(0x00, 0x00, 0x00));
-}
-
-void VRenderer::SetTerrain(VMesh& TerrainMesh)
-{
-    TerrainRenderList->ResetList();
-    TerrainMesh.ResetRenderState();
-    TerrainMesh.TransformModelToWorld();
-    TerrainRenderList->InsertMesh(TerrainMesh, TerrainMesh.TransVtxList);
 }
 
 void VRenderer::Render()
@@ -279,28 +279,16 @@ void VRenderer::Render()
 
     // Unlock buffer
     BackSurface.Unlock();
-
-    // Make lens flare effect
-    /* @TODO
-    const VLight* LensFlareLight = World.LensFlareLight;
-    const VSurface* LensFlare = &World.LensFlare;
-
-    // If light directed on us and lens flare texture is loaded
-    if (LensFlareLight && LensFlareLight->TransPosition.Z > 0.0f && LensFlare->SDLSurface && LensFlare->SDLSurface->pixels)
-    {
-        // @TODO: Check it only if light is directional, maybe make field bDirectional??
-        const f32 DirectionDot = VVector4::Dot(LensFlareLight->TransDirection, { 0.0f, 0.0f, -1.0f });
-
-        World.LensFlare.Blit(nullptr, &BackSurface, nullptr);
-    }
-    */
 }
 
 void VRenderer::PostProcess()
 {
-    static constexpr VVector3 DefaultColorCorrection = { 1.0f, 1.0f, 1.0f };
+    if (!Config.RenderSpec.bPostProcessing)
+    {
+        return;
+    }
 
-    if (Config.RenderSpec.bPostProcessing && Config.RenderSpec.PostProcessColorCorrection != DefaultColorCorrection)
+    if (Config.RenderSpec.PostProcessColorCorrection != Config.RenderSpec.DefaultColorCorrection)
     {
         BackSurface.CorrectColorsFast(Config.RenderSpec.PostProcessColorCorrection);
     }

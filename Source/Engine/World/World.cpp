@@ -29,7 +29,6 @@ void VWorld::ShutDown(EWorldShutDownReason Reason)
     }
 
     Environment2D.Destroy();
-    LensFlare.Destroy();
 
     for (const auto Entity : Entities)
     {
@@ -113,7 +112,6 @@ void VWorld::StartUp(VGameState* InGameState)
 
     Lights.Resize(MinLightsCapacity);
     ShadowMakingLight = nullptr;
-    LensFlareLight = nullptr;
 
     Camera = new VCamera();
     Camera->Init(ECameraAttr::Euler, { 0.0f, 1000.0f, 1500.0f }, { 0.0f, 0.0f, 0.0f }, VVector4(), 80.0f, 100.0f, 1000000.0f);

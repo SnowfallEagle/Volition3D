@@ -36,15 +36,15 @@ void VSurface::Create(i32 InWidth, i32 InHeight)
     Height = SDLSurface->h;
 }
 
-void VSurface::Load(const char* Path)
+void VSurface::Load(const char* Path, u32 SDLPixelFormat)
 {
     Destroy();
 
     SDL_Surface* Temp = IMG_Load(Path);
     VLN_ASSERT(Temp);
 
-    SDL_Surface* Converted = SDL_ConvertSurface(
-        Temp, Config.RenderSpec.SDLPixelFormat, 0
+    SDL_Surface* Converted = SDL_ConvertSurfaceFormat(
+        Temp, SDLPixelFormat, 0
     );
     VLN_ASSERT(Converted);
     SDL_FreeSurface(Temp);
@@ -121,7 +121,7 @@ void VSurface::SetAlphaMode(b32 bMode)
 {
     if (SDLSurface)
     {
-        SDL_SetSurfaceBlendMode(SDLSurface, bMode ? SDL_BLENDMODE_ADD : SDL_BLENDMODE_NONE);
+        SDL_SetSurfaceBlendMode(SDLSurface, bMode ? SDL_BLENDMODE_BLEND : SDL_BLENDMODE_NONE);
     }
 }
 

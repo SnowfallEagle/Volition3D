@@ -10,18 +10,21 @@ namespace Volition
 
 class VRenderSpecification
 {
-public: /** Set by user */
-    i32 TargetFPS = 60;
-    i32 TargetFixedFPS = 60;
-    i32 MaxMipMaps = 8;
+public:
+    static constexpr VVector3 DefaultColorCorrection = { 1.0f, 1.0f, 1.0f };
 
+public: /** Set by user */
     b32 bLimitFPS        : 1;
     b32 bRenderSolid     : 1;
     b32 bBackfaceRemoval : 1;
     b32 bPostProcessing  : 1;
     b32 bRenderUI        : 1;
 
-    VVector3 PostProcessColorCorrection = { 1.0f, 1.0f, 1.0f };
+    i32 TargetFPS = 60;
+    i32 TargetFixedFPS = 60;
+    i32 MaxMipMaps = 8;
+
+    VVector3 PostProcessColorCorrection = DefaultColorCorrection;
 
 private: /** Set by rendering engine */
     SDL_PixelFormat* SDLPixelFormat = nullptr;

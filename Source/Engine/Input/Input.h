@@ -171,6 +171,22 @@ public:
         return KeyState[SDL_GetScancodeFromKey(Key)];
     }
 
+    b32 IsEventKeyDown(EKeycode Key) const
+    {
+        for (const auto* Event : KeyDownEvents)
+        {
+            VLN_ASSERT(Event);
+
+            if (Event->KeyDown.Key == Key)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
     /** Checks actual state, not events */
     VLN_FINLINE b32 IsMouseDown(EMouseButton Button) const
     {

@@ -182,7 +182,7 @@ public:
 
 public:
     VVector4() = default; 
-    VVector4(f32 InX, f32 InY, f32 InZ, f32 InW = 1.0f)
+    constexpr VVector4(f32 InX, f32 InY, f32 InZ, f32 InW = 1.0f) noexcept
         : X(InX), Y(InY), Z(InZ), W(InW)
     {}
 

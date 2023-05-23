@@ -35,9 +35,6 @@ private:
     TArray<VLight> Lights;
     VLight* ShadowMakingLight;
 
-    VLight* LensFlareLight;
-    VSurface LensFlare;
-
     VSurface Environment2D;
 
     VCamera* Camera;
@@ -83,17 +80,6 @@ public:
     VLN_FINLINE void SetShadowMakingLight(VLight* Light)
     {
         ShadowMakingLight = Light;
-    }
-
-    VLN_FINLINE void SetLensFlareLight(VLight* Light)
-    {
-        LensFlareLight = Light;
-    }
-
-    VLN_FINLINE void SetLensFlare(const char* Path)
-    {
-        LensFlare.Load(Path);
-        LensFlare.SetAlphaMode(true);
     }
 
 private:

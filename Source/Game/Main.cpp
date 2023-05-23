@@ -6,136 +6,6 @@ using namespace Volition;
 namespace Game
 {
 
-class GTestGameState : public VGameState
-{
-    VEntity* Entity = nullptr;
-    VEntity* LightEntity = nullptr;
-    VCamera* Camera;
-
-    u8 CurrentAnimation = 0;
-    EAnimationInterpMode InterpMode = EAnimationInterpMode::Default;
-
-    VVector4 OccluderLightPosition;
-
-public:
-    virtual void StartUp() override
-    {
-        const auto COBEntity = World.SpawnEntity()->Mesh->LoadCOB("Assets/Models/jetski05.cob", { 1000.0f, 1000.0f, 0.0f }, { 100.0f, 100.0f, 100.0f }, ECOBFlags::Default | ECOBFlags::InvertV /* | ECOBFlags::OverrideShadeMode */, EShadeMode::Gouraud);
-
-        Entity = World.SpawnEntity<VEntity>();
-        LightEntity = World.SpawnEntity<VEntity>();
-
-        // Entity->Mesh->LoadMD2("Assets/Models/tekkblade/tris.md2", nullptr, 0, {0.0f, 0.0f, 0.0f}, {10.0f, 10.0f, 10.0f}, EShadeMode::Gouraud);
-        Entity->Mesh->LoadMD2("Assets/Models/monsters/brain/tris.md2", nullptr, 0, {0.0f, 0.0f, 0.0f}, {10.0f, 10.0f, 10.0f}, EShadeMode::Gouraud, { 1.5f, 2.0f, 1.5f });
-        // Entity->Mesh->LoadMD2("Assets/Models/boss3/tris.md2", "Assets/Models/boss3/rider.pcx", 0, {0.0f, 0.0f, 0.0f}, {10.0f, 10.0f, 10.0f}, EShadeMode::Gouraud, { 1.5f, 2.0f, 1.5f });
-        // Entity->Mesh->LoadMD2("Assets/Models/marine/tris.md2", "Assets/Models/marine/Centurion.pcx", 0, {0.0f, 0.0f, 0.0f}, {10.0f, 10.0f, 10.0f}, EShadeMode::Gouraud, { 1.5f, 2.0f, 1.5f });
-
-        Camera = World.GetCamera();
-        Camera->Init(ECameraAttr::Euler, { 0.0f, 1000.0f, 1500.0f }, { 25.0f, 180.0f, 0 }, VVector4(), 75, 100, 1000000);
-
-        World.SetEnvironment2D("Assets/Environment2D/Texture.png");
-        // World.GetTerrain()->GenerateTerrain("Assets/Terrains/Large/Heightmap.bmp", "Assets/Terrains/RockyLand/Texture.bmp", 1000000.0f, 250000.0f, EShadeMode::Gouraud);
-        World.GenerateTerrain("Assets/Terrains/Medium/Heightmap.bmp", "Assets/Terrains/Common/Texture.bmp", 10000.0f, 2500.0f, EShadeMode::Gouraud);
-
-        World.SpawnLight(ELightType::Ambient);
-        const auto ShadowMakingLight = World.SpawnLight(ELightType::Infinite);
-        World.SpawnLight(ELightType::Point);
-
-        World.SetShadowMakingLight(ShadowMakingLight);
-    }
-
-    virtual void Update(f32 DeltaTime) override
-    {
-        if (Input.IsKeyDown(EKeycode::Escape))
-        {
-            Engine.Stop();
-        }
-
-        f32 ShiftModifier = (Input.IsKeyDown(EKeycode::LShift) ? 4.0f : 1.0f);
-
-        f32 CamPosSpeed = 0.5f * DeltaTime * ShiftModifier;
-        if (Input.IsKeyDown(EKeycode::W))
-        {
-            Camera->Position.X += Math.FastSin(Camera->Direction.Y) * CamPosSpeed;
-            Camera->Position.Z += Math.FastCos(Camera->Direction.Y) * CamPosSpeed;
-        }
-        if (Input.IsKeyDown(EKeycode::S))
-        {
-            Camera->Position.X -= Math.FastSin(Camera->Direction.Y) * CamPosSpeed;
-            Camera->Position.Z -= Math.FastCos(Camera->Direction.Y) * CamPosSpeed;
-        }
-
-        f32 CamDirSpeed = 0.1f * DeltaTime;
-        if (Input.IsKeyDown(EKeycode::Left))  Camera->Direction.Y -= CamDirSpeed;
-        if (Input.IsKeyDown(EKeycode::Right)) Camera->Direction.Y += CamDirSpeed;
-        if (Input.IsKeyDown(EKeycode::Up))    Camera->Direction.X -= CamDirSpeed;
-        if (Input.IsKeyDown(EKeycode::Down))  Camera->Direction.X += CamDirSpeed;
-
-        if (Input.IsKeyDown(EKeycode::Space)) Camera->Position.Y += CamPosSpeed * ShiftModifier;
-        if (Input.IsKeyDown(EKeycode::C))     Camera->Position.Y -= CamPosSpeed * ShiftModifier;
-
-        VMatrix44 Rot = VMatrix44::Identity;
-        f32 Speed = 0.05f * DeltaTime;
-        if (Input.IsKeyDown(EKeycode::Q)) Rot.BuildRotationXYZ(0, Speed, 0);
-        if (Input.IsKeyDown(EKeycode::E)) Rot.BuildRotationXYZ(0, -Speed, 0);
-        if (Input.IsKeyDown(EKeycode::F)) Rot.BuildRotationXYZ(0, 0, Speed);
-        if (Input.IsKeyDown(EKeycode::G)) Rot.BuildRotationXYZ(0, 0, -Speed);
-        if (Input.IsKeyDown(EKeycode::Z)) Rot.BuildRotationXYZ(Speed, 0, 0);
-        if (Input.IsKeyDown(EKeycode::X)) Rot.BuildRotationXYZ(-Speed, 0, 0);
-
-        if (Input.IsKeyDown(EKeycode::P)) Entity->Mesh->PlayAnimation((EMD2AnimationId)CurrentAnimation, false, InterpMode);
-        if (Input.IsKeyDown(EKeycode::L)) Entity->Mesh->PlayAnimation((EMD2AnimationId)CurrentAnimation, true, InterpMode);
-
-        if (Input.IsKeyDown(EKeycode::N0)) InterpMode = EAnimationInterpMode::Default;
-        if (Input.IsKeyDown(EKeycode::N1)) InterpMode = EAnimationInterpMode::Linear;
-        if (Input.IsKeyDown(EKeycode::N2)) InterpMode = EAnimationInterpMode::Fixed;
-
-        if (Input.IsKeyDown(EKeycode::Home)) Entity->Mesh->Position.Z += DeltaTime * ShiftModifier;
-        if (Input.IsKeyDown(EKeycode::End)) Entity->Mesh->Position.Z -= DeltaTime * ShiftModifier;
-        if (Input.IsKeyDown(EKeycode::Delete)) Entity->Mesh->Position.X -= DeltaTime * ShiftModifier;
-        if (Input.IsKeyDown(EKeycode::PageDown)) Entity->Mesh->Position.X += DeltaTime * ShiftModifier;
-
-        static float AnimButtonCounter = 0.0f;
-        if (AnimButtonCounter <= 0.0f && Input.IsKeyDown(EKeycode::Comma)) { --CurrentAnimation; AnimButtonCounter = 100.0f; };
-        if (AnimButtonCounter <= 0.0f && Input.IsKeyDown(EKeycode::Period)) { ++CurrentAnimation; AnimButtonCounter = 100.0f; };
-
-        if (AnimButtonCounter >= 0.0f)
-        {
-            AnimButtonCounter -= DeltaTime;
-        }
-        CurrentAnimation %= (i32)EMD2AnimationId::MaxAnimations;
-
-        static b32 bStarted = false;
-        if (Input.IsKeyDown(EKeycode::B)) bStarted ^= true;
-
-        if (bStarted && Entity->Mesh->bAnimationPlayed)
-        {
-            Entity->Mesh->PlayAnimation((EMD2AnimationId)CurrentAnimation++, false, InterpMode);
-            CurrentAnimation %= (i32)EMD2AnimationId::MaxAnimations;
-        }
-
-        if (Entity)
-        {
-            Entity->Mesh->Transform(Rot, ETransformType::LocalOnly, true);
-        }
-
-        if (Input.IsKeyDown(EKeycode::Backspace)) Config.RenderSpec.bRenderSolid ^= true;
-
-        if (Input.IsKeyDown(EKeycode::F12)) Config.RenderSpec.PostProcessColorCorrection = { 1.0f, 1.0f, 1.0f };
-        if (Input.IsKeyDown(EKeycode::F1)) Config.RenderSpec.PostProcessColorCorrection = { 1.25f, 1.1f, 1.0f };
-        if (Input.IsKeyDown(EKeycode::F2)) Config.RenderSpec.PostProcessColorCorrection = { 1.25f, 1.25f, 1.0f };
-        if (Input.IsKeyDown(EKeycode::F3)) Config.RenderSpec.PostProcessColorCorrection = { 1.0f, 1.25f, 1.0f };
-        if (Input.IsKeyDown(EKeycode::F4)) Config.RenderSpec.PostProcessColorCorrection = { 1.25f, 1.0f, 1.25f };
-        if (Input.IsKeyDown(EKeycode::F5)) Config.RenderSpec.PostProcessColorCorrection = { 1.0f, 1.0f, 1.25f };
-        static f32 Accum = 0.0f; 
-        Accum += DeltaTime / 1000.0f;
-
-        Renderer.DrawDebugText("FPS: %.2f", 1000.0f / DeltaTime);
-        Renderer.DrawDebugText("AnimationId: %d", CurrentAnimation);
-        Renderer.DrawDebugText("AnimationInterpMode: %d", (i32)InterpMode);
-    }
-};
-
 class GGameState : public VGameState
 {
 protected:
@@ -158,7 +28,6 @@ protected:
     virtual void StartUp() override
     {
         World.SetEnvironment2D("Assets/Environment2D/Texture.png");
-        World.SetLensFlare("Assets/Textures/SunFlare.png");
 
         AmbientLight = World.SpawnLight(ELightType::Ambient);
         PointLight = World.SpawnLight(ELightType::Point);
@@ -167,7 +36,6 @@ protected:
         StartSunLightPosition = SunLight->Position;
 
         World.SetShadowMakingLight(SunLight);
-        World.SetLensFlareLight(SunLight);
         World.Environment2DMovementEffectAngle = 165.0f;
 
         Config.RenderSpec.PostProcessColorCorrection = { 1.25f, 1.1f, 1.0f };
@@ -193,48 +61,6 @@ protected:
     virtual void ProcessInput(f32 DeltaTime);
 };
 
-class GModelsScene : public GGameState
-{
-public:
-    using Super = GGameState;
-
-protected:
-    virtual void StartUp() override
-    {
-        Super::StartUp();
-
-        VCamera* Camera = World.GetCamera();
-        Camera->ZFarClip = 1000000000.0f;
-
-        const auto COBEntity = World.SpawnEntity()->Mesh->LoadCOB("Assets/Models/jetski05.cob", { 1000.0f, 1000.0f, 0.0f }, { 100.0f, 100.0f, 100.0f }, ECOBFlags::Default | ECOBFlags::InvertV /* | ECOBFlags::OverrideShadeMode */, EShadeMode::Gouraud);
-
-        const auto Entity = World.SpawnEntity<VEntity>();
-        // Entity->Mesh->LoadMD2("Assets/Models/monsters/brain/tris.md2", nullptr, 0, {0.0f, 0.0f, 0.0f}, {10.0f, 10.0f, 10.0f}, EShadeMode::Gouraud, { 1.5f, 2.0f, 1.5f });
-        // Entity->Mesh->LoadMD2("Assets/Models/blade/tris.md2", "Assets/Models/blade/blade.pcx", 0, {0.0f, 0.0f, 0.0f}, {10.0f, 10.0f, 10.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
-        Entity->Mesh->LoadMD2("Assets/Models/bobafett/tris.md2", "Assets/Models/bobafett/rotj_fett.pcx", 0, {0.0f, 0.0f, 0.0f}, {10.0f, 10.0f, 10.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
-        // Entity->Mesh->LoadMD2("Assets/Models/0069/tris.md2", "Assets/Models/0069/actionbond.pcx", 0, {0.0f, 0.0f, 0.0f}, {10.0f, 10.0f, 10.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
-
-        Camera = World.GetCamera();
-        Camera->Init(ECameraAttr::Euler, { 0.0f, 1000.0f, 1500.0f }, { 25.0f, 180.0f, 0.0f }, VVector4(), 90.0f, 100.0f, 1000000.0f);
-
-        World.GenerateTerrain("Assets/Terrains/Medium/Heightmap.bmp", "Assets/Terrains/Common/Texture.bmp", 10000.0f, 2500.0f, EShadeMode::Gouraud);
-
-        const auto Spotlight = World.SpawnLight(ELightType::ComplexSpotlight);
-        Spotlight->Position = { 0.0f, 1500.0f, -100.0f };
-        Spotlight->Color = MAP_XRGB32(0xFF, 0x00, 0x11);
-        Spotlight->KQuad = 0.0000001f;
-        Spotlight->KLinear = 0.0f;
-        Spotlight->FalloffPower = 5.0f;
-
-        World.SetShadowMakingLight(Spotlight);
-    }
-
-    virtual void Update(f32 DeltaTime) override
-    {
-        Super::Update(DeltaTime);
-    }
-};
-
 class GAgentWithBladeScene : public GGameState
 {
 public:
@@ -246,7 +72,6 @@ protected:
         Super::StartUp();
 
         Config.RenderSpec.PostProcessColorCorrection = { 0.6f, 0.6f, 1.0f };
-        Config.RenderSpec.bRenderUI = false;
 
         PointLight->bActive = false;
         SunLight->Color.R -= 0x11;
@@ -327,9 +152,13 @@ protected:
         CamPosSpeedModifier *= 0.25f;
     }
 
-    virtual void Update(f32 DeltaTime) override
+    virtual void ProcessInput(f32 DeltaTime) override
     {
-        Super::Update(DeltaTime);
+        Super::ProcessInput(DeltaTime);
+
+        if (Input.IsEventKeyDown(EKeycode::Y)) AmbientLight->bActive ^= true;
+        if (Input.IsEventKeyDown(EKeycode::U)) SunLight->bActive ^= true;
+        if (Input.IsEventKeyDown(EKeycode::I)) PointLight->bActive ^= true;
     }
 };
 
@@ -351,7 +180,6 @@ protected:
         Super::StartUp();
 
         Config.RenderSpec.PostProcessColorCorrection = { 1.0f, 1.0f, 1.1f };
-        Config.RenderSpec.bRenderUI = false;
 
         const auto Spotlight = World.SpawnLight(ELightType::ComplexSpotlight);
         Spotlight->Position = { 0.0f, -10000.0f, 250.0f };
@@ -403,7 +231,7 @@ protected:
         Airplane[3]->Mesh->LoadMD2("Assets/Models/strogg1/tris.md2", nullptr, 0, { -7500.0f, -5000.0f, -25000 }, {20.0f, 20.0f, 20.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
         Airplane[3]->Mesh->Rotation.X = 15.0f;
 
-        World.GetCamera()->Init(ECameraAttr::Euler, {-10000.0f, -5500.0f, -10000.0f}, {-15.0f, 180.0f, 0.0f}, VVector4(), 90.0f, 250.0f, 1000000.0f);
+        World.GetCamera()->Init(ECameraAttr::Euler, {-10000.0f, -5850.0f, -10000.0f}, {-15.0f, 180.0f, 0.0f}, VVector4(), 90.0f, 250.0f, 1000000.0f);
     }
 
     virtual void Update(f32 DeltaTime) override
@@ -544,26 +372,26 @@ void GGameState::ProcessInput(f32 DeltaTime)
 
     MouseMoveAccum = { 0, 0 };
 
-    if (Input.IsKeyDown(EKeycode::Backspace)) Config.RenderSpec.bRenderSolid ^= true;
+    if (Input.IsEventKeyDown(EKeycode::Backspace)) Config.RenderSpec.bRenderSolid ^= true;
 
-    if (Input.IsKeyDown(EKeycode::F1)) World.ChangeState<GLargeTerrainScene>();
-    if (Input.IsKeyDown(EKeycode::F2)) World.ChangeState<GGrandTerrainScene>();
-    if (Input.IsKeyDown(EKeycode::F3)) World.ChangeState<GModelsScene>();
-    if (Input.IsKeyDown(EKeycode::F4)) World.ChangeState<GTestGameState>();
+    if (Input.IsEventKeyDown(EKeycode::F1)) World.ChangeState<GAgentWithBladeScene>();
+    if (Input.IsEventKeyDown(EKeycode::F2)) World.ChangeState<GRaidScene>();
+    if (Input.IsEventKeyDown(EKeycode::F3)) World.ChangeState<GLargeTerrainScene>();
+    if (Input.IsEventKeyDown(EKeycode::F4)) World.ChangeState<GGrandTerrainScene>();
 
-    if (Input.IsKeyDown(EKeycode::F12)) Config.RenderSpec.PostProcessColorCorrection = { 1.0f, 1.0f, 1.0f };
-    if (Input.IsKeyDown(EKeycode::F5)) Config.RenderSpec.PostProcessColorCorrection = { 1.25f, 1.1f, 1.0f };
-    if (Input.IsKeyDown(EKeycode::F6)) Config.RenderSpec.PostProcessColorCorrection = { 1.25f, 1.25f, 1.0f };
-    if (Input.IsKeyDown(EKeycode::F7)) Config.RenderSpec.PostProcessColorCorrection = { 1.0f, 1.25f, 1.0f };
-    if (Input.IsKeyDown(EKeycode::F8)) Config.RenderSpec.PostProcessColorCorrection = { 1.25f, 1.0f, 1.25f };
-    if (Input.IsKeyDown(EKeycode::F9)) Config.RenderSpec.PostProcessColorCorrection = { 1.0f, 1.0f, 1.25f };
+    if (Input.IsEventKeyDown(EKeycode::F12)) Config.RenderSpec.PostProcessColorCorrection = { 1.0f, 1.0f, 1.0f };
+    if (Input.IsEventKeyDown(EKeycode::F5)) Config.RenderSpec.PostProcessColorCorrection = { 1.25f, 1.1f, 1.0f };
+    if (Input.IsEventKeyDown(EKeycode::F6)) Config.RenderSpec.PostProcessColorCorrection = { 1.25f, 1.25f, 1.0f };
+    if (Input.IsEventKeyDown(EKeycode::F7)) Config.RenderSpec.PostProcessColorCorrection = { 1.0f, 1.25f, 1.0f };
+    if (Input.IsEventKeyDown(EKeycode::F8)) Config.RenderSpec.PostProcessColorCorrection = { 1.25f, 1.0f, 1.25f };
+    if (Input.IsEventKeyDown(EKeycode::F9)) Config.RenderSpec.PostProcessColorCorrection = { 1.0f, 1.0f, 1.25f };
 
-    if (Input.IsKeyDown(EKeycode::Escape)) Engine.Stop();
+    if (Input.IsEventKeyDown(EKeycode::Escape)) Engine.Stop();
 }
 
 }
 
 int main(int Argc, char** Argv)
 {
-    return Engine.Run<Game::GRaidScene>(Argc, Argv);
+    return Engine.Run<Game::GAgentWithBladeScene>(Argc, Argv);
 }
