@@ -381,6 +381,10 @@ private:
     using Super = GGameState;
 
 private:
+    static constexpr f32 LightStates[]    = { 5000.0f, 3000.0f, 1500.0f, 3000.0f, 2000.0f, 500.0f, 4000.0f, 1000.0f, 1000.0f, 1500.0, 5000.0f };
+    static constexpr f32 LightIntensities[] = { 1.0f, 1.1f, 1.0f, 1.1f, 1.0f, 0.5f, 1.0f, 1.1f, 1.0f, 1.1f, 1.0f };
+
+private:
     VLight* Light1;
     VLight* Light2;
 
@@ -388,7 +392,15 @@ private:
     VVector4 Light2StartPosition;
     VVector4 LightStartDirection;
     
-    f32 TimeAccum;
+    f32 RotationTimeAccum;
+    f32 Light1TimeAccum;
+    f32 Light2TimeAccum;
+
+    VColorARGB Light1OriginalColor;
+    VColorARGB Light2OriginalColor;
+
+    i32 Light1State;
+    i32 Light2State;
 
 protected:
     virtual void StartUp() override
@@ -429,7 +441,8 @@ protected:
         Light1StartPosition = { Entity1->Mesh->Position.X, 10000.0f, Entity1->Mesh->Position.Z + 1000.0f };
         Light1->Position = Light1StartPosition;
         Light1->Direction = LightStartDirection;
-        Light1->Color = MAP_XRGB32(0x66, 0x0C, 0x00);
+        Light1OriginalColor = MAP_XRGB32(0x66, 0x0C, 0x00);
+        Light1->Color = Light1OriginalColor;
         Light1->KLinear = 0.00001f;
         Light1->FalloffPower = 5.0f;
 
@@ -437,21 +450,30 @@ protected:
         Light2StartPosition = { Entity2->Mesh->Position.X, 10000.0f, Entity2->Mesh->Position.Z + 1000.0f };
         Light2->Position = Light2StartPosition;
         Light2->Direction = LightStartDirection;
-        Light2->Color = MAP_XRGB32(0x00, 0x0C, 0x88);
+        Light2OriginalColor = MAP_XRGB32(0x00, 0x0C, 0x88);
+        Light2->Color = Light2OriginalColor;
         Light2->KLinear = 0.00001f;
         Light2->FalloffPower = 5.0f;
 
         World.SetShadowMakingLight(Light1);
 
-        TimeAccum = 0.0f;
+        RotationTimeAccum = 0.0f;
+        Light1TimeAccum   = 0.0f;
+        Light2TimeAccum   = 0.0f;
+
+        Light1State = 0;
+        Light2State = VLN_ARRAY_SIZE(LightStates) - 1;
     }
 
     virtual void Update(f32 DeltaTime) override
     {
         Super::Update(DeltaTime);
 
-        TimeAccum += DeltaTime;
-        f32 Angle = TimeAccum / 100.0f;
+        RotationTimeAccum += DeltaTime;
+        Light1TimeAccum   += DeltaTime;
+        Light2TimeAccum   += DeltaTime;
+
+        const f32 Angle = RotationTimeAccum / 100.0f;
 
         VMatrix44 MatTransform;
         MatTransform.BuildRotationXYZ(Math.Cos(Angle) * 30.0f, Math.Sin(Angle) * 360.0f, 0.0f);
@@ -461,6 +483,24 @@ protected:
 
         VMatrix44::MulVecMat(LightStartDirection, MatTransform, Light1->Direction);
         Light2->Direction = Light1->Direction;
+
+        if (Light1TimeAccum > LightStates[Light1State])
+        {
+            Light1->bActive ^= true;
+            Light1TimeAccum = 0.0f;
+
+            Light1State = (Light1State + 1) % VLN_ARRAY_SIZE(LightStates);
+            Light1->Color = MAP_XRGB32((i32)VLN_MIN((f32)Light1OriginalColor.R * LightIntensities[Light1State], 255), Light1OriginalColor.G, Light1OriginalColor.B);
+        }
+
+        if (Light2TimeAccum > LightStates[Light2State])
+        {
+            Light2->bActive ^= true;
+            Light2TimeAccum = 0.0f;
+
+            Light2State = (Light2State - 1) % VLN_ARRAY_SIZE(LightStates);
+            Light2->Color = MAP_XRGB32(Light2OriginalColor.R, Light2OriginalColor.G, (i32)VLN_MIN((f32)Light2OriginalColor.B * LightIntensities[Light2State], 255));
+        }
 
         Renderer.DrawDebugText("Shadow Making Light:");
         Renderer.DrawDebugText("  Spotlight1 [Y]");
