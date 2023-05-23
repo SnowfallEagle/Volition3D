@@ -258,8 +258,10 @@ protected:
         CornerLight->KQuad = 0.0000000000005f;
         CornerLight->FalloffPower = 5.0f;
 
-        World.SetYShadowPosition(-6000.0f);
+        World.Environment2DMovementEffectSpeed *= 2.0f;
+        World.SetEnvironment2D("Assets/Environment2D/Afternoon.png");
         World.GenerateTerrain("Assets/Terrains/Raid/Heightmap.bmp", "Assets/Terrains/RockyLand/Texture.bmp", 500000.0f, 50000.0f, EShadeMode::Gouraud);
+        World.SetYShadowPosition(-6000.0f);
         StartSunLightPosition = {1000000.0f, 1000000.0f, 1000000.0f};
 
         for (i32f i = 0; i < MaxTroopers; ++i)
@@ -363,6 +365,9 @@ protected:
     {
         Super::StartUp();
 
+        AmbientLight->Color = MAP_XRGB32(0x09, 0x06, 0x03);
+        SunLight->Color = MAP_XRGB32(0x88, 0x77, 0x33);
+
         VCamera* Camera = World.GetCamera();
         Camera->Position = { 50000.0f, 0.0f, -500000.0f };
         Camera->Direction = { 45.0f, -15.0f, 0.0f };
@@ -371,6 +376,8 @@ protected:
         CamPosSpeedModifier = 25.0f;
         CamDirSpeedModifier = 0.05f;
 
+        World.Environment2DMovementEffectSpeed = 0.0f;
+        World.SetEnvironment2D("Assets/Environment2D/Land.png");
         World.GenerateTerrain("Assets/Terrains/Grand/Heightmap.png", "Assets/Terrains/Grand/Texture.png", 2000000.0f, 2000000.0f, EShadeMode::Gouraud);
     }
 };
@@ -620,5 +627,5 @@ void GGameState::ProcessInput(f32 DeltaTime)
 
 int main(int Argc, char** Argv)
 {
-    return Engine.Run<Game::GAnimScene>(Argc, Argv);
+    return Engine.Run<Game::GRaidScene>(Argc, Argv);
 }
