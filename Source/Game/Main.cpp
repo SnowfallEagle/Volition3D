@@ -384,6 +384,12 @@ private:
     VLight* Light1;
     VLight* Light2;
 
+    VVector4 Light1StartPosition;
+    VVector4 Light2StartPosition;
+    VVector4 LightStartDirection;
+    
+    f32 TimeAccum;
+
 protected:
     virtual void StartUp() override
     {
@@ -412,30 +418,49 @@ protected:
 
         AmbientLight->Color = MAP_XRGB32(0x0A, 0x0A, 0x0A);
 
-        /*
-        StartSunLightPosition = { 10000.0f, 10000.0f, 10000.0f };
-        SunLight->Color = MAP_XRGB32(0xAA, 0x55, 0x99);
-        SunLight->bActive = false;
-        SunLight->Direction = VVector4{ -0.5f, -0.75f, -1.0f }.GetNormalized();
-        */
         SunLight->Color = 0;
         StartSunLightPosition = { 15000.0f, 15000.0f, 15000.0f };
 
         PointLight->bActive = false;
 
+        LightStartDirection = VVector4{ 0.0f, -1.0f, -0.25f }.GetNormalized();
+
         Light1 = World.SpawnLight(ELightType::ComplexSpotlight);
-        Light1->Position = { Entity1->Mesh->Position.X, 10000.0f, Entity1->Mesh->Position.Z + 1000.0f };
-        Light1->Direction = VVector4{ 0.0f, -1.0f, -0.25f }.GetNormalized();
+        Light1StartPosition = { Entity1->Mesh->Position.X, 10000.0f, Entity1->Mesh->Position.Z + 1000.0f };
+        Light1->Position = Light1StartPosition;
+        Light1->Direction = LightStartDirection;
         Light1->Color = MAP_XRGB32(0x66, 0x0C, 0x00);
         Light1->KLinear = 0.00001f;
         Light1->FalloffPower = 5.0f;
 
         Light2 = World.SpawnLight(ELightType::ComplexSpotlight);
-        Light2->Position = { Entity2->Mesh->Position.X, 10000.0f, Entity2->Mesh->Position.Z + 1000.0f };
-        Light2->Direction = VVector4{ 0.0f, -1.0f, -0.25f }.GetNormalized();
+        Light2StartPosition = { Entity2->Mesh->Position.X, 10000.0f, Entity2->Mesh->Position.Z + 1000.0f };
+        Light2->Position = Light2StartPosition;
+        Light2->Direction = LightStartDirection;
         Light2->Color = MAP_XRGB32(0x00, 0x0C, 0x88);
         Light2->KLinear = 0.00001f;
         Light2->FalloffPower = 5.0f;
+
+        World.SetShadowMakingLight(SunLight);
+
+        TimeAccum = 0.0f;
+    }
+
+    virtual void Update(f32 DeltaTime) override
+    {
+        Super::Update(DeltaTime);
+
+        TimeAccum += DeltaTime;
+        f32 Angle = TimeAccum / 100.0f;
+
+        VMatrix44 MatTransform;
+        MatTransform.BuildRotationXYZ(Math.Cos(Angle) * 30.0f, Math.Sin(Angle) * 360.0f, 0.0f);
+
+        VMatrix44::MulVecMat(Light1StartPosition, MatTransform, Light1->Position);
+        VMatrix44::MulVecMat(Light2StartPosition, MatTransform, Light2->Position);
+
+        VMatrix44::MulVecMat(LightStartDirection, MatTransform, Light1->Direction);
+        Light2->Direction = Light1->Direction;
     }
 };
 
