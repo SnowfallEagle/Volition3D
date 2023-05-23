@@ -169,7 +169,6 @@ void VRenderer::Render()
 
         // If we have empty space on screen on right - blit this area
         i32f Remainder = Environment2D.Width - Src.X;
-        Renderer.DrawDebugText("Remainder %d\n", Remainder);
         if (Remainder < WidthPart)
         {
             Src.X = 0;

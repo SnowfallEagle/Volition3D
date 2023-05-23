@@ -441,7 +441,7 @@ protected:
         Light2->KLinear = 0.00001f;
         Light2->FalloffPower = 5.0f;
 
-        World.SetShadowMakingLight(SunLight);
+        World.SetShadowMakingLight(Light1);
 
         TimeAccum = 0.0f;
     }
@@ -461,6 +461,20 @@ protected:
 
         VMatrix44::MulVecMat(LightStartDirection, MatTransform, Light1->Direction);
         Light2->Direction = Light1->Direction;
+
+        Renderer.DrawDebugText("Shadow Making Light:");
+        Renderer.DrawDebugText("  Spotlight1 [Y]");
+        Renderer.DrawDebugText("  Spotlight2 [U]");
+        Renderer.DrawDebugText("  Sun Light  [I]");
+    }
+
+    virtual void ProcessInput(f32 DeltaTime) override
+    {
+        Super::ProcessInput(DeltaTime);
+
+        if (Input.IsEventKeyDown(EKeycode::Y)) World.SetShadowMakingLight(Light1);
+        if (Input.IsEventKeyDown(EKeycode::U)) World.SetShadowMakingLight(Light2);
+        if (Input.IsEventKeyDown(EKeycode::I)) World.SetShadowMakingLight(SunLight);
     }
 };
 
