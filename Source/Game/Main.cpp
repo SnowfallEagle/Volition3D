@@ -6,6 +6,33 @@ using namespace Volition;
 namespace Game
 {
 
+class GCycleAnimatedEntity : public VEntity
+{
+private:
+    using Super = VEntity;
+
+private:
+    i32 AnimationId;
+
+public:
+    void StartAnimationsCycle()
+    {
+        AnimationId = 0;
+        Mesh->PlayAnimation((EMD2AnimationId)AnimationId);
+    }
+
+    virtual void Update(f32 DeltaTime) override
+    {
+        Super::Update(DeltaTime);
+
+        if (Mesh->bAnimationPlayed)
+        {
+            AnimationId = (AnimationId + 1) % (i32)EMD2AnimationId::MaxAnimations;
+            Mesh->PlayAnimation((EMD2AnimationId)AnimationId);
+        }
+    }
+};
+
 class GGameState : public VGameState
 {
 protected:
@@ -320,7 +347,9 @@ protected:
         SunLight->Color.G -= 0x22;
         SunLight->Color.B -= 0x11;
 
-        const auto Boss = World.SpawnEntity()->Mesh->LoadMD2("Assets/Models/boss3/tris.md2", "Assets/Models/boss3/rider.pcx", 0, {-150000.0f, -102500.0f, 225000.0f}, {500.0f, 500.0f, 500.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
+        const auto Boss = World.SpawnEntity<GCycleAnimatedEntity>();
+        Boss->Mesh->LoadMD2("Assets/Models/boss3/tris.md2", "Assets/Models/boss3/rider.pcx", 0, {-150000.0f, -102500.0f, 225000.0f}, {500.0f, 500.0f, 500.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
+        Boss->StartAnimationsCycle();
     }
 };
 
