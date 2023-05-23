@@ -181,15 +181,25 @@ protected:
 
 class GRaidScene : public GGameState
 {
-public:
-    static constexpr i32f MaxTroopers = 48;
-    static constexpr i32f MaxAirplanes = 4;
+private:
+    enum class ERaidState
+    {
+        Run = 0,
+        Stop
+    };
 
     using Super = GGameState;
 
 private:
+    static constexpr i32f MaxTroopers = 48;
+    static constexpr i32f MaxAirplanes = 4;
+
+private:
     VEntity* Troopers[MaxTroopers];
     VEntity* Airplane[MaxAirplanes];
+
+    ERaidState RaidState;
+    f32 RunTimer;
 
 protected:
     virtual void StartUp() override
@@ -249,20 +259,37 @@ protected:
         Airplane[3]->Mesh->Rotation.X = 15.0f;
 
         World.GetCamera()->Init(ECameraAttr::Euler, {-10000.0f, -5850.0f, -10000.0f}, {-15.0f, 180.0f, 0.0f}, VVector4(), 90.0f, 250.0f, 1000000.0f);
+
+        RaidState = ERaidState::Run;
+        RunTimer = 7500.0f;
     }
 
     virtual void Update(f32 DeltaTime) override
     {
         Super::Update(DeltaTime);
 
-        for (i32f i = 0; i < MaxTroopers; ++i)
+        if (RaidState == ERaidState::Run)
         {
-            Troopers[i]->Mesh->Position.Z += 2.0f *  DeltaTime;
-        }
+            for (i32f i = 0; i < MaxTroopers; ++i)
+            {
+                Troopers[i]->Mesh->Position.Z += 2.0f * DeltaTime;
+            }
 
-        for (i32f i = 0; i < MaxAirplanes; ++i)
-        {
-            Airplane[i]->Mesh->Position.Z += (i < 2 ? 1.0f : 2.0f) * DeltaTime;
+            for (i32f i = 0; i < MaxAirplanes; ++i)
+            {
+                Airplane[i]->Mesh->Position.Z += (i < 2 ? 1.0f : 2.0f) * DeltaTime;
+            }
+
+            RunTimer -= DeltaTime;
+            if (RunTimer < 0.0f)
+            {
+                for (i32f i = 0; i < MaxTroopers; ++i)
+                {
+                    Troopers[i]->Mesh->PlayAnimation(EMD2AnimationId::CrouchStand, true);
+                }
+
+                RaidState = ERaidState::Stop;
+            }
         }
     }
 };
@@ -410,5 +437,5 @@ void GGameState::ProcessInput(f32 DeltaTime)
 
 int main(int Argc, char** Argv)
 {
-    return Engine.Run<Game::GAgentWithBladeScene>(Argc, Argv);
+    return Engine.Run<Game::GRaidScene>(Argc, Argv);
 }
