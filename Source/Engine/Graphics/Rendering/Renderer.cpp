@@ -214,7 +214,7 @@ void VRenderer::Render()
 
             // Make shadow
             {
-                if (~Mesh->Attr & EMeshAttr::CastShadow || !ShadowMakingLight)
+                if (~Mesh->Attr & EMeshAttr::CastShadow || !ShadowMakingLight || !ShadowMakingLight->bActive)
                 {
                     continue;
                 }
