@@ -206,7 +206,7 @@ protected:
     {
         Super::StartUp();
 
-        Config.RenderSpec.PostProcessColorCorrection = { 1.0f, 1.0f, 1.1f };
+        Config.RenderSpec.PostProcessColorCorrection = { 1.1f, 1.05f, 1.0f };
 
         const auto Spotlight = World.SpawnLight(ELightType::ComplexSpotlight);
         Spotlight->Position = { 0.0f, -10000.0f, 250.0f };
@@ -306,12 +306,21 @@ protected:
         Super::StartUp();
 
         VCamera* Camera = World.GetCamera();
+        Camera->Position = { 0.0f, 0.0f, 400000.0f };
         Camera->Direction = { 15.0f, 180.0f, 0.0f };
         Camera->ZFarClip = 3000000.0f;
 
         CamPosSpeedModifier = 25.0f;
 
         World.GenerateTerrain("Assets/Terrains/Large/Heightmap.bmp", "Assets/Terrains/RockyLand/Texture.bmp", 1000000.0f, 250000.0f, EShadeMode::Gouraud);
+        World.SetYShadowPosition(-102500.0f);
+        StartSunLightPosition = { -500000.0f, 1000000.0f, -1000000.0f };
+
+        SunLight->Color.R -= 0x22;
+        SunLight->Color.G -= 0x22;
+        SunLight->Color.B -= 0x11;
+
+        const auto Boss = World.SpawnEntity()->Mesh->LoadMD2("Assets/Models/boss3/tris.md2", "Assets/Models/boss3/rider.pcx", 0, {-150000.0f, -102500.0f, 225000.0f}, {500.0f, 500.0f, 500.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
     }
 };
 
