@@ -105,8 +105,8 @@ protected:
         Config.RenderSpec.PostProcessColorCorrection = { 0.6f, 0.6f, 1.0f };
 
         PointLight->bActive = false;
-        SunLight->Color.R -= 0x11;
-        SunLight->Color.G -= 0x11;
+        SunLight->Color.R -= 0x33;
+        SunLight->Color.G -= 0x22;
 
         Spotlight = World.SpawnLight(ELightType::ComplexSpotlight);
         Spotlight->Position = { 0.0f, -10000.0f, 250.0f };
@@ -178,7 +178,7 @@ protected:
         Dead->Mesh->LoadMD2("Assets/Models/deadbods/dude/tris.md2", "Assets/Models/deadbods/dude/dead1.pcx", 0, { 5000.0f, -12200.0f, 4750.0f }, { 15.0f, 15.0f, 15.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
         Dead->Mesh->Rotation.Y = 90.0f;
 
-        World.GetCamera()->Init(ECameraAttr::Euler, {0.0f, 1000.0f, 1500.0f}, {25.0f, 180.0f, 0.0f}, VVector4(), 90.0f, 75.0f, 1000000.0f);
+        World.GetCamera()->Init(ECameraAttr::Euler, {7000.0f, -11000.0f, 5500.0f}, {15.0f, -135.0f, 0.0f}, VVector4(), 90.0f, 75.0f, 1000000.0f);
 
         CamPosSpeedModifier *= 0.25f;
     }
@@ -258,7 +258,9 @@ protected:
         CornerLight->KQuad = 0.0000000000005f;
         CornerLight->FalloffPower = 5.0f;
 
-        World.Environment2DMovementEffectSpeed *= 2.0f;
+        AmbientLight->Color = MAP_XRGB32(0x33, 0x22, 0x11);
+
+        World.Environment2DMovementEffectSpeed *= 1.0f;
         World.SetEnvironment2D("Assets/Environment2D/Afternoon.png");
         World.GenerateTerrain("Assets/Terrains/Raid/Heightmap.bmp", "Assets/Terrains/RockyLand/Texture.bmp", 500000.0f, 50000.0f, EShadeMode::Gouraud);
         World.SetYShadowPosition(-6000.0f);
@@ -341,10 +343,12 @@ protected:
 
         CamPosSpeedModifier = 25.0f;
 
+        World.SetEnvironment2D("Assets/Environment2D/Morning.png");
         World.GenerateTerrain("Assets/Terrains/Large/Heightmap.bmp", "Assets/Terrains/RockyLand/Texture.bmp", 1000000.0f, 250000.0f, EShadeMode::Gouraud);
         World.SetYShadowPosition(-102500.0f);
         StartSunLightPosition = { -500000.0f, 1000000.0f, -1000000.0f };
 
+        AmbientLight->Color = MAP_XRGB32(0x10, 0x0C, 0x08);
         SunLight->Color.R -= 0x22;
         SunLight->Color.G -= 0x22;
         SunLight->Color.B -= 0x11;
@@ -627,5 +631,5 @@ void GGameState::ProcessInput(f32 DeltaTime)
 
 int main(int Argc, char** Argv)
 {
-    return Engine.Run<Game::GRaidScene>(Argc, Argv);
+    return Engine.Run<Game::GLargeTerrainScene>(Argc, Argv);
 }
