@@ -89,7 +89,7 @@ protected:
 
 class GAgentWithBladeScene : public GGameState
 {
-public:
+private:
     using Super = GGameState;
 
 private:
@@ -324,7 +324,7 @@ protected:
 
 class GLargeTerrainScene : public GGameState
 {
-public:
+private:
     using Super = GGameState;
 
 protected:
@@ -355,7 +355,7 @@ protected:
 
 class GGrandTerrainScene : public GGameState
 {
-public:
+private:
     using Super = GGameState;
 
 protected:
@@ -377,8 +377,12 @@ protected:
 
 class GAnimScene : public GGameState
 {
-public:
+private:
     using Super = GGameState;
+
+private:
+    VLight* Light1;
+    VLight* Light2;
 
 protected:
     virtual void StartUp() override
@@ -393,22 +397,45 @@ protected:
 
         CamPosSpeedModifier = 25.0f;
 
-        World.GenerateTerrain("Assets/Terrains/Small/SmallHeightmap.bmp", "Assets/Terrains/Common/Green.bmp", 100000.0f, 2500.0f, EShadeMode::Gouraud);
+        World.SetEnvironment2D("Assets/Environment2D/Night.png");
+        World.Environment2DMovementEffectSpeed = 0.0f;
+        World.GenerateTerrain("Assets/Terrains/Small/SmallHeightmap.bmp", "Assets/Terrains/Common/Blue.bmp", 100000.0f, 2500.0f, EShadeMode::Gouraud);
         World.SetYShadowPosition(-900.0f);
 
-        AmbientLight->Color = MAP_XRGB32(0x11, 0x11, 0x11);
+        const auto Entity1 = World.SpawnEntity<GCycleAnimatedEntity>();
+        Entity1->Mesh->LoadMD2("Assets/Models/droideka/tris.md2", "Assets/Models/droideka/droideka.pcx", 0, { 5000.0f, -900.0f, 0.0f}, {100.0f, 100.0f, 100.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
+        Entity1->StartAnimationsCycle();
 
+        const auto Entity2 = World.SpawnEntity<GCycleAnimatedEntity>();
+        Entity2->Mesh->LoadMD2("Assets/Models/McClane/tris.md2", "Assets/Models/McClane/nakatomi1.pcx", 0, { -6000.0f, -900.0f, 0.0f}, {100.0f, 100.0f, 100.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
+        Entity2->StartAnimationsCycle();
+
+        AmbientLight->Color = MAP_XRGB32(0x0A, 0x0A, 0x0A);
+
+        /*
         StartSunLightPosition = { 10000.0f, 10000.0f, 10000.0f };
         SunLight->Color = MAP_XRGB32(0xAA, 0x55, 0x99);
+        SunLight->bActive = false;
         SunLight->Direction = VVector4{ -0.5f, -0.75f, -1.0f }.GetNormalized();
+        */
+        SunLight->Color = 0;
+        StartSunLightPosition = { 15000.0f, 15000.0f, 15000.0f };
 
-        GCycleAnimatedEntity* Entity = World.SpawnEntity<GCycleAnimatedEntity>();
-        Entity->Mesh->LoadMD2("Assets/Models/droideka/tris.md2", "Assets/Models/droideka/droideka.pcx", 0, { 5000.0f, -900.0f, 0.0f}, {100.0f, 100.0f, 100.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
-        Entity->StartAnimationsCycle();
+        PointLight->bActive = false;
 
-        Entity = World.SpawnEntity<GCycleAnimatedEntity>();
-        Entity->Mesh->LoadMD2("Assets/Models/McClane/tris.md2", "Assets/Models/McClane/nakatomi1.pcx", 0, { -6000.0f, -900.0f, 0.0f}, {100.0f, 100.0f, 100.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
-        Entity->StartAnimationsCycle();
+        Light1 = World.SpawnLight(ELightType::ComplexSpotlight);
+        Light1->Position = { Entity1->Mesh->Position.X, 10000.0f, Entity1->Mesh->Position.Z + 1000.0f };
+        Light1->Direction = VVector4{ 0.0f, -1.0f, -0.25f }.GetNormalized();
+        Light1->Color = MAP_XRGB32(0x66, 0x0C, 0x00);
+        Light1->KLinear = 0.00001f;
+        Light1->FalloffPower = 5.0f;
+
+        Light2 = World.SpawnLight(ELightType::ComplexSpotlight);
+        Light2->Position = { Entity2->Mesh->Position.X, 10000.0f, Entity2->Mesh->Position.Z + 1000.0f };
+        Light2->Direction = VVector4{ 0.0f, -1.0f, -0.25f }.GetNormalized();
+        Light2->Color = MAP_XRGB32(0x00, 0x0C, 0x88);
+        Light2->KLinear = 0.00001f;
+        Light2->FalloffPower = 5.0f;
     }
 };
 

@@ -107,6 +107,9 @@ VMaterial* VWorld::AddMaterial()
 
 void VWorld::StartUp(VGameState* InGameState)
 {
+    Environment2DMovementEffectAngle = 0.0f;
+    Environment2DMovementEffectSpeed = 0.00175f;
+
     Entities.Resize(MinEntitiesCapacity);
     Materials.Resize(MinMaterialsCapacity);
 
@@ -125,8 +128,6 @@ void VWorld::StartUp(VGameState* InGameState)
 
 void VWorld::FixedUpdateEnvironment(f32 FixedDeltaTime)
 {
-    static constexpr f32 Environment2DMovementEffectSpeed = 0.00175f;
-
     Environment2DMovementEffectAngle = Math.Mod(Environment2DMovementEffectAngle + (Environment2DMovementEffectSpeed * FixedDeltaTime), 360.0f);
     if (Environment2DMovementEffectAngle < 0.0f)
     {

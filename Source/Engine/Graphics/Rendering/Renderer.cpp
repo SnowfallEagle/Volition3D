@@ -152,27 +152,29 @@ void VRenderer::Render()
     if (Environment2D.SDLSurface && Environment2D.SDLSurface->pixels)
     {
         // Blit first part
-        VRelativeRectInt Src;
+        VRelativeRectInt Src, Dest;
 
         const f32 YCameraAngle = Math.Mod(Camera.Direction.Y + World.Environment2DMovementEffectAngle, 360.0f);
+        const i32 WidthPart = Environment2D.Width / 4;
         const i32 HeightPart = Environment2D.Height / 3;
 
+        static constexpr f32 YSrcMultiplier = 0.75f; // To move up/down a bit slower
         Src.X = (i32)((YCameraAngle / 360.0f) * (f32)World.Environment2D.Width + 0.5f);
-        Src.Y = HeightPart + (i32)((f32)HeightPart * Math.Sin(Camera.Direction.X));
+        Src.Y = HeightPart + (i32)((f32)HeightPart * Math.Sin(Camera.Direction.X) * YSrcMultiplier);
 
-        Src.W = GetScreenWidth();
+        Src.W = WidthPart;
         Src.H = HeightPart;
 
         Environment2D.Blit(&Src, &BackSurface, nullptr);
 
         // If we have empty space on screen on right - blit this area
         i32f Remainder = Environment2D.Width - Src.X;
-        if (Remainder < GetScreenWidth())
+        Renderer.DrawDebugText("Remainder %d\n", Remainder);
+        if (Remainder < WidthPart)
         {
             Src.X = 0;
 
-            VRelativeRectInt Dest;
-            Dest.X = Remainder;
+            Dest.X = (i32)(((f32)Remainder / (f32)WidthPart) * (f32)GetScreenWidth());
             Dest.Y = 0;
             Dest.W = GetScreenWidth();
             Dest.H = GetScreenHeight();

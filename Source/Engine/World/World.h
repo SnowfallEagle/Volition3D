@@ -23,7 +23,8 @@ private:
     static constexpr i32f MinLightsCapacity    = 128;
 
 public:
-    f32 Environment2DMovementEffectAngle = 0.0f;
+    f32 Environment2DMovementEffectAngle;
+    f32 Environment2DMovementEffectSpeed;
 
 private:
     VGameState* GameState;
