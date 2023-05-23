@@ -48,7 +48,6 @@ protected:
         Renderer.DrawDebugText("FPS: %.2f", 1000.0f / DeltaTime);
     }
 
-
     virtual void FixedUpdate(f32 FixedDeltaTime) override
     {
         // Rotate sun light
@@ -66,6 +65,11 @@ class GAgentWithBladeScene : public GGameState
 public:
     using Super = GGameState;
 
+private:
+    VLight* Spotlight;
+    VLight* Spotlight2;
+    VLight* CornerLight;
+
 protected:
     virtual void StartUp() override
     {
@@ -77,7 +81,7 @@ protected:
         SunLight->Color.R -= 0x11;
         SunLight->Color.G -= 0x11;
 
-        const auto Spotlight = World.SpawnLight(ELightType::ComplexSpotlight);
+        Spotlight = World.SpawnLight(ELightType::ComplexSpotlight);
         Spotlight->Position = { 0.0f, -10000.0f, 250.0f };
         Spotlight->Direction = VVector4{ 0.0f, -0.75f, -0.5f }.GetNormalized();
         Spotlight->Color = MAP_XRGB32(0x88, 0x88, 0xAA);
@@ -85,7 +89,7 @@ protected:
         Spotlight->KLinear = 0.0f;
         Spotlight->FalloffPower = 5.0f;
 
-        const auto Spotlight2 = World.SpawnLight(ELightType::ComplexSpotlight);
+        Spotlight2 = World.SpawnLight(ELightType::ComplexSpotlight);
         Spotlight2->Position = { 0.0f, -10000.0f, -250.0f };
         Spotlight2->Direction = VVector4{ 0.0f, -0.5f, 1.0f }.GetNormalized();
         Spotlight2->Color = MAP_XRGB32(0xAA, 0x22, 0x22);
@@ -93,7 +97,7 @@ protected:
         Spotlight2->KLinear = 0.0f;
         Spotlight2->FalloffPower = 5.0f;
 
-        const auto CornerLight = World.SpawnLight(ELightType::ComplexSpotlight);
+        CornerLight = World.SpawnLight(ELightType::ComplexSpotlight);
         CornerLight->Position = { -7500.0f, -5000.0f, -10500.0f };
         CornerLight->Direction = VVector4{ -0.25f, -1.0f, -1.0f }.GetNormalized();
         CornerLight->Color = MAP_XRGB32(0xAA, 0x33, 0x33);
@@ -152,13 +156,26 @@ protected:
         CamPosSpeedModifier *= 0.25f;
     }
 
+    virtual void Update(f32 DeltaTime) override
+    {
+        Super::Update(DeltaTime);
+
+        Renderer.DrawDebugText("Ambient Light [Y]: %s", AmbientLight->bActive ? "On" : "Off");
+        Renderer.DrawDebugText("Sun Light     [U]: %s", SunLight->bActive ? "On" : "Off");
+        Renderer.DrawDebugText("Spotlight1    [I]: %s", Spotlight->bActive ? "On" : "Off");
+        Renderer.DrawDebugText("Spotlight2    [O]: %s", Spotlight2->bActive ? "On" : "Off");
+        Renderer.DrawDebugText("Spotlight3    [P]: %s", CornerLight->bActive ? "On" : "Off");
+    }
+
     virtual void ProcessInput(f32 DeltaTime) override
     {
         Super::ProcessInput(DeltaTime);
 
         if (Input.IsEventKeyDown(EKeycode::Y)) AmbientLight->bActive ^= true;
         if (Input.IsEventKeyDown(EKeycode::U)) SunLight->bActive ^= true;
-        if (Input.IsEventKeyDown(EKeycode::I)) PointLight->bActive ^= true;
+        if (Input.IsEventKeyDown(EKeycode::I)) Spotlight->bActive ^= true;
+        if (Input.IsEventKeyDown(EKeycode::O)) Spotlight2->bActive ^= true;
+        if (Input.IsEventKeyDown(EKeycode::P)) CornerLight->bActive ^= true;
     }
 };
 
