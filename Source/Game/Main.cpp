@@ -74,7 +74,7 @@ protected:
     {
         ProcessInput(DeltaTime);
 
-        Renderer.DrawDebugText("FPS: %.2f", 1000.0f / DeltaTime);
+        Renderer.DrawDebugText("FPS: %.2f", Time.GetFPS());
         Renderer.DrawDebugText("Scene: %s", *StateName);
     }
 
@@ -376,6 +376,7 @@ protected:
         SunLight->Color.R -= 0x11;
         SunLight->Color.G -= 0x11;
         SunLight->Color.B -= 0x22;
+        PointLight->bActive = false;
 
         const auto Boss = World.SpawnEntity<GCycleAnimatedEntity>();
         Boss->Mesh->LoadMD2("Assets/Models/boss3/tris.md2", "Assets/Models/boss3/rider.pcx", 0, {-150000.0f, -102500.0f, 225000.0f}, {500.0f, 500.0f, 500.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
@@ -397,6 +398,7 @@ protected:
 
         AmbientLight->Color = MAP_XRGB32(0x09, 0x06, 0x03);
         SunLight->Color = MAP_XRGB32(0x88, 0x77, 0x33);
+        PointLight->bActive = false;
 
         VCamera* Camera = World.GetCamera();
         Camera->Position = { 350000.0f, 0.0f, -750000.0f };
