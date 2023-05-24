@@ -90,7 +90,7 @@ protected:
     virtual void ProcessInput(f32 DeltaTime);
 };
 
-class GAgentWithBladeScene : public GGameState
+class GThreatScene : public GGameState
 {
 private:
     using Super = GGameState;
@@ -104,6 +104,8 @@ protected:
     virtual void StartUp() override
     {
         Super::StartUp();
+
+        StateName = "Threat";
 
         Config.RenderSpec.PostProcessColorCorrection = { 0.6f, 0.6f, 1.0f };
 
@@ -237,6 +239,8 @@ protected:
     {
         Super::StartUp();
 
+        StateName = "Raid";
+
         Config.RenderSpec.PostProcessColorCorrection = { 1.1f, 1.05f, 1.0f };
 
         const auto Spotlight = World.SpawnLight(ELightType::ComplexSpotlight);
@@ -344,7 +348,7 @@ protected:
     }
 };
 
-class GLargeTerrainScene : public GGameState
+class GBigGuyScene : public GGameState
 {
 private:
     using Super = GGameState;
@@ -353,6 +357,8 @@ protected:
     virtual void StartUp() override
     {
         Super::StartUp();
+
+        StateName = "Big Guy";
 
         VCamera* Camera = World.GetCamera();
         Camera->Position = { 10750.0f, 27500.0f, 385000.0f };
@@ -387,6 +393,8 @@ protected:
     {
         Super::StartUp();
 
+        StateName = "Grand Terrain";
+
         AmbientLight->Color = MAP_XRGB32(0x09, 0x06, 0x03);
         SunLight->Color = MAP_XRGB32(0x88, 0x77, 0x33);
 
@@ -404,7 +412,7 @@ protected:
     }
 };
 
-class GAnimScene : public GGameState
+class GShadowsAndLightsScene : public GGameState
 {
 private:
     using Super = GGameState;
@@ -438,6 +446,8 @@ protected:
     virtual void StartUp() override
     {
         Super::StartUp();
+
+        StateName = "Shadows And Lights";
 
         Config.RenderSpec.PostProcessColorCorrection = { 1.1f, 0.9f, 0.9f };
 
@@ -644,11 +654,11 @@ void GGameState::ProcessInput(f32 DeltaTime)
 
     if (Input.IsEventKeyDown(EKeycode::Backspace)) Config.RenderSpec.bRenderSolid ^= true;
 
-    if (Input.IsEventKeyDown(EKeycode::F1)) World.ChangeState<GAgentWithBladeScene>();
+    if (Input.IsEventKeyDown(EKeycode::F1)) World.ChangeState<GThreatScene>();
     if (Input.IsEventKeyDown(EKeycode::F2)) World.ChangeState<GRaidScene>();
-    if (Input.IsEventKeyDown(EKeycode::F3)) World.ChangeState<GLargeTerrainScene>();
+    if (Input.IsEventKeyDown(EKeycode::F3)) World.ChangeState<GBigGuyScene>();
     if (Input.IsEventKeyDown(EKeycode::F4)) World.ChangeState<GGrandTerrainScene>();
-    if (Input.IsEventKeyDown(EKeycode::F5)) World.ChangeState<GAnimScene>();
+    if (Input.IsEventKeyDown(EKeycode::F5)) World.ChangeState<GShadowsAndLightsScene>();
 
     if (Input.IsEventKeyDown(EKeycode::F7))  Config.RenderSpec.PostProcessColorCorrection = { 1.0f, 1.0f, 1.0f };
     if (Input.IsEventKeyDown(EKeycode::F8))  Config.RenderSpec.PostProcessColorCorrection = { 1.25f, 1.1f, 1.0f };

@@ -134,6 +134,8 @@ void VRenderer::SetTerrain(VMesh& TerrainMesh)
 
 void VRenderer::PreRender()
 {
+    ProfileInfo.Reset();
+
     ZBuffer.Clear();
     BaseRenderList->ResetList();
     TerrainRenderList->ResetStateAndSaveList();
@@ -301,6 +303,8 @@ void VRenderer::RenderUI()
     {
         return;
     }
+
+    ProfileInfo.Display();
 
     for (const auto& TextElement : TextQueue)
     {
@@ -1719,6 +1723,18 @@ void VRenderer::RefreshWindowSurface()
 
     Config.RenderSpec.SDLPixelFormat = VideoSurface.SDLSurface->format;
     Config.RenderSpec.SDLPixelFormatEnum = Config.RenderSpec.SDLPixelFormat->format;
+}
+
+void VRenderer::VProfileInfo::Display()
+{
+    Renderer.DrawDebugText("Profile Info:");
+    Renderer.DrawDebugText("  Culled Entities: %d", NumCulledEntities);
+    Renderer.DrawDebugText("  Num Shadows:     %d", NumShadows);
+    Renderer.DrawDebugText("  Active Lights:   %d", NumActiveLights);
+    Renderer.DrawDebugText("  Backfaced Poly:  %d", NumBackfacedPoly);
+    Renderer.DrawDebugText("  Clipped Poly:    %d", NumClippedPoly);
+    Renderer.DrawDebugText("  Additional Poly: %d", NumAdditionalPoly);
+    Renderer.DrawDebugText("  NumRenderedPoly: %d", NumRenderedPoly);
 }
 
 }

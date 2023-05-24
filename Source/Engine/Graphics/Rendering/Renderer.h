@@ -33,6 +33,24 @@ public:
     static constexpr i32f MaxCachedRenderListPoly  = MaxTerrainRenderListPoly;
 
 private:
+    struct VProfileInfo
+    {
+        i32 NumCulledEntities;
+        i32 NumShadows;
+        i32 NumActiveLights;
+        i32 NumBackfacedPoly;
+        i32 NumClippedPoly;
+        i32 NumAdditionalPoly;
+        i32 NumRenderedPoly;
+
+        VLN_FINLINE void Reset()
+        {
+            Memory.MemSetByte(this, 0, sizeof(*this));
+        }
+
+        void Display();
+    };
+
     struct VTextElement
     {
         static constexpr i32f TextSize = 512;
@@ -43,6 +61,8 @@ private:
     };
 
 private:
+    VProfileInfo ProfileInfo;
+
     VSurface VideoSurface;
     VSurface BackSurface;
 
