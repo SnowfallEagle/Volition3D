@@ -120,7 +120,7 @@ void VMesh::ComputePolygonNormalsLength()
 
         PolyList[i].NormalLength = VVector4::GetCross(U, V).GetLength();
 
-        VLN_LOG_VERBOSE("\tPolygon normal length [%d]: %f\n", i, PolyList[i].NormalLength);
+        // @DEBUG: VLN_LOG_VERBOSE("\tPolygon normal length [%d]: %f\n", i, PolyList[i].NormalLength);
     }
 }
 
@@ -174,7 +174,7 @@ void VMesh::ComputeVertexNormals()
 
                 HeadLocalVtxList[VtxIndex].Attr |= EVertexAttr::HasNormal;
 
-                VLN_LOG_VERBOSE("Vertex normal [%d]: <%.2f %.2f %.2f>\n", VtxIndex, HeadLocalVtxList[VtxIndex].Normal.X, HeadLocalVtxList[VtxIndex].Normal.Y, HeadLocalVtxList[VtxIndex].Normal.Z);
+                // @DEBUG: VLN_LOG_VERBOSE("Vertex normal [%d]: <%.2f %.2f %.2f>\n", VtxIndex, HeadLocalVtxList[VtxIndex].Normal.X, HeadLocalVtxList[VtxIndex].Normal.Y, HeadLocalVtxList[VtxIndex].Normal.Z);
             }
         }
     }
@@ -603,7 +603,7 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                 PolyList[i].State = EPolyState::Active;
             }
 
-            VLN_LOG_VERBOSE("\tNum materials in object: %d\n", NumMaterialsInObject);
+            VLN_LOG_VERBOSE("\tNum materials in object: %d\n", NumMaterialsInModel);
         }
 
         // Read materials
@@ -701,7 +701,7 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                         CurrentMaterial->Color.A = VLN_MAX(AlphaRed, VLN_MAX(AlphaGreen, AlphaBlue));
                         CurrentMaterial->Attr |= EMaterialAttr::Transparent;
 
-                        VLN_LOG_VERBOSE("\tAlpha channel: %d\n", CurrentMaterial.Color.A);
+                        VLN_LOG_VERBOSE("\tAlpha channel: %d\n", CurrentMaterial->Color.A);
                     }
                 }
 
@@ -759,14 +759,17 @@ b32 VMesh::LoadCOB(const char* Path, const VVector4& InPosition, const VVector4&
                 CurrentMaterial->ComputeReflectiveColors();
 
                 // Log precomputed colors and factors
-                VLN_LOG_VERBOSE("\tRa [%d]: %d\n", RGBIndex, CurrentMaterial.RAmbient.C[RGBIndex]);
-                VLN_LOG_VERBOSE("\tRd [%d]: %d\n", RGBIndex, CurrentMaterial.RDiffuse.C[RGBIndex]);
+                for (i32f RGBIndex = 1; RGBIndex < 4; ++RGBIndex)
+                {
+                    VLN_LOG_VERBOSE("\tRa [%d]: %d\n", RGBIndex, CurrentMaterial->RAmbient.C[RGBIndex]);
+                    VLN_LOG_VERBOSE("\tRd [%d]: %d\n", RGBIndex, CurrentMaterial->RDiffuse.C[RGBIndex]);
+                }
 
                 // Log factors
                 VLN_LOG_VERBOSE("\tKa %.3f Kd %.3f Ks 1.000 Exp %.3f\n",
-                    CurrentMaterial.KAmbient,
-                    CurrentMaterial.KDiffuse,
-                    CurrentMaterial.Power
+                    CurrentMaterial->KAmbient,
+                    CurrentMaterial->KDiffuse,
+                    CurrentMaterial->Power
                 );
             }
         }

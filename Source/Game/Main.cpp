@@ -74,10 +74,28 @@ protected:
     {
         ProcessInput(DeltaTime);
 
-        Renderer.DrawDebugText("FPS: %.2f", Time.GetFPS());
         Renderer.DrawDebugText("Scene: %s", *StateName);
-        Renderer.DrawDebugText("Render [BackSpace]: %s", Config.RenderSpec.bRenderSolid ? "Solid" : "Wire");
-        Renderer.DrawDebugText("Toggle UI [Tab]");
+
+        Config.RenderSpec.DebugTextPosition.Y += Renderer.GetFontCharHeight();
+
+        Renderer.DrawDebugText("Controls:", Config.RenderSpec.bRenderSolid ? "Solid" : "Wire");
+        Renderer.DrawDebugText("  Render [Backspace]: %s", Config.RenderSpec.bRenderSolid ? "Solid" : "Wire");
+        Renderer.DrawDebugText("  Choose Scene      [F1-F5]");
+        Renderer.DrawDebugText("  Scale Target Size [1-3]");
+        Renderer.DrawDebugText("  Color Correction  [F7-F12]");
+        Renderer.DrawDebugText("  Toggle UI         [Tab]");
+
+        if (Input.IsEventKeyDown(EKeycode::F7))  Config.RenderSpec.PostProcessColorCorrection = { 1.0f, 1.0f, 1.0f };
+        if (Input.IsEventKeyDown(EKeycode::F8))  Config.RenderSpec.PostProcessColorCorrection = { 1.25f, 1.1f, 1.0f };
+        if (Input.IsEventKeyDown(EKeycode::F9))  Config.RenderSpec.PostProcessColorCorrection = { 1.25f, 1.25f, 1.0f };
+        if (Input.IsEventKeyDown(EKeycode::F10)) Config.RenderSpec.PostProcessColorCorrection = { 1.0f, 1.25f, 1.0f };
+        if (Input.IsEventKeyDown(EKeycode::F11)) Config.RenderSpec.PostProcessColorCorrection = { 1.25f, 1.0f, 1.25f };
+        if (Input.IsEventKeyDown(EKeycode::F12)) Config.RenderSpec.PostProcessColorCorrection = { 1.0f, 1.0f, 1.25f };
+
+        if (Input.IsKeyDown(EKeycode::N1)) Config.RenderSpec.RenderScale = VLN_MAX(Config.RenderSpec.RenderScale - 0.001f * DeltaTime, 0.1f);
+        if (Input.IsKeyDown(EKeycode::N2)) Config.RenderSpec.RenderScale = VLN_MIN(Config.RenderSpec.RenderScale + 0.001f * DeltaTime, 2.0f);
+        if (Input.IsKeyDown(EKeycode::N3)) Config.RenderSpec.RenderScale = 1.0f;
+
     }
 
     virtual void FixedUpdate(f32 FixedDeltaTime) override
@@ -195,11 +213,14 @@ protected:
     {
         Super::Update(DeltaTime);
 
-        Renderer.DrawDebugText("Ambient Light [Y]: %s", AmbientLight->bActive ? "On" : "Off");
-        Renderer.DrawDebugText("Sun Light     [U]: %s", SunLight->bActive ? "On" : "Off");
-        Renderer.DrawDebugText("Spotlight1    [I]: %s", Spotlight->bActive ? "On" : "Off");
-        Renderer.DrawDebugText("Spotlight2    [O]: %s", Spotlight2->bActive ? "On" : "Off");
-        Renderer.DrawDebugText("Spotlight3    [P]: %s", CornerLight->bActive ? "On" : "Off");
+        Config.RenderSpec.DebugTextPosition.Y += Renderer.GetFontCharHeight();
+
+        Renderer.DrawDebugText("Lights:");
+        Renderer.DrawDebugText("  Ambient Light [Y]: %s", AmbientLight->bActive ? "On" : "Off");
+        Renderer.DrawDebugText("  Sun Light     [U]: %s", SunLight->bActive ? "On" : "Off");
+        Renderer.DrawDebugText("  Spotlight1    [I]: %s", Spotlight->bActive ? "On" : "Off");
+        Renderer.DrawDebugText("  Spotlight2    [O]: %s", Spotlight2->bActive ? "On" : "Off");
+        Renderer.DrawDebugText("  Spotlight3    [P]: %s", CornerLight->bActive ? "On" : "Off");
     }
 
     virtual void ProcessInput(f32 DeltaTime) override
@@ -548,6 +569,8 @@ protected:
             Light2->Color = MAP_XRGB32(Light2OriginalColor.R, Light2OriginalColor.G, (i32)VLN_MIN((f32)Light2OriginalColor.B * LightIntensities[Light2State], 255));
         }
 
+        Config.RenderSpec.DebugTextPosition.Y += Renderer.GetFontCharHeight();
+
         Renderer.DrawDebugText("Shadow Making Light:");
         Renderer.DrawDebugText("  Spotlight1 [Y]");
         Renderer.DrawDebugText("  Spotlight2 [U]");
@@ -672,9 +695,9 @@ void GGameState::ProcessInput(f32 DeltaTime)
     if (Input.IsEventKeyDown(EKeycode::F11)) Config.RenderSpec.PostProcessColorCorrection = { 1.25f, 1.0f, 1.25f };
     if (Input.IsEventKeyDown(EKeycode::F12)) Config.RenderSpec.PostProcessColorCorrection = { 1.0f, 1.0f, 1.25f };
 
-    if (Input.IsKeyDown(EKeycode::N0)) Config.RenderSpec.RenderScale = 1.0f;
     if (Input.IsKeyDown(EKeycode::N1)) Config.RenderSpec.RenderScale = VLN_MAX(Config.RenderSpec.RenderScale - 0.001f * DeltaTime, 0.1f);
     if (Input.IsKeyDown(EKeycode::N2)) Config.RenderSpec.RenderScale = VLN_MIN(Config.RenderSpec.RenderScale + 0.001f * DeltaTime, 2.0f);
+    if (Input.IsKeyDown(EKeycode::N3)) Config.RenderSpec.RenderScale = 1.0f;
 
     if (Input.IsEventKeyDown(EKeycode::Escape)) Engine.Stop();
 }

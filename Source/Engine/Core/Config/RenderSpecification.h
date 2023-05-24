@@ -31,7 +31,7 @@ public: /** Set by user */
 
     VVector3 PostProcessColorCorrection = DefaultColorCorrection;
 
-    i32 DebugTextX = 0;
+    VVector2i DebugTextPosition;
     VColorARGB DebugTextColor = DefaultDebugTextColor;
 
 private: /** Set by rendering engine */

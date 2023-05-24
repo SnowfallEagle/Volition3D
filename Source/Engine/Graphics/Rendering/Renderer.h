@@ -79,7 +79,7 @@ private:
     i32 FontCharWidth; /** In pixels */
     i32 FontCharHeight;
 
-    i32 DebugTextY;
+    VVector2i TextShadowOffset;
     TArray<VTextElement> TextQueue;
 
 public:
@@ -91,6 +91,9 @@ public:
 
     i32 GetScreenWidth() const;
     i32 GetScreenHeight() const;
+
+    i32 GetFontCharWidth() const;
+    i32 GetFontCharHeight() const;
 
     void SetTerrain(VMesh& TerrainMesh);
     void RemoveTerrain();
@@ -162,6 +165,16 @@ VLN_FINLINE void VRenderer::DrawClippedLine(u32* Buffer, i32 Pitch, i32 X1, i32 
 VLN_FINLINE i32 VRenderer::GetScreenWidth() const
 {
     return BackSurface.Width;
+}
+
+VLN_FINLINE i32 VRenderer::GetFontCharWidth() const
+{
+    return FontCharWidth;
+}
+
+VLN_FINLINE i32 VRenderer::GetFontCharHeight() const
+{
+    return FontCharHeight;
 }
 
 VLN_FINLINE i32 VRenderer::GetScreenHeight() const

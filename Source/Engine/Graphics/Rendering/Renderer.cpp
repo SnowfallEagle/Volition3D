@@ -317,15 +317,13 @@ void VRenderer::RenderUI()
         VLN_ASSERT(SDLConverted);
 
         // Blit shadow
-        static constexpr VVector2i ShadowOffset = { -1, +1 };
-
-        SDL_Rect Dest = { TextElement.Position.X + ShadowOffset.X, TextElement.Position.Y + ShadowOffset.Y, (i32f)std::strlen(TextElement.Text) * FontCharWidth, FontCharHeight };
+        SDL_Rect Dest = { TextElement.Position.X + TextShadowOffset.X, TextElement.Position.Y + TextShadowOffset.Y, (i32f)std::strlen(TextElement.Text) * FontCharWidth, FontCharHeight };
         SDL_SetSurfaceColorMod(SDLConverted, 0x00, 0x00, 0x00);
         SDL_BlitScaled(SDLConverted, nullptr, BackSurface.SDLSurface, &Dest);
 
         // Blit text
-        Dest.x -= ShadowOffset.X;
-        Dest.y -= ShadowOffset.Y;
+        Dest.x -= TextShadowOffset.X;
+        Dest.y -= TextShadowOffset.Y;
         SDL_SetSurfaceColorMod(SDLConverted, 0xFF, 0xFF, 0xFF);
         SDL_BlitScaled(SDLConverted, nullptr, BackSurface.SDLSurface, &Dest);
 
@@ -341,7 +339,7 @@ void VRenderer::PostRender()
     SDL_UpdateWindowSurface(Window.SDLWindow);
 
     TextQueue.Clear();
-    DebugTextY = 0;
+    Config.RenderSpec.DebugTextPosition = { 0, 0 };
 }
 
 void VRenderer::DrawLine(u32* Buffer, i32 Pitch, i32 X1, i32 Y1, i32 X2, i32 Y2, u32 Color)
@@ -761,14 +759,17 @@ void VRenderer::UpdateFont()
     }
 
     static constexpr i32f CharsPerLine = 80;
+    static constexpr i32f CharsPerRow  = 40;
     static constexpr f32 PointDivPixel = 0.75f;
     static constexpr f32 QualityMultiplier = 4.0f;
 
     FontCharWidth = GetScreenWidth() / CharsPerLine;
-    FontCharHeight = (i32)(FontCharWidth * 1.65f);
+    FontCharHeight = GetScreenHeight() / CharsPerRow;
 
     Font = TTF_OpenFont("Assets/Fonts/Quake2.ttf", (i32)( (f32)FontCharWidth * PointDivPixel * QualityMultiplier ));
     VLN_ASSERT(Font);
+
+    TextShadowOffset = { (i32)((-1.0f / 640.0f) * (f32)GetScreenWidth()), (i32)((1.0f / 480.0f) * (f32)GetScreenHeight()) };
 }
 
 void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
@@ -1627,8 +1628,8 @@ void VRenderer::DrawDebugText(const char* Format, ...)
     std::va_list VarList;
     va_start(VarList, Format);
 
-    VarDrawText(Config.RenderSpec.DebugTextX, DebugTextY, Config.RenderSpec.DebugTextColor, Format, VarList);
-    DebugTextY += FontCharHeight;
+    VarDrawText(Config.RenderSpec.DebugTextPosition.X, Config.RenderSpec.DebugTextPosition.Y, Config.RenderSpec.DebugTextColor, Format, VarList);
+    Config.RenderSpec.DebugTextPosition.Y += FontCharHeight;
 
     va_end(VarList);
 }
@@ -1779,7 +1780,11 @@ void VRenderer::RefreshWindowSurface()
 
 void VRenderer::VProfileInfo::Display()
 {
+    Config.RenderSpec.DebugTextPosition.Y += Renderer.FontCharHeight;
+
     Renderer.DrawDebugText("Profile Info:");
+    Renderer.DrawDebugText("  FPS:             %.2f", Time.GetFPS());
+    Renderer.DrawDebugText("  RenderScale      %.2f", Config.RenderSpec.RenderScale);
     Renderer.DrawDebugText("  Entities:        %d", NumEntities);
     Renderer.DrawDebugText("  Active Lights:   %d", NumActiveLights);
     Renderer.DrawDebugText("  Shadows:         %d", NumShadows);
