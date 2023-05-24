@@ -62,9 +62,13 @@ public:
     void TransformPerspectiveToScreen(const VCamera& Cam);
     void TransformCameraToScreen(const VCamera& Cam);
 
-    void RemoveBackfaces(const VCamera& Cam);
+    /* Returns num backfaced polygons **/
+    i32 RemoveBackfaces(const VCamera& Cam);
+
     void Light(const VCamera& Cam, const TArray<VLight>& Lights);
-    void Clip(const VCamera& Camera, EClipFlags::Type Flags = EClipFlags::Full);
+
+    /* Returns num clipped polygons **/
+    i32 Clip(const VCamera& Camera, EClipFlags::Type Flags = EClipFlags::Full);
 
     void ConvertFromHomogeneous();
 

@@ -145,6 +145,15 @@ void VRenderer::PreRender()
 
 void VRenderer::Render()
 {
+    // Profile lights
+    for (const auto& Light : World.Lights)
+    {
+        if (Light.bActive)
+        {
+            ++ProfileInfo.NumActiveLights;
+        }
+    }
+
     // Set up camera
     VCamera& Camera = *World.Camera;
     Camera.BuildWorldToCameraMat44();
@@ -210,9 +219,14 @@ void VRenderer::Render()
                 {
                     Mesh->TransformModelToWorld();
                 }
-                Mesh->Cull(Camera);
+
+                if (Mesh->Cull(Camera))
+                {
+                    ++ProfileInfo.NumCulledEntities;
+                }
 
                 BaseRenderList->InsertMesh(*Mesh, Mesh->TransVtxList);
+                ++ProfileInfo.NumEntities;
             }
 
             // Make shadow
@@ -239,6 +253,8 @@ void VRenderer::Render()
                 // Insert shadow mesh
                 Mesh->State &= ~EMeshState::Culled;
                 BaseRenderList->InsertMesh(*Mesh, Mesh->TransVtxList, &ShadowMaterial);
+
+                ++ProfileInfo.NumShadows;
             }
         }
     }
@@ -253,12 +269,12 @@ void VRenderer::Render()
         // Processing in LocalVtx
         if (Config.RenderSpec.bBackfaceRemoval)
         {
-            RenderLists[i]->RemoveBackfaces(Camera);
+            ProfileInfo.NumBackfacedPoly += RenderLists[i]->RemoveBackfaces(Camera);
         }
 
         // Transform LocalVtx and use TransVtx since there
         RenderLists[i]->TransformWorldToCamera(Camera);
-        RenderLists[i]->Clip(Camera);
+        ProfileInfo.NumClippedPoly += RenderLists[i]->Clip(Camera);
         RenderLists[i]->Light(Camera, World.Lights);
         RenderLists[i]->TransformCameraToScreen(Camera);
     }
@@ -279,6 +295,8 @@ void VRenderer::Render()
             RenderWire(TerrainRenderList);
         }
     }
+
+    ProfileInfo.NumAdditionalPoly = RenderLists[0]->NumAdditionalPoly + RenderLists[1]->NumAdditionalPoly;
 
     // Unlock buffer
     BackSurface.Unlock();
@@ -1542,6 +1560,8 @@ void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)
             }
         }
     }
+    
+    ++ProfileInfo.NumRenderedPoly;
 }
 
 void VRenderer::VarDrawText(i32 X, i32 Y, VColorARGB Color, const char* Format, std::va_list VarList)
@@ -1714,6 +1734,8 @@ void VRenderer::RenderWire(const VRenderList* RenderList)
             (i32)Poly->TransVtx[0].X, (i32)Poly->TransVtx[0].Y,
             Poly->LitColor[2]
         );
+
+        ++ProfileInfo.NumRenderedPoly;
     }
 }
 
@@ -1728,13 +1750,14 @@ void VRenderer::RefreshWindowSurface()
 void VRenderer::VProfileInfo::Display()
 {
     Renderer.DrawDebugText("Profile Info:");
-    Renderer.DrawDebugText("  Culled Entities: %d", NumCulledEntities);
-    Renderer.DrawDebugText("  Num Shadows:     %d", NumShadows);
+    Renderer.DrawDebugText("  Entities:        %d", NumEntities);
     Renderer.DrawDebugText("  Active Lights:   %d", NumActiveLights);
+    Renderer.DrawDebugText("  Shadows:         %d", NumShadows);
+    Renderer.DrawDebugText("  Culled Entities: %d", NumCulledEntities);
     Renderer.DrawDebugText("  Backfaced Poly:  %d", NumBackfacedPoly);
     Renderer.DrawDebugText("  Clipped Poly:    %d", NumClippedPoly);
     Renderer.DrawDebugText("  Additional Poly: %d", NumAdditionalPoly);
-    Renderer.DrawDebugText("  NumRenderedPoly: %d", NumRenderedPoly);
+    Renderer.DrawDebugText("  Rendered Poly:   %d", NumRenderedPoly);
 }
 
 }

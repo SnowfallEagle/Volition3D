@@ -201,8 +201,10 @@ void VRenderList::TransformModelToWorld(const VPoint4& WorldPos, ETransformType 
     }
 }
 
-void VRenderList::RemoveBackfaces(const VCamera& Cam)
+i32 VRenderList::RemoveBackfaces(const VCamera& Cam)
 {
+    i32 NumBackfaced = 0;
+
     if (bTerrain)
     {
         for (i32f i = 0; i < NumPoly; ++i)
@@ -229,6 +231,7 @@ void VRenderList::RemoveBackfaces(const VCamera& Cam)
             if (VVector4::Dot(View, N) / (N.GetLength() * View.GetLength()) < -0.45f)
             {
                 Poly->State |= EPolyState::Backface;
+                ++NumBackfaced;
             }
         }
     }
@@ -257,9 +260,12 @@ void VRenderList::RemoveBackfaces(const VCamera& Cam)
             if (VVector4::Dot(View, N) < 0.0f)
             {
                 Poly->State |= EPolyState::Backface;
+                ++NumBackfaced;
             }
         }
     }
+
+    return NumBackfaced;
 }
 
 void VRenderList::Light(const VCamera& Cam, const TArray<VLight>& Lights)
@@ -741,7 +747,7 @@ void VRenderList::TransformWorldToCamera(const VCamera& Camera)
     }
 }
 
-void VRenderList::Clip(const VCamera& Camera, EClipFlags::Type Flags)
+i32 VRenderList::Clip(const VCamera& Camera, EClipFlags::Type Flags)
 {
     enum EClipCode
     {
@@ -757,6 +763,7 @@ void VRenderList::Clip(const VCamera& Camera, EClipFlags::Type Flags)
     };
 
     const i32f SavedNumPoly = NumPoly;
+    i32 NumClipped = 0;
 
     for (i32f PolyIndex = 0; PolyIndex < SavedNumPoly; ++PolyIndex)
     {
@@ -816,6 +823,7 @@ void VRenderList::Clip(const VCamera& Camera, EClipFlags::Type Flags)
                  ClipCodes[2] & EClipCode::XGreater))
             {
                 Poly.State |= EPolyState::Clipped;
+                ++NumClipped;
                 continue;
             }
         }
@@ -865,6 +873,7 @@ void VRenderList::Clip(const VCamera& Camera, EClipFlags::Type Flags)
                  ClipCodes[2] & EClipCode::YGreater))
             {
                 Poly.State |= EPolyState::Clipped;
+                ++NumClipped;
                 continue;
             }
         }
@@ -924,6 +933,7 @@ void VRenderList::Clip(const VCamera& Camera, EClipFlags::Type Flags)
                  ClipCodes[2] & EClipCode::ZGreater))
             {
                 Poly.State |= EPolyState::Clipped;
+                ++NumClipped;
                 continue;
             }
 
@@ -1104,6 +1114,8 @@ void VRenderList::Clip(const VCamera& Camera, EClipFlags::Type Flags)
             }
         }
     }
+
+    return NumClipped;
 }
 
 void VRenderList::TransformCameraToPerspective(const VCamera& Cam)

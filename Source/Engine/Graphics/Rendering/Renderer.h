@@ -35,9 +35,10 @@ public:
 private:
     struct VProfileInfo
     {
-        i32 NumCulledEntities;
-        i32 NumShadows;
+        i32 NumEntities;
         i32 NumActiveLights;
+        i32 NumShadows;
+        i32 NumCulledEntities;
         i32 NumBackfacedPoly;
         i32 NumClippedPoly;
         i32 NumAdditionalPoly;
@@ -61,8 +62,6 @@ private:
     };
 
 private:
-    VProfileInfo ProfileInfo;
-
     VSurface VideoSurface;
     VSurface BackSurface;
 
@@ -80,6 +79,9 @@ private:
 
     i32 DebugTextY;
     TArray<VTextElement> TextQueue;
+
+public:
+    VProfileInfo ProfileInfo;
 
 public:
     void StartUp();
