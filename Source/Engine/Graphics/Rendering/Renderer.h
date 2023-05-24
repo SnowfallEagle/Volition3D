@@ -65,6 +65,8 @@ private:
     VSurface VideoSurface;
     VSurface BackSurface;
 
+    f32 RenderScale;
+
     VRenderList* BaseRenderList;
     VRenderList* TerrainRenderList;
 
@@ -116,6 +118,11 @@ public:
     void RefreshWindowSurface();
 
 private:
+    void UpdateRenderTargetSize();
+
+    void InitFont();
+    void UpdateFont();
+
     void DrawTriangle(VInterpolationContext& InterpolationContext);
     void VarDrawText(i32 X, i32 Y, VColorARGB Color, const char* Format, std::va_list VarList); 
 
@@ -137,9 +144,9 @@ inline VRenderer Renderer;
 VLN_FINLINE void VRenderer::PutPixel(u32* Buffer, i32 Pitch, i32 X, i32 Y, u32 Color) const
 {
     VLN_ASSERT(X >= 0);
-    VLN_ASSERT(X < Config.RenderSpec.TargetSize.X);
+    VLN_ASSERT(X < BackSurface.Width);
     VLN_ASSERT(Y >= 0);
-    VLN_ASSERT(Y < Config.RenderSpec.TargetSize.Y);
+    VLN_ASSERT(Y < BackSurface.Height);
 
     Buffer[Y*Pitch + X] = Color;
 }
@@ -154,12 +161,12 @@ VLN_FINLINE void VRenderer::DrawClippedLine(u32* Buffer, i32 Pitch, i32 X1, i32 
 
 VLN_FINLINE i32 VRenderer::GetScreenWidth() const
 {
-    return Config.RenderSpec.TargetSize.X;
+    return BackSurface.Width;
 }
 
 VLN_FINLINE i32 VRenderer::GetScreenHeight() const
 {
-    return Config.RenderSpec.TargetSize.Y;
+    return BackSurface.Height;
 }
 
 VLN_FINLINE void VRenderer::RemoveTerrain()

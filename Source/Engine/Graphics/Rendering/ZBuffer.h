@@ -9,27 +9,39 @@ namespace Volition
 
 class VZBuffer
 {
-private:
-    VSurface Surface;
 public:
     u32* Buffer;
     i32 Pitch;
     i32 Width;
     i32 Height;
 
+    b32 bInitialized = false;
+
+private:
+    VSurface Surface;
+
 public:
     void Create(i32 InWidth, i32 InHeight)
     {
+        Destroy();
+
         Surface.Create(InWidth, InHeight);
         Surface.Lock(Buffer, Pitch);
         Width = InWidth;
         Height = InHeight;
+
+        bInitialized = true;
     }
 
-    VLN_FINLINE void Destroy()
+    void Destroy()
     {
-        Surface.Unlock();
-        Surface.Destroy();
+        if (bInitialized)
+        {
+            Surface.Unlock();
+            Surface.Destroy();
+
+            bInitialized = false;
+        }
     }
 
     VLN_FINLINE void Clear()

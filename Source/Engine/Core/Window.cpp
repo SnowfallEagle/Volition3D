@@ -34,7 +34,7 @@ void VWindow::StartUp()
         SDLWindow = SDL_CreateWindow(
             Config.WindowSpec.Name,
             SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-            Config.WindowSpec.Size.X, Config.WindowSpec.Size.Y,
+            Config.WindowSpec.DesiredSize.X, Config.WindowSpec.DesiredSize.Y,
             Flags
         );
         VLN_ASSERT(SDLWindow);

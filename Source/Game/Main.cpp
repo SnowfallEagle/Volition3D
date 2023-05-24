@@ -622,7 +622,7 @@ void GGameState::ProcessInput(f32 DeltaTime)
     static constexpr f32 Divider = 0.5f;
     const VVector2i MouseMoveInt = { (i32)((f32)MouseMoveAccum.X / Divider), (i32)((f32)MouseMoveAccum.Y / Divider) };
 
-    const f32 Multiplier = DeltaTime * MouseSensivity / Renderer.GetScreenWidth() * 360.0f; 
+    const f32 Multiplier = DeltaTime * MouseSensivity; 
 
     VVector2 MouseMoveFloat = { MouseMoveInt.X * Multiplier, MouseMoveInt.Y * Multiplier };
     if (Math.Abs(MouseMoveFloat.X) > MaxMouseDelta)
@@ -671,6 +671,10 @@ void GGameState::ProcessInput(f32 DeltaTime)
     if (Input.IsEventKeyDown(EKeycode::F10)) Config.RenderSpec.PostProcessColorCorrection = { 1.0f, 1.25f, 1.0f };
     if (Input.IsEventKeyDown(EKeycode::F11)) Config.RenderSpec.PostProcessColorCorrection = { 1.25f, 1.0f, 1.25f };
     if (Input.IsEventKeyDown(EKeycode::F12)) Config.RenderSpec.PostProcessColorCorrection = { 1.0f, 1.0f, 1.25f };
+
+    if (Input.IsKeyDown(EKeycode::N0)) Config.RenderSpec.RenderScale = 1.0f;
+    if (Input.IsKeyDown(EKeycode::N1)) Config.RenderSpec.RenderScale = VLN_MAX(Config.RenderSpec.RenderScale - 0.001f * DeltaTime, 0.1f);
+    if (Input.IsKeyDown(EKeycode::N2)) Config.RenderSpec.RenderScale = VLN_MIN(Config.RenderSpec.RenderScale + 0.001f * DeltaTime, 2.0f);
 
     if (Input.IsEventKeyDown(EKeycode::Escape)) Engine.Stop();
 }

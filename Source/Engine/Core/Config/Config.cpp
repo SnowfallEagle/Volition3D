@@ -24,7 +24,7 @@ static void LauncherArg(char** Argv, i32& Cursor)
 
 static void SizeArg(char** Argv, i32& Cursor)
 {
-    Config.WindowSpec.Size = { std::atoi(Argv[Cursor]), std::atoi(Argv[Cursor + 1]) };
+    Config.WindowSpec.DesiredSize = { std::atoi(Argv[Cursor]), std::atoi(Argv[Cursor + 1]) };
     Cursor += 2;
 }
 

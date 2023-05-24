@@ -1,3 +1,4 @@
+#include "Engine/Graphics/Rendering/Renderer.h"
 #include "Engine/Graphics/Rendering/RenderList.h"
 
 namespace Volition
@@ -1155,8 +1156,8 @@ void VRenderList::ConvertFromHomogeneous()
 
 void VRenderList::TransformPerspectiveToScreen(const VCamera& Cam)
 {
-    const f32 Alpha = Cam.ViewportSize.X * 0.5f - 0.5f;
-    const f32 Beta = Cam.ViewportSize.Y * 0.5f - 0.5f;
+    const f32 Alpha = (f32)Renderer.GetScreenWidth() * 0.5f - 0.5f;
+    const f32 Beta = (f32)Renderer.GetScreenHeight() * 0.5f - 0.5f;
 
     for (i32f i = 0; i < NumPoly; ++i)
     {
@@ -1176,8 +1177,8 @@ void VRenderList::TransformPerspectiveToScreen(const VCamera& Cam)
 
 void VRenderList::TransformCameraToScreen(const VCamera& Cam)
 {
-    const f32 Alpha = Cam.ViewportSize.X * 0.5f - 0.5f;
-    const f32 Beta = Cam.ViewportSize.Y * 0.5f - 0.5f;
+    const f32 Alpha = (f32)Renderer.GetScreenWidth() * 0.5f - 0.5f;
+    const f32 Beta = (f32)Renderer.GetScreenHeight() * 0.5f - 0.5f;
 
     for (i32f i = 0; i < NumPoly; ++i)
     {

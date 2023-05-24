@@ -28,22 +28,7 @@ void VRenderer::StartUp()
         VideoSurface.Create(SDLSurface);
         VideoSurface.bDestroyable = false;
 
-        /* @NOTE:
-            Set TargetSize as expected WindowSize, because in fullscreen we couldn't get really 10x10 window size,
-            but can render in 10x10 and blit to 640x480...
-
-            WindowSpec.Size become size of VideoSurface (== real window) size
-        */
-        Config.RenderSpec.TargetSize = Config.WindowSpec.Size;
-        Config.WindowSpec.Size = { VideoSurface.Width, VideoSurface.Height };
-
-        Config.RenderSpec.MinClip = { 0, 0 };
-        Config.RenderSpec.MaxClip = { Config.RenderSpec.TargetSize.X - 1, Config.RenderSpec.TargetSize.Y - 1 };
-
-        Config.RenderSpec.MinClipFloat = { (f32)Config.RenderSpec.MinClip.X, (f32)Config.RenderSpec.MinClip.Y };
-        Config.RenderSpec.MaxClipFloat = { (f32)Config.RenderSpec.MaxClip.X, (f32)Config.RenderSpec.MaxClip.Y };
-
-        BackSurface.Create(Config.RenderSpec.TargetSize.X, Config.RenderSpec.TargetSize.Y);
+        UpdateRenderTargetSize();
     }
 
     // Initialize IMG library
@@ -54,18 +39,10 @@ void VRenderer::StartUp()
 
     // Initialize TTF
     {
-        static constexpr i32f CharsPerLine = 80;
-        static constexpr f32 PointDivPixel = 0.75f;
-        static constexpr f32 QualityMultiplier = 4.0f;
-
         const i32 Res = TTF_Init();
         VLN_ASSERT(Res == 0);
 
-        FontCharWidth = Config.RenderSpec.TargetSize.X / CharsPerLine;
-        FontCharHeight = (i32)(FontCharWidth * 1.65f);
-
-        Font = TTF_OpenFont("Assets/Fonts/Quake2.ttf", (i32)( (f32)FontCharWidth * PointDivPixel * QualityMultiplier ));
-        VLN_ASSERT(Font);
+        InitFont();
     }
 
     // Init renderer stuff 
@@ -74,8 +51,6 @@ void VRenderer::StartUp()
 
         TerrainRenderList = new VRenderList(MaxTerrainRenderListPoly);
         TerrainRenderList->bTerrain = true;
-
-        ZBuffer.Create(Config.RenderSpec.TargetSize.X, Config.RenderSpec.TargetSize.Y);
     }
 
     // Set up shadow material
@@ -134,13 +109,19 @@ void VRenderer::SetTerrain(VMesh& TerrainMesh)
 
 void VRenderer::PreRender()
 {
-    ProfileInfo.Reset();
+    if (RenderScale != Config.RenderSpec.RenderScale)
+    {
+        UpdateRenderTargetSize();
+        UpdateFont();
+    }
 
+    BackSurface.FillRect(nullptr, MAP_XRGB32(0x00, 0x00, 0x00));
     ZBuffer.Clear();
+
     BaseRenderList->ResetList();
     TerrainRenderList->ResetStateAndSaveList();
 
-    BackSurface.FillRect(nullptr, MAP_XRGB32(0x00, 0x00, 0x00));
+    ProfileInfo.Reset();
 }
 
 void VRenderer::Render()
@@ -739,6 +720,55 @@ b32 VRenderer::ClipLine(i32& X1, i32& Y1, i32& X2, i32& Y2) const
     Y2 = CY2;
 
     return true;
+}
+
+void VRenderer::UpdateRenderTargetSize()
+{
+    RenderScale = Config.RenderSpec.RenderScale;
+    VVector2i NewSize = { (i32)((f32)Config.WindowSpec.DesiredSize.X * RenderScale), (i32)((f32)Config.WindowSpec.DesiredSize.Y * RenderScale) };
+
+    BackSurface.Create(NewSize.X, NewSize.Y);
+    ZBuffer.Create(NewSize.X, NewSize.Y);
+
+    /* @NOTE:
+        Set TargetSize as expected WindowSize, because in fullscreen we couldn't get really 10x10 window size,
+        but can render in 10x10 and blit to 640x480...
+
+        WindowSpec.Size become size of VideoSurface (== real window) size
+    */
+    Config.WindowSpec.Size = { VideoSurface.Width, VideoSurface.Height };
+
+    Config.RenderSpec.MinClip = { 0, 0 };
+    Config.RenderSpec.MaxClip = { NewSize.X - 1, NewSize.Y - 1 };
+
+    Config.RenderSpec.MinClipFloat = { (f32)Config.RenderSpec.MinClip.X, (f32)Config.RenderSpec.MinClip.Y };
+    Config.RenderSpec.MaxClipFloat = { (f32)Config.RenderSpec.MaxClip.X, (f32)Config.RenderSpec.MaxClip.Y };
+
+    VLN_NOTE(hLogRenderer, "New Render Target Size: %dx%d\n", NewSize.X, NewSize.Y);
+}
+
+void VRenderer::InitFont()
+{
+    Font = nullptr;
+    UpdateFont();
+}
+
+void VRenderer::UpdateFont()
+{
+    if (Font)
+    {
+        TTF_CloseFont(Font);
+    }
+
+    static constexpr i32f CharsPerLine = 80;
+    static constexpr f32 PointDivPixel = 0.75f;
+    static constexpr f32 QualityMultiplier = 4.0f;
+
+    FontCharWidth = GetScreenWidth() / CharsPerLine;
+    FontCharHeight = (i32)(FontCharWidth * 1.65f);
+
+    Font = TTF_OpenFont("Assets/Fonts/Quake2.ttf", (i32)( (f32)FontCharWidth * PointDivPixel * QualityMultiplier ));
+    VLN_ASSERT(Font);
 }
 
 void VRenderer::DrawTriangle(VInterpolationContext& InterpolationContext)

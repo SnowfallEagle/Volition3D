@@ -1,5 +1,6 @@
 #include "Engine/Core/Config/Config.h"
 #include "Engine/Graphics/Scene/Camera.h"
+#include "Engine/Graphics/Rendering/Renderer.h"
 
 namespace Volition
 {
@@ -17,17 +18,13 @@ void VCamera::Init(u32 InAttr, const VPoint4& InPos, const VVector4& InDir, cons
     Target = InTarget;
 
     FOV = InFOV;
-    ViewportSize = { (f32)Config.RenderSpec.TargetSize.X, (f32)Config.RenderSpec.TargetSize.Y };
-    AspectRatio = ViewportSize.X / ViewportSize.Y;
+    AspectRatio = (f32)Renderer.GetScreenWidth() / (f32)Renderer.GetScreenHeight();
 
     ZNearClip = InZNearClip;
     ZFarClip = InZFarClip;
 
     ViewplaneSize = { 2.0f, 2.0f/AspectRatio };
     ViewDist = (ViewplaneSize.X * 0.5f) / Math.Tan(FOV * 0.5f);
-    ViewportCenter = {
-        (ViewportSize.X - 1.0f) * 0.5f, (ViewportSize.Y - 1.0f) * 0.5f
-    };
 
     MatCamera = VMatrix44::Identity;
     MatPerspective = VMatrix44::Identity;
@@ -215,8 +212,8 @@ void VCamera::BuildHomogeneousPerspectiveToScreenMat44()
         we will perform conversion 4D->3D
     */
 
-    const f32 Alpha = ViewportSize.X * 0.5f - 0.5f;
-    const f32 Beta = ViewportSize.Y * 0.5f - 0.5f;
+    const f32 Alpha = (f32)Renderer.GetScreenWidth() * 0.5f - 0.5f;
+    const f32 Beta = (f32)Renderer.GetScreenHeight() * 0.5f - 0.5f;
 
     MatScreen = {
         Alpha, 0.0f, 0.0f, 0.0f,
@@ -233,8 +230,8 @@ void VCamera::BuildNonHomogeneousPerspectiveToScreenMat44()
         performed conversion 4D->3D
     */
 
-    const f32 Alpha = ViewportSize.X * 0.5f - 0.5f;
-    const f32 Beta = ViewportSize.Y * 0.5f - 0.5f;
+    const f32 Alpha = (f32)Renderer.GetScreenWidth() * 0.5f - 0.5f;
+    const f32 Beta = (f32)Renderer.GetScreenHeight() * 0.5f - 0.5f;
 
     MatScreen = {
         Alpha, 0.0f, 0.0f, 0.0f,

@@ -46,8 +46,6 @@ public:
     f32 ZFarClip;
 
     VVector2 ViewplaneSize;
-    VVector2 ViewportSize;
-    VVector2 ViewportCenter;
 
     VPlane3 LeftClipPlane;
     VPlane3 RightClipPlane;

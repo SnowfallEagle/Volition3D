@@ -20,7 +20,8 @@ class VWindowSpecification
 {
 public:
     VString Name = "Volition";
-    VVector2i Size = { 640, 480 };
+    VVector2i DesiredSize = { 640, 480 };
+    VVector2i Size = { 0, 0 };
     u32 Flags = EWindowSpecificationFlags::Windowed;
 };
 

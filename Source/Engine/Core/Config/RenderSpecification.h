@@ -22,6 +22,8 @@ public: /** Set by user */
     b32 bPostProcessing  : 1;
     b32 bRenderUI        : 1;
 
+    f32 RenderScale = 1.0f;
+
     i32 TargetFPS      = 60;
     i32 TargetFixedFPS = 60;
 
@@ -38,8 +40,6 @@ private: /** Set by rendering engine */
 
     i32 BitsPerPixel = 32;
     i32 BytesPerPixel = 4;
-
-    VVector2i TargetSize = { 0, 0 };
 
     VVector2i MinClip = { 0, 0 };
     VVector2i MaxClip = { 0, 0 };
