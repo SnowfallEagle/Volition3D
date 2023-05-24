@@ -1,6 +1,5 @@
 .vs
 
-Bin
 Build
 
 Log.txt
@@ -24,6 +23,11 @@ TODO*
 Bin/*.png
 *.wav
 *.ilk
+*.exe
+*.exp
+*.lib
+*.pdb
+Log.txt
 *.ttf
 *.dll
 *.zip

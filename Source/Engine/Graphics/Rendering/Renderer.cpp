@@ -766,7 +766,7 @@ void VRenderer::UpdateFont()
     FontCharWidth = GetScreenWidth() / CharsPerLine;
     FontCharHeight = GetScreenHeight() / CharsPerRow;
 
-    Font = TTF_OpenFont("Assets/Fonts/Quake2.ttf", (i32)( (f32)FontCharWidth * PointDivPixel * QualityMultiplier ));
+    Font = TTF_OpenFont("Assets/Fonts/Font.ttf", (i32)( (f32)FontCharWidth * PointDivPixel * QualityMultiplier ));
     VLN_ASSERT(Font);
 
     TextShadowOffset = { (i32)((-1.0f / 640.0f) * (f32)GetScreenWidth()), (i32)((1.0f / 480.0f) * (f32)GetScreenHeight()) };

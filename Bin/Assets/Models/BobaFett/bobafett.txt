@@ -1,0 +1,74 @@
+Boba Fett
+Quake2 Plugin Player Model
+by Dan Bickell
+
+Installation:
+
+Unzip all files to quake2\baseq2\players\bobafett
+You must name this directory "bobafett" for this to work properly
+Select bobafett as the model under the player setup menu, then 
+select the skin you wish to use.
+
+note: you must not have any stray files in your quake2\baseq2\players\
+directory!!!  There should be no files, just subdirectories.  Any
+stray files in here could cause plugin player models to not work.
+
+Tools used:
+
+Quake2 Model Editor
+Npherno's Skin Tool
+JawMD2
+Paintshop Pro
+Adobe Photoshop
+
+approx. 70 hours work
+
+I've always wanted to be Boba Fett in every 3d game I've played.  
+I started with Boba Fett player sprites in Doom and Doom II, made
+a number of Boba Fett skins for Quake, made Boba Fett skin for the
+Quake 2 male model, and now I've progressed to a whole new player
+model made from scratch.  
+
+I'm as big an accuracy freak as anyone on this subject.  I made 3 
+different skins depicting the 3 major variations of the Boba Fett
+costume, each with accurate variations in color, markings, and damage.
+
+ROTJ_Fett - Fett as he appeared in Return of the Jedi, w/ 2 red 
+gauntlets, multicolored jetpack, green cape, and overall faded and
+weathered appearance.
+
+ESB_Fett - Fett as he appeared in The Empire Strikes Back, with green/
+gray gauntlets and jetpack, and 2 tone brown cape.
+
+Prototype_Fett - the major prototype phase from movie pre-production 
+(many of the publicity photos that were released were this variation,
+which was used as the basis for the original toys), with red and yellow
+gauntlets, green cape, multicolored jetpack, non-final shoulder symbol,
+brown gloves, blue/grey jumpsuit (color hadn't been totally washed out
+yet), and overall brightly colored.  
+
+On the other hand, limitations of poly count and skin resolution forced
+me to make a few minor omissions, most noteworthy the lack of wookie
+scalp braids hanging from the shoulder.  
+
+I decided to make Boba use his gauntlet weapons for the weapons rather 
+than have him carry a gun (I couldn't do 3 different guns to match the
+various costume stages anyway).  I used the weapon.md2 for the weapon
+blasts, jetpack blasts (used on the jump), and for Boba's head (exposed 
+on the taunt sequence).  I took some liberty with Boba's head, and 
+made him appear badly damaged and bandaged up after that nasty incident
+with the Sarlaac.  
+
+The other 2 skins are CTF skins, for use with Threewave CTF for Quake2.
+
+I decided not to do sounds, since the default male sounds will suffice, 
+but a custom sound or two, perhaps for the jetpack jump, would be nice.
+Anybody who wants to have a try at it, please send me what you come up
+with.
+
+Any questions, just drop me an email at:
+danbickell@loop.com
+
+Enjoy.
+
+Any questions, just drop me an email:  danbickell@loop.com

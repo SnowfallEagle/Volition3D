@@ -1,0 +1,118 @@
+10/98
+================================================================
+
+Model Name              : John McClane
+
+installation directory  : quake2/baseq2/players/McClane 
+
+Author                  : roland gyrus
+
+Skin Author             : r.gyrus
+
+Email Address           : gyrus@2nd-world.fr / icq: 17996472
+
+
+
+Model description       : John McClane. De 'Die Hard'.
+                         
+
+Other info              : animation du Beretta
+
+
+Additional Credits to   : ID Software
+                          John McTiernan/Jan De Bont/Michael Kamen
+
+
+Thanks to               : DJ Phuzzy Pharao
+                          Csl & Tanis                          
+                          [KCS]IronMan & Svet
+                          
+			 
+			
+
+================================================================
+
+* Play Information *
+
+
+
+New Sounds              : yes
+
+CTF Skins               : no
+
+VWEP Support            : no
+
+
+* Construction *
+
+Poly Count              : 648 + 92 = 740
+
+Vert Count              : 326 + 95 = 421
+
+Skin Count              : 3 Skins
+                          "skins" en 256/256 ? -> e-mail...
+
+Base                    : New model 
+
+Editor used             : 3dsmaxR2 + C.Studio / Photoshop
+                          Q2mdlr / Nst
+                          Skinview [ 640/480 -> Orchid Righteous 3dfx ]
+
+
+* How to use this model *
+
+Unzip all files to your quake2\baseq2\players\  directory, 
+and select at player setup in multiplayer menu.  
+
+
+
+* Copyright / Permissions *
+
+Merci de me passer un petit bonjour par e-mail ou icq si vous downloadez McClane....Commentaires bienvenus.
+
+Si vous appreciez McClane et que vous avez 1 3dstudioMaxR2 (ou 2.5) pas trop plein de "bugs" en stock....-> e-mail... :-)))
+
+
+
+Author's notes (and excuses):  
+
+
+McCLane est mon 1er "model" pour Q2...
+...Et ma 1ere experience de modelisation et d'animation d'un personnage pour jeux videos...Maintenant je suis sur 
+que c'est loin d'etre la derniere...
+
+Le probleme le plus important fut les epaules de McClane...A l'origine McClane avait 5 doigts a la main
+gauche mais j'ai du les supprimer pour avoir un tronc correct au niveau des animations.
+
+Il est vrai que j'aurais du supprimer quelques vertices inutiles sur le "weapon.md2" (des details comme les viseurs qui ne 
+se voient pas franchement dans le jeu)...Ca n'entrave pas la jouabilite donc je verrai ca plus tard.
+
+J'ai choisi pour les "skins" un format de 320/256 (maximun autorize) a partir du moment ou je voulais 2 bras differents. 
+De plus je ne voulais pas "d'effet de symetrie" dans McClane. J'ai tente de reduire tout en 256/256 ds Nst mais je perdais
+pas mal de details au niveau des gouttes de sang et des raccords de mapping.
+
+Il y a certainement encore beaucoup d'erreurs dans mon McClane....Mais je ne suis pas trop decu du resultat ds Q2...
+Et McClane2 sera meilleur...
+
+
+a+,
+
+
+r.gyrus
+Paris, France
+gyrus@2nd-world.fr 
+(The 2nd World: http://www.2nd-world.fr -> @ccueil>gyrus)
+Icq: 17996472
+
+
+
+
+
+QUAKE(R) and QUAKE II(R) are registered trademarks of id Software, Inc.
+
+
+
+
+
+
+
