@@ -14,14 +14,15 @@ public:
 
 public:
     VStringBase() = default;
-
-    VStringBase(const VStringBase<T>& InString) : Super(InString)
-    {}
-
-    VStringBase(const T* InString) : Super(InString)
-    {}
+    VStringBase(const VStringBase<T>& InString) : Super(InString) {}
+    VStringBase(const T* InString) : Super(InString) {}
 
     VLN_FINLINE operator const T*() const
+    {
+        return Super::c_str();
+    }
+
+    VLN_FINLINE const T* operator *() const
     {
         return Super::c_str();
     }

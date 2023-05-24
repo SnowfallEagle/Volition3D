@@ -56,13 +56,13 @@ void VRenderer::StartUp()
     {
         static constexpr i32f CharsPerLine = 80;
         static constexpr f32 PointDivPixel = 0.75f;
-        static constexpr f32 QualityMultiplier = 2.0f;
+        static constexpr f32 QualityMultiplier = 4.0f;
 
         const i32 Res = TTF_Init();
         VLN_ASSERT(Res == 0);
 
         FontCharWidth = Config.RenderSpec.TargetSize.X / CharsPerLine;
-        FontCharHeight = (i32)(FontCharWidth * 1.5f);
+        FontCharHeight = (i32)(FontCharWidth * 1.65f);
 
         Font = TTF_OpenFont("Assets/Fonts/Quake2.ttf", (i32)( (f32)FontCharWidth * PointDivPixel * QualityMultiplier ));
         VLN_ASSERT(Font);
@@ -313,8 +313,17 @@ void VRenderer::RenderUI()
         SDL_Surface* SDLConverted = SDL_ConvertSurface(SDLSurface, Config.RenderSpec.SDLPixelFormat, 0);
         VLN_ASSERT(SDLConverted);
 
-        // Blit
-        SDL_Rect Dest = { TextElement.Position.X, TextElement.Position.Y, (i32f)std::strlen(TextElement.Text) * FontCharWidth, FontCharHeight };
+        // Blit shadow
+        static constexpr VVector2i ShadowOffset = { -1, +1 };
+
+        SDL_Rect Dest = { TextElement.Position.X + ShadowOffset.X, TextElement.Position.Y + ShadowOffset.Y, (i32f)std::strlen(TextElement.Text) * FontCharWidth, FontCharHeight };
+        SDL_SetSurfaceColorMod(SDLConverted, 0x00, 0x00, 0x00);
+        SDL_BlitScaled(SDLConverted, nullptr, BackSurface.SDLSurface, &Dest);
+
+        // Blit text
+        Dest.x -= ShadowOffset.X;
+        Dest.y -= ShadowOffset.Y;
+        SDL_SetSurfaceColorMod(SDLConverted, 0xFF, 0xFF, 0xFF);
         SDL_BlitScaled(SDLConverted, nullptr, BackSurface.SDLSurface, &Dest);
 
         // Free memory
@@ -1564,7 +1573,7 @@ void VRenderer::DrawDebugText(const char* Format, ...)
     std::va_list VarList;
     va_start(VarList, Format);
 
-    VarDrawText(0, DebugTextY, { 0xFF, 0xFF, 0xFF, 0xFF }, Format, VarList);
+    VarDrawText(Config.RenderSpec.DebugTextX, DebugTextY, Config.RenderSpec.DebugTextColor, Format, VarList);
     DebugTextY += FontCharHeight;
 
     va_end(VarList);

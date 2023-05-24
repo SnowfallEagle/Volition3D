@@ -52,14 +52,14 @@ private:
     VZBuffer ZBuffer;
     VInterpolationContext InterpolationContext;
 
+    VMaterial ShadowMaterial;
+
     TTF_Font* Font;
     i32 FontCharWidth; /** In pixels */
     i32 FontCharHeight;
 
     i32 DebugTextY;
     TArray<VTextElement> TextQueue;
-
-    VMaterial ShadowMaterial;
 
 public:
     void StartUp();

@@ -31,16 +31,10 @@ public:
 
 public:
     VLN_FINLINE VColorARGB() = default;
+    VLN_FINLINE constexpr VColorARGB(u8 A, u8 R, u8 G, u8 B) noexcept : ARGB(MAP_ARGB32(A, R, G, B)) {}
+    VLN_FINLINE constexpr VColorARGB(u32 InARGB) noexcept : ARGB(InARGB) {}
 
-    VLN_FINLINE constexpr VColorARGB(u8 A, u8 R, u8 G, u8 B) noexcept :
-        ARGB(MAP_ARGB32(A, R, G, B))
-    {}
-
-    VLN_FINLINE VColorARGB(u32 InARGB) noexcept :
-        ARGB(InARGB)
-    {}
-
-    VLN_FINLINE operator u32() const noexcept
+    VLN_FINLINE constexpr operator u32() const noexcept
     {
         return ARGB;
     }

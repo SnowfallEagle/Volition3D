@@ -36,6 +36,8 @@ public:
 class GGameState : public VGameState
 {
 protected:
+    VString StateName = "Untitled";
+
     VVector2 MouseMoveAccum = { 0.0f, 0.0f };
 
     f32 ShiftCamPosSpeedModifier = 5.0f;
@@ -73,6 +75,7 @@ protected:
         ProcessInput(DeltaTime);
 
         Renderer.DrawDebugText("FPS: %.2f", 1000.0f / DeltaTime);
+        Renderer.DrawDebugText("Scene: %s", *StateName);
     }
 
     virtual void FixedUpdate(f32 FixedDeltaTime) override
@@ -150,25 +153,26 @@ protected:
         Trooper1->Mesh->Rotation = { 0.0f, 180.0f, 0.0f };
 
         const auto Trooper2 = World.SpawnEntity<VEntity>();
-        Trooper2->Mesh->LoadMD2("Assets/Models/Marine/tris.md2", "Assets/Models/Marine/Centurion.pcx", 0, {1000.0f, -12200.0f, 4000.0f}, { 20.0f, 20.0f, 20.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
+        Trooper2->Mesh->LoadMD2("Assets/Models/Marine/tris.md2", "Assets/Models/Marine/Reese.pcx", 0, {1000.0f, -12200.0f, 4000.0f}, { 20.0f, 20.0f, 20.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
         Trooper2->Mesh->PlayAnimation(EMD2AnimationId::StandingIdle, true);
         Trooper2->Mesh->Rotation = { 0.0f, 210.0f, 0.0f };
 
         const auto Trooper3 = World.SpawnEntity<VEntity>();
-        Trooper3->Mesh->LoadMD2("Assets/Models/Marine/tris.md2", "Assets/Models/Marine/Centurion.pcx", 0, {-1000.0f, -12200.0f, 4000.0f}, { 20.0f, 20.0f, 20.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
+        Trooper3->Mesh->LoadMD2("Assets/Models/Marine/tris.md2", "Assets/Models/Marine/Reese.pcx", 0, {-1000.0f, -12200.0f, 4000.0f}, { 20.0f, 20.0f, 20.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
         Trooper3->Mesh->PlayAnimation(EMD2AnimationId::StandingIdle, true);
         Trooper3->Mesh->AnimationTimeAccum += 1.0f;
         Trooper3->Mesh->Rotation = { 0.0f, 150.0f, 0.0f };
 
         const auto Trooper4 = World.SpawnEntity<VEntity>();
-        Trooper4->Mesh->LoadMD2("Assets/Models/Marine/tris.md2", "Assets/Models/Marine/Centurion.pcx", 0, {-8000.0f, -12200.0f, -15000.0f}, { 20.0f, 20.0f, 20.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
+        Trooper4->Mesh->LoadMD2("Assets/Models/Marine/tris.md2", "Assets/Models/Marine/USMC.pcx", 0, {-8000.0f, -12200.0f, -15000.0f}, { 20.0f, 20.0f, 20.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
         Trooper4->Mesh->PlayAnimation(EMD2AnimationId::Wave, true);
         Trooper4->Mesh->Rotation = { 0.0f, 30.0f, 0.0f };
 
         const auto Trooper5 = World.SpawnEntity<VEntity>();
-        Trooper5->Mesh->LoadMD2("Assets/Models/Marine/tris.md2", "Assets/Models/Marine/Centurion.pcx", 0, {-6000.0f, -12200.0f, -15000.0f}, { 20.0f, 20.0f, 20.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
+        Trooper5->Mesh->LoadMD2("Assets/Models/Marine/tris.md2", "Assets/Models/Marine/Brownie.pcx", 0, {-6000.0f, -12200.0f, -15000.0f}, { 20.0f, 20.0f, 20.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
         Trooper5->Mesh->PlayAnimation(EMD2AnimationId::Salute, true);
         Trooper5->Mesh->Rotation = { 0.0f, 00.0f, 0.0f };
+        Trooper5->Mesh->AnimationTimeAccum += 0.4f;
 
         const auto Blade = World.SpawnEntity<VEntity>();
         Blade->Mesh->LoadMD2("Assets/Models/blade/tris.md2", "Assets/Models/blade/blade.pcx", 0, {0.0f, -12200.0f, 0.0f}, {20.0f, 20.0f, 20.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
@@ -178,7 +182,7 @@ protected:
         Dead->Mesh->LoadMD2("Assets/Models/deadbods/dude/tris.md2", "Assets/Models/deadbods/dude/dead1.pcx", 0, { 5000.0f, -12200.0f, 4750.0f }, { 15.0f, 15.0f, 15.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
         Dead->Mesh->Rotation.Y = 90.0f;
 
-        World.GetCamera()->Init(ECameraAttr::Euler, {7000.0f, -11000.0f, 5500.0f}, {15.0f, -135.0f, 0.0f}, VVector4(), 90.0f, 75.0f, 1000000.0f);
+        World.GetCamera()->Init(ECameraAttr::Euler, {7000.0f, -11000.0f, 5500.0f}, {5.0f, -135.0f, 0.0f}, VVector4(), 90.0f, 75.0f, 1000000.0f);
 
         CamPosSpeedModifier *= 0.25f;
     }
@@ -268,28 +272,42 @@ protected:
 
         for (i32f i = 0; i < MaxTroopers; ++i)
         {
+            static constexpr const char* TexturesPath[] = {
+                "Assets/Models/bobafett/rotj_fett.pcx",
+                "Assets/Models/bobafett/prototype_fett.pcx",
+                "Assets/Models/bobafett/esb_fett.pcx",
+                "Assets/Models/bobafett/prototype_fett.pcx",
+                "Assets/Models/bobafett/esb_fett.pcx",
+                "Assets/Models/bobafett/esb_fett.pcx",
+                "Assets/Models/bobafett/prototype_fett.pcx",
+                "Assets/Models/bobafett/prototype_fett.pcx",
+                "Assets/Models/bobafett/esb_fett.pcx",
+                "Assets/Models/bobafett/esb_fett.pcx",
+                "Assets/Models/bobafett/prototype_fett.pcx",
+            };
+
             Troopers[i] = World.SpawnEntity<VEntity>();
-            Troopers[i]->Mesh->LoadMD2("Assets/Models/bobafett/tris.md2", "Assets/Models/bobafett/rotj_fett.pcx", 0, {-11000.0f + 500.0f * (f32)(i % 4), -6000.0f, -17500.0f - ((f32)(i/4) * 1000.0f)}, {20.0f, 20.0f, 20.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
+            Troopers[i]->Mesh->LoadMD2("Assets/Models/bobafett/tris.md2", TexturesPath[(i / 4) % VLN_ARRAY_SIZE(TexturesPath)], 0, {-16000.0f + 500.0f * (f32)(i % 4), -6000.0f, -17500.0f - ((f32)(i / 4) * 1000.0f)}, {20.0f, 20.0f, 20.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
             Troopers[i]->Mesh->PlayAnimation(EMD2AnimationId::Run, true);
         }
 
         Airplane[0] = World.SpawnEntity<VEntity>();
-        Airplane[0]->Mesh->LoadMD2("Assets/Models/viper/tris.md2", nullptr, 0, { -5000.0f, 5000.0f, -40000 }, {100.0f, 100.0f, 100.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
+        Airplane[0]->Mesh->LoadMD2("Assets/Models/viper/tris.md2", nullptr, 0, { -10000.0f, 5000.0f, -40000 }, {100.0f, 100.0f, 100.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
         Airplane[0]->Mesh->Rotation.X = 30.0f;
 
         Airplane[1] = World.SpawnEntity<VEntity>();
-        Airplane[1]->Mesh->LoadMD2("Assets/Models/viper/tris.md2", nullptr, 0, { -20000.0f, 5000.0f, -40000 }, { 100.0f, 100.0f, 100.0f }, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
+        Airplane[1]->Mesh->LoadMD2("Assets/Models/viper/tris.md2", nullptr, 0, { -25000.0f, 5000.0f, -40000 }, { 100.0f, 100.0f, 100.0f }, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
         Airplane[1]->Mesh->Rotation.X = 30.0f;
 
         Airplane[2] = World.SpawnEntity<VEntity>();
-        Airplane[2]->Mesh->LoadMD2("Assets/Models/strogg1/tris.md2", nullptr, 0, { -15000.0f, -5000.0f, -25000 }, {20.0f, 20.0f, 20.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
+        Airplane[2]->Mesh->LoadMD2("Assets/Models/strogg1/tris.md2", nullptr, 0, { -20000.0f, -5000.0f, -25000 }, {20.0f, 20.0f, 20.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
         Airplane[2]->Mesh->Rotation.X = 15.0f;
 
         Airplane[3] = World.SpawnEntity<VEntity>();
-        Airplane[3]->Mesh->LoadMD2("Assets/Models/strogg1/tris.md2", nullptr, 0, { -7500.0f, -5000.0f, -25000 }, {20.0f, 20.0f, 20.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
+        Airplane[3]->Mesh->LoadMD2("Assets/Models/strogg1/tris.md2", nullptr, 0, { -12500.0f, -5000.0f, -25000 }, {20.0f, 20.0f, 20.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
         Airplane[3]->Mesh->Rotation.X = 15.0f;
 
-        World.GetCamera()->Init(ECameraAttr::Euler, {-10000.0f, -5850.0f, -10000.0f}, {-15.0f, 180.0f, 0.0f}, VVector4(), 90.0f, 250.0f, 1000000.0f);
+        World.GetCamera()->Init(ECameraAttr::Euler, {-15000.0f, -5850.0f, -10000.0f}, {-15.0f, 180.0f, 0.0f}, VVector4(), 90.0f, 250.0f, 1000000.0f);
 
         RaidState = ERaidState::Run;
         RunTimer = 7500.0f;
@@ -337,8 +355,8 @@ protected:
         Super::StartUp();
 
         VCamera* Camera = World.GetCamera();
-        Camera->Position = { 0.0f, 0.0f, 400000.0f };
-        Camera->Direction = { 15.0f, 180.0f, 0.0f };
+        Camera->Position = { 10750.0f, 27500.0f, 385000.0f };
+        Camera->Direction = { 15.0f, -157.5f, 0.0f };
         Camera->ZFarClip = 3000000.0f;
 
         CamPosSpeedModifier = 25.0f;
@@ -348,10 +366,10 @@ protected:
         World.SetYShadowPosition(-102500.0f);
         StartSunLightPosition = { -500000.0f, 1000000.0f, -1000000.0f };
 
-        AmbientLight->Color = MAP_XRGB32(0x10, 0x0C, 0x08);
-        SunLight->Color.R -= 0x22;
-        SunLight->Color.G -= 0x22;
-        SunLight->Color.B -= 0x11;
+        AmbientLight->Color = MAP_XRGB32(0x10, 0x0C, 0x04);
+        SunLight->Color.R -= 0x11;
+        SunLight->Color.G -= 0x11;
+        SunLight->Color.B -= 0x22;
 
         const auto Boss = World.SpawnEntity<GCycleAnimatedEntity>();
         Boss->Mesh->LoadMD2("Assets/Models/boss3/tris.md2", "Assets/Models/boss3/rider.pcx", 0, {-150000.0f, -102500.0f, 225000.0f}, {500.0f, 500.0f, 500.0f}, EShadeMode::Gouraud, {1.5f, 2.0f, 1.5f});
@@ -373,8 +391,8 @@ protected:
         SunLight->Color = MAP_XRGB32(0x88, 0x77, 0x33);
 
         VCamera* Camera = World.GetCamera();
-        Camera->Position = { 50000.0f, 0.0f, -500000.0f };
-        Camera->Direction = { 45.0f, -15.0f, 0.0f };
+        Camera->Position = { 350000.0f, 0.0f, -750000.0f };
+        Camera->Direction = { 35.0f, -35.0f, 0.0f };
         Camera->ZFarClip = 5000000.0f;
 
         CamPosSpeedModifier = 25.0f;
@@ -394,6 +412,9 @@ private:
 private:
     static constexpr f32 LightStates[]    = { 5000.0f, 3000.0f, 1500.0f, 3000.0f, 2000.0f, 500.0f, 4000.0f, 1000.0f, 1000.0f, 1500.0, 5000.0f };
     static constexpr f32 LightIntensities[] = { 1.0f, 1.1f, 1.0f, 1.1f, 1.0f, 0.5f, 1.0f, 1.1f, 1.0f, 1.1f, 1.0f };
+    
+    static constexpr VColorARGB Light1DebugTextColor = MAP_XRGB32(0xDD, 0x22, 0x66);
+    static constexpr VColorARGB Light2DebugTextColor = MAP_XRGB32(0x66, 0x22, 0xDD);
 
 private:
     VLight* Light1;
@@ -421,7 +442,7 @@ protected:
         Config.RenderSpec.PostProcessColorCorrection = { 1.1f, 0.9f, 0.9f };
 
         VCamera* Camera = World.GetCamera();
-        Camera->Position = { 0.0f, 5000.0f, 20000.0f };
+        Camera->Position = { 0.0f, 7500.0f, 25000.0f };
         Camera->Direction = { 15.0f, 180.0f, 0.0f };
 
         CamPosSpeedModifier = 25.0f;
@@ -523,9 +544,21 @@ protected:
     {
         Super::ProcessInput(DeltaTime);
 
-        if (Input.IsEventKeyDown(EKeycode::Y)) World.SetShadowMakingLight(Light1);
-        if (Input.IsEventKeyDown(EKeycode::U)) World.SetShadowMakingLight(Light2);
-        if (Input.IsEventKeyDown(EKeycode::I)) World.SetShadowMakingLight(SunLight);
+        if (Input.IsEventKeyDown(EKeycode::Y))
+        {
+            World.SetShadowMakingLight(Light1);
+            Config.RenderSpec.DebugTextColor = Light1DebugTextColor;
+        }
+        if (Input.IsEventKeyDown(EKeycode::U))
+        {
+            World.SetShadowMakingLight(Light2);
+            Config.RenderSpec.DebugTextColor = Light2DebugTextColor;
+        }
+        if (Input.IsEventKeyDown(EKeycode::I))
+        {
+            World.SetShadowMakingLight(SunLight);
+            Config.RenderSpec.DebugTextColor = Config.RenderSpec.DefaultDebugTextColor;
+        }
     }
 };
 
@@ -631,5 +664,5 @@ void GGameState::ProcessInput(f32 DeltaTime)
 
 int main(int Argc, char** Argv)
 {
-    return Engine.Run<Game::GLargeTerrainScene>(Argc, Argv);
+    return Engine.Run<Game::GRaidScene>(Argc, Argv);
 }

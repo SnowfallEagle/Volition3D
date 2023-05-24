@@ -2,6 +2,7 @@
 
 #include "Common/Types/Common.h"
 #include "Common/Math/Vector.h"
+#include "Engine/Graphics/Types/Color.h"
 
 struct SDL_PixelFormat;
 
@@ -12,6 +13,7 @@ class VRenderSpecification
 {
 public:
     static constexpr VVector3 DefaultColorCorrection = { 1.0f, 1.0f, 1.0f };
+    static constexpr VColorARGB DefaultDebugTextColor = MAP_XRGB32(0xDD, 0xCC, 0xDD);
 
 public: /** Set by user */
     b32 bLimitFPS        : 1;
@@ -20,11 +22,15 @@ public: /** Set by user */
     b32 bPostProcessing  : 1;
     b32 bRenderUI        : 1;
 
-    i32 TargetFPS = 60;
+    i32 TargetFPS      = 60;
     i32 TargetFixedFPS = 60;
+
     i32 MaxMipMaps = 8;
 
     VVector3 PostProcessColorCorrection = DefaultColorCorrection;
+
+    i32 DebugTextX = 0;
+    VColorARGB DebugTextColor = DefaultDebugTextColor;
 
 private: /** Set by rendering engine */
     SDL_PixelFormat* SDLPixelFormat = nullptr;

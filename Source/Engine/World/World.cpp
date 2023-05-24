@@ -107,6 +107,8 @@ VMaterial* VWorld::AddMaterial()
 
 void VWorld::StartUp(VGameState* InGameState)
 {
+    Config.RenderSpec.DebugTextColor = Config.RenderSpec.DefaultDebugTextColor;
+
     Environment2DMovementEffectAngle = 0.0f;
     Environment2DMovementEffectSpeed = 0.00175f;
 
