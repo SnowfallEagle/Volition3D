@@ -76,6 +76,8 @@ protected:
 
         Renderer.DrawDebugText("FPS: %.2f", Time.GetFPS());
         Renderer.DrawDebugText("Scene: %s", *StateName);
+        Renderer.DrawDebugText("Render [BackSpace]: %s", Config.RenderSpec.bRenderSolid ? "Solid" : "Wire");
+        Renderer.DrawDebugText("Toggle UI [Tab]");
     }
 
     virtual void FixedUpdate(f32 FixedDeltaTime) override
@@ -655,6 +657,7 @@ void GGameState::ProcessInput(f32 DeltaTime)
     MouseMoveAccum = { 0, 0 };
 
     if (Input.IsEventKeyDown(EKeycode::Backspace)) Config.RenderSpec.bRenderSolid ^= true;
+    if (Input.IsEventKeyDown(EKeycode::Tab)) Config.RenderSpec.bRenderUI ^= true;
 
     if (Input.IsEventKeyDown(EKeycode::F1)) World.ChangeState<GThreatScene>();
     if (Input.IsEventKeyDown(EKeycode::F2)) World.ChangeState<GRaidScene>();
