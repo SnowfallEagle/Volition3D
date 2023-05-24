@@ -17,10 +17,6 @@ VMesh::VMesh()
 
     State = EMeshState::Active | EMeshState::Visible;
 
-    UX = { 1.0f, 0.0f, 0.0f };
-    UY = { 0.0f, 1.0f, 0.0f };
-    UZ = { 0.0f, 0.0f, 1.0f };
-
     NumFrames = 1;
     CurrentFrame = 0.0f;
 
@@ -215,7 +211,7 @@ void VMesh::TransformModelToWorld(ETransformType Type)
     }
 }
 
-void VMesh::Transform(const VMatrix44& M, ETransformType Type, b32 bTransBasis)
+void VMesh::Transform(const VMatrix44& M, ETransformType Type)
 {
     VVector4 Res;
 
@@ -263,18 +259,6 @@ void VMesh::Transform(const VMatrix44& M, ETransformType Type, b32 bTransBasis)
             }
         }
     } break;
-    }
-
-    if (bTransBasis)
-    {
-        VMatrix44::MulVecMat(UX, M, Res);
-        UX = Res;
-
-        VMatrix44::MulVecMat(UY, M, Res);
-        UY = Res;
-
-        VMatrix44::MulVecMat(UZ, M, Res);
-        UZ = Res;
     }
 }
 

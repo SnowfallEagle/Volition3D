@@ -60,37 +60,4 @@ public:
 
 inline VTime Time;
 
-VLN_FINLINE void VTime::TickFrame()
-{
-    const u32 CurrentTick = GetTicks();
-    DeltaTime = (f32)(CurrentTick - LastTick);
-    LastTick = CurrentTick;
-
-    AccumulatedFixedTime += DeltaTime;
-    NumFixedUpdates = (i32f)(AccumulatedFixedTime / FixedDeltaTime);
-    AccumulatedFixedTime -= NumFixedUpdates * FixedDeltaTime;
-
-    DeltaTimeCache[DeltaTimeCacheIndex] = DeltaTime;
-    DeltaTimeCacheIndex = (DeltaTimeCacheIndex + 1) % MaxCachedDeltaTimes;
-
-    f32 SumDeltaTimes = 0.0f;
-    for (i32f i = 0; i < MaxCachedDeltaTimes; ++i)
-    {
-        SumDeltaTimes += DeltaTimeCache[i];
-    }
-
-    FPS = 1000.0f / (SumDeltaTimes / (f32)MaxCachedDeltaTimes);
-}
-
-VLN_FINLINE void VTime::SyncFrame()
-{
-    if (Config.RenderSpec.bLimitFPS)
-    {
-        while ((i32)GetTicks() - LastTick < MsFrameLimit)
-        {
-            VLN_PAUSE();
-        }
-    }
-}
-
 }

@@ -8,7 +8,7 @@ namespace Game
 
 class GCycleAnimatedEntity : public VEntity
 {
-private:
+public:
     using Super = VEntity;
 
 private:
@@ -112,7 +112,7 @@ protected:
 
 class GThreatScene : public GGameState
 {
-private:
+public:
     using Super = GGameState;
 
 private:
@@ -237,14 +237,14 @@ protected:
 
 class GRaidScene : public GGameState
 {
-private:
+public:
+    using Super = GGameState;
+
     enum class ERaidState
     {
         Run = 0,
         Stop
     };
-
-    using Super = GGameState;
 
 private:
     static constexpr i32f MaxTroopers = 48;
@@ -373,7 +373,7 @@ protected:
 
 class GBigGuyScene : public GGameState
 {
-private:
+public:
     using Super = GGameState;
 
 protected:
@@ -409,7 +409,7 @@ protected:
 
 class GGrandTerrainScene : public GGameState
 {
-private:
+public:
     using Super = GGameState;
 
 protected:
@@ -439,7 +439,7 @@ protected:
 
 class GShadowsAndLightsScene : public GGameState
 {
-private:
+public:
     using Super = GGameState;
 
 private:

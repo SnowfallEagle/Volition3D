@@ -13,9 +13,7 @@ public:
 
 public:
     TMap() = default;
-
-    TMap(std::initializer_list<typename Super::value_type> InitList) : Super(InitList)
-    {}
+    TMap(std::initializer_list<typename Super::value_type> InitList) : Super(InitList) {}
 };
 
 }

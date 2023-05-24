@@ -253,7 +253,6 @@
   <ItemGroup>
     <ClCompile Include="..\..\Source\Engine\Core\Config\Config.cpp" />
     <ClCompile Include="..\..\Source\Engine\Core\DebugLog.cpp" />
-    <ClCompile Include="..\..\Source\Engine\Core\Events\Event.cpp" />
     <ClCompile Include="..\..\Source\Engine\Core\Events\EventBus.cpp" />
     <ClCompile Include="..\..\Source\Engine\Core\Time.cpp" />
     <ClCompile Include="..\..\Source\Engine\Core\Engine.cpp" />
@@ -275,6 +274,7 @@
     <ClCompile Include="..\..\Source\Engine\Graphics\Scene\Light.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Scene\Material.cpp" />
     <ClCompile Include="..\..\Source\Engine\Graphics\Scene\Mesh.cpp" />
+    <ClCompile Include="..\..\Source\Engine\Input\Input.cpp" />
     <ClCompile Include="..\..\Source\Engine\World\Entity.cpp" />
     <ClCompile Include="..\..\Source\Engine\World\World.cpp" />
   </ItemGroup>

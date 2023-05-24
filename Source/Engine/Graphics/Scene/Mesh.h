@@ -113,9 +113,6 @@ public:
     VPoint4 Position;
     VVector3 Rotation;
 
-    // @TODO: Do we need it?
-    VVector4 UX, UY, UZ; /** Local axes to track full orientation */
-
     i32 NumFrames;
     f32 CurrentFrame;
 
@@ -183,7 +180,7 @@ public:
 
     /** LocalToTrans or TransOnly */
     void TransformModelToWorld(ETransformType Type = ETransformType::LocalToTrans);
-    void Transform(const VMatrix44& M, ETransformType Type, b32 bTransBasis);
+    void Transform(const VMatrix44& M, ETransformType Type);
     b32 Cull(const VCamera& Cam, u32 CullType = ECullType::XYZ);
 
     void GenerateTerrain(const char* HeightMap, const char* Texture, f32 Size, f32 Height, EShadeMode ShadeMode);

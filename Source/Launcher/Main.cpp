@@ -43,22 +43,21 @@ class GLauncher : public VLauncher
     };
 
 private:
-    int Width = 800;
-    int Height = 600;
+    i32 Width = 800;
+    i32 Height = 600;
 
-    int WindowSizeCurrent = 3;
-    int WindowTypeCurrent = 2;
+    i32 WindowSizeCurrent = 2;
+    i32 WindowTypeCurrent = 2;
 
-    int FPSLimit = 60;
-    int TargetFixedFPS = 60;
-    int MaxMipMaps = 8;
+    i32 FPSLimit = 60;
+    i32 TargetFixedFPS = 60;
+    i32 MaxMipMaps = 8;
 
     bool bLimitFPS = false;
     bool bBackfaceRemoval = true;
 
 public:
-    GLauncher() : VLauncher(L"Launcher", { 800, 600 })
-    {}
+    GLauncher() : VLauncher(L"Launcher", { 800, 600 }) {}
 
 private:
     virtual void Update() override

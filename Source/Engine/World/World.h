@@ -58,30 +58,16 @@ public:
     VLight* SpawnLight(ELightType Type);
     VMaterial* AddMaterial();
 
+    void GenerateTerrain(const char* HeightMap, const char* Texture, f32 Size = 15000.0f, f32 Height = 1000.0f, EShadeMode ShadeMode = EShadeMode::Gouraud);
     void SetEnvironment2D(const char* Path);
 
     template<typename GameStateT = VGameState>
     void ChangeState();
 
-    VLN_FINLINE void SetYShadowPosition(f32 NewY)
-    {
-        YShadowPosition = NewY;
-    }
+    void SetYShadowPosition(f32 NewY);
+    void SetShadowMakingLight(VLight* Light);
 
-    VLN_FINLINE VCamera* GetCamera() const
-    {
-        return Camera;
-    }
-
-    VLN_FINLINE void GenerateTerrain(const char* HeightMap, const char* Texture, f32 Size = 15000.0f, f32 Height = 1000.0f, EShadeMode ShadeMode = EShadeMode::Gouraud)
-    {
-        TerrainMesh->GenerateTerrain(HeightMap, Texture, Size, Height, ShadeMode);
-    }
-
-    VLN_FINLINE void SetShadowMakingLight(VLight* Light)
-    {
-        ShadowMakingLight = Light;
-    }
+    VCamera* GetCamera() const;
 
 private:
     void StartUp(VGameState* InGameState);
@@ -110,6 +96,26 @@ template<typename GameStateT>
 VLN_FINLINE void VWorld::ChangeState()
 {
     NextGameState = new GameStateT();
+}
+
+VLN_FINLINE void VWorld::SetShadowMakingLight(VLight* Light)
+{
+    ShadowMakingLight = Light;
+}
+
+VLN_FINLINE void VWorld::SetYShadowPosition(f32 NewY)
+{
+    YShadowPosition = NewY;
+}
+
+VLN_FINLINE VCamera* VWorld::GetCamera() const
+{
+    return Camera;
+}
+
+VLN_FINLINE void VWorld::GenerateTerrain(const char* HeightMap, const char* Texture, f32 Size, f32 Height, EShadeMode ShadeMode)
+{
+    TerrainMesh->GenerateTerrain(HeightMap, Texture, Size, Height, ShadeMode);
 }
 
 }

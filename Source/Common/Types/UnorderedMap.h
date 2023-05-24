@@ -13,9 +13,7 @@ public:
 
 public:
     TUnorderedMap() = default;
-
-    TUnorderedMap(std::initializer_list<typename Super::value_type> InitList) : Super(InitList)
-    {}
+    TUnorderedMap(std::initializer_list<typename Super::value_type> InitList) : Super(InitList) {}
 };
 
 }

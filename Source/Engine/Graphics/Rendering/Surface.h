@@ -49,48 +49,17 @@ public:
 
     void SetAlphaMode(b32 bMode);
 
-    VLN_FINLINE u32* GetBuffer()
-    {
-        VLN_ASSERT(bLocked);
-        return Buffer;
-    }
+    u32* GetBuffer();
+    const u32* GetBuffer() const;
 
-    VLN_FINLINE const u32* GetBuffer() const
-    {
-        VLN_ASSERT(bLocked);
-        return Buffer;
-    }
+    i32 GetPitch() const;
+    b32 IsLocked() const;
 
-    VLN_FINLINE i32 GetPitch() const
-    {
-        VLN_ASSERT(bLocked);
-        return Pitch;
-    }
+    i32 GetWidth() const;
+    i32 GetHeight() const;
 
-    VLN_FINLINE b32 IsLocked() const
-    {
-        return bLocked;
-    }
-
-    VLN_FINLINE i32 GetWidth() const 
-    {
-        return Width;
-    }
-
-    VLN_FINLINE i32 GetHeight() const
-    {
-        return Height;
-    }
-
-    VLN_FINLINE void Blit(VRelativeRectInt* SourceRect, VSurface* Dest, VRelativeRectInt* DestRect)
-    {
-        SDL_BlitScaled(SDLSurface, (SDL_Rect*)SourceRect, Dest->SDLSurface, (SDL_Rect*)DestRect);
-    }
-
-    VLN_FINLINE void FillRect(VRelativeRectInt* Rect, u32 Color)
-    {
-        SDL_FillRect(SDLSurface, (SDL_Rect*)Rect, Color); // SDL_Rect has the same footprint as VRelativeRectInt
-    }
+    void Blit(VRelativeRectInt* SourceRect, VSurface* Dest, VRelativeRectInt* DestRect);
+    void FillRect(VRelativeRectInt* Rect, u32 Color);
 
     friend class VRenderer;
 };
@@ -110,6 +79,49 @@ VLN_FINLINE void VSurface::Unlock()
 {
     VLN_ASSERT(bLocked);
     bLocked = false;
+}
+
+VLN_FINLINE u32* VSurface::GetBuffer()
+{
+    VLN_ASSERT(bLocked);
+    return Buffer;
+}
+
+VLN_FINLINE const u32* VSurface::GetBuffer() const
+{
+    VLN_ASSERT(bLocked);
+    return Buffer;
+}
+
+VLN_FINLINE i32 VSurface::GetPitch() const
+{
+    VLN_ASSERT(bLocked);
+    return Pitch;
+}
+
+VLN_FINLINE b32 VSurface::IsLocked() const
+{
+    return bLocked;
+}
+
+VLN_FINLINE i32 VSurface::GetWidth() const
+{
+    return Width;
+}
+
+VLN_FINLINE i32 VSurface::GetHeight() const
+{
+    return Height;
+}
+
+VLN_FINLINE void VSurface::Blit(VRelativeRectInt* SourceRect, VSurface* Dest, VRelativeRectInt* DestRect)
+{
+    SDL_BlitScaled(SDLSurface, (SDL_Rect*)SourceRect, Dest->SDLSurface, (SDL_Rect*)DestRect);
+}
+
+VLN_FINLINE void VSurface::FillRect(VRelativeRectInt* Rect, u32 Color)
+{
+    SDL_FillRect(SDLSurface, (SDL_Rect*)Rect, Color); // SDL_Rect has the same footprint as VRelativeRectInt
 }
 
 }

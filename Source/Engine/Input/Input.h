@@ -3,6 +3,8 @@
 #include "SDL.h"
 #include "Common/Platform/Platform.h"
 #include "Common/Types/Common.h"
+#include "Common/Math/Minimal.h"
+#include "Engine/Core/Events/Event.h"
 
 namespace Volition
 {
@@ -136,74 +138,36 @@ private:
     const u8* KeyState;
 
 public:
-    void StartUp()
-    {
-        SDL_SetRelativeMouseMode(SDL_TRUE);
+    void StartUp();
+    void ShutDown();
 
-        KeyDownEvents.Resize(InitialKeyDownEventsCapacity);
-        KeyState = SDL_GetKeyboardState(nullptr);
-    }
+    void ProcessEvents();
 
-    void ShutDown() {}
-
-    VLN_FINLINE void ProcessEvents()
-    {
-        MouseState = SDL_GetMouseState(&MouseAbsolutePosition.X, &MouseAbsolutePosition.Y);
-        MouseMoveEvent = EventBus.GetEventById(EEventId::MouseMove);
-        MouseRelativePosition = MouseMoveEvent ? VVector2i({ MouseMoveEvent->MouseMove.XRelative, MouseMoveEvent->MouseMove.YRelative }) : VVector2i({ 0, 0 });
-
-        KeyDownEvents.Clear();
-        EventBus.GetEventsById(KeyDownEvents, EEventId::KeyDown);
-    }
-
-    b32 IsKeyDown(EKeycode Key) const
-    {
-        for (const auto* Event : KeyDownEvents)
-        {
-            VLN_ASSERT(Event);
-
-            if (Event->KeyDown.Key == Key)
-            {
-                return true;
-            }
-        }
-
-        return KeyState[SDL_GetScancodeFromKey(Key)];
-    }
-
-    b32 IsEventKeyDown(EKeycode Key) const
-    {
-        for (const auto* Event : KeyDownEvents)
-        {
-            VLN_ASSERT(Event);
-
-            if (Event->KeyDown.Key == Key)
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
+    b32 IsKeyDown(EKeycode Key) const;
+    b32 IsEventKeyDown(EKeycode Key) const;
 
     /** Checks actual state, not events */
-    VLN_FINLINE b32 IsMouseDown(EMouseButton Button) const
-    {
-        return MouseState & (u32)Button;
-    }
+    b32 IsMouseDown(EMouseButton Button) const;
 
-    VLN_FINLINE const VVector2i& GetMouseAbsolutePosition() const
-    {
-        return MouseAbsolutePosition;
-    }
-
-    VLN_FINLINE const VVector2i& GetMouseRelativePosition() const
-    {
-        return MouseRelativePosition;
-    }
+    const VVector2i& GetMouseAbsolutePosition() const;
+    const VVector2i& GetMouseRelativePosition() const;
 };
 
 inline VInput Input;
+
+VLN_FINLINE b32 VInput::IsMouseDown(EMouseButton Button) const
+{
+    return MouseState & (u32)Button;
+}
+
+VLN_FINLINE const VVector2i& VInput::GetMouseAbsolutePosition() const
+{
+    return MouseAbsolutePosition;
+}
+
+VLN_FINLINE const VVector2i& VInput::GetMouseRelativePosition() const
+{
+    return MouseRelativePosition;
+}
 
 }

@@ -15,12 +15,8 @@ public:
 
 public:
     VLN_FINLINE TArray() = default;
-
-    VLN_FINLINE TArray(VSizeType Size) : Super(Size)
-    {}
-
-    VLN_FINLINE TArray(VSizeType Size, const T& Instance) : Super(Size, Instance)
-    {}
+    VLN_FINLINE TArray(VSizeType Size) : Super(Size) {}
+    VLN_FINLINE TArray(VSizeType Size, const T& Instance) : Super(Size, Instance) {}
 
     VLN_FINLINE void Resize(VSizeType Size)
     {
