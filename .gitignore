@@ -25,7 +25,6 @@ TODO*
 *.lib
 *.pdb
 Log.txt
-*.ttf
 *.dll
 *.zip
 *.rar
