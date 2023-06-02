@@ -82,7 +82,6 @@ private:
     VVector2i TextShadowOffset;
     TArray<VTextElement> TextQueue;
 
-public:
     VProfileInfo ProfileInfo;
 
 public:

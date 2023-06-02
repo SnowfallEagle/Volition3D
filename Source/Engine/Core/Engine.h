@@ -32,7 +32,7 @@ private:
 inline VEngine Engine;
 
 template<typename GameStateT>
-inline void VEngine::StartUp(i32 Argc, char** Argv)
+void VEngine::StartUp(i32 Argc, char** Argv)
 {
     DebugLog.StartUp();
     Config.StartUp(Argc, Argv);
@@ -48,7 +48,7 @@ inline void VEngine::StartUp(i32 Argc, char** Argv)
 }
 
 template<typename GameStateT>
-inline i32 VEngine::Run(i32 Argc, char** Argv)
+i32 VEngine::Run(i32 Argc, char** Argv)
 {
     StartUp<GameStateT>(Argc, Argv);
 

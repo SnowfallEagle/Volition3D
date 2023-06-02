@@ -85,7 +85,7 @@ VLN_FINLINE void VWorld::StartUp()
 }
 
 template<typename T>
-inline T* VWorld::SpawnEntity()
+VLN_INLINE T* VWorld::SpawnEntity()
 {
     VEntity* Entity = Entities.EmplaceBack(new T());
     Entity->Init();

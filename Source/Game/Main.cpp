@@ -25,7 +25,7 @@ public:
     {
         Super::Update(DeltaTime);
 
-        if (Mesh->bAnimationPlayed)
+        if (Mesh->State & EMeshState::AnimationPlayed)
         {
             AnimationId = (AnimationId + 1) % (i32)EMD2AnimationId::MaxAnimations;
             Mesh->PlayAnimation((EMD2AnimationId)AnimationId);

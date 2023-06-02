@@ -15,12 +15,11 @@ VMesh::VMesh()
 {
     Memory.MemSetByte(this, 0, sizeof(*this));
 
-    State = EMeshState::Active | EMeshState::Visible;
+    State = EMeshState::Active | EMeshState::Visible | EMeshState::AnimationPlayed;
 
     NumFrames = 1;
     CurrentFrame = 0.0f;
 
-    bAnimationPlayed = true;
 }
 
 void VMesh::Allocate(i32 InNumVtx, i32 InNumPoly, i32 InNumFrames, i32 InNumTextureCoords)
@@ -178,8 +177,6 @@ void VMesh::ComputeVertexNormals()
 
 void VMesh::TransformModelToWorld(ETransformType Type)
 {
-    // @TODO: Two passes: Position, Normal?
-
     VMatrix44 MatNormalTransform;
     MatNormalTransform.BuildRotationXYZ(Rotation.X, Rotation.Y, Rotation.Z); // Rotation
 
@@ -971,7 +968,7 @@ public:
     f32 Scale[3];
     f32 Translation[3];
     char Name[16];
-    VMD2Point VtxList[1]; // @FIXME: Maybe 0?
+    VMD2Point VtxList[1];
 };
 
 class VMD2Poly
@@ -1029,8 +1026,15 @@ void VMesh::PlayAnimation(EMD2AnimationId AnimationId, b32 bLoop, EAnimationInte
     AnimationInterpMode = InterpMode == EAnimationInterpMode::Default && !bLoop ? EAnimationInterpMode::Linear : InterpMode;
     AnimationTimeAccum = 0.0f;
 
-    bLoopAnimation    = bLoop;
-    bAnimationPlayed  = false;
+    State &= ~EMeshState::AnimationPlayed;
+    if (bLoop)
+    {
+        Attr |= EMeshAttr::LoopAnimation;
+    }
+    else
+    {
+        Attr &= ~EMeshAttr::LoopAnimation;
+    }
 
     CurrentFrame = (f32)MD2AnimationTable[(i32f)AnimationId].FrameStart;
 }
@@ -1093,7 +1097,7 @@ void VMesh::UpdateAnimationAndTransformModelToWorld(f32 DeltaTime)
     }
 
     // Check if we already played animation
-    if (bAnimationPlayed)
+    if (State & EMeshState::AnimationPlayed)
     {
         return;
     }
@@ -1107,7 +1111,7 @@ void VMesh::UpdateAnimationAndTransformModelToWorld(f32 DeltaTime)
         CurrentFrame += ((DeltaTime / 1000.0f) / Animation.InterpOnceInSeconds) * Animation.InterpRate;
         if (CurrentFrame >= Animation.FrameEnd)
         {
-            if (bLoopAnimation)
+            if (Attr & EMeshAttr::LoopAnimation)
             {
                 // Interpolate a bit to make it more smooth
                 CurrentFrame = (f32)Animation.FrameStart + Animation.InterpRate * (Math.Floor(CurrentFrame) / Animation.InterpOnceInSeconds);
@@ -1121,7 +1125,7 @@ void VMesh::UpdateAnimationAndTransformModelToWorld(f32 DeltaTime)
             else
             {
                 CurrentFrame = (f32)Animation.FrameEnd;
-                bAnimationPlayed = true;
+                State |= EMeshState::AnimationPlayed;
             }
         }
     }
@@ -1134,7 +1138,7 @@ void VMesh::UpdateAnimationAndTransformModelToWorld(f32 DeltaTime)
         CurrentFrame += InterpCount * Animation.InterpRate;
         if (CurrentFrame >= Animation.FrameEnd)
         {
-            if (bLoopAnimation)
+            if (Attr & EMeshAttr::LoopAnimation)
             {
                 // Interpolate a bit to make it more smooth
                 CurrentFrame = (f32)Animation.FrameStart + Animation.InterpRate * (AnimationTimeAccum / Animation.InterpOnceInSeconds);
@@ -1149,7 +1153,7 @@ void VMesh::UpdateAnimationAndTransformModelToWorld(f32 DeltaTime)
             else
             {
                 CurrentFrame = (f32)Animation.FrameEnd;
-                bAnimationPlayed = true;
+                State |= EMeshState::AnimationPlayed;
             }
         }
     }

@@ -12,9 +12,10 @@ namespace EMeshState
 {
     enum Type
     {
-        Active   = VLN_BIT(1),
-        Visible  = VLN_BIT(2),
-        Culled   = VLN_BIT(3),
+        Active          = VLN_BIT(1),
+        Visible         = VLN_BIT(2),
+        Culled          = VLN_BIT(3),
+        AnimationPlayed = VLN_BIT(4)
     };
 }
 
@@ -22,10 +23,11 @@ namespace EMeshAttr
 {
     enum Type
     {
-        MultiFrame  = VLN_BIT(1),
-        CanBeCulled = VLN_BIT(2),
-        CastShadow  = VLN_BIT(3),
-        TerrainMesh = VLN_BIT(4),
+        MultiFrame    = VLN_BIT(1),
+        CanBeCulled   = VLN_BIT(2),
+        CastShadow    = VLN_BIT(3),
+        TerrainMesh   = VLN_BIT(4),
+        LoopAnimation = VLN_BIT(5)
     };
 }
 
@@ -119,9 +121,6 @@ public:
     EMD2AnimationId CurrentAnimationId;
     EAnimationInterpMode AnimationInterpMode;
     f32 AnimationTimeAccum;
-
-    b8 bLoopAnimation    : 1; // @TODO: Put in attr
-    b8 bAnimationPlayed  : 1; // @TODO: Put in state
 
     i32 NumVtx;
     i32 TotalNumVtx;
