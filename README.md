@@ -1,7 +1,7 @@
 # Volition3D
 
 ## Summary
-![](Project/Images/Header.png)
+![](Project/Images/GrandTerrain.png)
 
 Volition3D is software renderer made for fun.
 It includes 5 demo scenes to see what it has.
