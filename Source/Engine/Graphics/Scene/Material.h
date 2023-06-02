@@ -10,17 +10,17 @@ namespace Volition
 
 namespace EMaterialAttr
 {
-	enum Type
-	{
-		TwoSided    = VLN_BIT(1),
-		Transparent = VLN_BIT(2),
-		Terrain     = VLN_BIT(3),
+    enum Type
+    {
+        TwoSided    = VLN_BIT(1),
+        Transparent = VLN_BIT(2),
+        Terrain     = VLN_BIT(3),
 
-		ShadeModeEmissive = VLN_BIT(4),
-		ShadeModeFlat     = VLN_BIT(5),
-		ShadeModeGouraud  = VLN_BIT(6),
-		ShadeModeTexture  = VLN_BIT(7),
-	};
+        ShadeModeEmissive = VLN_BIT(4),
+        ShadeModeFlat     = VLN_BIT(5),
+        ShadeModeGouraud  = VLN_BIT(6),
+        ShadeModeTexture  = VLN_BIT(7),
+    };
 }
 
 class VMaterial
