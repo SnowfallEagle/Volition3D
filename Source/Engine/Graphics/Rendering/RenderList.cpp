@@ -1192,12 +1192,8 @@ void VRenderList::TransformCameraToScreen(const VCamera& Cam)
         {
             const f32 ViewDistDivZ = Cam.ViewDist / Poly->TransVtx[V].Z;
 
-            // @TODO: Optimize
-            Poly->TransVtx[V].X = Poly->TransVtx[V].X * ViewDistDivZ;
-            Poly->TransVtx[V].Y = Poly->TransVtx[V].Y * Cam.AspectRatio * ViewDistDivZ;
-
-            Poly->TransVtx[V].X = Alpha + Alpha * Poly->TransVtx[V].X;
-            Poly->TransVtx[V].Y = Beta - Beta * Poly->TransVtx[V].Y;
+            Poly->TransVtx[V].X = Alpha + Alpha * (Poly->TransVtx[V].X * ViewDistDivZ);
+            Poly->TransVtx[V].Y = Beta - Beta * (Poly->TransVtx[V].Y * Cam.AspectRatio * ViewDistDivZ);
         }
     }
 }

@@ -230,12 +230,7 @@ public:
 
     friend VLN_FINLINE static VVector4 operator*(f32 S, const VVector4& A)
     {
-        return {
-            A.X * S,
-            A.Y * S,
-            A.Z * S,
-            1.0f
-        };
+        return A * S;
     }
 
     VLN_FINLINE VVector4 operator/(f32 Scalar) const
