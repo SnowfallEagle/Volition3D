@@ -99,11 +99,7 @@ public:
 
     void TransformLights(const VCamera& Camera);
 
-    void PreRender();
-    void Render();
-    void PostProcess();
-    void RenderUI();
-    void PostRender();
+    void RenderFrameAndFlip();
 
     /** Very slow put pixel function to debug draw functions */
     void PutPixel(u32* Buffer, i32 Pitch, i32 X, i32 Y, u32 Color) const;
@@ -127,6 +123,12 @@ private:
 
     void DrawTriangle(VInterpolationContext& InterpolationContext);
     void VarDrawText(i32 X, i32 Y, VColorARGB Color, const char* Format, std::va_list VarList); 
+
+    void PreRender();
+    void Render();
+    void PostProcess();
+    void RenderUI();
+    void PostRender();
 
     void SetInterpolators();
     void RenderSolid(const VRenderList* RenderList);

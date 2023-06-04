@@ -72,13 +72,9 @@ i32 VEngine::Run(i32 Argc, char** Argv)
         }
 
         // Render frame
-        Renderer.PreRender();
-        Renderer.Render();
-        Renderer.PostProcess();
-        Renderer.RenderUI();
-        Renderer.PostRender();
+        Renderer.RenderFrameAndFlip();
 
-        // Synchronize fps
+        // Limit fps
         Time.SyncFrame();
     }
 

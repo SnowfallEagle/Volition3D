@@ -99,6 +99,15 @@ void VRenderer::TransformLights(const VCamera& Camera)
     }
 }
 
+void VRenderer::RenderFrameAndFlip()
+{
+    Renderer.PreRender();
+    Renderer.Render();
+    Renderer.PostProcess();
+    Renderer.RenderUI();
+    Renderer.PostRender();
+}
+
 void VRenderer::SetTerrain(VMesh& TerrainMesh)
 {
     TerrainRenderList->ResetList();
