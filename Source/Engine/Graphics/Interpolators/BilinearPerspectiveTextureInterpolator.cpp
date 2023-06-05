@@ -1,10 +1,10 @@
 #include "Engine/Graphics/Rendering/InterpolationContext.h"
-#include "Engine/Graphics/Interpolators/BillinearPerspectiveTextureInterpolator.h"
+#include "Engine/Graphics/Interpolators/BilinearPerspectiveTextureInterpolator.h"
 
 namespace Volition
 {
 
-static void StartFun(VBillinearPerspectiveTextureInterpolator* Self)
+static void StartFun(VBilinearPerspectiveTextureInterpolator* Self)
 {
     const VSurface* Texture = &Self->InterpolationContext->Material->Texture.Get(Self->InterpolationContext->MipMappingLevel);
     VLN_ASSERT(Texture);
@@ -24,7 +24,7 @@ static void StartFun(VBillinearPerspectiveTextureInterpolator* Self)
     }
 }
 
-static void ComputeYStartsAndDeltasLeftFun(VBillinearPerspectiveTextureInterpolator* Self, i32 YDiffLeft, i32 LeftStartVtx, i32 LeftEndVtx)
+static void ComputeYStartsAndDeltasLeftFun(VBilinearPerspectiveTextureInterpolator* Self, i32 YDiffLeft, i32 LeftStartVtx, i32 LeftEndVtx)
 {
     Self->ULeft = (Self->UVtx[LeftStartVtx]);
     Self->VLeft = (Self->VVtx[LeftStartVtx]);
@@ -33,7 +33,7 @@ static void ComputeYStartsAndDeltasLeftFun(VBillinearPerspectiveTextureInterpola
     Self->VDeltaLeftByY = (Self->VVtx[LeftEndVtx] - Self->VVtx[LeftStartVtx]) / YDiffLeft;
 }
 
-static void ComputeYStartsAndDeltasRightFun(VBillinearPerspectiveTextureInterpolator* Self, i32 YDiffRight, i32 RightStartVtx, i32 RightEndVtx)
+static void ComputeYStartsAndDeltasRightFun(VBilinearPerspectiveTextureInterpolator* Self, i32 YDiffRight, i32 RightStartVtx, i32 RightEndVtx)
 {
     Self->URight = (Self->UVtx[RightStartVtx]);
     Self->VRight = (Self->VVtx[RightStartVtx]);
@@ -42,7 +42,7 @@ static void ComputeYStartsAndDeltasRightFun(VBillinearPerspectiveTextureInterpol
     Self->VDeltaRightByY = (Self->VVtx[RightEndVtx] - Self->VVtx[RightStartVtx]) / YDiffRight;
 }
 
-static void SwapLeftRightFun(VBillinearPerspectiveTextureInterpolator* Self)
+static void SwapLeftRightFun(VBilinearPerspectiveTextureInterpolator* Self)
 {
     i32 TempInt;
 
@@ -56,7 +56,7 @@ static void SwapLeftRightFun(VBillinearPerspectiveTextureInterpolator* Self)
     VLN_SWAP(Self->VVtx[Self->InterpolationContext->VtxIndices[1]], Self->VVtx[Self->InterpolationContext->VtxIndices[2]], TempInt);
 }
 
-static void ComputeXStartsAndDeltasFun(VBillinearPerspectiveTextureInterpolator* Self, i32 XDiff, fx28 ZLeft, fx28 ZRight)
+static void ComputeXStartsAndDeltasFun(VBilinearPerspectiveTextureInterpolator* Self, i32 XDiff, fx28 ZLeft, fx28 ZRight)
 {
     Self->U = Self->ULeft;
     Self->V = Self->VLeft;
@@ -73,7 +73,7 @@ static void ComputeXStartsAndDeltasFun(VBillinearPerspectiveTextureInterpolator*
     }
 }
 
-static void ProcessPixelFun(VBillinearPerspectiveTextureInterpolator* Self)
+static void ProcessPixelFun(VBilinearPerspectiveTextureInterpolator* Self)
 {
     const i32f X0 = ((Self->U << (Fx28Shift - Fx22Shift)) / Self->InterpolationContext->Z);
     const i32f Y0 = ((Self->V << (Fx28Shift - Fx22Shift)) / Self->InterpolationContext->Z) * Self->TexturePitch;
@@ -143,25 +143,25 @@ static void ProcessPixelFun(VBillinearPerspectiveTextureInterpolator* Self)
     );
 }
 
-static void InterpolateXFun(VBillinearPerspectiveTextureInterpolator* Self, i32 X)
+static void InterpolateXFun(VBilinearPerspectiveTextureInterpolator* Self, i32 X)
 {
     Self->U += Self->UDeltaByX * X;
     Self->V += Self->VDeltaByX * X;
 }
 
-static void InterpolateYLeftFun(VBillinearPerspectiveTextureInterpolator* Self, i32 YLeft)
+static void InterpolateYLeftFun(VBilinearPerspectiveTextureInterpolator* Self, i32 YLeft)
 {
     Self->ULeft += Self->UDeltaLeftByY * YLeft;
     Self->VLeft += Self->VDeltaLeftByY * YLeft;
 }
 
-static void InterpolateYRightFun(VBillinearPerspectiveTextureInterpolator* Self, i32 YRight)
+static void InterpolateYRightFun(VBilinearPerspectiveTextureInterpolator* Self, i32 YRight)
 {
     Self->URight += Self->UDeltaRightByY * YRight;
     Self->VRight += Self->VDeltaRightByY * YRight;
 }
 
-VBillinearPerspectiveTextureInterpolator::VBillinearPerspectiveTextureInterpolator()
+VBilinearPerspectiveTextureInterpolator::VBilinearPerspectiveTextureInterpolator()
 {
     Start = (StartType)StartFun;
     ComputeYStartsAndDeltasLeft = (ComputeYStartsAndDeltasLeftType)ComputeYStartsAndDeltasLeftFun;

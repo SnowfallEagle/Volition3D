@@ -12,7 +12,7 @@
 #include "Engine/Graphics/Interpolators/AffineTextureInterpolator.h"
 #include "Engine/Graphics/Interpolators/LinearPiecewiseTextureInterpolator.h"
 #include "Engine/Graphics/Interpolators/PerspectiveCorrectTextureInterpolator.h"
-#include "Engine/Graphics/Interpolators/BillinearPerspectiveTextureInterpolator.h"
+#include "Engine/Graphics/Interpolators/BilinearPerspectiveTextureInterpolator.h"
 #include "Engine/Graphics/Interpolators/AlphaInterpolator.h"
 
 namespace Volition
@@ -53,7 +53,7 @@ public:
     VAffineTextureInterpolator AffineTextureInterpolator;
     VLinearPiecewiseTextureInterpolator LinearPiecewiseTextureInterpolator;
     VPerspectiveCorrectTextureInterpolator PerspectiveCorrectTextureInterpolator;
-    VBillinearPerspectiveTextureInterpolator BillinearPerspectiveTextureInterpolator;
+    VBilinearPerspectiveTextureInterpolator BilinearPerspectiveTextureInterpolator;
     VAlphaInterpolator AlphaInterpolator;
 };
 

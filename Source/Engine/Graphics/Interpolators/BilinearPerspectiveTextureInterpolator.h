@@ -5,7 +5,7 @@
 namespace Volition
 {
 
-class VBillinearPerspectiveTextureInterpolator : public IInterpolator
+class VBilinearPerspectiveTextureInterpolator : public IInterpolator
 {
 public:
     fx22 UVtx[3], VVtx[3];
@@ -25,7 +25,7 @@ public:
     VVector2 TextureSize;
 
 public:
-    VBillinearPerspectiveTextureInterpolator();
+    VBilinearPerspectiveTextureInterpolator();
 };
 
 }

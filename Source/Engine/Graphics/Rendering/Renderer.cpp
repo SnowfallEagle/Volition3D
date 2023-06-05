@@ -1689,7 +1689,7 @@ void VRenderer::SetInterpolators()
             {
                 if (Distance < 10000.0f)
                 {
-                    InterpolationContext.Interpolators[InterpolationContext.NumInterpolators] = &InterpolationContext.BillinearPerspectiveTextureInterpolator;
+                    InterpolationContext.Interpolators[InterpolationContext.NumInterpolators] = &InterpolationContext.BilinearPerspectiveTextureInterpolator;
                 }
                 else if (Distance < 15000.0f)
                 {
@@ -1708,7 +1708,7 @@ void VRenderer::SetInterpolators()
         else
         {
             InterpolationContext.MipMappingLevel = 0;
-            InterpolationContext.Interpolators[InterpolationContext.NumInterpolators] = &InterpolationContext.BillinearPerspectiveTextureInterpolator;
+            InterpolationContext.Interpolators[InterpolationContext.NumInterpolators] = &InterpolationContext.BilinearPerspectiveTextureInterpolator;
         }
 
         ++InterpolationContext.NumInterpolators;

@@ -13,7 +13,7 @@ Play demo: [Volition3D on Itch Io](https://snowfall-eagle.itch.io/volition3d-dem
 ## Features
 - Emissive, flat, gouraud shading
 - Perspective correct, linear piecewise, affine texture mapping
-- Billinear texture filtering, texture mipmapping
+- Bilinear texture filtering, texture mipmapping
 - Ambient, infinite, point, spotlight lights
 - MD2, COB model loaders
 - Shadows, MD2 animations

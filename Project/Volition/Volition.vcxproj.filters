@@ -54,7 +54,7 @@
     <ClInclude Include="..\..\Source\Engine\Graphics\Interpolators\AlphaInterpolator.h">
       <Filter>Engine\Graphics\Interpolators</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Engine\Graphics\Interpolators\BillinearPerspectiveTextureInterpolator.h">
+    <ClInclude Include="..\..\Source\Engine\Graphics\Interpolators\BilinearPerspectiveTextureInterpolator.h">
       <Filter>Engine\Graphics\Interpolators</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Engine\Graphics\Interpolators\FlatInterpolator.h">
@@ -167,7 +167,7 @@
     <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\AlphaInterpolator.cpp">
       <Filter>Engine\Graphics\Interpolators</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\BillinearPerspectiveTextureInterpolator.cpp">
+    <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\BilinearPerspectiveTextureInterpolator.cpp">
       <Filter>Engine\Graphics\Interpolators</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Engine\Graphics\Interpolators\FlatInterpolator.cpp">
